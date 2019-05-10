@@ -11,7 +11,11 @@ class Token
 public:
     enum class Type
     {
-        Id, IntLiteral, Eof, Invalid
+        Id, IntLiteral,
+        LeftBrace, RightBrace,
+        Dot, Semicolon,
+        RwClass, RwUsing,
+        Eof, Invalid
     };
 
     Token() : t(Type::Invalid) { }
@@ -21,6 +25,9 @@ public:
     Type type() const { return t; }
     std::string text() const { return s; }
     Location location() const { return n; }
+
+    static const char *toString(Type type);
+    static Type reserved(const std::string &text);
 
 private:
     Type t;

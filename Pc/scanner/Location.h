@@ -13,6 +13,8 @@ public:
     Location() : i(0), c(0), n(0) { }
     Location(Id id, unsigned column, unsigned line) : i(id), c(column), n(line) { }
 
+    operator bool() const { return i; }
+
     Id id() const { return i; }
     Column column() const { return c; }
     Line line() const { return n; }

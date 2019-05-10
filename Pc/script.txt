@@ -1,5 +1,17 @@
-foo12 ba4
+class std
+{
+    class foo
+    {
+        class bar
+        {
+        }
+    }
 
-32woo foo
- -
-woo
+    using class foo.bar;
+
+    bar;
+}
+
+std.bar;
+std.foo.bar;
+

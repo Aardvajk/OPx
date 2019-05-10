@@ -1,28 +1,39 @@
+#include "application/Context.h"
 #include "application/Error.h"
 
-#include "scanner/Source.h"
-#include "scanner/Token.h"
-#include "scanner/Lexer.h"
+#include "compiler/Compiler.h"
 
-#include <iostream>
-#include <fstream>
+#include "visitors/AstPrinter.h"
 
 int main()
 {
+    Context c;
+
     try
     {
-        Source src(0, new std::ifstream("C:/Projects/Px/Px/Pc/script.txt"));
+        c.open("C:/Projects/Px/Px/Pc/script.txt");
+        auto n = compile(c);
 
-        auto tok = Lexer::next(src);
-        while(tok.type() != Token::Type::Eof)
-        {
-            std::cout << tok.location().column() << ", " << tok.location().line() << ": [" << tok.text() << "]\n";
-            tok = Lexer::next(src);
-        }
+        std::cout << "== symbols ===============================================\n";
+
+        c.tree.root()->print(std::cout);
+
+        std::cout << "== nodes =================================================\n";
+
+        AstPrinter pr(std::cout);
+        n->accept(pr);
+
+        std::cout << "==========================================================\n";
     }
 
     catch(const Error &error)
     {
-        std::cout << "error " << error.location().column() << ", " << error.location().line() << ": " << error.what() << "\n";
+        std::cout << "error";
+        if(auto n = error.location())
+        {
+            std::cout << " " << c.sources.path(n.id()) << " " << n.column() << "," << n.line();
+        }
+
+        std::cout << ": " << error.what() << "\n";
     }
 }

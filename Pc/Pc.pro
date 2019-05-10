@@ -17,7 +17,22 @@ SOURCES += main.cpp \
     scanner/Source.cpp \
     scanner/Token.cpp \
     scanner/Lexer.cpp \
-    application/Context.cpp
+    scanner/Scanner.cpp \
+    application/Context.cpp \
+    scanner/SourceList.cpp \
+    nodes/Node.cpp \
+    nodes/BlockNode.cpp \
+    nodes/IdNode.cpp \
+    visitors/AstPrinter.cpp \
+    nodes/ClassNode.cpp \
+    nodes/DotNode.cpp \
+    compiler/Compiler.cpp \
+    symbols/Sym.cpp \
+    symbols/SymTree.cpp \
+    symbols/SymGuard.cpp \
+    visitors/Visitor.cpp \
+    visitors/SymFinder.cpp \
+    visitors/IdResolver.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -25,7 +40,22 @@ HEADERS += \
     scanner/Lexer.h \
     application/Error.h \
     scanner/Location.h \
-    application/Context.h
+    scanner/Scanner.h \
+    application/Context.h \
+    scanner/SourceList.h \
+    nodes/Node.h \
+    nodes/BlockNode.h \
+    nodes/IdNode.h \
+    visitors/Visitor.h \
+    visitors/AstPrinter.h \
+    nodes/ClassNode.h \
+    nodes/DotNode.h \
+    compiler/Compiler.h \
+    symbols/Sym.h \
+    symbols/SymTree.h \
+    symbols/SymGuard.h \
+    visitors/SymFinder.h \
+    visitors/IdResolver.h
 
 DISTFILES += \
     script.txt

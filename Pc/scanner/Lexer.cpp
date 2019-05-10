@@ -28,10 +28,13 @@ Token Lexer::next(Source &source)
     auto ch = skip(source);
     auto loc = source.location();
 
-    if(!ch)
-    {
-        return Token(Token::Type::Eof, loc, "EOF");
-    }
+    if(!ch) return Token(Token::Type::Eof, loc, "EOF");
+
+    if(ch == '{') return Token(Token::Type::LeftBrace, loc, ch);
+    if(ch == '}') return Token(Token::Type::RightBrace, loc, ch);
+
+    if(ch == '.') return Token(Token::Type::Dot, loc, ch);
+    if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
 
     if(std::isalpha(ch))
     {
@@ -43,7 +46,7 @@ Token Lexer::next(Source &source)
         }
 
         source.unget(ch);
-        return Token(Token::Type::Id, loc, s);
+        return Token(Token::reserved(s), loc, s);
     }
 
     if(std::isdigit(ch))
