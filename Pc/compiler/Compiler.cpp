@@ -11,7 +11,7 @@
 #include "symbols/Sym.h"
 
 #include "visitors/SymFinder.h"
-#include "visitors/IdResolver.h"
+#include "visitors/NameVisitors.h"
 
 namespace
 {
@@ -33,10 +33,25 @@ NodePtr name(Context &c, bool get)
 
 void classConstruct(Context &c, BlockNode *block, bool get)
 {
-    c.scanner.match(Token::Type::RwClass, get);
-    auto nn = name(c, true);
+    auto nn = name(c, get);
 
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Class, nn->location(), nn->text()));
+    auto sym = c.search(nn.get());
+    if(!sym)
+    {
+        if(!isNameSimple(nn.get()))
+        {
+            throw Error(nn->location(), "not found - ", nn->text());
+        }
+
+        sym = c.tree.current()->add(new Sym(Sym::Type::Class, nn->location(), nn->text()));
+    }
+    else
+    {
+        if(sym->type() != Sym::Type::Class)
+        {
+            throw Error(nn->location(), "class expected - ", nn->text());
+        }
+    }
 
     auto cl = new ClassNode(nn->location(), sym);
     block->nodes.push_back(cl);
@@ -57,33 +72,28 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     c.scanner.next(true);
 }
 
-void usingConstruct(Context &c, bool get)
+void usingClassConstruct(Context &c, bool get)
 {
-    c.scanner.match(Token::Type::RwUsing, get);
-    c.scanner.match(Token::Type::RwClass, true);
+    auto nn = name(c, get);
+    auto proxy = c.find(nn.get());
 
-    auto nn = name(c, true);
-    SymFinder sf(c.tree.current());
-    nn->accept(sf);
-
-    if(sf.result().empty())
-    {
-        throw Error(nn->location(), "not found - ", nn->text());
-    }
-
-    if(sf.result().size() > 1)
-    {
-        throw Error(nn->location(), "ambiguous - ", nn->text());
-    }
-
-    auto proxy = sf.result().front();
     if(proxy->type() != Sym::Type::Class)
     {
-        throw Error(nn->location(), "invalid using class - ", nn->text);
+        throw Error(nn->location(), "class expected - ", nn->text());
     }
 
     auto s = c.tree.current()->add(new Sym(Sym::Type::UsingClass, nn->location(), "[using-scope]"));
     s->setProperty("proxy", proxy);
+}
+
+void usingConstruct(Context &c, bool get)
+{
+    auto tok = c.scanner.next(get);
+
+    if(tok.type() == Token::Type::RwClass)
+    {
+        usingClassConstruct(c, true);
+    }
 
     c.scanner.consume(Token::Type::Semicolon, false);
 }
@@ -94,10 +104,12 @@ void idTest(Context &c, bool get)
 
     SymFinder sf(c.tree.current());
     nn->accept(sf);
-    if(!sf.result().empty())
+
+    auto r = sf.result();
+    if(!r.empty())
     {
         std::cout << "searching with " << nn->text() << "\n";
-        for(auto i: sf.result())
+        for(auto i: r)
         {
             std::cout << "    " << i->fullname() << " [" << i << "]\n";
         }
@@ -115,8 +127,8 @@ void construct(Context &c, BlockNode *block, bool get)
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::RwClass: classConstruct(c, block, false); break;
-        case Token::Type::RwUsing: usingConstruct(c, false); break;
+        case Token::Type::RwClass: classConstruct(c, block, true); break;
+        case Token::Type::RwUsing: usingConstruct(c, true); break;
 
         case Token::Type::Id: idTest(c, false); break;
 

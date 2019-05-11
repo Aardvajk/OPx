@@ -32,7 +32,7 @@ SOURCES += main.cpp \
     symbols/SymGuard.cpp \
     visitors/Visitor.cpp \
     visitors/SymFinder.cpp \
-    visitors/IdResolver.cpp
+    visitors/NameVisitors.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -55,7 +55,7 @@ HEADERS += \
     symbols/SymTree.h \
     symbols/SymGuard.h \
     visitors/SymFinder.h \
-    visitors/IdResolver.h
+    visitors/NameVisitors.h
 
 DISTFILES += \
     script.txt

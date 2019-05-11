@@ -8,12 +8,17 @@
 
 #include <vector>
 
+class Node;
+
 class Context
 {
 public:
     Context();
 
     void open(const std::string &path);
+
+    Sym *search(Node *name);
+    Sym *find(Node *name);
 
     SourceList sources;
     Scanner scanner;
