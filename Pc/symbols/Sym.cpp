@@ -19,6 +19,11 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
     os << ts << Sym::toString(sym->type()) << " [" << sym << "] " << sym->fullname() << " (" << sym->name() << ")\n";
 
+    if(auto pr = sym->property("proxy"))
+    {
+        os << ts << "    proxy [" << pr.to<const Sym*>() << "]\n";
+    }
+
     if(scope(sym->type()))
     {
         os << ts << "{\n";

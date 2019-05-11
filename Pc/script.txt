@@ -4,14 +4,18 @@ class std
     {
         class bar
         {
+            class woo
+            {
+            }
         }
     }
 
-    using class foo.bar;
-
-    bar;
+    class woo
+    {
+    }
 }
 
-std.bar;
-std.foo.bar;
+using class std.foo;
 
+std.woo;
+bar.woo;
