@@ -1,7 +1,16 @@
+namespace foo
+{
+    class c
+    {
+    }
+}
+
 namespace a
 {
     namespace b
     {
+        using namespace foo;
+
         class c
         {
         }
@@ -10,8 +19,8 @@ namespace a
 
 using namespace a.b;
 
-namespace a.b.c
+class c
 {
 }
 
-c;
+a.b.c;

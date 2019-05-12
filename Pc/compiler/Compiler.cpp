@@ -40,6 +40,24 @@ NodePtr name(Context &c, bool get)
     return new IdNode(tok.location(), tok.text());
 }
 
+NodePtr scopeContents(Context &c, Location location, bool get)
+{
+    auto block = new BlockNode(location);
+    NodePtr nn(block);
+
+    c.scanner.match(Token::Type::LeftBrace, get);
+
+    c.scanner.next(true);
+    while(c.scanner.token().type() != Token::Type::RightBrace)
+    {
+        construct(c, block, false);
+    }
+
+    c.scanner.next(true);
+
+    return nn;
+}
+
 void namespaceConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = name(c, get);
@@ -60,20 +78,8 @@ void namespaceConstruct(Context &c, BlockNode *block, bool get)
     auto cl = new NamespaceNode(nn->location(), sym);
     block->nodes.push_back(cl);
 
-    c.scanner.match(Token::Type::LeftBrace, false);
-
-    auto scope = new BlockNode(nn->location());
-    cl->block = scope;
-
     auto g = c.tree.open(sym);
-
-    c.scanner.next(true);
-    while(c.scanner.token().type() != Token::Type::RightBrace)
-    {
-        construct(c, scope, false);
-    }
-
-    c.scanner.next(true);
+    cl->block = scopeContents(c, nn->location(), false);
 }
 
 void classConstruct(Context &c, BlockNode *block, bool get)
@@ -87,20 +93,8 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     auto cl = new ClassNode(tok.location(), sym);
     block->nodes.push_back(cl);
 
-    c.scanner.match(Token::Type::LeftBrace, true);
-
-    auto scope = new BlockNode(tok.location());
-    cl->block = scope;
-
     auto g = c.tree.open(sym);
-
-    c.scanner.next(true);
-    while(c.scanner.token().type() != Token::Type::RightBrace)
-    {
-        construct(c, scope, false);
-    }
-
-    c.scanner.next(true);
+    cl->block = scopeContents(c, tok.location(), true);
 }
 
 void usingScopeConstruct(Context &c, Sym::Type type, bool get)
