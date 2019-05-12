@@ -1,16 +1,17 @@
 class std
 {
-    class foo
+    class one
     {
-        class bar
-        {
-        }
     }
 }
 
-using a = std.foo;
-using b = a;
-using c = b;
-
-a;
-b;
+class foo
+{
+    class stdx
+    {
+        class two
+        {
+        }
+    }
+    std;
+}

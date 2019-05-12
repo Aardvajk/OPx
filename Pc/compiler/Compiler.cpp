@@ -43,13 +43,15 @@ void classConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = name(c, get);
 
-    auto sym = c.search(nn.get());
+    auto sym = c.search(nn.get(), c.tree.current());
     if(!sym)
     {
         if(!NameVisitors::isNameSimple(nn.get()))
         {
             throw Error(nn->location(), "not found - ", nn->text());
         }
+
+        c.assertUnique(nn->location(), nn->text());
 
         sym = c.tree.current()->add(new Sym(Sym::Type::Class, nn->location(), nn->text()));
     }
@@ -130,7 +132,7 @@ void idTest(Context &c, bool get)
 {
     auto nn = name(c, get);
 
-    SymFinder sf(c.tree.current());
+    SymFinder sf(c.tree.current(), nullptr);
     nn->accept(sf);
 
     auto r = sf.result();

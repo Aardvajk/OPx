@@ -10,7 +10,7 @@ class Sym;
 class SymFinder : public Visitor
 {
 public:
-    SymFinder(Sym *start);
+    SymFinder(Sym *start, Sym *limit);
 
     std::vector<Sym*> result() const { return v; }
 
@@ -19,6 +19,7 @@ public:
 
 private:
     Sym *start;
+    Sym *limit;
     std::vector<Sym*> scopes;
     std::vector<Sym*> v;
 };

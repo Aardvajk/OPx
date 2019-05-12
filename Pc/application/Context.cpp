@@ -25,17 +25,12 @@ void Context::open(const std::string &path)
     scanner.push(new Source(sources.id(path), is.release()));
 }
 
-Sym *Context::search(Node *name)
+Sym *Context::search(Node *name, Sym *limit)
 {
-    SymFinder sf(tree.current());
+    SymFinder sf(tree.current(), limit);
     name->accept(sf);
 
-    std::vector<Sym*> r;
-    for(auto s: sf.result())
-    {
-        r.push_back(s->resolved());
-    }
-
+    auto r = sf.result();
     if(r.size() > 1)
     {
         throw Error(name->location(), "ambiguous - ", name->text());
@@ -44,9 +39,9 @@ Sym *Context::search(Node *name)
     return r.empty() ? nullptr : r.front();
 }
 
-Sym *Context::find(Node *name)
+Sym *Context::find(Node *name, Sym *limit)
 {
-    auto sym = search(name);
+    auto sym = search(name, limit);
 
     if(!sym)
     {

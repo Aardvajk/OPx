@@ -19,16 +19,16 @@ std::vector<Sym*> &findIn(Sym *scope, const std::string &name, std::vector<Sym*>
 
         if(s->name() == name)
         {
-            result.push_back(s);
+            result.push_back(s->resolved());
         }
     }
 
     return result;
 }
 
-void findFirst(Sym *scope, const std::string &name, std::vector<Sym*> &result)
+void findFirst(Sym *scope, Sym *limit, const std::string &name, std::vector<Sym*> &result)
 {
-    while(scope)
+    while(scope != limit)
     {
         if(!findIn(scope, name, result).empty())
         {
@@ -41,7 +41,7 @@ void findFirst(Sym *scope, const std::string &name, std::vector<Sym*> &result)
 
 }
 
-SymFinder::SymFinder(Sym *start) : start(start)
+SymFinder::SymFinder(Sym *start, Sym *limit) : start(start), limit(limit)
 {
 }
 
@@ -49,7 +49,7 @@ void SymFinder::visit(IdNode &node)
 {
     if(scopes.empty())
     {
-        findFirst(start, node.name, v);
+        findFirst(start, limit, node.name, v);
     }
     else
     {
@@ -64,7 +64,7 @@ void SymFinder::visit(DotNode &node)
 {
     if(scopes.empty())
     {
-        findFirst(start, node.name, scopes);
+        findFirst(start, limit, node.name, scopes);
     }
     else
     {

@@ -17,8 +17,8 @@ public:
 
     void open(const std::string &path);
 
-    Sym *search(Node *name);
-    Sym *find(Node *name);
+    Sym *search(Node *name, Sym *limit = nullptr);
+    Sym *find(Node *name, Sym *limit = nullptr);
 
     std::string assertUnique(Location location, const std::string &name) const;
 
