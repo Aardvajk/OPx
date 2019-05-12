@@ -14,7 +14,7 @@ public:
         Id, IntLiteral,
         LeftBrace, RightBrace,
         Dot, Semicolon, Assign,
-        RwClass, RwUsing,
+        RwClass, RwNamespace, RwUsing,
         Eof, Invalid
     };
 

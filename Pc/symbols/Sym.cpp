@@ -1,5 +1,6 @@
 #include "Sym.h"
 
+#include <pcx/str.h>
 #include <pcx/join_str.h>
 
 #include <algorithm>
@@ -9,7 +10,7 @@ namespace
 
 bool scope(Sym::Type type)
 {
-    static const std::vector<Sym::Type> v = { Sym::Type::Global, Sym::Type::Class };
+    static const std::vector<Sym::Type> v = { Sym::Type::Global, Sym::Type::Class, Sym::Type::Namespace };
     return std::find(v.begin(), v.end(), type) != v.end();
 }
 
@@ -42,7 +43,7 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
 }
 
-Sym::Sym(Type type, Location location, std::string name) : t(type), n(location), s(std::move(name)), ps(nullptr)
+Sym::Sym(Type type, Attrs attrs, Location location, std::string name) : t(type), a(attrs), n(location), s(std::move(name)), ps(nullptr)
 {
 }
 
@@ -98,6 +99,6 @@ void Sym::print(std::ostream &os) const
 
 const char *Sym::toString(Type type)
 {
-    static const char *s[] = { "global", "class", "using", "using-class", "(invalid)" };
+    static const char *s[] = { "global", "namespace", "class", "using", "using-scope", "(invalid)" };
     return s[static_cast<int>(type)];
 }

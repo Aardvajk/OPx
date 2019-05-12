@@ -19,3 +19,7 @@ void Visitor::visit(DotNode &node)
 void Visitor::visit(ClassNode &node)
 {
 }
+
+void Visitor::visit(NamespaceNode &node)
+{
+}

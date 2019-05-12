@@ -18,7 +18,7 @@ const char *Token::toString(Type type)
 
 Token::Type Token::reserved(const std::string &text)
 {
-    static const char *s[] = { "class", "using", "" };
+    static const char *s[] = { "class", "namespace", "using", "" };
 
     for(int i = 0; s[i][0]; ++i)
     {

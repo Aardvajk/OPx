@@ -1,9 +1,10 @@
 #include "AstPrinter.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/NamespaceNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
-#include "nodes/ClassNode.h"
 
 #include "symbols/Sym.h"
 
@@ -32,6 +33,18 @@ void AstPrinter::visit(BlockNode &node)
     tab() << "}\n";
 }
 
+void AstPrinter::visit(NamespaceNode &node)
+{
+    tab() << "namespace " << node.sym->fullname() << "\n";
+    node.block->accept(*this);
+}
+
+void AstPrinter::visit(ClassNode &node)
+{
+    tab() << "class " << node.sym->fullname() << "\n";
+    node.block->accept(*this);
+}
+
 void AstPrinter::visit(IdNode &node)
 {
     tab() << "id " << node.name << "\n";
@@ -45,12 +58,6 @@ void AstPrinter::visit(DotNode &node)
         auto g = pcx::scoped_counter(tc);
         node.child->accept(*this);
     }
-}
-
-void AstPrinter::visit(ClassNode &node)
-{
-    tab() << "class " << node.sym->fullname() << "\n";
-    node.block->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

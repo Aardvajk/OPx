@@ -3,6 +3,7 @@
 
 #include "scanner/Location.h"
 
+#include <pcx/flags.h>
 #include <pcx/any.h>
 
 #include <string>
@@ -15,10 +16,16 @@ class Sym
 public:
     enum class Type
     {
-        Global, Class, Using, UsingClass, Invalid
+        Global, Namespace, Class, Using, UsingScope, Invalid
     };
 
-    Sym(Type type, Location location, std::string name);
+    enum class Attr
+    {
+    };
+
+    using Attrs = pcx::flags<Attr>;
+
+    Sym(Type type, Attrs attrs, Location location, std::string name);
 
     Sym *add(Sym *sym);
     Sym *resolved();
@@ -26,6 +33,8 @@ public:
     void setProperty(const std::string &name, pcx::any value);
 
     Type type() const { return t; }
+    Attrs attrs() const { return a; }
+
     Location location() const { return n; }
     std::string name() const { return s; }
 
@@ -45,6 +54,8 @@ public:
 
 private:
     Type t;
+    Attrs a;
+
     Location n;
     std::string s;
 
@@ -53,5 +64,7 @@ private:
 
     std::unordered_map<std::string, pcx::any> pm;
 };
+
+template<> struct pcx_is_flag_enum<Sym::Attr> : std::true_type { };
 
 #endif // SYM_H

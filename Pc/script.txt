@@ -1,25 +1,17 @@
-class std
+namespace a
 {
-    class one
+    namespace b
     {
-    }
-}
-
-class foo
-{
-    class stdx
-    {
-        class two
+        class c
         {
         }
     }
-
-    using woo = std;
 }
 
-class foo.woo
+using namespace a.b;
+
+namespace a.b.c
 {
-    class three
-    {
-    }
 }
+
+c;

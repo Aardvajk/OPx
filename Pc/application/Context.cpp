@@ -51,14 +51,24 @@ Sym *Context::find(Node *name, Sym *limit)
     return sym;
 }
 
-std::string Context::assertUnique(Location location, const std::string &name) const
+Sym *Context::searchLocal(const std::string &name) const
 {
     for(auto s: tree.current()->children())
     {
         if(s->name() == name)
         {
-            throw Error(location, "already defined - ", name);
+            return s;
         }
+    }
+
+    return nullptr;
+}
+
+std::string Context::assertUnique(Location location, const std::string &name) const
+{
+    if(searchLocal(name))
+    {
+        throw Error(location, "already defined - ", name);
     }
 
     return name;
