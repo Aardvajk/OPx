@@ -13,5 +13,13 @@ class foo
         {
         }
     }
-    std;
+
+    using woo = std;
+}
+
+class foo.woo
+{
+    class three
+    {
+    }
 }

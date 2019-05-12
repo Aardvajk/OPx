@@ -43,7 +43,7 @@ void classConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = name(c, get);
 
-    auto sym = c.search(nn.get(), c.tree.current());
+    auto sym = c.search(nn.get(), c.tree.current()->parent());
     if(!sym)
     {
         if(!NameVisitors::isNameSimple(nn.get()))
