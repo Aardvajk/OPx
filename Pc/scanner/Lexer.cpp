@@ -35,6 +35,7 @@ Token Lexer::next(Source &source)
 
     if(ch == '.') return Token(Token::Type::Dot, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
+    if(ch == '=') return Token(Token::Type::Assign, loc, ch);
 
     if(std::isalpha(ch))
     {

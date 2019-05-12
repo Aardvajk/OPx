@@ -54,6 +54,16 @@ Sym *Sym::add(Sym *sym)
     return sym;
 }
 
+Sym *Sym::resolved()
+{
+    if(auto pr = property("proxy"))
+    {
+        return pr.to<Sym*>()->resolved();
+    }
+
+    return this;
+}
+
 void Sym::setProperty(const std::string &name, pcx::any value)
 {
     pm[name] = value;
@@ -88,6 +98,6 @@ void Sym::print(std::ostream &os) const
 
 const char *Sym::toString(Type type)
 {
-    static const char *s[] = { "global", "class", "using-class", "(invalid)" };
+    static const char *s[] = { "global", "class", "using", "using-class", "(invalid)" };
     return s[static_cast<int>(type)];
 }

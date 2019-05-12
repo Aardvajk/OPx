@@ -13,7 +13,7 @@ public:
     {
         Id, IntLiteral,
         LeftBrace, RightBrace,
-        Dot, Semicolon,
+        Dot, Semicolon, Assign,
         RwClass, RwUsing,
         Eof, Invalid
     };

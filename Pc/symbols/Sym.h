@@ -15,12 +15,14 @@ class Sym
 public:
     enum class Type
     {
-        Global, Class, UsingClass, Invalid
+        Global, Class, Using, UsingClass, Invalid
     };
 
     Sym(Type type, Location location, std::string name);
 
     Sym *add(Sym *sym);
+    Sym *resolved();
+
     void setProperty(const std::string &name, pcx::any value);
 
     Type type() const { return t; }

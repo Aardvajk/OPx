@@ -20,6 +20,8 @@ public:
     Sym *search(Node *name);
     Sym *find(Node *name);
 
+    std::string assertUnique(Location location, const std::string &name) const;
+
     SourceList sources;
     Scanner scanner;
 

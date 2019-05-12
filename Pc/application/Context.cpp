@@ -30,7 +30,11 @@ Sym *Context::search(Node *name)
     SymFinder sf(tree.current());
     name->accept(sf);
 
-    auto r = sf.result();
+    std::vector<Sym*> r;
+    for(auto s: sf.result())
+    {
+        r.push_back(s->resolved());
+    }
 
     if(r.size() > 1)
     {
@@ -50,4 +54,17 @@ Sym *Context::find(Node *name)
     }
 
     return sym;
+}
+
+std::string Context::assertUnique(Location location, const std::string &name) const
+{
+    for(auto s: tree.current()->children())
+    {
+        if(s->name() == name)
+        {
+            throw Error(location, "already defined - ", name);
+        }
+    }
+
+    return name;
 }

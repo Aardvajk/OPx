@@ -2,15 +2,15 @@ class std
 {
     class foo
     {
+        class bar
+        {
+        }
     }
 }
 
-class foo
-{
-}
+using a = std.foo;
+using b = a;
+using c = b;
 
-using class std;
-
-class foo
-{
-}
+a;
+b;

@@ -18,6 +18,14 @@ namespace
 
 void construct(Context &c, BlockNode *block, bool get);
 
+void assertType(Location location, Sym::Type type, Sym::Type expected, const std::string &text)
+{
+    if(type != expected)
+    {
+        throw Error(location, Sym::toString(expected), " expected - ", text);
+    }
+}
+
 NodePtr name(Context &c, bool get)
 {
     auto tok = c.scanner.match(Token::Type::Id, get);
@@ -38,7 +46,7 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     auto sym = c.search(nn.get());
     if(!sym)
     {
-        if(!isNameSimple(nn.get()))
+        if(!NameVisitors::isNameSimple(nn.get()))
         {
             throw Error(nn->location(), "not found - ", nn->text());
         }
@@ -47,10 +55,7 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     }
     else
     {
-        if(sym->type() != Sym::Type::Class)
-        {
-            throw Error(nn->location(), "class expected - ", nn->text());
-        }
+        assertType(nn->location(), sym->type(), Sym::Type::Class, nn->text());
     }
 
     auto cl = new ClassNode(nn->location(), sym);
@@ -77,12 +82,31 @@ void usingClassConstruct(Context &c, bool get)
     auto nn = name(c, get);
     auto proxy = c.find(nn.get());
 
-    if(proxy->type() != Sym::Type::Class)
+    assertType(nn->location(), proxy->type(), Sym::Type::Class, nn->text());
+
+    auto s = c.tree.current()->add(new Sym(Sym::Type::UsingClass, nn->location(), "[using-class]"));
+    s->setProperty("proxy", proxy);
+}
+
+void usingAliasConstruct(Context &c, bool get)
+{
+    auto nn = name(c, get);
+
+    NodePtr an;
+    if(c.scanner.token().type() == Token::Type::Assign)
     {
-        throw Error(nn->location(), "class expected - ", nn->text());
+        if(!NameVisitors::isNameSimple(nn.get()))
+        {
+            throw Error(nn->location(), "id expected - ", nn->text());
+        }
+
+        an = name(c, true);
     }
 
-    auto s = c.tree.current()->add(new Sym(Sym::Type::UsingClass, nn->location(), "[using-scope]"));
+    auto proxy = c.find(an ? an.get() : nn.get());
+    auto name = c.assertUnique(nn->location(), NameVisitors::lastIdOfName(nn.get()));
+
+    auto s = c.tree.current()->add(new Sym(Sym::Type::Using, nn->location(), name));
     s->setProperty("proxy", proxy);
 }
 
@@ -93,6 +117,10 @@ void usingConstruct(Context &c, bool get)
     if(tok.type() == Token::Type::RwClass)
     {
         usingClassConstruct(c, true);
+    }
+    else
+    {
+        usingAliasConstruct(c, false);
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);

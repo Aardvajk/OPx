@@ -16,6 +16,8 @@ public:
     Sym *root(){ return r.get(); }
     Sym *current(){ return cs; }
 
+    const Sym *current() const { return cs; }
+
 private:
     friend class SymGuard;
 

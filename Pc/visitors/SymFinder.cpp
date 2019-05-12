@@ -12,9 +12,9 @@ std::vector<Sym*> &findIn(Sym *scope, const std::string &name, std::vector<Sym*>
 {
     for(auto s: scope->children())
     {
-        if(auto pr = s->property("proxy"))
+        if(s->type() == Sym::Type::UsingClass)
         {
-            findIn(pr.to<Sym*>(), name, result);
+            findIn(s->property("proxy").to<Sym*>(), name, result);
         }
 
         if(s->name() == name)
