@@ -8,29 +8,29 @@
 namespace
 {
 
-std::vector<Sym*> &findIn(Sym *scope, const std::string &name, std::vector<Sym*> &result)
+std::vector<SymFinder::Result> &findIn(SymFinder::Policy policy, Sym *scope, const std::string &name, std::vector<SymFinder::Result> &result)
 {
     for(auto s: scope->children())
     {
-        if(s->type() == Sym::Type::UsingScope)
+        if(s->type() == Sym::Type::UsingScope && policy != SymFinder::Policy::Declaration)
         {
-            findIn(s->property("proxy").to<Sym*>(), name, result);
+            findIn(policy, s->property("proxy").to<Sym*>(), name, result);
         }
 
         if(s->name() == name)
         {
-            result.push_back(s->resolved());
+            result.push_back({ s->resolved(), true });
         }
     }
 
     return result;
 }
 
-void findFirst(Sym *scope, Sym *limit, const std::string &name, std::vector<Sym*> &result)
+void findFirst(SymFinder::Policy policy, Sym *scope, const std::string &name, std::vector<SymFinder::Result> &result)
 {
-    while(scope != limit)
+    while(scope)
     {
-        if(!findIn(scope, name, result).empty())
+        if(!findIn(policy, scope, name, result).empty())
         {
             return;
         }
@@ -41,7 +41,7 @@ void findFirst(Sym *scope, Sym *limit, const std::string &name, std::vector<Sym*
 
 }
 
-SymFinder::SymFinder(Sym *start, Sym *limit) : start(start), limit(limit)
+SymFinder::SymFinder(Policy policy, Sym *start) : policy(policy), start(start)
 {
 }
 
@@ -49,13 +49,13 @@ void SymFinder::visit(IdNode &node)
 {
     if(scopes.empty())
     {
-        findFirst(start, limit, node.name, v);
+        findFirst(policy, start, node.name, v);
     }
     else
     {
         for(auto s: scopes)
         {
-            findIn(s, node.name, v);
+            findIn(policy, s.sym, node.name, v);
         }
     }
 }
@@ -64,14 +64,14 @@ void SymFinder::visit(DotNode &node)
 {
     if(scopes.empty())
     {
-        findFirst(start, limit, node.name, scopes);
+        findFirst(policy, start, node.name, scopes);
     }
     else
     {
-        std::vector<Sym*> v;
+        std::vector<Result> v;
         for(auto s: scopes)
         {
-            findIn(s, node.name, v);
+            findIn(policy, s.sym, node.name, v);
             scopes = v;
         }
     }

@@ -4,8 +4,6 @@
 
 #include "nodes/Node.h"
 
-#include "visitors/SymFinder.h"
-
 #include <pcx/scoped_ptr.h>
 
 #include <fstream>
@@ -25,9 +23,9 @@ void Context::open(const std::string &path)
     scanner.push(new Source(sources.id(path), is.release()));
 }
 
-Sym *Context::search(Node *name, Sym *limit)
+Sym *Context::search(SymFinder::Policy policy, Node *name)
 {
-    SymFinder sf(tree.current(), limit);
+    SymFinder sf(policy, tree.current());
     name->accept(sf);
 
     auto r = sf.result();
@@ -36,12 +34,12 @@ Sym *Context::search(Node *name, Sym *limit)
         throw Error(name->location(), "ambiguous - ", name->text());
     }
 
-    return r.empty() ? nullptr : r.front();
+    return r.empty() ? nullptr : r.front().sym;
 }
 
-Sym *Context::find(Node *name, Sym *limit)
+Sym *Context::find(SymFinder::Policy policy, Node *name)
 {
-    auto sym = search(name, limit);
+    auto sym = search(policy, name);
 
     if(!sym)
     {

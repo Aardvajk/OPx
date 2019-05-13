@@ -6,7 +6,7 @@
 
 #include "symbols/SymTree.h"
 
-#include <vector>
+#include "visitors/SymFinder.h"
 
 class Node;
 
@@ -17,8 +17,8 @@ public:
 
     void open(const std::string &path);
 
-    Sym *search(Node *name, Sym *limit = nullptr);
-    Sym *find(Node *name, Sym *limit = nullptr);
+    Sym *search(SymFinder::Policy policy, Node *name);
+    Sym *find(SymFinder::Policy policy, Node *name);
 
     Sym *searchLocal(const std::string &name) const;
 

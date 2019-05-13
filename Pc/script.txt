@@ -1,26 +1,15 @@
 namespace foo
 {
-    class c
+    namespace bar
     {
-    }
-}
-
-namespace a
-{
-    namespace b
-    {
-        using namespace foo;
-
-        class c
+        namespace woo
         {
         }
     }
 }
 
-using namespace a.b;
+using woo = foo;
 
-class c
+namespace woo.bar.woo
 {
 }
-
-a.b.c;

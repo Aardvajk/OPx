@@ -14,16 +14,36 @@ bool scope(Sym::Type type)
     return std::find(v.begin(), v.end(), type) != v.end();
 }
 
+std::string attrs(Sym::Attrs attr)
+{
+    std::vector<std::string> v;
+
+    if(attr & Sym::Attr::Public) v.push_back("public");
+    if(attr & Sym::Attr::Private) v.push_back("private");
+
+    return pcx::join_str(v, " ");
+}
+
 void dump(int tab, const Sym *sym, std::ostream &os)
 {
     auto ts = std::string(tab * 4, ' ');
 
-    os << ts << Sym::toString(sym->type()) << " [" << sym << "] " << sym->fullname() << " (" << sym->name() << ")\n";
+    os << ts;
+
+    auto as = attrs(sym->attrs());
+    if(!as.empty())
+    {
+        os << as << " ";
+    }
+
+    os << Sym::toString(sym->type()) << " [" << sym << "] " << sym->fullname() << " (" << sym->name() << ")";
 
     if(auto pr = sym->property("proxy"))
     {
-        os << ts << "    proxy [" << pr.to<const Sym*>() << "]\n";
+        os << " proxy [" << pr.to<const Sym*>() << "]";
     }
+
+    os << "\n";
 
     if(scope(sym->type()))
     {
@@ -84,6 +104,22 @@ std::string Sym::fullname() const
     }
 
     return pcx::join_str(v, ".");
+}
+
+bool Sym::accessibleBy(const Sym *scope) const
+{
+    auto s = scope;
+    while(s)
+    {
+        if(s == this)
+        {
+            return true;
+        }
+
+        s = s->parent();
+    }
+
+    return false;
 }
 
 pcx::any Sym::property(const std::string &name) const

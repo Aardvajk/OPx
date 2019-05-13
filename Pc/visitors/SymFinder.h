@@ -3,6 +3,7 @@
 
 #include "visitors/Visitor.h"
 
+#include <utility>
 #include <vector>
 
 class Sym;
@@ -10,18 +11,27 @@ class Sym;
 class SymFinder : public Visitor
 {
 public:
-    SymFinder(Sym *start, Sym *limit);
+    enum class Policy { Symbol, Declaration };
 
-    std::vector<Sym*> result() const { return v; }
+    struct Result
+    {
+        Sym *sym;
+        bool accessible;
+    };
+
+    SymFinder(Policy policy, Sym *start);
+
+    std::vector<Result> result() const { return v; }
 
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
 
 private:
+    Policy policy;
     Sym *start;
-    Sym *limit;
-    std::vector<Sym*> scopes;
-    std::vector<Sym*> v;
+
+    std::vector<Result> scopes;
+    std::vector<Result> v;
 };
 
 #endif // SYMFINDER_H

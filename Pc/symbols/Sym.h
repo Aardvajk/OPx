@@ -21,6 +21,8 @@ public:
 
     enum class Attr
     {
+        Public = 1,
+        Private = 2
     };
 
     using Attrs = pcx::flags<Attr>;
@@ -39,6 +41,8 @@ public:
     std::string name() const { return s; }
 
     std::string fullname() const;
+
+    bool accessibleBy(const Sym *scope) const;
 
     Sym *parent(){ return ps; }
     const Sym *parent() const { return ps; }

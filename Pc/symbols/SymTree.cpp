@@ -1,6 +1,6 @@
 #include "SymTree.h"
 
-SymTree::SymTree() : r(new Sym(Sym::Type::Global, { }, { }, "[global]")), cs(r.get())
+SymTree::SymTree() : r(new Sym(Sym::Type::Global, Sym::Attr::Public, { }, "[global]")), cs(r.get())
 {
 }
 
