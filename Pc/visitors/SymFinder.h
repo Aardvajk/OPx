@@ -32,6 +32,8 @@ private:
 
     std::vector<Result> scopes;
     std::vector<Result> v;
+
+    std::vector<bool> access;
 };
 
 #endif // SYMFINDER_H

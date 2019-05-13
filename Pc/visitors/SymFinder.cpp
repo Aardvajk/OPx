@@ -8,29 +8,39 @@
 namespace
 {
 
-std::vector<SymFinder::Result> &findIn(SymFinder::Policy policy, Sym *scope, const std::string &name, std::vector<SymFinder::Result> &result)
+void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string &name, std::vector<bool> &access, std::vector<SymFinder::Result> &result)
 {
     for(auto s: scope->children())
     {
         if(s->type() == Sym::Type::UsingScope && policy != SymFinder::Policy::Declaration)
         {
-            findIn(policy, s->property("proxy").to<Sym*>(), name, result);
+            auto a = s->accessibleBy(start);
+            if(!a)
+            {
+                access.push_back(false);
+            }
+
+            findIn(policy, start, s->property("proxy").to<Sym*>(), name, access, result);
+
+            if(!a)
+            {
+                access.pop_back();
+            }
         }
 
         if(s->name() == name)
         {
-            result.push_back({ s->resolved(), true });
+            result.push_back({ s->resolved(), access.empty() ? s->accessibleBy(start) : access.back() });
         }
     }
-
-    return result;
 }
 
-void findFirst(SymFinder::Policy policy, Sym *scope, const std::string &name, std::vector<SymFinder::Result> &result)
+void findFirst(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string &name, std::vector<bool> &access, std::vector<SymFinder::Result> &result)
 {
     while(scope)
     {
-        if(!findIn(policy, scope, name, result).empty())
+        findIn(policy, start, scope, name, access, result);
+        if(!result.empty())
         {
             return;
         }
@@ -49,13 +59,13 @@ void SymFinder::visit(IdNode &node)
 {
     if(scopes.empty())
     {
-        findFirst(policy, start, node.name, v);
+        findFirst(policy, start, start, node.name, access, v);
     }
     else
     {
         for(auto s: scopes)
         {
-            findIn(policy, s.sym, node.name, v);
+            findIn(policy, start, s.sym, node.name, access, v);
         }
     }
 }
@@ -64,14 +74,14 @@ void SymFinder::visit(DotNode &node)
 {
     if(scopes.empty())
     {
-        findFirst(policy, start, node.name, scopes);
+        findFirst(policy, start, start, node.name, access, scopes);
     }
     else
     {
         std::vector<Result> v;
         for(auto s: scopes)
         {
-            findIn(policy, s.sym, node.name, v);
+            findIn(policy, start, s.sym, node.name, access, v);
             scopes = v;
         }
     }

@@ -172,7 +172,7 @@ void idTest(Context &c, bool get)
         std::cout << "searching with " << nn->text() << "\n";
         for(auto i: r)
         {
-            std::cout << "    " << i.sym->fullname() << " [" << i.sym << "]\n";
+            std::cout << "    " << i.sym->fullname() << " [" << i.sym << "] access [" << i.accessible << "]\n";
         }
     }
     else

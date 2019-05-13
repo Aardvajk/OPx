@@ -8,8 +8,6 @@ namespace foo
     }
 }
 
-using woo = foo;
+using namespace foo.bar;
 
-namespace woo.bar.woo
-{
-}
+woo;

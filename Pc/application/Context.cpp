@@ -34,6 +34,11 @@ Sym *Context::search(SymFinder::Policy policy, Node *name)
         throw Error(name->location(), "ambiguous - ", name->text());
     }
 
+    if(!r.empty() && !r.front().accessible)
+    {
+        throw Error(name->location(), "not accessible - ", r.front().sym->fullname());
+    }
+
     return r.empty() ? nullptr : r.front().sym;
 }
 

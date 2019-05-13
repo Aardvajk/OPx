@@ -108,18 +108,23 @@ std::string Sym::fullname() const
 
 bool Sym::accessibleBy(const Sym *scope) const
 {
-    auto s = scope;
-    while(s)
+    if(attrs() & Sym::Attr::Private)
     {
-        if(s == this)
+        auto s = scope;
+        while(s)
         {
-            return true;
+            if(s == parent())
+            {
+                return true;
+            }
+
+            s = s->parent();
         }
 
-        s = s->parent();
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 pcx::any Sym::property(const std::string &name) const
