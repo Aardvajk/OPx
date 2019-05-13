@@ -5,6 +5,10 @@
 
 #include "visitors/AstPrinter.h"
 
+#include <pcx/str.h>
+
+std::string banner(const std::string &title);
+
 int main()
 {
     Context c;
@@ -13,15 +17,15 @@ int main()
     {
         c.open("C:/Projects/Px/Px/Pc/script.txt");
 
-        std::cout << "==========================================================\n";
+        std::cout << banner("");
 
         compile(c);
 
-        std::cout << "== symbols ===============================================\n";
+        std::cout << banner("symbols");
 
         c.tree.root()->print(std::cout);
 
-        std::cout << "==========================================================\n";
+        std::cout << banner("");
     }
 
     catch(const Error &error)
@@ -35,3 +39,14 @@ int main()
         std::cout << ": " << error.what() << "\n";
     }
 }
+
+std::string banner(const std::string &title)
+{
+    if(title.empty())
+    {
+        return std::string(120, '=');
+    }
+
+    return pcx::str("== ", title, " ", std::string(120 - (title.length() + 4), '='));
+}
+

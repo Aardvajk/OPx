@@ -1,13 +1,15 @@
-namespace foo
+namespace std
 {
-    namespace bar
+    class string
     {
-        namespace woo
+        public class foo
         {
         }
     }
+
+    using bar = string;
 }
 
-using namespace foo.bar;
+using std.bar;
 
-woo;
+bar.foo;

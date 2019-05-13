@@ -143,3 +143,8 @@ const char *Sym::toString(Type type)
     static const char *s[] = { "global", "namespace", "class", "using", "using-scope", "(invalid)" };
     return s[static_cast<int>(type)];
 }
+
+bool Sym::isImportableScope(Type type)
+{
+    return type == Type::Namespace || type == Type::Class;
+}

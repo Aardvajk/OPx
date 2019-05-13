@@ -55,6 +55,7 @@ public:
     void print(std::ostream &os) const;
 
     static const char *toString(Type type);
+    static bool isImportableScope(Type type);
 
 private:
     Type t;

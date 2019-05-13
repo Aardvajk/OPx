@@ -21,14 +21,6 @@ namespace
 
 void construct(Context &c, BlockNode *block, bool get);
 
-void assertType(Location location, Sym::Type type, Sym::Type expected, const std::string &text)
-{
-    if(type != expected)
-    {
-        throw Error(location, Sym::toString(expected), " expected - ", text);
-    }
-}
-
 Sym::Attrs defaultAttrs(Sym::Type type)
 {
     switch(type)
@@ -109,12 +101,15 @@ void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
     cl->block = scopeContents(c, tok.location(), true);
 }
 
-void usingScopeConstruct(Context &c, Sym::Attrs attrs, Sym::Type type, bool get)
+void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
 {
     auto nn = name(c, get);
     auto proxy = c.find(SymFinder::Policy::Symbol, nn.get());
 
-    assertType(nn->location(), proxy->type(), type, nn->text());
+    if(!Sym::isImportableScope(proxy->type()))
+    {
+        throw Error(nn->location(), "scope expected - ", proxy->fullname());
+    }
 
     auto s = c.tree.current()->add(new Sym(Sym::Type::UsingScope, attrs, nn->location(), "[using-scope]"));
     s->setProperty("proxy", proxy);
@@ -148,8 +143,7 @@ void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
 
     switch(tok.type())
     {
-        case Token::Type::RwClass: usingScopeConstruct(c, attrs, Sym::Type::Class, true); break;
-        case Token::Type::RwNamespace: usingScopeConstruct(c, attrs, Sym::Type::Namespace, true); break;
+        case Token::Type::RwNamespace: usingScopeConstruct(c, attrs, true); break;
 
         default: usingAliasConstruct(c, attrs, false);
     }
