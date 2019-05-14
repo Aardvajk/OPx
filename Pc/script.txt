@@ -1,25 +1,12 @@
-namespace foo
+namespace std
 {
-    class bar
-    {
-    }
+
+class foo;
+
 }
 
-namespace woo
-{
-    class bar
-    {
-    }
-}
+using namespace std;
 
-using namespace foo;
-using namespace woo;
-
-class bar
+class std.foo
 {
 }
-
-bar;
-foo.bar;
-woo.bar;
-.bar;

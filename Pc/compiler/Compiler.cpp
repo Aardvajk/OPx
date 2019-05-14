@@ -76,42 +76,59 @@ NodePtr scopeContents(Context &c, Location location, bool get)
     return nn;
 }
 
-void namespaceConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
+Sym *declarationSym(Context &c, Sym::Type type, Sym::Attrs attrs, Node *nn)
 {
-    auto nn = name(c, get);
-
-    auto sym = c.search(SymFinder::Policy::Limited, nn.get());
+    auto sym = c.search(SymFinder::Policy::Limited, nn);
 
     if(!sym)
     {
-        if(!NameVisitors::isNameSimple(nn.get()))
+        if(!NameVisitors::isNameSimple(nn))
         {
             throw Error(nn->location(), "not found - ", nn->text());
         }
 
-        sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, attrs, nn->location(), nn->text()));
+        return c.tree.current()->add(new Sym(type, attrs, nn->location(), nn->text()));
     }
 
-    auto cl = new NamespaceNode(nn->location(), sym);
-    block->nodes.push_back(cl);
+    return sym;
+}
+
+void namespaceConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
+{
+    auto nn = name(c, get);
+    auto sym = declarationSym(c, Sym::Type::Namespace, attrs, nn.get());
+
+    auto n = new NamespaceNode(nn->location(), sym);
+    block->nodes.push_back(n);
 
     auto g = c.tree.open(sym);
-    cl->block = scopeContents(c, nn->location(), false);
+    n->block = scopeContents(c, nn->location(), false);
 }
 
 void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 {
-    auto tok = c.scanner.match(Token::Type::Id, get);
+    auto nn = name(c, get);
+    auto sym = declarationSym(c, Sym::Type::Class, attrs, nn.get());
 
-    c.assertUnique(tok.location(), tok.text());
+    auto n = new ClassNode(nn->location(), sym);
+    block->nodes.push_back(n);
 
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Class, attrs, tok.location(), tok.text()));
+    if(c.scanner.token().type() == Token::Type::LeftBrace)
+    {
+        if(sym->property("defined").value<bool>())
+        {
+            throw Error(nn->location(), "already defined - ", sym->fullname());
+        }
 
-    auto cl = new ClassNode(tok.location(), sym);
-    block->nodes.push_back(cl);
+        auto g = c.tree.open(sym);
+        n->block = scopeContents(c, nn->location(), false);
 
-    auto g = c.tree.open(sym);
-    cl->block = scopeContents(c, tok.location(), true);
+        sym->setProperty("defined", true);
+    }
+    else
+    {
+        c.scanner.consume(Token::Type::Semicolon, false);
+    }
 }
 
 void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
@@ -124,7 +141,7 @@ void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
         throw Error(nn->location(), "scope expected - ", proxy->fullname());
     }
 
-    auto s = c.tree.current()->add(new Sym(Sym::Type::UsingScope, attrs, nn->location(), "[using-scope]"));
+    auto s = c.tree.current()->add(new Sym(Sym::Type::UsingScope, attrs, nn->location(), { }));
     s->setProperty("proxy", proxy);
 }
 

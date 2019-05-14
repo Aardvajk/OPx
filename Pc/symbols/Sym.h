@@ -9,14 +9,13 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <iostream>
 
 class Sym
 {
 public:
     enum class Type
     {
-        Global, Namespace, Class, Using, UsingScope, Invalid
+        Namespace, Class, Using, UsingScope, Invalid
     };
 
     enum class Attr
@@ -51,8 +50,6 @@ public:
     const std::vector<Sym*> &children() const { return cs; }
 
     pcx::any property(const std::string &name) const;
-
-    void print(std::ostream &os) const;
 
     static const char *toString(Type type);
     static bool isImportableScope(Type type);

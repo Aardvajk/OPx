@@ -43,7 +43,10 @@ void AstPrinter::visit(NamespaceNode &node)
 void AstPrinter::visit(ClassNode &node)
 {
     tab() << "class " << node.sym->fullname() << "\n";
-    node.block->accept(*this);
+    if(node.block)
+    {
+        node.block->accept(*this);
+    }
 }
 
 void AstPrinter::visit(GlobalNode &node)

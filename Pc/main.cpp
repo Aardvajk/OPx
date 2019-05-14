@@ -1,6 +1,8 @@
 #include "application/Context.h"
 #include "application/Error.h"
 
+#include "symbols/SymPrinter.h"
+
 #include "compiler/Compiler.h"
 
 #include "visitors/AstPrinter.h"
@@ -22,7 +24,7 @@ int main()
         compile(c);
 
         std::cout << banner("symbols");
-        c.tree.root()->print(std::cout);
+        SymPrinter::print(c.tree.root(), std::cout);
 
         std::cout << banner("");
     }
