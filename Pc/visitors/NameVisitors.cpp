@@ -1,5 +1,6 @@
 #include "NameVisitors.h"
 
+#include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
 
@@ -22,6 +23,11 @@ bool NameVisitors::isNameSimple(Node *node)
 
 NameVisitors::LastIdOfName::LastIdOfName()
 {
+}
+
+void NameVisitors::LastIdOfName::visit(GlobalNode &node)
+{
+    node.child->accept(*this);
 }
 
 void NameVisitors::LastIdOfName::visit(IdNode &node)

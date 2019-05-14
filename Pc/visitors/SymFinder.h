@@ -11,7 +11,7 @@ class Sym;
 class SymFinder : public Visitor
 {
 public:
-    enum class Policy { Symbol, Declaration };
+    enum class Policy { Full, Limited };
 
     struct Result
     {
@@ -19,15 +19,18 @@ public:
         bool accessible;
     };
 
-    SymFinder(Policy policy, Sym *start);
+    SymFinder(Policy policy, Sym *root, Sym *start);
 
     std::vector<Result> result() const { return v; }
 
+    virtual void visit(GlobalNode &node) override;
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
 
 private:
     Policy policy;
+
+    Sym *root;
     Sym *start;
 
     std::vector<Result> scopes;

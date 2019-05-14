@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     visitors/Visitor.cpp \
     visitors/SymFinder.cpp \
     visitors/NameVisitors.cpp \
-    nodes/NamespaceNode.cpp
+    nodes/NamespaceNode.cpp \
+    nodes/GlobalNode.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -57,7 +58,8 @@ HEADERS += \
     symbols/SymGuard.h \
     visitors/SymFinder.h \
     visitors/NameVisitors.h \
-    nodes/NamespaceNode.h
+    nodes/NamespaceNode.h \
+    nodes/GlobalNode.h
 
 DISTFILES += \
     script.txt

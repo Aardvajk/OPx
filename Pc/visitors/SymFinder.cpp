@@ -1,5 +1,6 @@
 #include "SymFinder.h"
 
+#include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
 
@@ -12,7 +13,7 @@ void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string 
 {
     for(auto s: scope->children())
     {
-        if(s->type() == Sym::Type::UsingScope && policy != SymFinder::Policy::Declaration)
+        if(s->type() == Sym::Type::UsingScope && policy != SymFinder::Policy::Limited)
         {
             auto a = s->accessibleBy(start);
             if(!a)
@@ -51,8 +52,16 @@ void findFirst(SymFinder::Policy policy, Sym *start, Sym *scope, const std::stri
 
 }
 
-SymFinder::SymFinder(Policy policy, Sym *start) : policy(policy), start(start)
+SymFinder::SymFinder(Policy policy, Sym *root, Sym *start) : policy(policy), root(root), start(start)
 {
+}
+
+void SymFinder::visit(GlobalNode &node)
+{
+    scopes.push_back({ root, true });
+    policy = Policy::Limited;
+
+    node.child->accept(*this);
 }
 
 void SymFinder::visit(IdNode &node)

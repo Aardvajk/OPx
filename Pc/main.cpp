@@ -22,7 +22,6 @@ int main()
         compile(c);
 
         std::cout << banner("symbols");
-
         c.tree.root()->print(std::cout);
 
         std::cout << banner("");

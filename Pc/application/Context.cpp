@@ -25,7 +25,7 @@ void Context::open(const std::string &path)
 
 Sym *Context::search(SymFinder::Policy policy, Node *name)
 {
-    SymFinder sf(policy, tree.current());
+    SymFinder sf(policy, tree.root(), tree.current());
     name->accept(sf);
 
     auto r = sf.result();

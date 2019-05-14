@@ -4,6 +4,7 @@
 class BlockNode;
 class NamespaceNode;
 class ClassNode;
+class GlobalNode;
 class IdNode;
 class DotNode;
 
@@ -15,6 +16,7 @@ public:
     virtual void visit(BlockNode &node);
     virtual void visit(NamespaceNode &node);
     virtual void visit(ClassNode &node);
+    virtual void visit(GlobalNode &node);
     virtual void visit(IdNode &node);
     virtual void visit(DotNode &node);
 };

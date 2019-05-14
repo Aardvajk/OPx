@@ -4,6 +4,8 @@
 
 #include "scanner/Lexer.h"
 
+#include <algorithm>
+
 Scanner::Scanner()
 {
 }

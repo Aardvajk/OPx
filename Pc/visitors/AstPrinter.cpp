@@ -3,6 +3,7 @@
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
 
@@ -45,6 +46,14 @@ void AstPrinter::visit(ClassNode &node)
     node.block->accept(*this);
 }
 
+void AstPrinter::visit(GlobalNode &node)
+{
+    tab() << "global\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.child->accept(*this);
+}
+
 void AstPrinter::visit(IdNode &node)
 {
     tab() << "id " << node.name << "\n";
@@ -53,11 +62,9 @@ void AstPrinter::visit(IdNode &node)
 void AstPrinter::visit(DotNode &node)
 {
     tab() << "dot " << node.name << "\n";
-    if(node.child)
-    {
-        auto g = pcx::scoped_counter(tc);
-        node.child->accept(*this);
-    }
+
+    auto g = pcx::scoped_counter(tc);
+    node.child->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

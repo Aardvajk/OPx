@@ -6,6 +6,7 @@
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
 
@@ -32,17 +33,29 @@ Sym::Attrs defaultAttrs(Sym::Type type)
     }
 }
 
-NodePtr name(Context &c, bool get)
+NodePtr nameTrail(Context &c, bool get)
 {
     auto tok = c.scanner.match(Token::Type::Id, get);
 
     auto dot = c.scanner.next(true);
     if(dot.type() == Token::Type::Dot)
     {
-        return new DotNode(dot.location(), tok.text(), name(c, true));
+        return new DotNode(dot.location(), tok.text(), nameTrail(c, true));
     }
 
     return new IdNode(tok.location(), tok.text());
+}
+
+NodePtr name(Context &c, bool get)
+{
+    auto tok = c.scanner.next(get);
+
+    if(tok.type() == Token::Type::Dot)
+    {
+        return new GlobalNode(tok.location(), nameTrail(c, true));
+    }
+
+    return nameTrail(c, false);
 }
 
 NodePtr scopeContents(Context &c, Location location, bool get)
@@ -67,7 +80,7 @@ void namespaceConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
 {
     auto nn = name(c, get);
 
-    auto sym = c.search(SymFinder::Policy::Declaration, nn.get());
+    auto sym = c.search(SymFinder::Policy::Limited, nn.get());
 
     if(!sym)
     {
@@ -104,7 +117,7 @@ void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
 {
     auto nn = name(c, get);
-    auto proxy = c.find(SymFinder::Policy::Symbol, nn.get());
+    auto proxy = c.find(SymFinder::Policy::Full, nn.get());
 
     if(!Sym::isImportableScope(proxy->type()))
     {
@@ -130,7 +143,7 @@ void usingAliasConstruct(Context &c, Sym::Attrs attrs, bool get)
         an = name(c, true);
     }
 
-    auto proxy = c.find(SymFinder::Policy::Symbol, an ? an.get() : nn.get());
+    auto proxy = c.find(SymFinder::Policy::Full, an ? an.get() : nn.get());
     auto name = c.assertUnique(nn->location(), NameVisitors::lastIdOfName(nn.get()));
 
     auto s = c.tree.current()->add(new Sym(Sym::Type::Using, attrs, nn->location(), name));
@@ -157,7 +170,7 @@ void idTest(Context &c, bool get)
 
     c.scanner.consume(Token::Type::Semicolon, false);
 
-    SymFinder sf(SymFinder::Policy::Symbol, c.tree.current());
+    SymFinder sf(SymFinder::Policy::Full, c.tree.root(), c.tree.current());
     nn->accept(sf);
 
     auto r = sf.result();
@@ -201,9 +214,7 @@ void construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwPublic: declarationConstruct(c, block, Sym::Attr::Public, true); break;
         case Token::Type::RwPrivate: declarationConstruct(c, block, Sym::Attr::Private, true); break;
 
-        case Token::Type::Id: idTest(c, false); break;
-
-        default: throw Error(tok.location(), "construct expected - ", tok.text());
+        default: idTest(c, false);
     }
 }
 

@@ -32,6 +32,7 @@ public:
 
     std::string result() const { return r; }
 
+    virtual void visit(GlobalNode &node) override;
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
 
