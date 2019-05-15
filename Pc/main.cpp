@@ -11,7 +11,7 @@
 
 std::string banner(const std::string &title);
 
-int main()
+int main(int argc, char *argv[])
 {
     Context c;
 
@@ -35,13 +35,13 @@ int main()
 
     catch(const Error &error)
     {
-        std::cout << "error";
+        std::cerr << "error";
         if(auto n = error.location())
         {
-            std::cout << " " << c.sources.path(n.id()) << " " << n.line() << "," << n.column();
+            std::cerr << " " << c.sources.path(n.id()) << " " << n.line() << "," << n.column();
         }
 
-        std::cout << ": " << error.what() << "\n";
+        std::cerr << ": " << error.what() << "\n";
     }
 }
 
