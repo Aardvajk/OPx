@@ -21,10 +21,14 @@ int main()
 
         std::cout << banner("");
 
-        compile(c);
+        auto n = compile(c);
 
         std::cout << banner("symbols");
         SymPrinter::print(c.tree.root(), std::cout);
+
+        std::cout << banner("nodes");
+        AstPrinter as(std::cout);
+        n->accept(as);
 
         std::cout << banner("");
     }

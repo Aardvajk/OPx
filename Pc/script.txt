@@ -7,6 +7,8 @@ class foo;
 
 using namespace std;
 
-class std.foo
+class foo
 {
 }
+
+foo;

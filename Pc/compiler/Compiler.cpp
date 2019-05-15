@@ -110,15 +110,15 @@ void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
     auto nn = name(c, get);
     auto sym = declarationSym(c, Sym::Type::Class, attrs, nn.get());
 
-    auto n = new ClassNode(nn->location(), sym);
-    block->nodes.push_back(n);
-
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         if(sym->property("defined").value<bool>())
         {
             throw Error(nn->location(), "already defined - ", sym->fullname());
         }
+
+        auto n = new ClassNode(nn->location(), sym);
+        block->nodes.push_back(n);
 
         auto g = c.tree.open(sym);
         n->block = scopeContents(c, nn->location(), false);
