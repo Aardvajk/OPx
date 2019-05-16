@@ -9,7 +9,22 @@
 #include "compiler/DeclarationConstructs.h"
 #include "compiler/TestConstructs.h"
 
+#include "compiler/TypeConstructs.h"
+
 #include <pcx/scoped_push.h>
+
+namespace
+{
+
+void typeTest(Context &c, bool get)
+{
+    auto tn = TypeConstructs::type(c, get);
+    std::cout << tn->text() << "\n";
+
+    c.scanner.consume(Token::Type::Semicolon, false);
+}
+
+}
 
 void Compiler::construct(Context &c, BlockNode *block, bool get)
 {
@@ -26,7 +41,7 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwLookup: TestConstructs::lookup(c, true); break;
         case Token::Type::RwTriggerError: TestConstructs::triggerError(c, block, true); break;
 
-        default: throw Error(tok.location(), "construct expected - ", tok.text());
+        default: typeTest(c, false);
     }
 }
 

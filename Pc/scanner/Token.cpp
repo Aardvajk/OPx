@@ -27,6 +27,7 @@ const char *Token::toString(Type type)
         case Type::Dot: return "dot";
         case Type::Comma: return "comma";
         case Type::Semicolon: return "semicolon";
+        case Type::Colon: return "colon";
 
         default: return "(unknown)";
     }
@@ -34,7 +35,7 @@ const char *Token::toString(Type type)
 
 Token::Type Token::reserved(const std::string &text)
 {
-    static const char *s[] = { "class", "namespace", "using", "public", "private",
+    static const char *s[] = { "class", "namespace", "using", "public", "private", "func", "ptr",
                                "lookup", "trigger_error",
                                "" };
 

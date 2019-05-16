@@ -41,7 +41,9 @@ SOURCES += main.cpp \
     compiler/CommonConstructs.cpp \
     compiler/TestConstructs.cpp \
     tests/Tests.cpp \
-    compiler/DeclarationConstructs.cpp
+    compiler/DeclarationConstructs.cpp \
+    types/Type.cpp \
+    compiler/TypeConstructs.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -71,7 +73,9 @@ HEADERS += \
     compiler/CommonConstructs.h \
     compiler/TestConstructs.h \
     tests/Tests.h \
-    compiler/DeclarationConstructs.h
+    compiler/DeclarationConstructs.h \
+    types/Type.h \
+    compiler/TypeConstructs.h
 
 DISTFILES += \
     script.txt \

@@ -1,0 +1,16 @@
+namespace std
+{
+    class int
+    {
+    }
+
+    class null
+    {
+    }
+}
+
+class bar
+{
+}
+
+ptr func(std.int, func(ptr ptr .bar):std.null):ptr ptr std.int;

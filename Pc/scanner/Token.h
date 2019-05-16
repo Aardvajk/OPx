@@ -13,8 +13,8 @@ public:
     {
         Id, IntLiteral, StringLiteral,
         LeftBrace, RightBrace, LeftParen, RightParen,
-        Dot, Comma, Semicolon, Assign,
-        RwClass, RwNamespace, RwUsing, RwPublic, RwPrivate,
+        Dot, Comma, Semicolon, Colon, Assign,
+        RwClass, RwNamespace, RwUsing, RwPublic, RwPrivate, RwFunc, RwPtr,
         RwLookup, RwTriggerError,
         Eof, Invalid
     };
