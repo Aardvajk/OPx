@@ -15,6 +15,9 @@
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
 
+#include "compiler/CommonConstructs.h"
+#include "compiler/TestConstructs.h"
+
 #include <pcx/scoped_push.h>
 
 namespace
@@ -31,31 +34,6 @@ Sym::Attrs defaultAttrs(Sym::Type type)
 
         default: return { };
     }
-}
-
-NodePtr nameTrail(Context &c, bool get)
-{
-    auto tok = c.scanner.match(Token::Type::Id, get);
-
-    auto dot = c.scanner.next(true);
-    if(dot.type() == Token::Type::Dot)
-    {
-        return new DotNode(dot.location(), tok.text(), nameTrail(c, true));
-    }
-
-    return new IdNode(tok.location(), tok.text());
-}
-
-NodePtr name(Context &c, bool get)
-{
-    auto tok = c.scanner.next(get);
-
-    if(tok.type() == Token::Type::Dot)
-    {
-        return new GlobalNode(tok.location(), nameTrail(c, true));
-    }
-
-    return nameTrail(c, false);
 }
 
 NodePtr scopeContents(Context &c, Location location, bool get)
@@ -95,7 +73,7 @@ Sym *declarationSym(Context &c, Sym::Type type, Sym::Attrs attrs, Node *nn)
 
 void namespaceConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 {
-    auto nn = name(c, get);
+    auto nn = CommonConstructs::name(c, get);
     auto sym = declarationSym(c, Sym::Type::Namespace, attrs, nn.get());
 
     auto n = new NamespaceNode(nn->location(), sym);
@@ -107,7 +85,7 @@ void namespaceConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
 
 void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 {
-    auto nn = name(c, get);
+    auto nn = CommonConstructs::name(c, get);
     auto sym = declarationSym(c, Sym::Type::Class, attrs, nn.get());
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
@@ -133,7 +111,7 @@ void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 
 void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
 {
-    auto nn = name(c, get);
+    auto nn = CommonConstructs::name(c, get);
     auto proxy = c.find(SymFinder::Policy::Full, nn.get());
 
     if(!Sym::isImportableScope(proxy->type()))
@@ -147,7 +125,7 @@ void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
 
 void usingAliasConstruct(Context &c, Sym::Attrs attrs, bool get)
 {
-    auto nn = name(c, get);
+    auto nn = CommonConstructs::name(c, get);
 
     NodePtr an;
     if(c.scanner.token().type() == Token::Type::Assign)
@@ -157,7 +135,7 @@ void usingAliasConstruct(Context &c, Sym::Attrs attrs, bool get)
             throw Error(nn->location(), "id expected - ", nn->text());
         }
 
-        an = name(c, true);
+        an = CommonConstructs::name(c, true);
     }
 
     auto proxy = c.find(SymFinder::Policy::Full, an ? an.get() : nn.get());
@@ -183,7 +161,7 @@ void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
 
 void idTest(Context &c, bool get)
 {
-    auto nn = name(c, get);
+    auto nn = CommonConstructs::name(c, get);
 
     c.scanner.consume(Token::Type::Semicolon, false);
 
@@ -230,6 +208,8 @@ void construct(Context &c, BlockNode *block, bool get)
 
         case Token::Type::RwPublic: declarationConstruct(c, block, Sym::Attr::Public, true); break;
         case Token::Type::RwPrivate: declarationConstruct(c, block, Sym::Attr::Private, true); break;
+
+        case Token::Type::RwLookup: TestConstructs::lookup(c, true); break;
 
         default: idTest(c, false);
     }

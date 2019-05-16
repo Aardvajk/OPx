@@ -20,8 +20,11 @@ const char *Token::toString(Type type)
 
         case Type::LeftBrace: return "left brace";
         case Type::RightBrace: return "right brace";
+        case Type::LeftParen: return "left bracket";
+        case Type::RightParen: return "right bracket";
 
         case Type::Dot: return "dot";
+        case Type::Comma: return "comma";
         case Type::Semicolon: return "semicolon";
 
         default: return "(unknown)";
@@ -30,7 +33,8 @@ const char *Token::toString(Type type)
 
 Token::Type Token::reserved(const std::string &text)
 {
-    static const char *s[] = { "class", "namespace", "using", "public", "private", "" };
+    static const char *s[] = { "class", "namespace", "using", "public", "private",
+                               "lookup", "" };
 
     for(int i = 0; s[i][0]; ++i)
     {

@@ -1,14 +1,18 @@
-namespace std
+class std
 {
 
 class foo;
 
 }
 
+lookup(foo, "");
+
 using namespace std;
+
+lookup(foo, "private std.foo");
 
 class foo
 {
 }
 
-foo;
+lookup(foo, "private std.foo, foo");

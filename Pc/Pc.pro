@@ -35,7 +35,9 @@ SOURCES += main.cpp \
     visitors/NameVisitors.cpp \
     nodes/NamespaceNode.cpp \
     nodes/GlobalNode.cpp \
-    symbols/SymPrinter.cpp
+    symbols/SymPrinter.cpp \
+    compiler/CommonConstructs.cpp \
+    compiler/TestConstructs.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -61,7 +63,9 @@ HEADERS += \
     visitors/NameVisitors.h \
     nodes/NamespaceNode.h \
     nodes/GlobalNode.h \
-    symbols/SymPrinter.h
+    symbols/SymPrinter.h \
+    compiler/CommonConstructs.h \
+    compiler/TestConstructs.h
 
 DISTFILES += \
     script.txt
