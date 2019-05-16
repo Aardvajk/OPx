@@ -82,3 +82,15 @@ bool Sym::isImportableScope(Type type)
 {
     return type == Type::Namespace || type == Type::Class;
 }
+
+Sym::Attrs Sym::defaultAttrs(Type type)
+{
+    switch(type)
+    {
+        case Type::Namespace: return Attr::Public;
+        case Type::Class: return Attr::Private;
+
+        default: return { };
+    }
+}
+

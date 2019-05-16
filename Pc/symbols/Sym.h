@@ -53,6 +53,7 @@ public:
 
     static const char *toString(Type type);
     static bool isImportableScope(Type type);
+    static Attrs defaultAttrs(Type type);
 
 private:
     Type t;

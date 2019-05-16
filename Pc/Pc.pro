@@ -40,7 +40,8 @@ SOURCES += main.cpp \
     symbols/SymPrinter.cpp \
     compiler/CommonConstructs.cpp \
     compiler/TestConstructs.cpp \
-    tests/Tests.cpp
+    tests/Tests.cpp \
+    compiler/DeclarationConstructs.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -69,7 +70,8 @@ HEADERS += \
     symbols/SymPrinter.h \
     compiler/CommonConstructs.h \
     compiler/TestConstructs.h \
-    tests/Tests.h
+    tests/Tests.h \
+    compiler/DeclarationConstructs.h
 
 DISTFILES += \
     script.txt \
