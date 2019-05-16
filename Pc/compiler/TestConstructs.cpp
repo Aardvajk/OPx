@@ -42,8 +42,6 @@ void TestConstructs::lookup(Context &c, bool get)
         throw Error(nn->location(), "lookup failed - expected: ", Lexer::encodeString(expected), " - result: ", Lexer::encodeString(result));
     }
 
-    std::cout << "lookup passed: " << Lexer::encodeString(expected) << "\n";
-
     c.scanner.consume(Token::Type::RightParen, true);
     c.scanner.consume(Token::Type::Semicolon, false);
 }

@@ -37,7 +37,8 @@ SOURCES += main.cpp \
     nodes/GlobalNode.cpp \
     symbols/SymPrinter.cpp \
     compiler/CommonConstructs.cpp \
-    compiler/TestConstructs.cpp
+    compiler/TestConstructs.cpp \
+    tests/Tests.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -65,7 +66,9 @@ HEADERS += \
     nodes/GlobalNode.h \
     symbols/SymPrinter.h \
     compiler/CommonConstructs.h \
-    compiler/TestConstructs.h
+    compiler/TestConstructs.h \
+    tests/Tests.h
 
 DISTFILES += \
-    script.txt
+    script.txt \
+    tests/scripts/lookup.txt

@@ -7,12 +7,19 @@
 
 #include "visitors/AstPrinter.h"
 
+#include "tests/Tests.h"
+
 #include <pcx/str.h>
 
 std::string banner(const std::string &title);
 
 int main(int argc, char *argv[])
 {
+    if(!runTests())
+    {
+        return -1;
+    }
+
     Context c;
 
     try

@@ -1,0 +1,22 @@
+namespace std
+{
+
+class bar;
+private class foo;
+
+}
+
+lookup(bar, "");
+lookup(foo, "");
+
+using namespace std;
+
+lookup(bar, "std.bar");
+lookup(foo, "private std.foo");
+
+class foo
+{
+}
+
+lookup(foo, "private std.foo, foo");
+lookup(.foo, "foo");
