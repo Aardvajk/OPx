@@ -15,7 +15,7 @@ bool hasScope(const Sym *sym)
         return sym->property("defined").value<bool>();
     }
 
-    return sym->type() == Sym::Type::Namespace;
+    return sym->type() == Sym::Type::Namespace || sym->type() == Sym::Type::Scope;
 }
 
 std::string attrs(Sym::Attrs attr)

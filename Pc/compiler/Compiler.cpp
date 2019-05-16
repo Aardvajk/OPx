@@ -23,8 +23,6 @@
 namespace
 {
 
-void construct(Context &c, BlockNode *block, bool get);
-
 Sym::Attrs defaultAttrs(Sym::Type type)
 {
     switch(type)
@@ -46,7 +44,7 @@ NodePtr scopeContents(Context &c, Location location, bool get)
     c.scanner.next(true);
     while(c.scanner.token().type() != Token::Type::RightBrace)
     {
-        construct(c, block, false);
+        Compiler::construct(c, block, false);
     }
 
     c.scanner.next(true);
@@ -197,7 +195,9 @@ void declarationConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool g
     }
 }
 
-void construct(Context &c, BlockNode *block, bool get)
+}
+
+void Compiler::construct(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.next(get);
     switch(tok.type())
@@ -210,14 +210,13 @@ void construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwPrivate: declarationConstruct(c, block, Sym::Attr::Private, true); break;
 
         case Token::Type::RwLookup: TestConstructs::lookup(c, true); break;
+        case Token::Type::RwTriggerError: TestConstructs::triggerError(c, block, true); break;
 
         default: idTest(c, false);
     }
 }
 
-}
-
-NodePtr compile(Context &c)
+NodePtr Compiler::compile(Context &c)
 {
     auto block = new BlockNode(Location());
     NodePtr n(block);

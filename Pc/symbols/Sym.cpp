@@ -74,7 +74,7 @@ pcx::any Sym::property(const std::string &name) const
 
 const char *Sym::toString(Type type)
 {
-    static const char *s[] = { "namespace", "class", "using", "using-scope", "(invalid)" };
+    static const char *s[] = { "namespace", "class", "using", "using-scope", "scope", "(invalid)" };
     return s[static_cast<int>(type)];
 }
 

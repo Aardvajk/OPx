@@ -74,4 +74,6 @@ HEADERS += \
 DISTFILES += \
     script.txt \
     tests/scripts/lookup.txt \
-    tests/scripts/aliases.txt
+    tests/scripts/aliases.txt \
+    tests/scripts/lookupfails.txt \
+    tests/scripts/ambiguous.txt

@@ -14,12 +14,14 @@ namespace
 
 bool runTest(const std::string &script)
 {
+    std::cout << "running test: " << script << "\n";
+
     Context c;
 
     try
     {
         c.open(pcx::str("C:/Projects/Px/Px/Pc/tests/scripts/", script, ".txt"));
-        compile(c);
+        Compiler::compile(c);
 
         return true;
     }
@@ -37,6 +39,8 @@ bool runTest(const std::string &script)
 
 bool runTests()
 {
+    std::cout << "== tests " << std::string(111, '=');
+
     std::vector<std::string> scripts;
 
     WIN32_FIND_DATA fd;

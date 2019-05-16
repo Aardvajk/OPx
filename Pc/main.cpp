@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
         std::cout << banner("");
 
-        auto n = compile(c);
+        auto n = Compiler::compile(c);
 
         std::cout << banner("symbols");
         SymPrinter::print(c.tree.root(), std::cout);

@@ -47,6 +47,24 @@ Token Scanner::consume(Token::Type type, bool get)
     return next(true);
 }
 
+void Scanner::recover(int braces, bool get)
+{
+    auto tok = next(get);
+    while(true)
+    {
+        switch(tok.type())
+        {
+            case Token::Type::LeftBrace: ++braces; break;
+            case Token::Type::RightBrace: if(--braces == 0){ next(true); return; } break;
+            case Token::Type::Eof: throw Error(tok.location(), "unable to recover");
+
+            default: break;
+        }
+
+        tok = next(true);
+    }
+}
+
 Token Scanner::token() const
 {
     return state.back().tok;

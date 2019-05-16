@@ -17,6 +17,7 @@ const char *Token::toString(Type type)
     switch(type)
     {
         case Type::Id: return "identifier";
+        case Type::StringLiteral: return "string literal";
 
         case Type::LeftBrace: return "left brace";
         case Type::RightBrace: return "right brace";
@@ -34,7 +35,8 @@ const char *Token::toString(Type type)
 Token::Type Token::reserved(const std::string &text)
 {
     static const char *s[] = { "class", "namespace", "using", "public", "private",
-                               "lookup", "" };
+                               "lookup", "trigger_error",
+                               "" };
 
     for(int i = 0; s[i][0]; ++i)
     {

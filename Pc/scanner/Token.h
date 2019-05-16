@@ -15,7 +15,7 @@ public:
         LeftBrace, RightBrace, LeftParen, RightParen,
         Dot, Comma, Semicolon, Assign,
         RwClass, RwNamespace, RwUsing, RwPublic, RwPrivate,
-        RwLookup,
+        RwLookup, RwTriggerError,
         Eof, Invalid
     };
 

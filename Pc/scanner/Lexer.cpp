@@ -70,10 +70,10 @@ Token Lexer::next(Source &source)
         return stringConstant(source, loc, s);
     }
 
-    if(std::isalpha(ch))
+    if(std::isalpha(ch) || ch == '_')
     {
         std::string s;
-        while(std::isalnum(ch))
+        while(std::isalnum(ch) || ch == '_')
         {
             s += char(ch);
             ch = source.get();

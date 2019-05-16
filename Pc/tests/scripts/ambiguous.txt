@@ -1,0 +1,15 @@
+namespace foo
+{
+    class bar;
+}
+
+using namespace foo;
+
+class bar;
+
+trigger_error("ambiguous - bar")
+{
+
+using woo = bar;
+
+}

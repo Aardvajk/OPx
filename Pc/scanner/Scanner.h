@@ -20,6 +20,8 @@ public:
     Token match(Token::Type type, bool get);
     Token consume(Token::Type type, bool get);
 
+    void recover(int braces, bool get);
+
     Token token() const;
 
 private:
