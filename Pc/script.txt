@@ -1,3 +1,10 @@
 namespace std
 {
+    class foo
+    {
+    }
 }
+
+using bar = std.foo;
+
+lookup(bar, "std.foo");

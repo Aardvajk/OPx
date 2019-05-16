@@ -1,0 +1,15 @@
+namespace std
+{
+    class foo
+    {
+        public class hoo;
+    }
+
+    using woo = foo.hoo;
+}
+
+using hoo = std;
+using bar = hoo.foo;
+
+lookup(bar, "std.foo");
+lookup(hoo.woo, "std.foo.hoo");

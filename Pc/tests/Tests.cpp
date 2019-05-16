@@ -7,6 +7,8 @@
 
 #include <pcx/str.h>
 
+#include <windows.h>
+
 namespace
 {
 
@@ -35,10 +37,25 @@ bool runTest(const std::string &script)
 
 bool runTests()
 {
-    const std::vector<std::string> scripts =
+    std::vector<std::string> scripts;
+
+    WIN32_FIND_DATA fd;
+    HANDLE hFind = FindFirstFile("C:/Projects/Px/Px/Pc/tests/scripts/*.txt", &fd);
+
+    if(hFind != INVALID_HANDLE_VALUE)
     {
-        "lookup"
-    };
+        do
+        {
+            if(!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+            {
+                std::string s(fd.cFileName);
+                scripts.push_back(s.substr(0, s.length() - 4));
+            }
+        }
+        while(FindNextFile(hFind, &fd));
+
+        FindClose(hFind);
+    }
 
     for(auto script: scripts)
     {

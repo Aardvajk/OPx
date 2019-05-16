@@ -15,10 +15,7 @@ std::string banner(const std::string &title);
 
 int main(int argc, char *argv[])
 {
-    if(!runTests())
-    {
-        return -1;
-    }
+    if(!runTests()) return -1;
 
     Context c;
 

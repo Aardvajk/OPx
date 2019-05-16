@@ -3,6 +3,8 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
+DEFINES -= UNICODE
+
 QMAKE_CXXFLAGS += -std=gnu++11
 
 QMAKE_LFLAGS += -Wl,--exclude-all-symbols
@@ -71,4 +73,5 @@ HEADERS += \
 
 DISTFILES += \
     script.txt \
-    tests/scripts/lookup.txt
+    tests/scripts/lookup.txt \
+    tests/scripts/aliases.txt
