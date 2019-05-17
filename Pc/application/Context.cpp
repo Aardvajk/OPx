@@ -4,6 +4,9 @@
 
 #include "nodes/Node.h"
 
+#include "types/Type.h"
+#include "types/TypeCompare.h"
+
 #include <pcx/scoped_ptr.h>
 
 #include <fstream>

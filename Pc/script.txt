@@ -1,16 +1,10 @@
 namespace std
 {
-    class int
-    {
-    }
+    class int;
 
-    class null
-    {
-    }
+    func a():int;
 }
 
-class bar
+func std.a(a:std.int, b:std.int):std.int
 {
 }
-
-ptr func(std.int, func(ptr ptr .bar):std.null):ptr ptr std.int;

@@ -43,7 +43,12 @@ SOURCES += main.cpp \
     tests/Tests.cpp \
     compiler/DeclarationConstructs.cpp \
     types/Type.cpp \
-    compiler/TypeConstructs.cpp
+    compiler/TypeConstructs.cpp \
+    compiler/VarConstructs.cpp \
+    types/TypeCache.cpp \
+    types/TypeCompare.cpp \
+    nodes/VarNode.cpp \
+    nodes/FuncNode.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -75,7 +80,12 @@ HEADERS += \
     tests/Tests.h \
     compiler/DeclarationConstructs.h \
     types/Type.h \
-    compiler/TypeConstructs.h
+    compiler/TypeConstructs.h \
+    compiler/VarConstructs.h \
+    types/TypeCache.h \
+    types/TypeCompare.h \
+    nodes/VarNode.h \
+    nodes/FuncNode.h
 
 DISTFILES += \
     script.txt \

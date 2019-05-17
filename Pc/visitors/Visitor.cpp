@@ -27,3 +27,11 @@ void Visitor::visit(IdNode &node)
 void Visitor::visit(DotNode &node)
 {
 }
+
+void Visitor::visit(VarNode &node)
+{
+}
+
+void Visitor::visit(FuncNode &node)
+{
+}

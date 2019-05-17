@@ -22,12 +22,7 @@ std::string toString(const Type &type)
     }
     else
     {
-        s += "func";
-    }
-
-    if(!type.args.empty())
-    {
-        s += "(" + pcx::join_str(type.args, ",", toString) + ")";
+        s += "func(" + pcx::join_str(type.args, ",", toString) + ")";
     }
 
     if(type.returnType)
@@ -42,6 +37,20 @@ std::string toString(const Type &type)
 
 Type::Type(Sym *sym) : sym(sym), ptr(0)
 {
+}
+
+Type *Type::clone() const
+{
+    auto r = new Type(sym);
+    r->ptr = ptr;
+
+    r->returnType = returnType ? returnType->clone() : nullptr;
+    for(auto &a: args)
+    {
+        r->args.push_back(a.clone());
+    }
+
+    return r;
 }
 
 std::string Type::text() const

@@ -2,6 +2,8 @@
 
 #include "symbols/Sym.h"
 
+#include "types/Type.h"
+
 #include <pcx/str.h>
 #include <pcx/join_str.h>
 
@@ -10,12 +12,25 @@ namespace
 
 bool hasScope(const Sym *sym)
 {
-    if(sym->type() == Sym::Type::Class)
+    if(sym->type() == Sym::Type::Class || sym->type() == Sym::Type::Func)
     {
         return sym->property("defined").value<bool>();
     }
 
     return sym->type() == Sym::Type::Namespace || sym->type() == Sym::Type::Scope;
+}
+
+std::string typeToString(const Sym *sym)
+{
+    if(sym->type() == Sym::Type::Var)
+    {
+        if(sym->property("argument").value<bool>())
+        {
+            return "arg";
+        }
+    }
+
+    return Sym::toString(sym->type());
 }
 
 std::string attrs(Sym::Attrs attr)
@@ -50,13 +65,18 @@ void dump(int tab, const Sym *sym, std::ostream &os)
         os << as << " ";
     }
 
-    os << Sym::toString(sym->type()) << " [" << sym << "]" << prepend(sym->fullname()) << prependParen(sym->name());
+    os << typeToString(sym) << " [" << sym << "]" << prepend(sym->fullname()) << prependParen(sym->name());
 
     if(auto pr = sym->property("proxy"))
     {
         auto ps = pr.to<const Sym*>();
 
         os << " proxy" << prepend(ps->fullname()) << " [" << ps << "]";
+    }
+
+    if(auto pr = sym->property("type"))
+    {
+        os << " type " << pr.to<const Type*>()->text();
     }
 
     os << "\n";

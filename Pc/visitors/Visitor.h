@@ -7,6 +7,8 @@ class ClassNode;
 class GlobalNode;
 class IdNode;
 class DotNode;
+class VarNode;
+class FuncNode;
 
 class Visitor
 {
@@ -19,6 +21,8 @@ public:
     virtual void visit(GlobalNode &node);
     virtual void visit(IdNode &node);
     virtual void visit(DotNode &node);
+    virtual void visit(VarNode &node);
+    virtual void visit(FuncNode &node);
 };
 
 #endif // VISITOR_H

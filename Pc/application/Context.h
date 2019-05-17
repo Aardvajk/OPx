@@ -6,9 +6,12 @@
 
 #include "symbols/SymTree.h"
 
+#include "types/TypeCache.h"
+
 #include "visitors/SymFinder.h"
 
 class Node;
+class Type;
 
 class Context
 {
@@ -28,6 +31,7 @@ public:
     Scanner scanner;
 
     SymTree tree;
+    TypeCache types;
 };
 
 #endif // CONTEXT_H

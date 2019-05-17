@@ -13,6 +13,8 @@ class Type
 public:
     explicit Type(Sym *sym = nullptr);
 
+    Type *clone() const;
+
     std::string text() const;
 
     Sym *sym;

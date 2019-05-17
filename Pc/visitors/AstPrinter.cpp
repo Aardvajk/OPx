@@ -6,8 +6,12 @@
 #include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
+#include "nodes/VarNode.h"
+#include "nodes/FuncNode.h"
 
 #include "symbols/Sym.h"
+
+#include "types/Type.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -68,6 +72,20 @@ void AstPrinter::visit(DotNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.child->accept(*this);
+}
+
+void AstPrinter::visit(VarNode &node)
+{
+    tab() << "var " << node.sym->fullname() << ":" << node.sym->property("type").to<const Type*>()->text() << "\n";
+}
+
+void AstPrinter::visit(FuncNode &node)
+{
+    tab() << "func " << node.sym->fullname() << ":" << node.sym->property("type").to<const Type*>()->text() << "\n";
+    if(node.block)
+    {
+        node.block->accept(*this);
+    }
 }
 
 std::ostream &AstPrinter::tab() const

@@ -11,29 +11,11 @@
 
 #include "visitors/NameVisitors.h"
 
-#include "compiler/Compiler.h"
 #include "compiler/CommonConstructs.h"
+#include "compiler/VarConstructs.h"
 
 namespace
 {
-
-NodePtr scopeContents(Context &c, Location location, bool get)
-{
-    auto block = new BlockNode(location);
-    NodePtr nn(block);
-
-    c.scanner.match(Token::Type::LeftBrace, get);
-
-    c.scanner.next(true);
-    while(c.scanner.token().type() != Token::Type::RightBrace)
-    {
-        Compiler::construct(c, block, false);
-    }
-
-    c.scanner.next(true);
-
-    return nn;
-}
 
 Sym *declarationSym(Context &c, Sym::Type type, Sym::Attrs attrs, Node *nn)
 {
@@ -49,6 +31,11 @@ Sym *declarationSym(Context &c, Sym::Type type, Sym::Attrs attrs, Node *nn)
         return c.tree.current()->add(new Sym(type, attrs, nn->location(), nn->text()));
     }
 
+    if(sym->type() != type)
+    {
+        throw Error(nn->location(), Sym::toString(type), " expected - ", nn->text());
+    }
+
     return sym;
 }
 
@@ -61,7 +48,7 @@ void namespaceConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
     block->nodes.push_back(n);
 
     auto g = c.tree.open(sym);
-    n->block = scopeContents(c, nn->location(), false);
+    n->block = CommonConstructs::scopeContents(c, nn->location(), false);
 }
 
 void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
@@ -80,7 +67,7 @@ void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
         block->nodes.push_back(n);
 
         auto g = c.tree.open(sym);
-        n->block = scopeContents(c, nn->location(), false);
+        n->block = CommonConstructs::scopeContents(c, nn->location(), false);
 
         sym->setProperty("defined", true);
     }
@@ -142,7 +129,7 @@ void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
 
 }
 
-void DeclarationConstructs::declarationConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
+void DeclarationConstructs::declaration(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 {
     auto tok = c.scanner.next(get);
     switch(tok.type())
@@ -151,6 +138,9 @@ void DeclarationConstructs::declarationConstruct(Context &c, BlockNode *block, S
         case Token::Type::RwClass: classConstruct(c, block, attrs, true); break;
 
         case Token::Type::RwUsing: usingConstruct(c, attrs, true); break;
+
+        case Token::Type::RwVar: VarConstructs::var(c, block, attrs, true); break;
+        case Token::Type::RwFunc: VarConstructs::func(c, block, attrs, true); break;
 
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }

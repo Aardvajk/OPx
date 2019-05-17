@@ -16,6 +16,8 @@ public:
     virtual void visit(GlobalNode &node) override;
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
+    virtual void visit(VarNode &node) override;
+    virtual void visit(FuncNode &node) override;
 
 private:
     std::ostream &tab() const;

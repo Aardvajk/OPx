@@ -8,6 +8,16 @@
 namespace
 {
 
+void args(Context &c, pcx::ptr_vector<Type> &v, bool get)
+{
+    v.push_back(TypeConstructs::type(c, get).release());
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        args(c, v, true);
+    }
+}
+
 TypePtr primary(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -16,13 +26,11 @@ TypePtr primary(Context &c, bool get)
     {
         TypePtr tn(new Type());
 
-        c.scanner.match(Token::Type::LeftParen, true);
-
-        do
+        c.scanner.consume(Token::Type::LeftParen, true);
+        if(c.scanner.token().type() != Token::Type::RightParen)
         {
-            tn->args.push_back(TypeConstructs::type(c, true).release());
+            args(c, tn->args, false);
         }
-        while(c.scanner.token().type() == Token::Type::Comma);
 
         c.scanner.consume(Token::Type::RightParen, false);
 

@@ -35,7 +35,7 @@ const char *Token::toString(Type type)
 
 Token::Type Token::reserved(const std::string &text)
 {
-    static const char *s[] = { "class", "namespace", "using", "public", "private", "func", "ptr",
+    static const char *s[] = { "class", "namespace", "using", "public", "private", "var", "func", "ptr",
                                "lookup", "trigger_error",
                                "" };
 
