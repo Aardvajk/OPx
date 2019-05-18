@@ -23,6 +23,8 @@ public:
     Sym *search(SymFinder::Policy policy, Node *name);
     Sym *find(SymFinder::Policy policy, Node *name);
 
+    Sym *matchFunction(SymFinder::Policy policy, Node *name, const Type *type);
+
     Sym *searchLocal(const std::string &name) const;
 
     std::string assertUnique(Location location, const std::string &name) const;

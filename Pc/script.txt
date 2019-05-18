@@ -1,10 +1,8 @@
-namespace std
+trigger_error("not found - std.a")
 {
-    class int;
 
-    func a():int;
+namespace std.a
+{
 }
 
-func std.a(a:std.int, b:std.int):std.int
-{
 }

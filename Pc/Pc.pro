@@ -92,4 +92,5 @@ DISTFILES += \
     tests/scripts/lookup.txt \
     tests/scripts/aliases.txt \
     tests/scripts/lookupfails.txt \
-    tests/scripts/ambiguous.txt
+    tests/scripts/ambiguous.txt \
+    tests/scripts/funclookup.txt

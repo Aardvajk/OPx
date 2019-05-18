@@ -57,6 +57,38 @@ Sym *Context::find(SymFinder::Policy policy, Node *name)
     return sym;
 }
 
+Sym *Context::matchFunction(SymFinder::Policy policy, Node *name, const Type *type)
+{
+    SymFinder sf(policy, tree.root(), tree.current());
+    name->accept(sf);
+
+    std::vector<SymFinder::Result> r;
+    for(auto s: sf.result())
+    {
+        if(s.sym->type() != Sym::Type::Func)
+        {
+            throw Error(name->location(), "function expected - ", s.sym->fullname());
+        }
+
+        if(TypeCompare::args(type, s.sym->property("type").to<const Type*>()))
+        {
+            r.push_back(s);
+        }
+    }
+
+    if(r.size() > 1)
+    {
+        throw Error(name->location(), "ambiguous - ", name->text());
+    }
+
+    if(!r.empty() && !r.front().accessible)
+    {
+        throw Error(name->location(), "not accessible - ", r.front().sym->fullname());
+    }
+
+    return r.empty() ? nullptr : r.front().sym;
+}
+
 Sym *Context::searchLocal(const std::string &name) const
 {
     for(auto s: tree.current()->children())

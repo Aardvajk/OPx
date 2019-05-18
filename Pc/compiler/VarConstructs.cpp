@@ -8,10 +8,13 @@
 #include "nodes/FuncNode.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 #include "compiler/Compiler.h"
 #include "compiler/CommonConstructs.h"
 #include "compiler/TypeConstructs.h"
+
+#include "visitors/NameVisitors.h"
 
 namespace
 {
@@ -84,13 +87,24 @@ void VarConstructs::func(Context &c, BlockNode *block, Sym::Attrs attrs, bool ge
         tn->args.push_back(a.property("type").to<const Type*>()->clone());
     }
 
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Func, attrs, nn->location(), nn->text()));
-    for(std::size_t i = 0; i < av.size(); ++i)
+    auto sym = c.matchFunction(SymFinder::Policy::Limited, nn.get(), tn.get());
+    if(!sym)
     {
-        sym->add(av.release(i));
-    }
+        if(!NameVisitors::isNameSimple(nn.get()))
+        {
+            throw Error(nn->location(), "not found - ", nn->text());
+        }
 
-    sym->setProperty("type", c.types.insert(tn.get()));
+        sym = c.tree.current()->add(new Sym(Sym::Type::Func, attrs, nn->location(), nn->text()));
+        sym->setProperty("type", c.types.insert(tn.get()));
+    }
+    else
+    {
+        if(!TypeCompare::exact(sym->property("type").to<const Type*>()->returnType.get(), tn->returnType.get()))
+        {
+            throw Error(nn->location(), "mismatched return types - ", sym->fullname());
+        }
+    }
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
@@ -103,6 +117,12 @@ void VarConstructs::func(Context &c, BlockNode *block, Sym::Attrs attrs, bool ge
         block->nodes.push_back(n);
 
         auto g = c.tree.open(sym);
+
+        for(std::size_t i = 0; i < av.size(); ++i)
+        {
+            sym->add(av.release(i));
+        }
+
         n->block = CommonConstructs::scopeContents(c, nn->location(), false);
 
         sym->setProperty("defined", true);

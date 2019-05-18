@@ -1,0 +1,36 @@
+namespace std
+{
+    class int;
+    class float;
+
+    func a(c:int, d:int):int
+    {
+    }
+
+    func a(c:int):float;
+    func a():int;
+}
+
+using namespace std;
+
+func a(a:std.int, b:std.int):std.int
+{
+}
+
+lookup(a, "std.a, std.a, std.a, a");
+
+trigger_error("already defined - std.a")
+{
+
+func std.a(a:std.int, b:std.int):std.int
+{
+}
+
+}
+
+trigger_error("mismatched return types - std.a")
+{
+
+func std.a(c:std.int):std.int;
+
+}
