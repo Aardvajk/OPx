@@ -83,6 +83,17 @@ void VarConstructs::var(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
 
     sym->setProperty("type", type);
 
+    if(c.tree.current()->type() == Sym::Type::Class)
+    {
+        auto vs = type->size();
+        if(!vs)
+        {
+            throw Error(tok.location(), "use of forwarded type - ", type->text());
+        }
+
+        c.tree.current()->setProperty("size", c.tree.current()->property("size").value<std::size_t>() + *vs);
+    }
+
     block->nodes.push_back(new VarNode(tok.location(), sym, value));
 
     if(c.scanner.token().type() == Token::Type::Comma)

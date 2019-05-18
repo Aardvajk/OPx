@@ -3,6 +3,7 @@
 
 #include <pcx/scoped_ptr.h>
 #include <pcx/ptr_vector.h>
+#include <pcx/optional.h>
 
 #include <string>
 
@@ -16,6 +17,7 @@ public:
     Type *clone() const;
 
     std::string text() const;
+    pcx::optional<std::size_t> size() const;
 
     Sym *sym;
     unsigned ptr;

@@ -57,3 +57,21 @@ std::string Type::text() const
 {
     return toString(*this);
 }
+
+pcx::optional<std::size_t> Type::size() const
+{
+    if(ptr)
+    {
+        return 8;
+    }
+
+    if(sym)
+    {
+        if(auto pr = sym->property("size"))
+        {
+            return pr.to<std::size_t>();
+        }
+    }
+
+    return { };
+}

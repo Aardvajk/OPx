@@ -1,7 +1,16 @@
-func a(:std.int, b:std.null, :std.null):std.int
+class foo
 {
-}
+    class bar;
 
-func b(:std.int, :std.null)
-{
+    var a:std.int;
+    var b:std.int;
+    var c:ptr bar;
+
+    class bar
+    {
+        var a:std.int;
+    }
+
+    var d:bar;
+    var e:std.null;
 }

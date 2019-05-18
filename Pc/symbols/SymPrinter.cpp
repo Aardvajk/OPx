@@ -79,6 +79,11 @@ void dump(int tab, const Sym *sym, std::ostream &os)
         os << " type " << pr.to<const Type*>()->text();
     }
 
+    if(auto pr = sym->property("size"))
+    {
+        os << " size " << pr.to<std::size_t>();
+    }
+
     os << "\n";
 
     if(hasScope(sym))
