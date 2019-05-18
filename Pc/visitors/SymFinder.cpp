@@ -95,5 +95,8 @@ void SymFinder::visit(DotNode &node)
         }
     }
 
-    node.child->accept(*this);
+    if(!scopes.empty())
+    {
+        node.child->accept(*this);
+    }
 }

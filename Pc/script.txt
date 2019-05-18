@@ -1,8 +1,17 @@
-trigger_error("not found - std.a")
+namespace std
 {
 
-namespace std.a
+namespace foo
+{
+
+class bar
 {
 }
 
+}
+
+}
+
+namespace std.foo
+{
 }

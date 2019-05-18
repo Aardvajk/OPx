@@ -1,0 +1,30 @@
+namespace foo
+{
+
+class bar
+{
+}
+
+}
+
+trigger_error("already defined - foo.bar")
+{
+
+class foo.bar
+{
+}
+
+}
+
+trigger_error("not found - std.foo")
+{
+
+class std.foo;
+
+}
+
+using namespace foo;
+
+class bar;
+
+lookup(bar, "foo.bar, bar");

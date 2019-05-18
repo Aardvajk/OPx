@@ -33,7 +33,7 @@ Sym *declarationSym(Context &c, Sym::Type type, Sym::Attrs attrs, Node *nn)
 
     if(sym->type() != type)
     {
-        throw Error(nn->location(), Sym::toString(type), " expected - ", nn->text());
+        throw Error(nn->location(), Sym::toString(type), " expected - ", sym->fullname());
     }
 
     return sym;
