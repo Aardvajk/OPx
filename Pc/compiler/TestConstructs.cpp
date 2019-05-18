@@ -41,7 +41,11 @@ void TestConstructs::lookup(Context &c, bool get)
 
     auto result = pcx::join_str(sf.result(), ", ", formatResult);
 
-    if(result != expected)
+    if(expected == "*")
+    {
+        std::cout << "lookup " << nn->text() << ": " << result << "\n";;
+    }
+    else if(result != expected)
     {
         throw Error(nn->location(), "lookup failed - expected: ", Lexer::encodeString(expected), " - result: ", Lexer::encodeString(result));
     }

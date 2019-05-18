@@ -46,6 +46,11 @@ void findFirst(SymFinder::Policy policy, Sym *start, Sym *scope, const std::stri
             return;
         }
 
+        if(policy == SymFinder::Policy::Limited && Sym::isPrimaryScope(scope->type()))
+        {
+            return;
+        }
+
         scope = scope->parent();
     }
 }

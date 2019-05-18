@@ -52,7 +52,7 @@ public:
     pcx::any property(const std::string &name) const;
 
     static const char *toString(Type type);
-    static bool isImportableScope(Type type);
+    static bool isPrimaryScope(Type type);
     static Attrs defaultAttrs(Type type);
 
 private:

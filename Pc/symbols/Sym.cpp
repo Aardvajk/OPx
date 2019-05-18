@@ -78,7 +78,7 @@ const char *Sym::toString(Type type)
     return s[static_cast<int>(type)];
 }
 
-bool Sym::isImportableScope(Type type)
+bool Sym::isPrimaryScope(Type type)
 {
     return type == Type::Namespace || type == Type::Class;
 }

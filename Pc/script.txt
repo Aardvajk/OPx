@@ -1,17 +1,14 @@
-namespace std
-{
-
 namespace foo
 {
+    class bar
+    {
+    }
+}
 
 class bar
 {
 }
 
-}
+using namespace foo;
 
-}
-
-namespace std.foo
-{
-}
+lookup(bar, "*");

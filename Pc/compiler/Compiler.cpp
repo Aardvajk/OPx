@@ -35,10 +35,10 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwClass:
         case Token::Type::RwUsing:
         case Token::Type::RwVar:
-        case Token::Type::RwFunc: DeclarationConstructs::declaration(c, block, Sym::defaultAttrs(c.tree.current()->type()), false); break;
+        case Token::Type::RwFunc: DeclarationConstructs::entity(c, block, Sym::defaultAttrs(c.tree.current()->type()), false); break;
 
-        case Token::Type::RwPublic: DeclarationConstructs::declaration(c, block, Sym::Attr::Public, true); break;
-        case Token::Type::RwPrivate: DeclarationConstructs::declaration(c, block, Sym::Attr::Private, true); break;
+        case Token::Type::RwPublic: DeclarationConstructs::entity(c, block, Sym::Attr::Public, true); break;
+        case Token::Type::RwPrivate: DeclarationConstructs::entity(c, block, Sym::Attr::Private, true); break;
 
         case Token::Type::RwLookup: TestConstructs::lookup(c, true); break;
         case Token::Type::RwTriggerError: TestConstructs::triggerError(c, block, true); break;

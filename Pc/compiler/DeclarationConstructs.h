@@ -9,7 +9,7 @@ class BlockNode;
 namespace DeclarationConstructs
 {
 
-void declaration(Context &c, BlockNode *block, Sym::Attrs attrs, bool get);
+void entity(Context &c, BlockNode *block, Sym::Attrs attrs, bool get);
 
 }
 

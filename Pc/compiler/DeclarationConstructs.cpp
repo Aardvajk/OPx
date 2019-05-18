@@ -82,7 +82,7 @@ void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
     auto nn = CommonConstructs::name(c, get);
     auto proxy = c.find(SymFinder::Policy::Full, nn.get());
 
-    if(!Sym::isImportableScope(proxy->type()))
+    if(!Sym::isPrimaryScope(proxy->type()))
     {
         throw Error(nn->location(), "scope expected - ", proxy->fullname());
     }
@@ -129,7 +129,7 @@ void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
 
 }
 
-void DeclarationConstructs::declaration(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
+void DeclarationConstructs::entity(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
 {
     auto tok = c.scanner.next(get);
     switch(tok.type())
