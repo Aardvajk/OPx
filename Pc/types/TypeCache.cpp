@@ -19,3 +19,8 @@ const Type *TypeCache::insert(const Type *type)
     v.push_back(type->clone());
     return v.back_ptr();
 }
+
+const Type *TypeCache::insert(const Type &type)
+{
+    return insert(&type);
+}

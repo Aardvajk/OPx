@@ -1,4 +1,4 @@
-namespace std
+namespace stdx
 {
 
 class bar;
@@ -9,14 +9,14 @@ private class foo;
 lookup(bar, "");
 lookup(foo, "");
 
-using namespace std;
+using namespace stdx;
 
-lookup(bar, "std.bar");
-lookup(foo, "private std.foo");
+lookup(bar, "stdx.bar");
+lookup(foo, "private stdx.foo");
 
 class foo
 {
 }
 
-lookup(foo, "private std.foo, foo");
+lookup(foo, "private stdx.foo, foo");
 lookup(.foo, "foo");

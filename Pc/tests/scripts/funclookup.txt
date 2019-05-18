@@ -1,4 +1,4 @@
-namespace std
+namespace stdx
 {
     class int;
     class float;
@@ -11,26 +11,26 @@ namespace std
     func a():int;
 }
 
-using namespace std;
+using namespace stdx;
 
-func a(a:std.int, b:std.int):std.int
+func a(a:stdx.int, b:stdx.int):stdx.int
 {
 }
 
-lookup(a, "std.a, std.a, std.a, a");
+lookup(a, "stdx.a, stdx.a, stdx.a, a");
 
-trigger_error("already defined - std.a")
+trigger_error("already defined - stdx.a")
 {
 
-func std.a(a:std.int, b:std.int):std.int
+func stdx.a(a:stdx.int, b:stdx.int):stdx.int
 {
 }
 
 }
 
-trigger_error("mismatched return types - std.a")
+trigger_error("mismatched return types - stdx.a")
 {
 
-func std.a(c:std.int):std.int;
+func stdx.a(c:stdx.int):stdx.int;
 
 }

@@ -35,3 +35,7 @@ void Visitor::visit(VarNode &node)
 void Visitor::visit(FuncNode &node)
 {
 }
+
+void Visitor::visit(IntLiteralNode &node)
+{
+}

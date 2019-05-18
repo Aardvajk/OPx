@@ -24,6 +24,19 @@ Sym *Sym::resolved()
     return this;
 }
 
+Sym *Sym::child(const std::string &name)
+{
+    for(auto s: children())
+    {
+        if(s->name() == name)
+        {
+            return s;
+        }
+    }
+
+    return nullptr;
+}
+
 void Sym::setProperty(const std::string &name, pcx::any value)
 {
     pm[name] = value;
@@ -74,13 +87,18 @@ pcx::any Sym::property(const std::string &name) const
 
 const char *Sym::toString(Type type)
 {
-    static const char *s[] = { "namespace", "class", "using", "using-scope", "scope", "var", "func", "(invalid)" };
+    static const char *s[] = { "namespace", "primitive", "class", "using", "using-scope", "scope", "var", "func", "(invalid)" };
     return s[static_cast<int>(type)];
 }
 
 bool Sym::isPrimaryScope(Type type)
 {
     return type == Type::Namespace || type == Type::Class;
+}
+
+bool Sym::isType(Type type)
+{
+    return type == Type::Primitive || type == Type::Class;
 }
 
 Sym::Attrs Sym::defaultAttrs(Type type)

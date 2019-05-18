@@ -15,7 +15,7 @@ class Sym
 public:
     enum class Type
     {
-        Namespace, Class, Using, UsingScope, Scope, Var, Func, Invalid
+        Namespace, Primitive, Class, Using, UsingScope, Scope, Var, Func, Invalid
     };
 
     enum class Attr
@@ -30,6 +30,7 @@ public:
 
     Sym *add(Sym *sym);
     Sym *resolved();
+    Sym *child(const std::string &name);
 
     void setProperty(const std::string &name, pcx::any value);
 
@@ -53,6 +54,7 @@ public:
 
     static const char *toString(Type type);
     static bool isPrimaryScope(Type type);
+    static bool isType(Type type);
     static Attrs defaultAttrs(Type type);
 
 private:

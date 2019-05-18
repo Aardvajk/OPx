@@ -1,4 +1,4 @@
-namespace std
+namespace stdx
 {
     class foo
     {
@@ -8,8 +8,8 @@ namespace std
     using woo = foo.hoo;
 }
 
-using hoo = std;
+using hoo = stdx;
 using bar = hoo.foo;
 
-lookup(bar, "std.foo");
-lookup(hoo.woo, "std.foo.hoo");
+lookup(bar, "stdx.foo");
+lookup(hoo.woo, "stdx.foo.hoo");

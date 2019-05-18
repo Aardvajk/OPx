@@ -12,6 +12,7 @@
 
 #include "visitors/AstPrinter.h"
 #include "visitors/SymFinder.h"
+#include "visitors/NameVisitors.h"
 
 #include <pcx/str.h>
 #include <pcx/join_str.h>
@@ -43,7 +44,7 @@ void TestConstructs::lookup(Context &c, bool get)
 
     if(expected == "*")
     {
-        std::cout << "lookup " << nn->text() << ": " << result << "\n";;
+        std::cout << "lookup " << NameVisitors::prettyName(nn.get()) << ": " << result << "\n";;
     }
     else if(result != expected)
     {

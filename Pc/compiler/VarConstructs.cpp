@@ -13,6 +13,7 @@
 #include "compiler/Compiler.h"
 #include "compiler/CommonConstructs.h"
 #include "compiler/TypeConstructs.h"
+#include "compiler/Expr.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -21,10 +22,18 @@ namespace
 
 void args(Context &c, pcx::ptr_vector<Sym> &syms, bool get)
 {
-    auto tok = c.scanner.match(Token::Type::Id, get);
-    c.scanner.match(Token::Type::Colon, true);
+    Token name;
 
-    auto sym = new Sym(Sym::Type::Var, { }, tok.location(), tok.text());
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::Id)
+    {
+        name = tok;
+        c.scanner.next(true);
+    }
+
+    c.scanner.match(Token::Type::Colon, false);
+
+    auto sym = new Sym(Sym::Type::Var, { }, tok.location(), name.text());
     syms.push_back(sym);
 
     sym->setProperty("argument", true);
@@ -48,12 +57,33 @@ void VarConstructs::var(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
 
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, attrs, tok.location(), tok.text()));
 
-    c.scanner.match(Token::Type::Colon, true);
+    NodePtr value;
+    const Type *type = nullptr;
 
-    auto tn = TypeConstructs::type(c, true);
-    sym->setProperty("type", c.types.insert(tn.get()));
+    c.scanner.next(true);
+    if(c.scanner.token().type() == Token::Type::Colon)
+    {
+        auto tn = TypeConstructs::type(c, true);
+        type = c.types.insert(tn.get());
+    }
 
-    block->nodes.push_back(new VarNode(tok.location(), sym));
+    if(c.scanner.token().type() == Token::Type::Assign)
+    {
+        value = Expr::get(c, true);
+        if(!type)
+        {
+            type = c.identifyType(value.get());
+        }
+    }
+
+    if(!type)
+    {
+        throw Error(tok.location(), "no type - ", tok.text());
+    }
+
+    sym->setProperty("type", type);
+
+    block->nodes.push_back(new VarNode(tok.location(), sym, value));
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {
@@ -77,10 +107,16 @@ void VarConstructs::func(Context &c, BlockNode *block, Sym::Attrs attrs, bool ge
     }
 
     c.scanner.consume(Token::Type::RightParen, false);
-    c.scanner.match(Token::Type::Colon, false);
 
     TypePtr tn(new Type());
-    tn->returnType = TypeConstructs::type(c, true).release();
+    if(c.scanner.token().type() == Token::Type::Colon)
+    {
+        tn->returnType = TypeConstructs::type(c, true).release();
+    }
+    else
+    {
+        tn->returnType = new Type(c.tree.root()->child("std")->child("null"));
+    }
 
     for(auto &a: av)
     {
@@ -92,10 +128,10 @@ void VarConstructs::func(Context &c, BlockNode *block, Sym::Attrs attrs, bool ge
     {
         if(!NameVisitors::isNameSimple(nn.get()))
         {
-            throw Error(nn->location(), "not found - ", nn->text());
+            throw Error(nn->location(), "not found - ", NameVisitors::prettyName(nn.get()));
         }
 
-        sym = c.tree.current()->add(new Sym(Sym::Type::Func, attrs, nn->location(), nn->text()));
+        sym = c.tree.current()->add(new Sym(Sym::Type::Func, attrs, nn->location(), NameVisitors::prettyName(nn.get())));
         sym->setProperty("type", c.types.insert(tn.get()));
     }
     else

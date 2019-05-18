@@ -44,7 +44,7 @@ TypePtr primary(Context &c, bool get)
         auto nn = CommonConstructs::name(c, false);
 
         auto sym = c.find(SymFinder::Policy::Full, nn.get());
-        if(sym->type() != Sym::Type::Class)
+        if(!Sym::isType(sym->type()))
         {
             throw Error(nn->location(), "type expected - ", sym->fullname());
         }

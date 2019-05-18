@@ -25,10 +25,10 @@ Sym *declarationSym(Context &c, Sym::Type type, Sym::Attrs attrs, Node *nn)
     {
         if(!NameVisitors::isNameSimple(nn))
         {
-            throw Error(nn->location(), "not found - ", nn->text());
+            throw Error(nn->location(), "not found - ", NameVisitors::prettyName(nn));
         }
 
-        return c.tree.current()->add(new Sym(type, attrs, nn->location(), nn->text()));
+        return c.tree.current()->add(new Sym(type, attrs, nn->location(), NameVisitors::prettyName(nn)));
     }
 
     if(sym->type() != type)
@@ -100,7 +100,7 @@ void usingAliasConstruct(Context &c, Sym::Attrs attrs, bool get)
     {
         if(!NameVisitors::isNameSimple(nn.get()))
         {
-            throw Error(nn->location(), "id expected - ", nn->text());
+            throw Error(nn->location(), "id expected - ", NameVisitors::prettyName(nn.get()));
         }
 
         an = CommonConstructs::name(c, true);

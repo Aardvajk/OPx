@@ -11,7 +11,6 @@ public:
     IdNode(Location location, std::string name) : Node(location), name(std::move(name)) { }
 
     virtual void accept(Visitor &v) override;
-    virtual std::string text() const override;
 
     std::string name;
 };

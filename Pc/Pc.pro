@@ -48,7 +48,10 @@ SOURCES += main.cpp \
     types/TypeCache.cpp \
     types/TypeCompare.cpp \
     nodes/VarNode.cpp \
-    nodes/FuncNode.cpp
+    nodes/FuncNode.cpp \
+    compiler/Expr.cpp \
+    nodes/IntLiteralNode.cpp \
+    visitors/TypeVisitor.cpp
 
 HEADERS += \
     scanner/Source.h \
@@ -85,7 +88,10 @@ HEADERS += \
     types/TypeCache.h \
     types/TypeCompare.h \
     nodes/VarNode.h \
-    nodes/FuncNode.h
+    nodes/FuncNode.h \
+    compiler/Expr.h \
+    nodes/IntLiteralNode.h \
+    visitors/TypeVisitor.h
 
 DISTFILES += \
     script.txt \
@@ -94,4 +100,5 @@ DISTFILES += \
     tests/scripts/lookupfails.txt \
     tests/scripts/ambiguous.txt \
     tests/scripts/funclookup.txt \
-    tests/scripts/classlookup.txt
+    tests/scripts/classlookup.txt \
+    tests/scripts/lookupfwd.txt

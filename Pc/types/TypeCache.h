@@ -11,6 +11,7 @@ public:
     TypeCache();
 
     const Type *insert(const Type *type);
+    const Type *insert(const Type &type);
 
 private:
     pcx::ptr_vector<Type> v;

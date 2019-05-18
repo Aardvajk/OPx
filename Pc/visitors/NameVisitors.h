@@ -42,6 +42,23 @@ private:
 
 std::string lastIdOfName(Node *node);
 
+class PrettyName : public Visitor
+{
+public:
+    PrettyName();
+
+    std::string result() const { return r; }
+
+    virtual void visit(GlobalNode &node) override;
+    virtual void visit(IdNode &node) override;
+    virtual void visit(DotNode &node) override;
+
+private:
+    std::string r;
+};
+
+std::string prettyName(Node *node);
+
 }
 
 #endif // NAMEVISITORS_H

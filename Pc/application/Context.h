@@ -29,6 +29,8 @@ public:
 
     std::string assertUnique(Location location, const std::string &name) const;
 
+    const Type *identifyType(Node *node);
+
     SourceList sources;
     Scanner scanner;
 

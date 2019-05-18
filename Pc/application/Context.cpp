@@ -7,12 +7,19 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
+#include "visitors/NameVisitors.h"
+#include "visitors/TypeVisitor.h"
+
 #include <pcx/scoped_ptr.h>
 
 #include <fstream>
 
 Context::Context()
 {
+    auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, Sym::Attr::Public, { }, "std"));
+
+    ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "null"))->setProperty("size", std::size_t(0));
+    ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "int"))->setProperty("size", std::size_t(4));
 }
 
 void Context::open(const std::string &path)
@@ -34,7 +41,7 @@ Sym *Context::search(SymFinder::Policy policy, Node *name)
     auto r = sf.result();
     if(r.size() > 1)
     {
-        throw Error(name->location(), "ambiguous - ", name->text());
+        throw Error(name->location(), "ambiguous - ", NameVisitors::prettyName(name));
     }
 
     if(!r.empty() && !r.front().accessible)
@@ -51,7 +58,7 @@ Sym *Context::find(SymFinder::Policy policy, Node *name)
 
     if(!sym)
     {
-        throw Error(name->location(), "not found - ", name->text());
+        throw Error(name->location(), "not found - ", NameVisitors::prettyName(name));
     }
 
     return sym;
@@ -78,7 +85,7 @@ Sym *Context::matchFunction(SymFinder::Policy policy, Node *name, const Type *ty
 
     if(r.size() > 1)
     {
-        throw Error(name->location(), "ambiguous - ", name->text());
+        throw Error(name->location(), "ambiguous - ", NameVisitors::prettyName(name));
     }
 
     if(!r.empty() && !r.front().accessible)
@@ -110,4 +117,17 @@ std::string Context::assertUnique(Location location, const std::string &name) co
     }
 
     return name;
+}
+
+const Type *Context::identifyType(Node *node)
+{
+    TypeVisitor tn(*this);
+    node->accept(tn);
+
+    if(!tn.result())
+    {
+        throw Error(node->location(), "type expected - ", NameVisitors::prettyName(node));
+    }
+
+    return tn.result();
 }

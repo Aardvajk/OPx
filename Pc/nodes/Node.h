@@ -17,7 +17,6 @@ public:
     virtual ~Node();
 
     virtual void accept(Visitor &v) = 0;
-    virtual std::string text() const;
 
     Location location() const { return n; }
 

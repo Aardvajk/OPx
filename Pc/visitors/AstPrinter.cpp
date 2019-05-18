@@ -8,6 +8,7 @@
 #include "nodes/DotNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/IntLiteralNode.h"
 
 #include "symbols/Sym.h"
 
@@ -77,7 +78,12 @@ void AstPrinter::visit(DotNode &node)
 void AstPrinter::visit(VarNode &node)
 {
     tab() << "var " << node.sym->fullname() << ":" << node.sym->property("type").to<const Type*>()->text() << "\n";
-}
+    if(node.value)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.value->accept(*this);
+    }
+ }
 
 void AstPrinter::visit(FuncNode &node)
 {
@@ -86,6 +92,11 @@ void AstPrinter::visit(FuncNode &node)
     {
         node.block->accept(*this);
     }
+}
+
+void AstPrinter::visit(IntLiteralNode &node)
+{
+    tab() << "int literal " << node.value << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

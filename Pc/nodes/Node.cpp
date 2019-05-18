@@ -8,8 +8,3 @@ Node::~Node()
 {
 }
 
-std::string Node::text() const
-{
-    return { };
-}
-

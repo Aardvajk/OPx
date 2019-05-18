@@ -1,0 +1,16 @@
+class foo;
+
+using namespace foo;
+
+class bar
+{
+}
+
+class foo
+{
+    public class bar
+    {
+    }
+}
+
+lookup(bar, "foo.bar, bar");

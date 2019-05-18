@@ -1,14 +1,7 @@
-namespace foo
-{
-    class bar
-    {
-    }
-}
-
-class bar
+func a(:std.int, b:std.null, :std.null):std.int
 {
 }
 
-using namespace foo;
-
-lookup(bar, "*");
+func b(:std.int, :std.null)
+{
+}

@@ -16,10 +16,10 @@ class foo.bar
 
 }
 
-trigger_error("not found - std.foo")
+trigger_error("not found - stdx.foo")
 {
 
-class std.foo;
+class stdx.foo;
 
 }
 
