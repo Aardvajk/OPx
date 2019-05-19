@@ -46,6 +46,7 @@ void SymStack::print(std::ostream &os)
         {
             case Sym::Type::Var: os << "var "; break;
             case Sym::Type::Func: os << "func "; break;
+            case Sym::Type::Arg: os << "arg "; break;
 
             default: break;
         }

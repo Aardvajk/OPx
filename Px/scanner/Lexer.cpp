@@ -50,7 +50,7 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
     if(mode == Lexer::Mode::Pc)
     {
         static const char *s[] = { "class", "namespace", "using", "public", "private", "var", "func", "ptr",
-                                   "lookup", "trigger_error",
+                                   "lookup", "trigger_error", "",
                                    "" };
 
         for(int i = 0; s[i][0]; ++i)
@@ -65,6 +65,7 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
     {
         if(text == "var") return Token::Type::RwVar;
         if(text == "func") return Token::Type::RwFunc;
+        if(text == "arg") return Token::Type::RwArg;
     }
 
     return Token::Type::Id;

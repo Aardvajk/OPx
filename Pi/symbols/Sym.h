@@ -11,7 +11,7 @@
 class Sym
 {
 public:
-    enum class Type { Var, Func, Invalid };
+    enum class Type { Var, Func, Arg, Invalid };
 
     Sym();
     Sym(Type type, std::string name);

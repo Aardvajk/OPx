@@ -4,7 +4,7 @@
 
 #include "application/Context.h"
 
-#include "compiler/InstructionConstruct.h"
+#include "compiler/Instructions.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -23,29 +23,44 @@ void commonSizeConstruct(Context &c, Sym *sym, bool get)
     }
 }
 
-void commonVarConstruct(Context &c, bool get)
+void commonVarConstruct(Context &c, Sym::Type type, bool get)
 {
     auto id = c.scanner.match(Token::Type::StringLiteral, get);
     c.assertUnique(id.location(), id.text());
 
-    auto sym = c.syms.add(new Sym(Sym::Type::Var, id.text()));
+    auto sym = c.syms.add(new Sym(type, id.text()));
     commonSizeConstruct(c, sym, true);
 }
 
 void varConstruct(Context &c, bool get)
 {
-    commonVarConstruct(c, get);
+    commonVarConstruct(c, Sym::Type::Var, get);
 
     c.scanner.consume(Token::Type::Semicolon, false);
 }
 
 void argConstruct(Context &c, bool get)
 {
-    commonVarConstruct(c, get);
+    commonVarConstruct(c, Sym::Type::Arg, get);
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {
         argConstruct(c, true);
+    }
+    else
+    {
+        c.scanner.consume(Token::Type::Semicolon, false);
+    }
+}
+
+void scopedConstruct(Context &c, bool get)
+{
+    auto tok = c.scanner.next(get);
+    switch(tok.type())
+    {
+        case Token::Type::RwArg: argConstruct(c, true); break;
+
+        default: Instructions::entity(c, false);
     }
 }
 
@@ -57,22 +72,16 @@ void funcConstruct(Context &c, bool get)
     auto sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
 
     c.syms.push();
+    c.funcs.push_back({ });
 
-    c.scanner.consume(Token::Type::LeftParen, true);
-    if(c.scanner.token().type() != Token::Type::RightParen)
-    {
-        argConstruct(c, false);
-    }
-
-    c.scanner.consume(Token::Type::RightParen, false);
-    commonSizeConstruct(c, sym, false);
+    commonSizeConstruct(c, sym, true);
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         c.scanner.next(true);
         while(c.scanner.token().type() != Token::Type::RightBrace)
         {
-            InstructionConstruct::entity(c, false);
+            scopedConstruct(c, false);
         }
 
         c.scanner.consume(Token::Type::RightBrace, false);

@@ -25,6 +25,13 @@ int main(int argc, char *argv[])
         c.syms.print(std::cout);
 
         std::cout << banner("");
+
+        for(auto &f: c.funcs)
+        {
+            std::cout << "func: " << f.str().size() << "\n";
+        }
+
+        std::cout << banner("");
     }
 
     catch(const Error &error)

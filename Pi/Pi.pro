@@ -20,17 +20,19 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
 PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
+        application/ByteStream.cpp \
         application/Context.cpp \
         compiler/Compiler.cpp \
-        compiler/InstructionConstruct.cpp \
+        compiler/Instructions.cpp \
         main.cpp \
         symbols/Sym.cpp \
         symbols/SymStack.cpp
 
 HEADERS += \
+    application/ByteStream.h \
     application/Context.h \
     compiler/Compiler.h \
-    compiler/InstructionConstruct.h \
+    compiler/Instructions.h \
     symbols/Sym.h \
     symbols/SymStack.h
 
