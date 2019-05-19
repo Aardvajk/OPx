@@ -32,20 +32,3 @@ const char *Token::toString(Type type)
         default: return "(unknown)";
     }
 }
-
-Token::Type Token::reserved(const std::string &text)
-{
-    static const char *s[] = { "class", "namespace", "using", "public", "private", "var", "func", "ptr",
-                               "lookup", "trigger_error",
-                               "" };
-
-    for(int i = 0; s[i][0]; ++i)
-    {
-        if(text == s[i])
-        {
-            return static_cast<Token::Type>(static_cast<int>(Token::Type::RwClass) + i);
-        }
-    }
-
-    return Token::Type::Id;
-}

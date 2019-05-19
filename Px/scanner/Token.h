@@ -28,7 +28,6 @@ public:
     Location location() const { return n; }
 
     static const char *toString(Type type);
-    static Type reserved(const std::string &text);
 
 private:
     Type t;

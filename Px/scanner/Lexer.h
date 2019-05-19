@@ -9,7 +9,9 @@ class Source;
 namespace Lexer
 {
 
-Token next(Source &source);
+enum class Mode { Pc, Pi };
+
+Token next(Mode mode, Source &source);
 
 std::string encodeString(const std::string &text);
 std::string decodeString(const std::string &text);

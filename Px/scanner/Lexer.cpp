@@ -1,6 +1,6 @@
 #include "Lexer.h"
 
-#include "application/Error.h"
+#include "error/Error.h"
 
 #include "scanner/Source.h"
 #include "scanner/Token.h"
@@ -45,9 +45,34 @@ Token stringConstant(Source &source, Location location, std::string &s)
     return Token(Token::Type::StringLiteral, location, s);
 }
 
+Token::Type reserved(Lexer::Mode mode, const std::string &text)
+{
+    if(mode == Lexer::Mode::Pc)
+    {
+        static const char *s[] = { "class", "namespace", "using", "public", "private", "var", "func", "ptr",
+                                   "lookup", "trigger_error",
+                                   "" };
+
+        for(int i = 0; s[i][0]; ++i)
+        {
+            if(text == s[i])
+            {
+                return static_cast<Token::Type>(static_cast<int>(Token::Type::RwClass) + i);
+            }
+        }
+    }
+    else if(mode == Lexer::Mode::Pi)
+    {
+        if(text == "var") return Token::Type::RwVar;
+        if(text == "func") return Token::Type::RwFunc;
+    }
+
+    return Token::Type::Id;
 }
 
-Token Lexer::next(Source &source)
+}
+
+Token Lexer::next(Mode mode, Source &source)
 {
     auto ch = skip(source);
     auto loc = source.location();
@@ -60,9 +85,9 @@ Token Lexer::next(Source &source)
     if(ch == ')') return Token(Token::Type::RightParen, loc, ch);
 
     if(ch == '.') return Token(Token::Type::Dot, loc, ch);
+    if(ch == ':') return Token(Token::Type::Colon, loc, ch);
     if(ch == ',') return Token(Token::Type::Comma, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
-    if(ch == ':') return Token(Token::Type::Colon, loc, ch);
     if(ch == '=') return Token(Token::Type::Assign, loc, ch);
 
     if(ch == '\"')
@@ -81,7 +106,7 @@ Token Lexer::next(Source &source)
         }
 
         source.unget(ch);
-        return Token(Token::reserved(s), loc, s);
+        return Token(reserved(mode, s), loc, s);
     }
 
     if(std::isdigit(ch))

@@ -1,6 +1,7 @@
 #include "Compiler.h"
 
-#include "application/Error.h"
+#include "error/Error.h"
+
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"

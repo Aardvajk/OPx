@@ -3,6 +3,7 @@
 
 #include "scanner/Source.h"
 #include "scanner/Token.h"
+#include "scanner/Lexer.h"
 
 #include <pcx/scoped_ptr.h>
 
@@ -11,7 +12,7 @@
 class Scanner
 {
 public:
-    Scanner();
+    explicit Scanner(Lexer::Mode mode);
 
     void push(Source *source);
     void pop();
@@ -31,6 +32,7 @@ private:
         Token tok;
     };
 
+    Lexer::Mode mode;
     std::vector<State> state;
 };
 

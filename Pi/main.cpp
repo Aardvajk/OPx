@@ -2,13 +2,7 @@
 
 #include "application/Context.h"
 
-#include "symbols/SymPrinter.h"
-
 #include "compiler/Compiler.h"
-
-#include "visitors/AstPrinter.h"
-
-#include "tests/Tests.h"
 
 #include <pcx/str.h>
 
@@ -16,24 +10,19 @@ std::string banner(const std::string &title);
 
 int main(int argc, char *argv[])
 {
-    if(!runTests()) return -1;
-
     Context c;
 
     try
     {
-        c.open("C:/Projects/Px/Px/Pc/script.txt");
+        c.open("C:/Projects/Px/Px/Pi/script.txt");
 
         std::cout << banner("");
 
-        auto n = Compiler::compile(c);
+        compile(c);
 
-        std::cout << banner("symbols");
-        SymPrinter::print(c.tree.root(), std::cout);
+        std::cout << banner("");
 
-        std::cout << banner("nodes");
-        AstPrinter as(std::cout);
-        n->accept(as);
+        c.syms.print(std::cout);
 
         std::cout << banner("");
     }

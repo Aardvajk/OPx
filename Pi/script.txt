@@ -1,0 +1,17 @@
+func "add(std.int,std.int)"("a":4, "b":4):4
+{
+    push "a";
+    push "b";
+    addi;
+    ret 4;
+    pop 4;
+}
+
+func "main"():0
+{
+    alloca 4;
+    push 2;
+    push 3;
+    call "add(std.int,std.int)";
+    pop 4;
+}

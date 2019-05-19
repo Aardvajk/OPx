@@ -1,12 +1,12 @@
 #include "Scanner.h"
 
-#include "application/Error.h"
+#include "error/Error.h"
 
 #include "scanner/Lexer.h"
 
 #include <algorithm>
 
-Scanner::Scanner()
+Scanner::Scanner(Lexer::Mode mode) : mode(mode)
 {
 }
 
@@ -24,7 +24,7 @@ Token Scanner::next(bool get)
 {
     if(get)
     {
-        state.back().tok = Lexer::next(*state.back().src);
+        state.back().tok = Lexer::next(mode, *state.back().src);
     }
 
     return state.back().tok;

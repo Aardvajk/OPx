@@ -1,16 +1,23 @@
 class foo
 {
+    public using namespace std;
     class bar;
 
-    var a:std.int;
-    var b:std.int;
+    var a:int;
+    var b:int;
     var c:ptr bar;
 
     class bar
     {
-        var a:std.int;
+        var a:int;
     }
 
     var d:bar;
-    var e:std.null;
+    var e:null;
+}
+
+class foox
+{
+    using namespace foo;
+    var a:int;
 }

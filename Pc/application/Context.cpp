@@ -1,6 +1,6 @@
 #include "Context.h"
 
-#include "application/Error.h"
+#include "error/Error.h"
 
 #include "nodes/Node.h"
 
@@ -14,7 +14,7 @@
 
 #include <fstream>
 
-Context::Context()
+Context::Context() : scanner(Lexer::Mode::Pc)
 {
     auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, Sym::Attr::Public, { }, "std"));
 

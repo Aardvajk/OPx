@@ -1,7 +1,8 @@
 #include "Tests.h"
 
+#include "error/Error.h"
+
 #include "application/Context.h"
-#include "application/Error.h"
 
 #include "compiler/Compiler.h"
 
