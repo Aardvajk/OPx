@@ -23,34 +23,15 @@ void commonSizeConstruct(Context &c, Sym *sym, bool get)
     }
 }
 
-void commonVarConstruct(Context &c, Sym::Type type, bool get)
+void varConstruct(Context &c, Sym::Type type, bool get)
 {
     auto id = c.scanner.match(Token::Type::StringLiteral, get);
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(type, id.text()));
     commonSizeConstruct(c, sym, true);
-}
-
-void varConstruct(Context &c, bool get)
-{
-    commonVarConstruct(c, Sym::Type::Var, get);
 
     c.scanner.consume(Token::Type::Semicolon, false);
-}
-
-void argConstruct(Context &c, bool get)
-{
-    commonVarConstruct(c, Sym::Type::Arg, get);
-
-    if(c.scanner.token().type() == Token::Type::Comma)
-    {
-        argConstruct(c, true);
-    }
-    else
-    {
-        c.scanner.consume(Token::Type::Semicolon, false);
-    }
 }
 
 void scopedConstruct(Context &c, bool get)
@@ -58,7 +39,7 @@ void scopedConstruct(Context &c, bool get)
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::RwArg: argConstruct(c, true); break;
+        case Token::Type::RwArg: varConstruct(c, Sym::Type::Arg, true); break;
 
         default: Instructions::entity(c, false);
     }
@@ -99,7 +80,7 @@ void construct(Context &c, bool get)
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::RwVar: varConstruct(c, true); break;
+        case Token::Type::RwVar: varConstruct(c, Sym::Type::Var, true); break;
         case Token::Type::RwFunc: funcConstruct(c, true); break;
 
         default: throw Error(tok.location(), "construct expected - ", tok.text());

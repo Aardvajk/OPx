@@ -1,11 +1,19 @@
-func "add(std.int,std.int)":10
+func "add(std.int,std.int)":4
 {
-    arg "a":4, "b":4;
+    arg "a":4;
+    arg "b":4;
 
-    ret 23;
+    push "a";
+    push "b";
+    asm "addi4";
+
+    ret 4;
 }
 
-func "main"
+func "main":0
 {
-    ret 4;
+    push 1:4;
+    push 2:4;
+    call "add(std.int,std.int");
+    pop 4;
 }

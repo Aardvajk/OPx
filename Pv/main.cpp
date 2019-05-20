@@ -1,37 +1,63 @@
-#include "application/Machine.h"
-
 #include <iostream>
 #include <fstream>
 #include <vector>
 
-std::vector<char> readFile(const std::string &path)
+#include "application/Machine.h"
+#include "application/Error.h"
+
+#include <cstring>
+#include <sstream>
+
+//std::vector<char> readFile(const std::string &path)
+//{
+//    std::ifstream file(path, std::ios::binary);
+//    return std::vector<char>(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
+//}
+
+class Stream
 {
-    std::ifstream file(path, std::ios::binary);
-    return std::vector<char>(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
-}
+public:
+    Stream() : os(std::ios::binary) { }
+
+    template<typename T> Stream &operator<<(const T &t){ os.write(reinterpret_cast<const char*>(&t), sizeof(T)); return *this; }
+    std::vector<char> data(){ auto s = os.str(); return std::vector<char>(s.begin(), s.end()); }
+
+private:
+    std::ostringstream os;
+};
 
 int main(int argc, char *argv[])
 {
-//    std::ofstream os("z.dat", std::ios::binary);
-//    char c = '1';
-//    os.write(&c, sizeof(char));
+    try
+    {
+        Stream s;
 
-//    c = '2';
-//    os.write(&c, sizeof(char));
+        if(true)
+        {
+            using namespace OpCode;
 
-//    c = '\0';
-//    os.write(&c, sizeof(char));
+            s << Type::PrintR << Reg::Bp;
 
-//    c = '2';
-//    os.write(&c, sizeof(char));
+            s << Type::SubRI << Reg::Sp << std::size_t(8);
+            s << Type::CopyRA << Reg::Bp << Reg::Sp;
 
-//    c = '\0';
-//    os.write(&c, sizeof(char));
+            s << Type::CopyRR << Reg::Pc << Reg::Bp;
+            s << Type::PrintR << Reg::Bp;
 
-//    c = 'z';
-//    os.write(&c, sizeof(char));
+            s << Type::CopyAR << Reg::Sp << Reg::Bp;
+            s << Type::PrintR << Reg::Bp;
 
-    auto f = readFile("z.dat");
+            s << Type::AddRI << Reg::Sp << std::size_t(8);
+            s << Type::End;
+        }
 
-    for(auto c: f) std::cout << c << "\n";
+        Machine m(s.data());
+        m.execute();
+    }
+
+    catch(const Error &e)
+    {
+        std::cerr << "error: " << e.what() << "\n";
+        return -1;
+    }
 }
