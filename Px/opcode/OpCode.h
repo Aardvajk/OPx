@@ -10,6 +10,7 @@ enum class Reg : unsigned char
     Pc,
     Bp,
     Sp,
+    Dx,
     Invalid
 };
 
@@ -26,8 +27,12 @@ enum class Type : unsigned char
     CopyRA,
     CopyAR,
     CopyAA,
+    CopyAI,
 
-    PrintR,
+    PushR,
+    PopR,
+
+    Int,
 
     Invalid
 };

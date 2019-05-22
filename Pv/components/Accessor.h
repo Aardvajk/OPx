@@ -9,14 +9,14 @@ namespace Accessor
 namespace detail
 {
 
-void get(char *&p){ }
+inline void get(const char *m, std::size_t &p){ }
 
-template<typename T, typename... Args> void get(char *&p, T &t, Args&... args)
+template<typename T, typename... Args> void get(const char *m, std::size_t &p, T &t, Args&... args)
 {
-    std::memcpy(reinterpret_cast<char*>(&t), p, sizeof(T));
+    std::memcpy(reinterpret_cast<char*>(&t), m + p, sizeof(T));
     p += sizeof(T);
 
-    get(p, args...);
+    get(m, p, args...);
 }
 
 }
@@ -24,12 +24,13 @@ template<typename T, typename... Args> void get(char *&p, T &t, Args&... args)
 class Reader
 {
 public:
-    Reader(char *&p) : p(p) { }
+    Reader(const char *m, std::size_t &p) : m(m), p(p) { }
 
-    template<typename... Args> void operator()(Args&... args){ detail::get(p, args...); }
+    template<typename... Args> void operator()(Args&... args){ detail::get(m, p, args...); }
 
 private:
-    char *&p;
+    const char *m;
+    std::size_t &p;
 };
 
 }

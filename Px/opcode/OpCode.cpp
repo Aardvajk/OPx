@@ -7,6 +7,7 @@ const char *OpCode::toString(Reg v)
         "pc",
         "bp",
         "sp",
+        "dx",
         "(invalid)"
     };
 
@@ -27,7 +28,10 @@ const char *OpCode::toString(Type v)
         "copyar",
         "copyaa",
 
-        "printr",
+        "pushr",
+        "popr",
+
+        "int",
 
         "(invalid)"
     };

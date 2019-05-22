@@ -1,19 +1,13 @@
 func "add(std.int,std.int)":4
 {
-    arg "a":4;
-    arg "b":4;
+    var "a":4;
+    var "b":4;
 
-    push "a";
-    push "b";
-    asm "addi4";
-
-    ret 4;
+    foo;
+    foo;
 }
 
 func "main":0
 {
-    push 1:4;
-    push 2:4;
-    call "add(std.int,std.int");
-    pop 4;
+    var "c":23;
 }

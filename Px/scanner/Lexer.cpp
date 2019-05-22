@@ -65,7 +65,6 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
     {
         if(text == "var") return Token::Type::RwVar;
         if(text == "func") return Token::Type::RwFunc;
-        if(text == "arg") return Token::Type::RwArg;
     }
 
     return Token::Type::Id;

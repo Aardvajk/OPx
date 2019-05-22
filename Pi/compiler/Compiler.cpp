@@ -34,17 +34,6 @@ void varConstruct(Context &c, Sym::Type type, bool get)
     c.scanner.consume(Token::Type::Semicolon, false);
 }
 
-void scopedConstruct(Context &c, bool get)
-{
-    auto tok = c.scanner.next(get);
-    switch(tok.type())
-    {
-        case Token::Type::RwArg: varConstruct(c, Sym::Type::Arg, true); break;
-
-        default: Instructions::entity(c, false);
-    }
-}
-
 void funcConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::StringLiteral, get);
@@ -53,16 +42,21 @@ void funcConstruct(Context &c, bool get)
     auto sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
 
     c.syms.push();
-    c.funcs.push_back({ });
+    c.funcs.emplace_back(sym);
 
     commonSizeConstruct(c, sym, true);
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         c.scanner.next(true);
+        while(c.scanner.token().type() == Token::Type::RwVar)
+        {
+            varConstruct(c, Sym::Type::Arg, true);
+        }
+
         while(c.scanner.token().type() != Token::Type::RightBrace)
         {
-            scopedConstruct(c, false);
+            Instructions::entity(c, false);
         }
 
         c.scanner.consume(Token::Type::RightBrace, false);

@@ -4,7 +4,7 @@
 #include "scanner/SourceList.h"
 #include "scanner/Scanner.h"
 
-#include "application/ByteStream.h"
+#include "application/Function.h"
 
 #include "symbols/SymStack.h"
 
@@ -17,14 +17,14 @@ public:
 
     void assertUnique(Location location, const std::string &text);
 
-    ByteStream &curr(){ return funcs.back(); }
+    ByteStream &curr(){ return funcs.back().bytes; }
 
     SourceList sources;
     Scanner scanner;
 
     SymStack syms;
 
-    std::vector<ByteStream> funcs;
+    std::vector<Function> funcs;
 };
 
 #endif // CONTEXT_H

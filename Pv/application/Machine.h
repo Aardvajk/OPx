@@ -1,6 +1,7 @@
 #ifndef MACHINE_H
 #define MACHINE_H
 
+#include "components/Memory.h"
 #include "components/Registers.h"
 
 #include <vector>
@@ -8,13 +9,16 @@
 class Machine
 {
 public:
-    Machine(const std::vector<char> &pr);
+    using IntFunc = void(*)(int,Memory&,Registers&);
+
+    Machine(const std::vector<char> &pr, IntFunc intFunc);
 
     void execute();
 
 private:
-    std::vector<char> mm;
+    Memory mm;
     Registers rg;
+    IntFunc ip;
 };
 
 #endif // MACHINE_H

@@ -10,20 +10,15 @@ class Registers
 public:
     Registers();
 
-    char *&operator[](OpCode::Reg i){ return reg(i); }
+    std::size_t &operator[](OpCode::Reg i){ return v[static_cast<int>(i)]; }
 
-    char *&pc(){ return v[static_cast<int>(OpCode::Reg::Pc)]; }
-    char *&bp(){ return v[static_cast<int>(OpCode::Reg::Bp)]; }
-    char *&sp(){ return v[static_cast<int>(OpCode::Reg::Sp)]; }
-
-    void ra(OpCode::Reg s, OpCode::Reg d){ std::memcpy(reg(d), &(reg(s)), sizeof(char*)); }
-    void ar(OpCode::Reg s, OpCode::Reg d){ std::memcpy(&(reg(d)), reg(s), sizeof(char*)); }
-    void aa(OpCode::Reg s, OpCode::Reg d, std::size_t n){ std::memcpy(reg(d), reg(s), n); }
+    std::size_t &pc(){ return operator[](OpCode::Reg::Pc); }
+    std::size_t &bp(){ return operator[](OpCode::Reg::Bp); }
+    std::size_t &sp(){ return operator[](OpCode::Reg::Sp); }
+    std::size_t &dx(){ return operator[](OpCode::Reg::Dx); }
 
 private:
-    char *&reg(OpCode::Reg i){ return v[static_cast<int>(i)]; }
-
-    char *v[4];
+    std::size_t v[5];
 };
 
 #endif // REGISTERS_H

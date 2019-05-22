@@ -19,15 +19,5 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
 
 PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
-SOURCES += main.cpp \
-    application/Machine.cpp \
-    components/Memory.cpp \
-    components/Registers.cpp
-
-HEADERS += \
-    application/Error.h \
-    application/Machine.h \
-    components/Accessor.h \
-    components/Memory.h \
-    components/Registers.h \
-    components/Vars.h
+SOURCES += \
+        main.cpp
