@@ -27,12 +27,17 @@ ByteStream &ByteStream::operator<<(ByteStreamPatch &p)
     return (*this) << std::size_t(0);
 }
 
+void ByteStream::write(const void *data, std::size_t bytes)
+{
+    o->write(reinterpret_cast<const char*>(data), bytes);
+}
+
 std::string ByteStream::data() const
 {
     return os.str();
 }
 
-std::ostream::pos_type ByteStream::position() const
+std::size_t ByteStream::position() const
 {
     return o->tellp();
 }

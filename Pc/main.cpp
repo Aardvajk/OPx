@@ -1,4 +1,5 @@
 #include "framework/Error.h"
+#include "framework/Console.h"
 
 #include "application/Context.h"
 
@@ -9,8 +10,6 @@
 #include "visitors/AstPrinter.h"
 
 #include "tests/Tests.h"
-
-#include <pcx/str.h>
 
 std::string banner(const std::string &title);
 
@@ -48,15 +47,5 @@ int main(int argc, char *argv[])
 
         std::cerr << ": " << error.what() << "\n";
     }
-}
-
-std::string banner(const std::string &title)
-{
-    if(title.empty())
-    {
-        return std::string(120, '=');
-    }
-
-    return pcx::str("== ", title, " ", std::string(120 - (title.length() + 4), '='));
 }
 

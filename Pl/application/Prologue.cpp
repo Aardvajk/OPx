@@ -1,8 +1,7 @@
 #include "Prologue.h"
 
-#include "Px.h"
-
-#include "opcode/OpCode.h"
+#include "common/Px.h"
+#include "common/OpCode.h"
 
 #include "framework/ByteStream.h"
 

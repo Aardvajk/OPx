@@ -19,7 +19,8 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a"
 SOURCES += \
     framework/ByteStream.cpp \
     framework/ByteStreamPatch.cpp \
-    opcode/OpCode.cpp \
+    common/OpCode.cpp \
+    framework/Console.cpp \
     scanner/Lexer.cpp \
     scanner/Scanner.cpp \
     scanner/Source.cpp \
@@ -27,11 +28,12 @@ SOURCES += \
     scanner/Token.cpp
 
 HEADERS += \
-    Px.h \
+    common/Px.h \
+    framework/Console.h \
     framework/Error.h \
     framework/ByteStream.h \
     framework/ByteStreamPatch.h \
-    opcode/OpCode.h \
+    common/OpCode.h \
     scanner/Lexer.h \
     scanner/Location.h \
     scanner/Scanner.h \

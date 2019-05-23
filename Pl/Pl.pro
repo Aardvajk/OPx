@@ -21,12 +21,18 @@ PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
+        application/Generator.cpp \
         application/Prologue.cpp \
+        components/Entity.cpp \
         components/InputStream.cpp \
+        components/Unit.cpp \
         main.cpp
 
 HEADERS += \
     application/Context.h \
     application/Error.h \
+    application/Generator.h \
     application/Prologue.h \
-    components/InputStream.h
+    components/Entity.h \
+    components/InputStream.h \
+    components/Unit.h

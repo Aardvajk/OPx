@@ -5,6 +5,8 @@
 #include "application/Machine.h"
 #include "application/Error.h"
 
+#include "framework/Console.h"
+
 #include "components/Accessor.h"
 
 #include <cstring>
@@ -63,6 +65,8 @@ int main(int argc, char *argv[])
 
         Machine m(readFile(argv[1]), intFunc);
         m.execute();
+
+        std::cout << banner("");
     }
 
     catch(const Error &e)

@@ -18,3 +18,8 @@ InputStream &InputStream::operator>>(std::string &s)
     s = v.data();
     return *this;
 }
+
+void InputStream::read(void *data, std::size_t &bytes)
+{
+    is->read(reinterpret_cast<char*>(data), bytes);
+}

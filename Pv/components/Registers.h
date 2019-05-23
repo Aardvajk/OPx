@@ -1,7 +1,7 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
-#include "opcode/OpCode.h"
+#include "common/OpCode.h"
 
 #include <cstring>
 

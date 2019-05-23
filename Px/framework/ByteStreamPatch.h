@@ -15,7 +15,7 @@ public:
 private:
     friend class ByteStream;
 
-    std::ostream::pos_type p;
+    std::size_t p;
 };
 
 #endif // BYTESTREAMPATCH_H

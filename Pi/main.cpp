@@ -1,14 +1,13 @@
 #include "application/Context.h"
 
 #include "framework/Error.h"
+#include "framework/Console.h"
 
 #include "compiler/Compiler.h"
 
 #include <pcx/str.h>
 
-std::string banner(const std::string &title);
-
-#include "opcode/OpCode.h"
+#include "common/OpCode.h"
 #include <fstream>
 
 int main(int argc, char *argv[])
@@ -19,11 +18,9 @@ int main(int argc, char *argv[])
     {
         c.open("C:/Projects/Px/Px/Pi/script.txt");
 
-        std::cout << banner("");
-
         compile(c);
 
-        std::cout << banner("");
+        std::cout << banner("symbols");
 
         c.syms.print(std::cout);
 
@@ -34,61 +31,42 @@ int main(int argc, char *argv[])
             std::cout << "func " << f.sym->name << "\n";
         }
 
-        std::cout << banner("");
-
         if(true)
         {
-            std::ofstream os("C:/Users/aardv/Desktop/prog.px", std::ios::binary);
+            std::ofstream os("C:/Projects/Px/Px/script.po", std::ios::binary);
             ByteStream bs(os);
 
             ByteStreamPatch p;
 
-            using namespace OpCode;
+            bs << std::size_t(2);
+            bs << "main()";
+            bs << "foo()";
 
-            // space for return
-            bs << Type::SubRI << Reg::Sp << std::size_t(4);
+            bs << std::size_t(2);
 
-            // push param
-            bs << Type::SubRI << Reg::Sp << std::size_t(4);
-            bs << Type::CopyAI << Reg::Sp << std::size_t(4) << 321;
+            bs << 'F' << std::size_t(0);
 
-            // push func address
-            bs << Type::SubRI << Reg::Sp << std::size_t(8);
-            bs << Type::CopyAI << Reg::Sp << std::size_t(8) << p;
+            bs << p;
+            auto i = bs.position();
 
-            // pop address into pc
-            bs << Type::Call;
+            bs << OpCode::Type::Int << 1010;
+            bs << OpCode::Type::Ret << std::size_t(0);
+            p.patch(bs, bs.position() - i);
 
-            // return point
-            bs << Type::Int << 3;
+            bs << 'F' << std::size_t(1);
 
-            // pop int
-            bs << Type::AddRI << Reg::Sp << std::size_t(4);
+            bs << p;
+            i = bs.position();
 
-            bs << Type::Int << 1010;
-            bs << Type::End;
+            bs << OpCode::Type::Int << 1020;
+            bs << OpCode::Type::Int << 1030;
+            bs << OpCode::Type::Ret << std::size_t(0);
 
-            p.patch(bs, bs.position());
-
-            // function
-            bs << Type::AddRI << Reg::Sp << std::size_t(8);
-            bs << Type::Int << 3;
-            bs << Type::SubRI << Reg::Sp << std::size_t(8);
-
-            // get address of int in dx
-            bs << Type::CopyRR << Reg::Sp << Reg::Dx;
-            bs << Type::AddRI << Reg::Dx << std::size_t(12);
-
-            // copy in to stack
-            bs << Type::CopyAI << Reg::Dx << std::size_t(4) << 123;
-
-            // get return address from stack
-            bs << Type::Ret << 4;
+            p.patch(bs, bs.position() - i);
         }
 
-        std::system("C:/Projects/Px/Px/build-Pv/release/pv C:/Users/aardv/Desktop/prog.px");
-
-        std::cout << banner("");
+        std::cout << banner("launching pl");
+        std::system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
     }
 
     catch(const Error &error)
@@ -102,14 +80,3 @@ int main(int argc, char *argv[])
         std::cerr << ": " << error.what() << "\n";
     }
 }
-
-std::string banner(const std::string &title)
-{
-    if(title.empty())
-    {
-        return std::string(120, '=');
-    }
-
-    return pcx::str("== ", title, " ", std::string(120 - (title.length() + 4), '='));
-}
-

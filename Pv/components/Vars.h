@@ -1,7 +1,7 @@
 #ifndef VARS_H
 #define VARS_H
 
-#include "opcode/OpCode.h"
+#include "common/OpCode.h"
 
 #include <cstring>
 

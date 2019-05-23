@@ -13,6 +13,8 @@ public:
 
     template<typename T> T get(){ T v; (*this) >> v; return v; }
 
+    void read(void *data, std::size_t &bytes);
+
 private:
     std::istream *is;
 };
