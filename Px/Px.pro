@@ -27,7 +27,8 @@ SOURCES += \
     scanner/Token.cpp
 
 HEADERS += \
-    error/Error.h \
+    Px.h \
+    framework/Error.h \
     framework/ByteStream.h \
     framework/ByteStreamPatch.h \
     opcode/OpCode.h \

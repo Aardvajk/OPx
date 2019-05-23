@@ -1,6 +1,6 @@
 #include "Context.h"
 
-#include "error/Error.h"
+#include "framework/Error.h"
 
 #include <pcx/scoped_ptr.h>
 

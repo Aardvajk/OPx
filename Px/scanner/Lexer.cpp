@@ -1,6 +1,6 @@
 #include "Lexer.h"
 
-#include "error/Error.h"
+#include "framework/Error.h"
 
 #include "scanner/Source.h"
 #include "scanner/Token.h"

@@ -32,6 +32,9 @@ enum class Type : unsigned char
     PushR,
     PopR,
 
+    Call,
+    Ret,
+
     Int,
 
     Invalid

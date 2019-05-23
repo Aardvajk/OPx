@@ -1,6 +1,6 @@
-#include "error/Error.h"
-
 #include "application/Context.h"
+
+#include "framework/Error.h"
 
 #include "compiler/Compiler.h"
 
@@ -42,19 +42,11 @@ int main(int argc, char *argv[])
             ByteStream bs(os);
 
             ByteStreamPatch p;
-            ByteStreamPatch o;
 
             using namespace OpCode;
 
             // space for return
             bs << Type::SubRI << Reg::Sp << std::size_t(4);
-
-            // push pc
-            bs << Type::CopyRR << Reg::Pc << Reg::Dx;
-
-            auto pos = bs.position();
-            bs << Type::AddRI << Reg::Dx << o;
-            bs << Type::PushR << Reg::Dx;
 
             // push param
             bs << Type::SubRI << Reg::Sp << std::size_t(4);
@@ -65,9 +57,7 @@ int main(int argc, char *argv[])
             bs << Type::CopyAI << Reg::Sp << std::size_t(8) << p;
 
             // pop address into pc
-            bs << Type::PopR << Reg::Pc;
-
-            o.patch(bs, bs.position() - pos);
+            bs << Type::Call;
 
             // return point
             bs << Type::Int << 3;
@@ -81,7 +71,9 @@ int main(int argc, char *argv[])
             p.patch(bs, bs.position());
 
             // function
+            bs << Type::AddRI << Reg::Sp << std::size_t(8);
             bs << Type::Int << 3;
+            bs << Type::SubRI << Reg::Sp << std::size_t(8);
 
             // get address of int in dx
             bs << Type::CopyRR << Reg::Sp << Reg::Dx;
@@ -90,14 +82,11 @@ int main(int argc, char *argv[])
             // copy in to stack
             bs << Type::CopyAI << Reg::Dx << std::size_t(4) << 123;
 
-            // destroy param
-            bs << Type::AddRI << Reg::Sp << std::size_t(4);
-
             // get return address from stack
-            bs << Type::PopR << Reg::Pc;
+            bs << Type::Ret << 4;
         }
 
-        auto r = std::system("C:/Projects/Px/Px/build-Pv/release/pv C:/Users/aardv/Desktop/prog.px");
+        std::system("C:/Projects/Px/Px/build-Pv/release/pv C:/Users/aardv/Desktop/prog.px");
 
         std::cout << banner("");
     }

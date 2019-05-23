@@ -20,4 +20,13 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
 PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
+        application/Context.cpp \
+        application/Prologue.cpp \
+        components/InputStream.cpp \
         main.cpp
+
+HEADERS += \
+    application/Context.h \
+    application/Error.h \
+    application/Prologue.h \
+    components/InputStream.h
