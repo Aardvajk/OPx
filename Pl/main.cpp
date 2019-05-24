@@ -1,8 +1,8 @@
 #include "application/Context.h"
-#include "application/Error.h"
 #include "application/Prologue.h"
 #include "application/Generator.h"
 
+#include "framework/Error.h"
 #include "framework/Console.h"
 
 #include <pcx/indexed_range.h>

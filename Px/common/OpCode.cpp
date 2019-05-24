@@ -27,9 +27,13 @@ const char *OpCode::toString(Op v)
         "copyra",
         "copyar",
         "copyaa",
+        "copyai",
 
         "pushr",
         "popr",
+
+        "call",
+        "ret",
 
         "int",
 

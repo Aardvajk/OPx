@@ -1,9 +1,9 @@
 #include "Generator.h"
 
 #include "application/Context.h"
-#include "application/Error.h"
 
-#include "components/InputStream.h"
+#include "framework/Error.h"
+#include "framework/InputStream.h"
 
 #include <iostream>
 #include <fstream>

@@ -21,6 +21,7 @@ SOURCES += \
     framework/ByteStreamPatch.cpp \
     common/OpCode.cpp \
     framework/Console.cpp \
+    framework/InputStream.cpp \
     scanner/Lexer.cpp \
     scanner/Scanner.cpp \
     scanner/Source.cpp \
@@ -29,11 +30,13 @@ SOURCES += \
 
 HEADERS += \
     common/Px.h \
+    framework/ByteReader.h \
     framework/Console.h \
     framework/Error.h \
     framework/ByteStream.h \
     framework/ByteStreamPatch.h \
     common/OpCode.h \
+    framework/InputStream.h \
     scanner/Lexer.h \
     scanner/Location.h \
     scanner/Scanner.h \
