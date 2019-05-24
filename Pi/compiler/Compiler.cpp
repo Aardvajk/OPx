@@ -2,6 +2,8 @@
 
 #include "framework/Error.h"
 
+#include "common/OpCode.h"
+
 #include "application/Context.h"
 
 #include "compiler/Instructions.h"
@@ -36,13 +38,15 @@ void varConstruct(Context &c, Sym::Type type, bool get)
 
 void funcConstruct(Context &c, bool get)
 {
+    static int number = 1000;
+
     auto id = c.scanner.match(Token::Type::StringLiteral, get);
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
 
     c.syms.push();
-    c.funcs.emplace_back(sym);
+    c.funcs.emplace_back(sym, c.strings.insert(id.text()));
 
     commonSizeConstruct(c, sym, true);
 
@@ -60,6 +64,9 @@ void funcConstruct(Context &c, bool get)
         }
 
         c.scanner.consume(Token::Type::RightBrace, false);
+
+        c.funcs.back().bytes << OpCode::Op::Int << number++;
+        c.funcs.back().bytes << OpCode::Op::Ret << std::size_t(0);
     }
     else
     {

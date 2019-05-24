@@ -1,13 +1,11 @@
-func "add(std.int,std.int)":4
+func "foo()":10
 {
-    var "a":4;
-    var "b":4;
-
-    foo;
-    foo;
 }
 
-func "main":0
+func "bar()":0
 {
-    var "c":23;
+}
+
+func "main()":0
+{
 }

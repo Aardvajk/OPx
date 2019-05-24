@@ -7,14 +7,17 @@
 
 ByteStreamPatch Prologue::generate(ByteStream &bs)
 {
+    using namespace OpCode;
+
     ByteStreamPatch p;
 
-    bs << OpCode::Type::SubRI << OpCode::Reg::Sp << Px::ptr_size;
-    bs << OpCode::Type::CopyAI << OpCode::Reg::Sp << Px::ptr_size << p;
+    bs << Op::SubRI << Reg::Sp << std::size_t(8);
+    bs << Op::CopyAI << Reg::Sp << std::size_t(8) << p;
+    bs << Op::PopR << Reg::Dx;
 
-    bs << OpCode::Type::Call;
+    bs << Op::Call << Reg::Dx;
 
-    bs << OpCode::Type::End;
+    bs << Op::End;
 
     return p;
 }

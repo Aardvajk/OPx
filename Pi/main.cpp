@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
         c.syms.print(std::cout);
 
-        std::cout << banner("");
+        std::cout << banner("functions");
 
         for(auto &f: c.funcs)
         {
@@ -36,33 +36,27 @@ int main(int argc, char *argv[])
             std::ofstream os("C:/Projects/Px/Px/script.po", std::ios::binary);
             ByteStream bs(os);
 
-            ByteStreamPatch p;
+            bs << c.strings.size();
+            for(auto &s: c.strings)
+            {
+                bs << s;
+            }
 
-            bs << std::size_t(2);
-            bs << "main()";
-            bs << "foo()";
+            bs << c.funcs.size();
+            for(auto &f: c.funcs)
+            {
+                ByteStreamPatch p;
 
-            bs << std::size_t(2);
+                bs << 'F' << f.id;
 
-            bs << 'F' << std::size_t(0);
+                bs << p;
+                auto i = bs.position();
 
-            bs << p;
-            auto i = bs.position();
+                auto bytes = f.bytes.data();
 
-            bs << OpCode::Type::Int << 1010;
-            bs << OpCode::Type::Ret << std::size_t(0);
-            p.patch(bs, bs.position() - i);
-
-            bs << 'F' << std::size_t(1);
-
-            bs << p;
-            i = bs.position();
-
-            bs << OpCode::Type::Int << 1020;
-            bs << OpCode::Type::Int << 1030;
-            bs << OpCode::Type::Ret << std::size_t(0);
-
-            p.patch(bs, bs.position() - i);
+                bs.write(bytes.data(), bytes.size());
+                p.patch(bs, bs.position() - i);
+            }
         }
 
         std::cout << banner("launching pl");

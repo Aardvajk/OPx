@@ -5,6 +5,7 @@
 #include "scanner/Scanner.h"
 
 #include "application/Function.h"
+#include "application/StringTable.h"
 
 #include "symbols/SymStack.h"
 
@@ -24,6 +25,7 @@ public:
 
     SymStack syms;
 
+    StringTable strings;
     std::vector<Function> funcs;
 };
 

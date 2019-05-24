@@ -8,9 +8,11 @@ class Sym;
 class Function
 {
 public:
-    explicit Function(Sym *sym) : sym(sym) { }
+    Function(Sym *sym, std::size_t id) : sym(sym), id(id) { }
 
     Sym *sym;
+    std::size_t id;
+
     ByteStream bytes;
 };
 

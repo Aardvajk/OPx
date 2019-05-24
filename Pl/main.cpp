@@ -69,8 +69,7 @@ int main(int argc, char *argv[])
             os.write(c.ps.data().c_str(), c.ps.position());
         }
 
-        std::cout << banner("launching pv");
-        std::system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
+        std::cout << banner("");
     }
 
     catch(const Error &e)

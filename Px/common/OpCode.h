@@ -16,7 +16,7 @@ enum class Reg : unsigned char
 
 const char *toString(Reg v);
 
-enum class Type : unsigned char
+enum class Op : unsigned char
 {
     End,
 
@@ -40,7 +40,7 @@ enum class Type : unsigned char
     Invalid
 };
 
-const char *toString(Type v);
+const char *toString(Op v);
 
 }
 

@@ -14,7 +14,7 @@ const char *OpCode::toString(Reg v)
     return s[static_cast<int>(v)];
 }
 
-const char *OpCode::toString(Type v)
+const char *OpCode::toString(Op v)
 {
     static const char *s[] =
     {
