@@ -14,7 +14,7 @@ public:
         Id, IntLiteral, StringLiteral,
         LeftBrace, RightBrace, LeftParen, RightParen,
         Dot, Comma, Semicolon, Colon, Assign,
-        RwClass, RwNamespace, RwUsing, RwPublic, RwPrivate, RwVar, RwFunc, RwPtr,
+        RwClass, RwNamespace, RwUsing, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr,
         RwLookup, RwTriggerError,
         Eof, Invalid
     };

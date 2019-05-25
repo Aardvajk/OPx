@@ -26,7 +26,6 @@ const char *OpCode::toString(Op v)
         "copyrr",
         "copyra",
         "copyar",
-        "copyaa",
         "copyai",
 
         "pushr",

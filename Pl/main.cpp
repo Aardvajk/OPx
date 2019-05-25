@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
                 std::cout << "    " << pad(s.index, w) << ": " << s.value << "\n";
             }
 
+            std::cout << "entities:\n";
             for(auto &e: u.entities)
             {
-                std::cout << "entities:\n";
                 std::cout << "    " << e.type << " " << u.strings[e.id] << " " << e.offset << "\n";
             }
         }
@@ -69,7 +69,8 @@ int main(int argc, char *argv[])
             os.write(c.ps.data().c_str(), c.ps.position());
         }
 
-        std::cout << banner("");
+        std::system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px");
+        std::system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
     }
 
     catch(const Error &e)

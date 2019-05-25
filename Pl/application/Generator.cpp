@@ -41,8 +41,6 @@ void Generator::generate(Context &c, const std::vector<std::string> &paths)
 {
     for(auto &path: paths)
     {
-        std::cout << "generating " << path << "\n";
-
         std::ifstream fs(path, std::ios::binary);
         if(!fs.is_open())
         {

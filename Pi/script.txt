@@ -1,11 +1,9 @@
+func "main()":0
+{
+    var c:4;
+}
+
 func "foo()":10
 {
 }
 
-func "bar()":0
-{
-}
-
-func "main()":0
-{
-}

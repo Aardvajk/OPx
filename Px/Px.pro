@@ -29,7 +29,6 @@ SOURCES += \
     scanner/Token.cpp
 
 HEADERS += \
-    common/Px.h \
     framework/ByteReader.h \
     framework/Console.h \
     framework/Error.h \

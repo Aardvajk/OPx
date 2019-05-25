@@ -16,9 +16,11 @@ public:
 
     void open(const std::string &path);
 
+    Token matchId(bool get);
+
     void assertUnique(Location location, const std::string &text);
 
-    ByteStream &curr(){ return funcs.back().bytes; }
+    Function &func(){ return funcs.back(); }
 
     SourceList sources;
     Scanner scanner;

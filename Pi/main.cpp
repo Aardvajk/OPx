@@ -59,7 +59,6 @@ int main(int argc, char *argv[])
             }
         }
 
-        std::cout << banner("launching pl");
         std::system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
     }
 

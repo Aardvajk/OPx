@@ -2,12 +2,25 @@
 
 #include "framework/Error.h"
 
+#include "common/OpCode.h"
+
 #include <pcx/scoped_ptr.h>
 
 #include <fstream>
 
 Context::Context() : scanner(Lexer::Mode::Pi)
 {
+}
+
+Token Context::matchId(bool get)
+{
+    auto tok = scanner.next(get);
+    if(tok.type() != Token::Type::Id && tok.type() != Token::Type::StringLiteral)
+    {
+        throw Error(tok.location(), "id expected - ", tok.text());
+    }
+
+    return tok;
 }
 
 void Context::open(const std::string &path)

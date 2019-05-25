@@ -3,10 +3,10 @@
 
 #include <cstring>
 
-namespace detail
+namespace bytereader_detail
 {
 
-void get(const char *d, std::size_t &p)
+void get(const char*, std::size_t&)
 {
 }
 
@@ -18,11 +18,6 @@ template<typename T, typename... Args> void get(const char *d, std::size_t &p, T
     get(d, p, std::forward<Args>(args)...);
 }
 
-template<typename T, typename... Args> void get(const char *d, std::size_t &p, Args&&... args)
-{
-    get(d, p, std::forward<Args>(args)...);
-}
-
 }
 
 class ByteReader
@@ -30,7 +25,7 @@ class ByteReader
 public:
     ByteReader(const char *data, std::size_t &pc) : m(data), p(pc) { }
 
-    template<typename... Args> ByteReader &operator()(Args&&... args){ detail::get(m, p, std::forward<Args>(args)...); return *this; }
+    template<typename... Args> ByteReader &operator()(Args&&... args){ bytereader_detail::get(m, p, std::forward<Args>(args)...); return *this; }
     template<typename T> T get(){ T v; operator()(v); return v; }
 
 private:

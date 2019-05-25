@@ -26,7 +26,6 @@ enum class Op : unsigned char
     CopyRR,
     CopyRA,
     CopyAR,
-    CopyAA,
     CopyAI,
 
     PushR,

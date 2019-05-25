@@ -42,19 +42,15 @@ void SymStack::print(std::ostream &os)
 {
     for(std::size_t i = 0; i < v.size(); ++i)
     {
-        switch(v[i].type)
-        {
-            case Sym::Type::Var: os << "var "; break;
-            case Sym::Type::Func: os << "func "; break;
-            case Sym::Type::Arg: os << "arg "; break;
-
-            default: break;
-        }
-
-        os << v[i].name;
+        os << Sym::toString(v[i].type) << " " << v[i].name;
         if(auto pr = v[i].properties["size"])
         {
             os << ":" << pr.to<std::size_t>();
+        }
+
+        if(auto pr = v[i].properties["offset"])
+        {
+            os << " [" << pr.to<std::size_t>() << "]";
         }
 
         os << "\n";

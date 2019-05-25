@@ -71,8 +71,7 @@ int main(int argc, char *argv[])
 
                 case Op::CopyRR:
                 case Op::CopyRA:
-                case Op::CopyAR:
-                case Op::CopyAA: rm(r0, r1); std::cout << toString(r0) << " " << toString(r1); break;
+                case Op::CopyAR: rm(r0, r1); std::cout << toString(r0) << " " << toString(r1); break;
 
                 case Op::CopyAI: rm(r0, s0); std::cout << toString(r0) << " " << s0 << " " << byteString(rm, s0); break;
 
@@ -91,8 +90,6 @@ int main(int argc, char *argv[])
 
             std::cout << "\n";
         }
-
-        std::cout << banner("");
     }
 
     catch(const Error &e)
