@@ -3,6 +3,10 @@
 
 #include "framework/ByteStream.h"
 
+#include "scanner/Token.h"
+
+#include <vector>
+
 class Sym;
 
 class Function
@@ -17,6 +21,9 @@ public:
     std::size_t locals;
 
     ByteStream bytes;
+
+    std::vector<std::pair<Token,ByteStreamPatch> > jmpPatches;
+    std::vector<std::pair<std::size_t, std::size_t> > links;
 };
 
 #endif // FUNCTION_H

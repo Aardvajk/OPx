@@ -20,6 +20,8 @@ enum class Op : unsigned char
 {
     End,
 
+    SetRI,
+
     SubRI,
     AddRI,
 
@@ -27,6 +29,7 @@ enum class Op : unsigned char
     CopyRA,
     CopyAR,
     CopyAI,
+    CopyAA,
 
     PushR,
     PopR,

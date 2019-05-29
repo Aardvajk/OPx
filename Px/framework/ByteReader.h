@@ -6,7 +6,7 @@
 namespace bytereader_detail
 {
 
-void get(const char*, std::size_t&)
+inline void get(const char*, std::size_t&)
 {
 }
 

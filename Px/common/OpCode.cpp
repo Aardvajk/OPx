@@ -20,6 +20,8 @@ const char *OpCode::toString(Op v)
     {
         "end",
 
+        "setri",
+
         "subri",
         "addri",
 
@@ -27,6 +29,7 @@ const char *OpCode::toString(Op v)
         "copyra",
         "copyar",
         "copyai",
+        "copyaa",
 
         "pushr",
         "popr",

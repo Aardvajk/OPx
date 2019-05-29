@@ -10,10 +10,7 @@ ByteStreamPatch Prologue::generate(ByteStream &bs)
 
     ByteStreamPatch p;
 
-    bs << Op::SubRI << Reg::Sp << std::size_t(8);
-    bs << Op::CopyAI << Reg::Sp << std::size_t(8) << p;
-    bs << Op::PopR << Reg::Dx;
-
+    bs << Op::SetRI << Reg::Dx << p;
     bs << Op::Call << Reg::Dx;
 
     bs << Op::End;

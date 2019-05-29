@@ -4,10 +4,11 @@
 #include "framework/Console.h"
 
 #include "common/OpCode.h"
+#include "common/Interrupt.h"
 
 #include "application/Context.h"
 
-#include "compiler/Instructions.h"
+#include "compiler/FuncConstruct.h"
 
 #include <pcx/lexical_cast.h>
 #include <pcx/range_reverse.h>
@@ -17,16 +18,14 @@
 namespace
 {
 
-void commonSizeConstruct(Context &c, Sym *sym, bool get)
+void commonSizeConstruct(Context &c, Sym *sym, const std::string &property, bool get)
 {
-    c.scanner.next(get);
-    if(c.scanner.token().type() == Token::Type::Colon)
-    {
-        auto size = c.scanner.match(Token::Type::IntLiteral, true);
-        sym->properties["size"] = pcx::lexical_cast<std::size_t>(size.text());
+    c.scanner.match(Token::Type::Colon, get);
 
-        c.scanner.next(true);
-    }
+    auto size = c.scanner.match(Token::Type::IntLiteral, true);
+    sym->properties[property] = pcx::lexical_cast<std::size_t>(size.text());
+
+    c.scanner.next(true);
 }
 
 void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
@@ -35,7 +34,7 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(type, id.text()));
-    commonSizeConstruct(c, sym, true);
+    commonSizeConstruct(c, sym, "size", true);
 
     if(type == Sym::Type::Arg || type == Sym::Type::Local)
     {
@@ -61,17 +60,16 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 
 void funcConstruct(Context &c, bool get)
 {
-    static int number = 1000;
-
     auto id = c.matchId(get);
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
+    sym->properties["size"] = sizeof(std::size_t);
 
     c.syms.push();
     c.funcs.emplace_back(sym, c.strings.insert(id.text()));
 
-    commonSizeConstruct(c, sym, true);
+    commonSizeConstruct(c, sym, "returnSize", true);
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
@@ -83,35 +81,42 @@ void funcConstruct(Context &c, bool get)
             varConstruct(c, Sym::Type::Arg, &args, true);
         }
 
+        while(c.scanner.token().type() == Token::Type::RwVar)
+        {
+            varConstruct(c, Sym::Type::Local, nullptr, true);
+        }
+
         for(auto s: pcx::range_reverse(args))
         {
             s->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
             c.func().args += s->properties["size"].to<std::size_t>();
         }
 
+        auto r = c.syms.add(new Sym(Sym::Type::Arg, "@ret"));
+        r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
+        r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
+
         c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Sp << OpCode::Reg::Bp;
-
-        ByteStreamPatch lp;
-        c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << lp;
+        c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
 
         while(c.scanner.token().type() != Token::Type::RightBrace)
         {
-            if(c.scanner.token().type() == Token::Type::RwVar)
-            {
-                varConstruct(c, Sym::Type::Local, nullptr, true);
-            }
-            else
-            {
-                Instructions::entity(c, false);
-            }
+            FuncConstruct::entity(c, false);
         }
 
         c.scanner.consume(Token::Type::RightBrace, false);
 
-        c.func().bytes << OpCode::Op::Int << number++;
+        for(auto p: c.func().jmpPatches)
+        {
+            auto s = c.syms.findLocal(p.first.text());
+            if(!s || s->type != Sym::Type::Label)
+            {
+                throw Error(p.first.location(), "label expected - ", p.first.text());
+            }
 
-        lp.patch(c.func().bytes, c.func().locals);
+            p.second.patch(c.func().bytes, s->properties["position"].to<std::size_t>() - (p.second.position() + 8));
+        }
 
         c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
         c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Bp;

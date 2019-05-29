@@ -9,7 +9,9 @@
 class Machine
 {
 public:
-    Machine(const std::vector<char> &v);
+    using IntProc = void(*)(int, Memory&, Registers&);
+
+    Machine(const std::vector<char> &v, IntProc ip);
 
     void execute();
     void shutdown();
@@ -17,6 +19,7 @@ public:
 private:
     Memory mm;
     Registers rg;
+    IntProc ip;
 };
 
 #endif // MACHINE_H

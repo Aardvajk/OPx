@@ -32,6 +32,16 @@ void ByteStream::write(const void *data, std::size_t bytes)
     o->write(reinterpret_cast<const char*>(data), bytes);
 }
 
+void ByteStream::writeAt(std::size_t position, const void *data, std::size_t bytes)
+{
+    auto old = o->tellp();
+    o->seekp(position);
+
+    write(data, bytes);
+
+    o->seekp(old);
+}
+
 std::string ByteStream::data() const
 {
     return os.str();

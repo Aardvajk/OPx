@@ -29,6 +29,7 @@ SOURCES += \
     scanner/Token.cpp
 
 HEADERS += \
+    common/Interrupt.h \
     framework/ByteReader.h \
     framework/Console.h \
     framework/Error.h \

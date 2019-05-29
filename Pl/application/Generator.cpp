@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 namespace
 {
@@ -28,6 +29,15 @@ void processUnit(Context &c, Unit &unit, InputStream &is)
         unit.entities.push_back(Entity(type, id, c.units.size(), c.ps.position()));
 
         auto n = is.get<std::size_t>();
+        for(std::size_t j = 0; j < n; ++j)
+        {
+            auto a = is.get<std::size_t>();
+            auto b = is.get<std::size_t>();
+
+            unit.entities.back().links.push_back(std::make_pair(a, b));
+        }
+
+        n = is.get<std::size_t>();
 
         std::vector<char> v(n);
         is.read(v.data(), n);

@@ -5,7 +5,7 @@
 
 #include "components/Vars.h"
 
-Machine::Machine(const std::vector<char> &v) : mm(1024 * 5)
+Machine::Machine(const std::vector<char> &v, IntProc ip) : mm(1024 * 5), ip(ip)
 {
     std::memcpy(mm(0), v.data(), v.size());
 
@@ -28,6 +28,8 @@ void Machine::execute()
 
         switch(v.op)
         {
+            case Op::SetRI: rm(v.r0); std::memcpy(&(rg[v.r0]), mm(rg.pc()), sizeof(std::size_t)); rg.pc() += sizeof(std::size_t); break;
+
             case Op::AddRI: rm(v.r0, v.s0); rg[v.r0] += v.s0; break;
             case Op::SubRI: rm(v.r0, v.s0); rg[v.r0] -= v.s0; break;
 
@@ -35,6 +37,7 @@ void Machine::execute()
             case Op::CopyRA: rm(v.r0, v.r1); std::memcpy(mm(rg[v.r1]), &(rg[v.r0]), sizeof(std::size_t)); break;
             case Op::CopyAR: rm(v.r0, v.r1); std::memcpy(&(rg[v.r1]), mm(rg[v.r0]), sizeof(std::size_t)); break;
             case Op::CopyAI: rm(v.r0, v.s0); std::memcpy(mm(rg[v.r0]), mm(rg.pc()), v.s0); rg.pc() += v.s0; break;
+            case Op::CopyAA: rm(v.r0, v.r1, v.s0); std::memcpy(mm(rg[v.r1]), mm(rg[v.r0]), v.s0); break;
 
             case Op::PushR: rm(v.r0); rg.sp() -= sizeof(std::size_t); std::memcpy(mm(rg.sp()), &(rg[v.r0]), sizeof(std::size_t)); break;
             case Op::PopR: rm(v.r0); std::memcpy(&(rg[v.r0]), mm(rg.sp()), sizeof(std::size_t)); rg.sp() += sizeof(std::size_t); break;
@@ -42,7 +45,7 @@ void Machine::execute()
             case Op::Call: rm(v.r0); rg.sp() -= sizeof(std::size_t); std::memcpy(mm(rg.sp()), &(rg.pc()), sizeof(std::size_t)); rg.pc() = rg[v.r0]; break;
             case Op::Ret: rm(v.s0); std::memcpy(&(rg.pc()), mm(rg.sp()), sizeof(std::size_t)); rg.sp() += sizeof(std::size_t) + v.s0; break;
 
-            case Op::Int: rm(v.i0); std::cout << "int " << v.i0 << "\n"; break;
+            case Op::Int: rm(v.i0); ip(v.i0, mm, rg); break;
 
             case Op::End: return;
 

@@ -1,9 +1,29 @@
+func "foo()":4
+{
+    arg a:4;
+    arg b:4;
+
+    push a;
+    int 1;
+    pop 4;
+
+    push b;
+    int 1;
+    pop 4;
+
+    push a;
+    store "@ret";
+    pop 4;
+}
+
 func "main()":0
 {
-    var c:4;
-}
+    push 999;
+    push 3212;
+    push 123;
+    push "foo()";
+    call;
 
-func "foo()":10
-{
+    int 1;
+    pop 4;
 }
-

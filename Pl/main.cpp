@@ -1,6 +1,7 @@
 #include "application/Context.h"
 #include "application/Prologue.h"
 #include "application/Generator.h"
+#include "application/Linker.h"
 
 #include "framework/Error.h"
 #include "framework/Console.h"
@@ -9,6 +10,20 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstring>
+
+template<typename T> T readAt(const char *data, std::size_t offset)
+{
+    T t;
+    std::memcpy(reinterpret_cast<char*>(&t), data + offset, sizeof(T));
+
+    return t;
+}
+
+template<typename T> void writeAt(char *data, const T &t, std::size_t offset)
+{
+    std::memcpy(data + offset, reinterpret_cast<const char*>(&t), sizeof(T));
+}
 
 int main(int argc, char *argv[])
 {
@@ -49,6 +64,10 @@ int main(int argc, char *argv[])
             }
         }
 
+        std::cout << banner("linking");
+
+        Linker::link(c);
+
         auto me = c.lookup("main()");
         if(!me)
         {
@@ -56,6 +75,12 @@ int main(int argc, char *argv[])
         }
 
         mp.patch(c.ds, c.ds.position() + me->offset);
+
+        auto ds = c.ds.data();
+        auto ps = c.ps.data();
+
+        std::vector<char> db(ds.begin(), ds.end());
+        std::vector<char> pb(ps.begin(), ps.end());
 
         if(true)
         {
@@ -65,8 +90,8 @@ int main(int argc, char *argv[])
                 throw Error("unable to create - out.px");
             }
 
-            os.write(c.ds.data().c_str(), c.ds.position());
-            os.write(c.ps.data().c_str(), c.ps.position());
+            os.write(db.data(), db.size());
+            os.write(pb.data(), pb.size());
         }
 
         std::system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px");

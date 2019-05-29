@@ -49,6 +49,12 @@ int main(int argc, char *argv[])
 
                 bs << 'F' << f.id;
 
+                bs << f.links.size();
+                for(auto i: f.links)
+                {
+                    bs << i.first << i.second;
+                }
+
                 bs << p;
                 auto i = bs.position();
 

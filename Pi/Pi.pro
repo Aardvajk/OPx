@@ -23,7 +23,8 @@ SOURCES += \
         application/Context.cpp \
         application/StringTable.cpp \
         compiler/Compiler.cpp \
-        compiler/Instructions.cpp \
+        compiler/FuncConstruct.cpp \
+        compiler/Instruction.cpp \
         main.cpp \
         symbols/Sym.cpp \
         symbols/SymStack.cpp
@@ -33,7 +34,8 @@ HEADERS += \
     application/Function.h \
     application/StringTable.h \
     compiler/Compiler.h \
-    compiler/Instructions.h \
+    compiler/FuncConstruct.h \
+    compiler/Instruction.h \
     symbols/Sym.h \
     symbols/SymStack.h
 

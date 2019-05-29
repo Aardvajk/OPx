@@ -53,6 +53,11 @@ void SymStack::print(std::ostream &os)
             os << " [" << pr.to<std::size_t>() << "]";
         }
 
+        if(auto pr = v[i].properties["position"])
+        {
+            os << " @" << pr.to<std::size_t>();
+        }
+
         os << "\n";
     }
 }

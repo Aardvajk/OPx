@@ -66,6 +66,8 @@ int main(int argc, char *argv[])
 
             switch(op)
             {
+                case Op::SetRI: rm(r0); std::cout << toString(r0) << " " << byteString(rm, sizeof(std::size_t)); break;
+
                 case Op::AddRI:
                 case Op::SubRI: rm(r0, s0); std::cout << toString(r0) << " " << s0; break;
 
@@ -74,6 +76,8 @@ int main(int argc, char *argv[])
                 case Op::CopyAR: rm(r0, r1); std::cout << toString(r0) << " " << toString(r1); break;
 
                 case Op::CopyAI: rm(r0, s0); std::cout << toString(r0) << " " << s0 << " " << byteString(rm, s0); break;
+
+                case Op::CopyAA: rm(r0, r1, s0); std::cout << toString(r0) << " " << toString(r1) << " " << s0; break;
 
                 case Op::PushR:
                 case Op::PopR:
