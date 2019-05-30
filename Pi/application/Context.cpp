@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-Context::Context() : scanner(Lexer::Mode::Pi)
+Context::Context() : scanner(Lexer::Mode::Pi), comments(funcs)
 {
 }
 

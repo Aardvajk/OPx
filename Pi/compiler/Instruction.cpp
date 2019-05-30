@@ -8,12 +8,12 @@ const char *s[] =
     "push",
     "pop",
     "store",
+    "allocs",
 
     "jmp",
     "call",
 
     "int",
-    "foo",
     ""
 };
 

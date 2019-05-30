@@ -4,8 +4,9 @@
 #include "scanner/SourceList.h"
 #include "scanner/Scanner.h"
 
-#include "application/Function.h"
-#include "application/StringTable.h"
+#include "components/Function.h"
+#include "components/StringTable.h"
+#include "components/Comments.h"
 
 #include "symbols/SymStack.h"
 
@@ -29,6 +30,8 @@ public:
 
     StringTable strings;
     std::vector<Function> funcs;
+
+    Comments comments;
 };
 
 #endif // CONTEXT_H

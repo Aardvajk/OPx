@@ -8,6 +8,8 @@
 
 #include "compiler/Instruction.h"
 
+#include "components/Header.h"
+
 #include <pcx/lexical_cast.h>
 
 namespace
@@ -27,6 +29,8 @@ void generateAddress(Context &c, OpCode::Reg reg, Sym *sym)
 void pushInstruction(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
+
+    c.comments(header("push ", tok.text(), ";"));
 
     if(tok.type() == Token::Type::IntLiteral)
     {
@@ -68,6 +72,8 @@ void pushInstruction(Context &c, bool get)
 void popInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.comments(header("pop ", id.text(), ";"));
+
     c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
 
     c.scanner.consume(Token::Type::Semicolon, true);
@@ -76,6 +82,8 @@ void popInstruction(Context &c, bool get)
 void storeInstruction(Context &c, bool get)
 {
     auto tok = c.matchId(get);
+    c.comments(header("store ", tok.text(), ";"));
+
     auto sym = c.syms.find(tok.text());
 
     if(sym && (sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local))
@@ -92,9 +100,20 @@ void storeInstruction(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void allocSInstruction(Context &c, bool get)
+{
+    auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.comments(header("allocs ", id.text(), ";"));
+
+    c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void jmpInstruction(Context &c, bool get)
 {
     auto label = c.matchId(get);
+    c.comments(header("jmp ", label.text(), ";"));
 
     if(auto s = c.syms.findLocal(label.text()))
     {
@@ -121,6 +140,8 @@ void jmpInstruction(Context &c, bool get)
 
 void callInstruction(Context &c, bool get)
 {
+    c.comments(header("call;"));
+
     c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
     c.func().bytes << OpCode::Op::Call << OpCode::Reg::Dx;
 
@@ -130,20 +151,9 @@ void callInstruction(Context &c, bool get)
 void intInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.comments(header("int ", id.text(), ";"));
+
     c.func().bytes << OpCode::Op::Int << pcx::lexical_cast<int>(id.text());
-
-    c.scanner.consume(Token::Type::Semicolon, true);
-}
-
-void testInstruction(Context &c, bool get)
-{
-    auto id = c.scanner.next(get);
-    auto sym = c.syms.find(id.text());
-
-    if(sym)
-    {
-        generateAddress(c, OpCode::Reg::Dx, sym);
-    }
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -172,12 +182,12 @@ void FuncConstruct::entity(Context &c, bool get)
         case Instruction::Code::Push: pushInstruction(c, false); break;
         case Instruction::Code::Pop: popInstruction(c, false); break;
         case Instruction::Code::Store: storeInstruction(c, false); break;
+        case Instruction::Code::AllocS: allocSInstruction(c, false); break;
 
         case Instruction::Code::Jmp: jmpInstruction(c, false); break;
         case Instruction::Code::Call: callInstruction(c, false); break;
 
         case Instruction::Code::Int: intInstruction(c, false); break;
-        case Instruction::Code::Foo: testInstruction(c, false); break;
 
         default: throw Error(tok.location(), "instruction expected - ", tok.text());
     }

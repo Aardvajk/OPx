@@ -65,6 +65,17 @@ int main(int argc, char *argv[])
             }
         }
 
+        if(true)
+        {
+            std::ofstream os("C:/Projects/Px/Px/script.po.pmap");
+            for(std::size_t i = 0; i < c.comments.size(); ++i)
+            {
+                auto e = c.comments[i];
+                os << e.first  << " " << e.second << "\n";
+            }
+        }
+
+        std::system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/script.po C:/Projects/Px/Px/script.po.pmap");
         std::system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
     }
 

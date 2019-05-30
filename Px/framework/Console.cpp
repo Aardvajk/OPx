@@ -1,6 +1,6 @@
 #include "Console.h"
 
-std::string banner(const std::string &title)
+std::string banner_imp(const std::string &title)
 {
     if(title.empty())
     {

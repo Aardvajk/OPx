@@ -11,12 +11,12 @@ enum class Code
     Push,
     Pop,
     Store,
+    AllocS,
 
     Jmp,
     Call,
 
     Int,
-    Foo,
     Invalid
 };
 

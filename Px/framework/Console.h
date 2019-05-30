@@ -3,7 +3,12 @@
 
 #include <pcx/str.h>
 
-std::string banner(const std::string &title);
+std::string banner_imp(const std::string &title);
+
+template<typename... Args> std::string banner(Args&&... args)
+{
+    return banner_imp(pcx::str(std::forward<Args>(args)...));
+}
 
 std::size_t padw(std::size_t n);
 
