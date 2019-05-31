@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include "framework/ByteStreamPatch.h"
 
@@ -21,7 +22,7 @@ public:
     void write(const void *data, std::size_t bytes);
     void writeAt(std::size_t position, const void *data, std::size_t bytes);
 
-    std::string data() const;
+    std::vector<char> data() const;
     std::size_t position() const;
 
 private:

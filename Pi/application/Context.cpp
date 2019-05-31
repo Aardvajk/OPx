@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-Context::Context() : scanner(Lexer::Mode::Pi), comments(funcs)
+Context::Context() : scanner(Lexer::Mode::Pi), comments(pcx::make_callback(this, &currentPosition))
 {
 }
 
@@ -41,3 +41,5 @@ void Context::assertUnique(Location location, const std::string &text)
         throw Error(location, "already defined - ", text);
     }
 }
+
+

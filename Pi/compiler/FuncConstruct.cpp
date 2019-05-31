@@ -8,8 +8,6 @@
 
 #include "compiler/Instruction.h"
 
-#include "components/Header.h"
-
 #include <pcx/lexical_cast.h>
 
 namespace
@@ -30,7 +28,7 @@ void pushInstruction(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
 
-    c.comments(header("push ", tok.text(), ";"));
+    c.comments("push ", tok.text(), ";");
 
     if(tok.type() == Token::Type::IntLiteral)
     {
@@ -72,7 +70,7 @@ void pushInstruction(Context &c, bool get)
 void popInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
-    c.comments(header("pop ", id.text(), ";"));
+    c.comments("pop ", id.text(), ";");
 
     c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
 
@@ -82,7 +80,7 @@ void popInstruction(Context &c, bool get)
 void storeInstruction(Context &c, bool get)
 {
     auto tok = c.matchId(get);
-    c.comments(header("store ", tok.text(), ";"));
+    c.comments("store ", tok.text(), ";");
 
     auto sym = c.syms.find(tok.text());
 
@@ -103,7 +101,7 @@ void storeInstruction(Context &c, bool get)
 void allocSInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
-    c.comments(header("allocs ", id.text(), ";"));
+    c.comments("allocs ", id.text(), ";");
 
     c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
 
@@ -113,7 +111,7 @@ void allocSInstruction(Context &c, bool get)
 void jmpInstruction(Context &c, bool get)
 {
     auto label = c.matchId(get);
-    c.comments(header("jmp ", label.text(), ";"));
+    c.comments("jmp ", label.text(), ";");
 
     if(auto s = c.syms.findLocal(label.text()))
     {
@@ -140,7 +138,7 @@ void jmpInstruction(Context &c, bool get)
 
 void callInstruction(Context &c, bool get)
 {
-    c.comments(header("call;"));
+    c.comments("call;");
 
     c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
     c.func().bytes << OpCode::Op::Call << OpCode::Reg::Dx;
@@ -151,7 +149,7 @@ void callInstruction(Context &c, bool get)
 void intInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
-    c.comments(header("int ", id.text(), ";"));
+    c.comments("int ", id.text(), ";");
 
     c.func().bytes << OpCode::Op::Int << pcx::lexical_cast<int>(id.text());
 

@@ -4,6 +4,7 @@
 #include "framework/InputStream.h"
 #include "framework/ByteReader.h"
 #include "framework/Console.h"
+#include "framework/Comments.h"
 
 #include <pcx/str.h>
 #include <pcx/join_str.h>
@@ -35,59 +36,19 @@ std::string byteString(ByteReader &rm, std::size_t n)
     return pcx::join_str(v, ",");
 }
 
-std::vector<std::pair<std::size_t, std::string> > loadComments(const std::string &path)
-{
-    std::vector<std::pair<std::size_t, std::string> > comments;
-
-    std::ifstream file(path);
-    if(!file.is_open())
-    {
-        throw Error("unable to open - ", path);
-    }
-
-    std::string line;
-    while(std::getline(file, line))
-    {
-        std::string no, tx;
-        bool getting = true;
-        for(std::size_t i = 0; i < line.length(); ++i)
-        {
-            if(std::isdigit(line[i]) && getting)
-            {
-                no += line[i];
-            }
-            else if(getting)
-            {
-                getting = false;
-            }
-            else
-            {
-                tx += line[i];
-            }
-        }
-
-        if(!no.empty())
-        {
-            comments.push_back(std::make_pair(pcx::lexical_cast<std::size_t>(no), tx));
-        }
-    }
-
-    return comments;
-}
-
-void dumpComment(const std::vector<std::pair<std::size_t, std::string> > &cv, std::size_t &ci, std::size_t pc)
+void dumpComment(const Comments &cv, std::size_t &ci, std::size_t pc)
 {
     if(ci < cv.size())
     {
-        while(cv[ci].first == pc)
+        while(cv[ci].position == pc)
         {
-            std::cout << cv[ci].second << "\n";
+            std::cout << cv[ci].text << "\n";
             ++ci;
         }
     }
 }
 
-void disassemble(const std::vector<char> &data, const std::vector<std::pair<std::size_t, std::string> > &cv, std::size_t &ci)
+void disassemble(const std::vector<char> &data, const Comments &cv, std::size_t &ci)
 {
     std::size_t pc = 0;
     ByteReader rm(data.data(), pc);
@@ -153,10 +114,14 @@ int main(int argc, char *argv[])
 
         std::string path = argv[1];
 
-        std::vector<std::pair<std::size_t, std::string> > comments;
+        Comments comments;
         if(argc > 2)
         {
-            comments = loadComments(argv[2]);
+            comments = Comments(argv[2]);
+            if(comments.failed())
+            {
+                throw Error("unable to open - ", argv[2]);
+            }
         }
 
         if(path.length() > 3 && path.substr(path.length() - 3) == ".po")

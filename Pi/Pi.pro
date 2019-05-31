@@ -18,10 +18,12 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
         "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
+PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Pd/release/Pd.exe"
+PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Pl/release/Pl.exe"
+PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Pv/release/Pv.exe"
 
 SOURCES += \
         application/Context.cpp \
-        components/Header.cpp \
         components/StringTable.cpp \
         compiler/Compiler.cpp \
         compiler/FuncConstruct.cpp \
@@ -32,9 +34,7 @@ SOURCES += \
 
 HEADERS += \
     application/Context.h \
-    components/Comments.h \
     components/Function.h \
-    components/Header.h \
     components/StringTable.h \
     compiler/Compiler.h \
     compiler/FuncConstruct.h \

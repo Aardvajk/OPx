@@ -10,8 +10,6 @@
 
 #include "compiler/FuncConstruct.h"
 
-#include "components/Header.h"
-
 #include <pcx/lexical_cast.h>
 #include <pcx/range_reverse.h>
 
@@ -98,12 +96,14 @@ void funcConstruct(Context &c, bool get)
         r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
         r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
 
-        c.comments("func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
-        c.comments("{");
-        c.comments(header("prologue"));
+        c.comments(Comments::Bare, "func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
+        c.comments(Comments::Bare, "{");
+        c.comments("prologue");
 
         c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Sp << OpCode::Reg::Bp;
+
+        c.comments("allocate locals");
         c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
 
         while(c.scanner.token().type() != Token::Type::RightBrace)
@@ -124,13 +124,15 @@ void funcConstruct(Context &c, bool get)
             p.second.patch(c.func().bytes, s->properties["position"].to<std::size_t>() - (p.second.position() + 8));
         }
 
-        c.comments(header("----epilogue"));
 
+        c.comments("deallocate locals");
         c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
+
+        c.comments("epilogue");
         c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::Ret << c.func().args;
 
-        c.comments("}\n");
+        c.comments(Comments::Bare, "}\n");
     }
     else
     {

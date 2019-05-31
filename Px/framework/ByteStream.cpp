@@ -42,9 +42,10 @@ void ByteStream::writeAt(std::size_t position, const void *data, std::size_t byt
     o->seekp(old);
 }
 
-std::string ByteStream::data() const
+std::vector<char> ByteStream::data() const
 {
-    return os.str();
+    auto s = os.str();
+    return std::vector<char>(s.begin(), s.end());
 }
 
 std::size_t ByteStream::position() const

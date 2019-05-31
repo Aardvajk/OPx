@@ -5,6 +5,7 @@
 
 #include "framework/Error.h"
 #include "framework/Console.h"
+#include "framework/Comments.h"
 
 #include <pcx/indexed_range.h>
 
@@ -42,9 +43,10 @@ int main(int argc, char *argv[])
             paths.push_back(argv[i]);
         }
 
-        auto mp = Prologue::generate(c.ds);
+        auto mp = Prologue::generate(c, c.ds);
 
         Generator::generate(c, paths);
+        auto cm = Generator::comments(c, paths);
 
         std::cout << banner("linker");
         for(auto &u: c.units)
@@ -76,11 +78,8 @@ int main(int argc, char *argv[])
 
         mp.patch(c.ds, c.ds.position() + me->offset);
 
-        auto ds = c.ds.data();
-        auto ps = c.ps.data();
-
-        std::vector<char> db(ds.begin(), ds.end());
-        std::vector<char> pb(ps.begin(), ps.end());
+        auto db = c.ds.data();
+        auto pb = c.ps.data();
 
         if(true)
         {
@@ -94,7 +93,19 @@ int main(int argc, char *argv[])
             os.write(pb.data(), pb.size());
         }
 
-        std::system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px");
+        if(true)
+        {
+            std::ofstream os("C:/Projects/Px/Px/out.px.pmap");
+            if(!os.is_open())
+            {
+                throw Error("unable to create - out.px.pmap");
+            }
+
+            c.dataComments.write(os);
+            cm.write(os);
+        }
+
+        std::system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px C:/Projects/Px/Px/out.px.pmap");
         std::system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
     }
 

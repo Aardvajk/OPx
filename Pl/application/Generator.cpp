@@ -4,6 +4,11 @@
 
 #include "framework/Error.h"
 #include "framework/InputStream.h"
+#include "framework/Comments.h"
+
+#include <pcx/str.h>
+#include <pcx/indexed_range.h>
+#include <pcx/optional.h>
 
 #include <iostream>
 #include <fstream>
@@ -45,6 +50,20 @@ void processUnit(Context &c, Unit &unit, InputStream &is)
     }
 }
 
+class PositionProvider
+{
+public:
+    PositionProvider(Context &c) : c(c), u(0), e(0), b(0) { }
+
+    void setBase(std::size_t unit, std::size_t entity, std::size_t base){ u = unit; e = entity; b = base; }
+
+    std::size_t position() const { return c.ds.position() + c.units[u].entities[e].offset + b; }
+
+private:
+    Context &c;
+    std::size_t u, e, b;
+};
+
 }
 
 void Generator::generate(Context &c, const std::vector<std::string> &paths)
@@ -62,4 +81,35 @@ void Generator::generate(Context &c, const std::vector<std::string> &paths)
         InputStream is(fs);
         processUnit(c, c.units.back(), is);
     }
+}
+
+Comments Generator::comments(Context &c, const std::vector<std::string> &paths)
+{
+    PositionProvider pp(c);
+    Comments out(pcx::make_callback(&pp, &PositionProvider::position));
+
+    for(auto path: pcx::indexed_range(paths))
+    {
+        Comments cm(pcx::str(path.value, ".pmap"));
+        if(!cm.failed())
+        {
+            pcx::optional<std::size_t> last;
+
+            std::size_t entity = 0;
+            for(std::size_t i = 0; i < cm.size(); ++i)
+            {
+                if(last && cm[i].position < *last)
+                {
+                    ++entity;
+                }
+
+                last = cm[i].position;
+
+                pp.setBase(path.index, entity, cm[i].position);
+                out(Comments::Bare, cm[i].text);
+            }
+        }
+    }
+
+    return out;
 }

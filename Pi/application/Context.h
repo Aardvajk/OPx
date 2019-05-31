@@ -1,12 +1,13 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+#include "framework/Comments.h"
+
 #include "scanner/SourceList.h"
 #include "scanner/Scanner.h"
 
 #include "components/Function.h"
 #include "components/StringTable.h"
-#include "components/Comments.h"
 
 #include "symbols/SymStack.h"
 
@@ -22,6 +23,7 @@ public:
     void assertUnique(Location location, const std::string &text);
 
     Function &func(){ return funcs.back(); }
+    std::size_t currentPosition() const { return funcs.back().bytes.position(); }
 
     SourceList sources;
     Scanner scanner;

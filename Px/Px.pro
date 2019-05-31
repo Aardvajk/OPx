@@ -26,7 +26,8 @@ SOURCES += \
     scanner/Scanner.cpp \
     scanner/Source.cpp \
     scanner/SourceList.cpp \
-    scanner/Token.cpp
+    scanner/Token.cpp \
+    framework/Comments.cpp
 
 HEADERS += \
     common/Interrupt.h \
@@ -42,4 +43,5 @@ HEADERS += \
     scanner/Scanner.h \
     scanner/Source.h \
     scanner/SourceList.h \
-    scanner/Token.h
+    scanner/Token.h \
+    framework/Comments.h
