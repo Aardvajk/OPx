@@ -31,7 +31,19 @@ int main(int argc, char *argv[])
                 bs << s;
             }
 
-            bs << c.funcs.size();
+            bs << c.globs.size() + c.funcs.size();
+            for(auto &g: c.globs)
+            {
+                bs << 'V' << g.id;
+
+                bs << std::size_t(0);
+
+                auto bytes = g.bytes.data();
+
+                bs << bytes.size();
+                bs.write(bytes.data(), bytes.size());
+            }
+
             for(auto &f: c.funcs)
             {
                 ByteStreamPatch p;
@@ -41,27 +53,22 @@ int main(int argc, char *argv[])
                 bs << f.links.size();
                 for(auto i: f.links)
                 {
-                    bs << i.first << i.second;
+                    bs << i.address << i.id;
                 }
-
-                bs << p;
-                auto i = bs.position();
 
                 auto bytes = f.bytes.data();
 
+                bs << bytes.size();
                 bs.write(bytes.data(), bytes.size());
-                p.patch(bs, bs.position() - i);
             }
         }
 
-        c.comments.save("C:/Projects/Px/Px/script.po.pmap");
-
-        std::system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
+        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/script.po");
     }
 
     catch(const Error &error)
     {
-        std::cerr << "error";
+        std::cerr << "pi error";
         if(auto n = error.location())
         {
             std::cerr << " " << c.sources.path(n.id()) << " " << n.line() << "," << n.column();

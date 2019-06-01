@@ -36,15 +36,17 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
     auto sym = c.syms.add(new Sym(type, id.text()));
     commonSizeConstruct(c, sym, "size", true);
 
-    if(type == Sym::Type::Arg || type == Sym::Type::Local)
+    if(type == Sym::Type::Global)
     {
-        if(!sym->properties["size"])
+        c.globs.emplace_back(sym, c.strings.insert(id.text()));
+
+        auto sz = sym->properties["size"].to<std::size_t>();
+        for(std::size_t i = 0; i < sz; ++i)
         {
-            throw Error(id.location(), Sym::toString(type), " missing size - ", id.text());
+            c.globs.back().bytes << char(0);
         }
     }
-
-    if(type == Sym::Type::Local)
+    else if(type == Sym::Type::Local)
     {
         c.func().locals += sym->properties["size"].to<std::size_t>();
         sym->properties["offset"] = c.func().locals;
@@ -61,18 +63,42 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 void funcConstruct(Context &c, bool get)
 {
     auto id = c.matchId(get);
-    c.assertUnique(id.location(), id.text());
 
-    auto sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
-    sym->properties["size"] = sizeof(std::size_t);
+    Sym *sym = c.syms.find(id.text());
+    if(sym)
+    {
+        if(sym->type != Sym::Type::Func)
+        {
+            throw Error(id.location(), "function expected - ", id.text());
+        }
+    }
+    else
+    {
+        sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
+        sym->properties["size"] = sizeof(std::size_t);
+    }
 
-    c.syms.push();
-    c.funcs.emplace_back(sym, c.strings.insert(id.text()));
+    auto rs = sym->properties["returnSize"];
 
     commonSizeConstruct(c, sym, "returnSize", true);
 
+    if(rs && rs.to<std::size_t>() != sym->properties["returnSize"].to<std::size_t>())
+    {
+        throw Error(id.location(), "return size different - ", id.text());
+    }
+
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
+        if(sym->properties["defined"].value<bool>())
+        {
+            throw Error(id.location(), "function already defined - ", id.text());
+        }
+
+        sym->properties["defined"] = true;
+
+        c.syms.push();
+        c.funcs.emplace_back(sym, c.strings.insert(id.text()));
+
         std::vector<Sym*> args;
 
         c.scanner.next(true);
@@ -96,14 +122,9 @@ void funcConstruct(Context &c, bool get)
         r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
         r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
 
-        c.comments(Comments::Bare, "func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
-        c.comments(Comments::Bare, "{");
-        c.comments("prologue");
-
         c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Sp << OpCode::Reg::Bp;
 
-        c.comments("allocate locals");
         c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
 
         while(c.scanner.token().type() != Token::Type::RightBrace)
@@ -125,14 +146,12 @@ void funcConstruct(Context &c, bool get)
         }
 
 
-        c.comments("deallocate locals");
         c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
 
-        c.comments("epilogue");
         c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::Ret << c.func().args;
 
-        c.comments(Comments::Bare, "}\n");
+        c.syms.pop();
     }
     else
     {
@@ -141,8 +160,6 @@ void funcConstruct(Context &c, bool get)
 
     std::cout << banner(id.text());
     c.syms.print(std::cout);
-
-    c.syms.pop();
 }
 
 void construct(Context &c, bool get)

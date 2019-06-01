@@ -1,6 +1,8 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
+#include "common/Object.h"
+
 #include "framework/ByteStream.h"
 
 #include "scanner/Token.h"
@@ -23,7 +25,7 @@ public:
     ByteStream bytes;
 
     std::vector<std::pair<Token,ByteStreamPatch> > jmpPatches;
-    std::vector<std::pair<std::size_t, std::size_t> > links;
+    std::vector<Object::Link> links;
 };
 
 #endif // FUNCTION_H

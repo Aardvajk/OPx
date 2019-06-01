@@ -1,29 +1,11 @@
-func "foo()":4
-{
-    arg a:4;
-    arg b:4;
-
-    push a;
-    int 1;
-    pop 4;
-
-    push b;
-    int 1;
-    pop 4;
-
-    push 999;
-    store "@ret";
-    pop 4;
-}
+var a:4;
+var b:8;
 
 func "main()":0
 {
-    allocs 4;
-    push 3212;
-    push 123;
-    push "foo()";
-    call;
+    int 1010;
+}
 
-    int 1;
-    pop 4;
+func "foo()":8
+{
 }

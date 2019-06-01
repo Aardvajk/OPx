@@ -17,6 +17,7 @@ INCLUDEPATH += "C:/Projects/pcx"
 LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a"
 
 SOURCES += \
+    common/Object.cpp \
     framework/ByteStream.cpp \
     framework/ByteStreamPatch.cpp \
     common/OpCode.cpp \
@@ -27,10 +28,11 @@ SOURCES += \
     scanner/Source.cpp \
     scanner/SourceList.cpp \
     scanner/Token.cpp \
-    framework/Comments.cpp
+    framework/Segment.cpp
 
 HEADERS += \
     common/Interrupt.h \
+    common/Object.h \
     framework/ByteReader.h \
     framework/Console.h \
     framework/Error.h \
@@ -44,4 +46,4 @@ HEADERS += \
     scanner/Source.h \
     scanner/SourceList.h \
     scanner/Token.h \
-    framework/Comments.h
+    framework/Segment.h

@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
     catch(const Error &e)
     {
-        std::cerr << "error: " << e.what() << "\n";
+        std::cerr << "pv error: " << e.what() << "\n";
         return -1;
     }
 }

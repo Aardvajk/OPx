@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-Context::Context() : scanner(Lexer::Mode::Pi), comments(pcx::make_callback(this, &currentPosition))
+Context::Context() : scanner(Lexer::Mode::Pi)
 {
 }
 
@@ -42,4 +42,8 @@ void Context::assertUnique(Location location, const std::string &text)
     }
 }
 
+std::size_t Context::currentPosition(char) const
+{
+    return funcs.back().bytes.position();
+}
 
