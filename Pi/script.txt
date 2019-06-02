@@ -16,6 +16,7 @@ func "foo()":0
     int 2020;
     jmp bar;
     int 3030;
+bar:
     int 4040;
 }
 

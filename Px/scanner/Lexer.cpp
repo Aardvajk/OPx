@@ -49,7 +49,7 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
 {
     if(mode == Lexer::Mode::Pc)
     {
-        static const char *s[] = { "class", "namespace", "using", "public", "private", "var", "", "func", "ptr",
+        static const char *s[] = { "class", "namespace", "using", "public", "private", "var", " ", "func", "ptr",
                                    "lookup", "trigger_error", "",
                                    "" };
 
