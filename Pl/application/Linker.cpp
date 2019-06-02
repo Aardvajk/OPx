@@ -20,7 +20,7 @@ void linkEntity(Context &c, Object::Unit &unit, Object::Entity &entity)
             throw Error("unable to locate - ", name);
         }
 
-        auto addr = c.ds.position() + e->offset;
+        auto addr = e->offset;
 
         std::cout << "linking " << name << " to " << addr << "\n";
 

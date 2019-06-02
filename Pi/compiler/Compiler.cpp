@@ -156,9 +156,6 @@ void funcConstruct(Context &c, bool get)
     {
         c.scanner.consume(Token::Type::Semicolon, false);
     }
-
-    std::cout << banner(id.text());
-    c.syms.print(std::cout);
 }
 
 void construct(Context &c, bool get)

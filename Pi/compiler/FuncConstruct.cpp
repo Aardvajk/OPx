@@ -17,10 +17,15 @@ void generateAddress(Context &c, OpCode::Reg reg, Sym *sym)
 {
     if(sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local)
     {
-        using namespace OpCode;
+        c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Bp << reg;
+        c.func().bytes << (sym->type == Sym::Type::Arg ? OpCode::Op::AddRI : OpCode::Op::SubRI) << reg << sym->properties["offset"].to<std::size_t>();
+    }
+    else if(sym->type == Sym::Type::Global)
+    {
+        auto id = c.strings.insert(sym->name);
 
-        c.func().bytes << Op::CopyRR << Reg::Bp << reg;
-        c.func().bytes << (sym->type == Sym::Type::Arg ? Op::AddRI : Op::SubRI) << reg << sym->properties["offset"].to<std::size_t>();
+        c.func().bytes << OpCode::Op::SetRI << reg << std::size_t(0);
+        c.func().links.push_back(Object::Link(c.func().bytes.position() - sizeof(std::size_t), id));
     }
 }
 
@@ -42,7 +47,7 @@ void pushInstruction(Context &c, bool get)
             throw Error(tok.location(), "not found - ", tok.text());
         }
 
-        if(sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local)
+        if(sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local || sym->type == Sym::Type::Global)
         {
             generateAddress(c, OpCode::Reg::Dx, sym);
 
@@ -80,7 +85,7 @@ void storeInstruction(Context &c, bool get)
 
     auto sym = c.syms.find(tok.text());
 
-    if(sym && (sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local))
+    if(sym && (sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local || sym->type == Sym::Type::Global))
     {
         generateAddress(c, OpCode::Reg::Dx, sym);
 
