@@ -1,11 +1,21 @@
-var a:4;
-var b:8;
+func "foo()":0;
 
 func "main()":0
 {
     int 1010;
+    push "foo()";
+    call;
+    jmp barx;
+    int 5050;
+barx:
+    int 6060;
 }
 
-func "foo()":8
+func "foo()":0
 {
+    int 2020;
+    jmp bar;
+    int 3030;
+    int 4040;
 }
+

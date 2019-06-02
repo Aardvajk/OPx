@@ -1,6 +1,7 @@
 #include "framework/Error.h"
 #include "framework/Console.h"
 #include "framework/ByteReader.h"
+#include "framework/LoadBinaryFile.h"
 
 #include "common/Interrupt.h"
 
@@ -8,17 +9,6 @@
 
 #include <iostream>
 #include <fstream>
-
-std::vector<char> readFile(const std::string &path)
-{
-    std::ifstream is(path, std::ios::binary);
-    if(!is.is_open())
-    {
-        throw Error("unable to open - ", path);
-    }
-
-    return { std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>() };
-}
 
 void intProc(int code, Memory &mm, Registers &rg)
 {
@@ -47,7 +37,7 @@ int main(int argc, char *argv[])
 
         std::cout << banner("executing");
 
-        Machine m(readFile(argv[1]), intProc);
+        Machine m(loadBinaryFile(argv[1]), intProc);
 
         m.execute();
 

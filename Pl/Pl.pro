@@ -15,5 +15,18 @@ QMAKE_CXXFLAGS_WARN_OFF += Wunused-parameter
 INCLUDEPATH += "C:/Projects/pcx" \
                "C:/Projects/Px/Px/Px"
 
+LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
+        "C:/Projects/Px/Px/build-Px/release/libPx.a"
+
 SOURCES += \
+        application/Context.cpp \
+        application/Generator.cpp \
+        application/Linker.cpp \
+        application/Prologue.cpp \
         main.cpp
+
+HEADERS += \
+    application/Context.h \
+    application/Generator.h \
+    application/Linker.h \
+    application/Prologue.h

@@ -137,14 +137,13 @@ void funcConstruct(Context &c, bool get)
         for(auto p: c.func().jmpPatches)
         {
             auto s = c.syms.findLocal(p.first.text());
-            if(!s || s->type != Sym::Type::Label)
+            if(!s || (s && s->type != Sym::Type::Label))
             {
-                throw Error(p.first.location(), "label expected - ", p.first.text());
+                throw Error(p.first.location(), "label not found - ", p.first.text());
             }
 
             p.second.patch(c.func().bytes, s->properties["position"].to<std::size_t>() - (p.second.position() + 8));
         }
-
 
         c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
 

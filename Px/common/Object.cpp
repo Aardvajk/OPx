@@ -23,12 +23,12 @@ std::vector<std::string> Object::readStringTable(InputStream &is)
     return v;
 }
 
-Object::Entity Object::readEntity(InputStream &is, std::size_t offset, pcx::callback<void, std::size_t, InputStream&> read)
+Object::Entity Object::readEntity(InputStream &is, pcx::callback<std::size_t, char> offset, pcx::callback<void, char, InputStream&> read)
 {
     auto type = is.get<char>();
     auto id = is.get<std::size_t>();
 
-    Entity e(type, id, offset);
+    Entity e(type, id, offset(type));
 
     auto n = is.get<std::size_t>();
     for(std::size_t i = 0; i < n; ++i)
@@ -39,8 +39,7 @@ Object::Entity Object::readEntity(InputStream &is, std::size_t offset, pcx::call
         e.links.emplace_back(address, id);
     }
 
-    auto bytes = is.get<std::size_t>();
-    read(bytes, is);
+    read(type, is);
 
     return e;
 }

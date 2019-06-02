@@ -58,7 +58,7 @@ void pushInstruction(Context &c, bool get)
             c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << sizeof(std::size_t);
             c.func().bytes << OpCode::Op::CopyAI << OpCode::Reg::Sp << sizeof(std::size_t) << std::size_t(0);
 
-            c.func().links.push_back(Object::Link(id, c.func().bytes.position() - sizeof(std::size_t)));
+            c.func().links.push_back(Object::Link(c.func().bytes.position() - sizeof(std::size_t), id));
         }
     }
 

@@ -22,13 +22,14 @@ SOURCES += \
     framework/ByteStreamPatch.cpp \
     common/OpCode.cpp \
     framework/Console.cpp \
+    framework/Error.cpp \
     framework/InputStream.cpp \
+    framework/LoadBinaryFile.cpp \
     scanner/Lexer.cpp \
     scanner/Scanner.cpp \
     scanner/Source.cpp \
     scanner/SourceList.cpp \
-    scanner/Token.cpp \
-    framework/Segment.cpp
+    scanner/Token.cpp
 
 HEADERS += \
     common/Interrupt.h \
@@ -40,10 +41,10 @@ HEADERS += \
     framework/ByteStreamPatch.h \
     common/OpCode.h \
     framework/InputStream.h \
+    framework/LoadBinaryFile.h \
     scanner/Lexer.h \
     scanner/Location.h \
     scanner/Scanner.h \
     scanner/Source.h \
     scanner/SourceList.h \
-    scanner/Token.h \
-    framework/Segment.h
+    scanner/Token.h

@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
         }
 
         checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/script.po");
+        checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
     }
 
     catch(const Error &error)
