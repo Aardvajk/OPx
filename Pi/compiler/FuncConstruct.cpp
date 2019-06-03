@@ -65,6 +65,10 @@ void pushInstruction(Context &c, bool get)
 
             c.func().links.push_back(Object::Link(c.func().bytes.position() - sizeof(std::size_t), id));
         }
+        else
+        {
+            throw Error(tok.location(), "invalid push parameter - ", tok.text());
+        }
     }
 
     c.scanner.consume(Token::Type::Semicolon, true);
@@ -84,8 +88,12 @@ void storeInstruction(Context &c, bool get)
     auto tok = c.matchId(get);
 
     auto sym = c.syms.find(tok.text());
+    if(!sym)
+    {
+        throw Error(tok.location(), "not found - ", tok.text());
+    }
 
-    if(sym && (sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local || sym->type == Sym::Type::Global))
+    if(sym->type == Sym::Type::Arg || sym->type == Sym::Type::Local || sym->type == Sym::Type::Global)
     {
         generateAddress(c, OpCode::Reg::Dx, sym);
 
@@ -94,6 +102,7 @@ void storeInstruction(Context &c, bool get)
     }
     else
     {
+        throw Error(tok.location(), "invalid store parameter - ", tok.text());
     }
 
     c.scanner.consume(Token::Type::Semicolon, true);
