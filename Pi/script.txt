@@ -1,11 +1,12 @@
 var a:4;
 
-func "foo()":0;
-
 func "main()":0
 {
     push 876;
     store a;
     pop 4;
+
+    service 1010;
 }
 
+var b:4;

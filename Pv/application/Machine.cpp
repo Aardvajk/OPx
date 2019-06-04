@@ -5,7 +5,7 @@
 
 #include "components/Vars.h"
 
-Machine::Machine(const std::vector<char> &v, IntProc ip) : mm(1024 * 5), ip(ip)
+Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), sp(sp)
 {
     std::memcpy(mm(0), v.data(), v.size());
 
@@ -45,7 +45,7 @@ void Machine::execute()
             case Op::Call: rm(v.r0); rg.sp() -= sizeof(std::size_t); std::memcpy(mm(rg.sp()), &(rg.pc()), sizeof(std::size_t)); rg.pc() = rg[v.r0]; break;
             case Op::Ret: rm(v.s0); std::memcpy(&(rg.pc()), mm(rg.sp()), sizeof(std::size_t)); rg.sp() += sizeof(std::size_t) + v.s0; break;
 
-            case Op::Int: rm(v.i0); ip(v.i0, mm, rg); break;
+            case Op::Service: rm(v.i0); sp(v.i0, mm, rg); break;
 
             case Op::End: return;
 

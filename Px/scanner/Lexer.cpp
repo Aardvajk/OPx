@@ -139,6 +139,8 @@ std::string Lexer::encodeString(const std::string &text)
             case '\n': s += "\\n"; break;
             case '\t': s += "\\t"; break;
             case '\0': s += "\\0"; break;
+            case '\"': s += "\\\""; break;
+            case '\'': s += "\\'"; break;
 
             default: s += ch;
         }
@@ -163,6 +165,8 @@ std::string Lexer::decodeString(const std::string &text)
                 case 'n': ch = '\n'; break;
                 case 't': ch = '\t'; break;
                 case '0': ch = '\0'; break;
+                case '\"': ch = '\"'; break;
+                case '\'': ch = '\''; break;
             }
         }
 

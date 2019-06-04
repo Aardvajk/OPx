@@ -13,7 +13,7 @@ const char *s[] =
     "jmp",
     "call",
 
-    "int",
+    "service",
     ""
 };
 

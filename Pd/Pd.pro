@@ -19,10 +19,14 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
         "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
+        application/Context.cpp \
         application/Disassmble.cpp \
         application/Loader.cpp \
+        application/Process.cpp \
         main.cpp
 
 HEADERS += \
+    application/Context.h \
     application/Disassmble.h \
-    application/Loader.h
+    application/Loader.h \
+    application/Process.h

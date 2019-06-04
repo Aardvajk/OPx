@@ -3,8 +3,6 @@
 #include "framework/ByteReader.h"
 #include "framework/LoadBinaryFile.h"
 
-#include "common/Interrupt.h"
-
 #include "application/Machine.h"
 
 #include <iostream>
@@ -15,7 +13,7 @@ void intProc(int code, Memory &mm, Registers &rg)
     auto sp = rg.sp();
     ByteReader sr(mm(0), sp);
 
-    if(code == Interrupt::PrintInt)
+    if(code == 1)
     {
         auto i = sr.get<int>();
         std::cout << "integer " << i << "\n";
@@ -47,9 +45,9 @@ int main(int argc, char *argv[])
         std::cout << banner("");
     }
 
-    catch(const Error &e)
+    catch(const Error &error)
     {
-        std::cerr << "pv error: " << e.what() << "\n";
+        std::cerr << "pv error: " << error.what() << "\n";
         return -1;
     }
 }

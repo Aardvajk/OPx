@@ -3,10 +3,12 @@
 
 #include <iostream>
 
+class Context;
+
 namespace Disassemble
 {
 
-void disassemble(std::ostream &os, const char *data, std::size_t size);
+void disassemble(Context &c, std::ostream &os, const char *data, std::size_t size);
 
 }
 

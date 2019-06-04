@@ -9,9 +9,9 @@
 class Machine
 {
 public:
-    using IntProc = void(*)(int, Memory&, Registers&);
+    using ServiceProc = void(*)(int, Memory&, Registers&);
 
-    Machine(const std::vector<char> &v, IntProc ip);
+    Machine(const std::vector<char> &v, ServiceProc sp);
 
     void execute();
     void shutdown();
@@ -19,7 +19,7 @@ public:
 private:
     Memory mm;
     Registers rg;
-    IntProc ip;
+    ServiceProc sp;
 };
 
 #endif // MACHINE_H

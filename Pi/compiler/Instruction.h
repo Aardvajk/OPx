@@ -16,7 +16,7 @@ enum class Code
     Jmp,
     Call,
 
-    Int,
+    Service,
     Invalid
 };
 

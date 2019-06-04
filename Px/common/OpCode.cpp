@@ -37,7 +37,7 @@ const char *OpCode::toString(Op v)
         "call",
         "ret",
 
-        "int",
+        "service",
 
         "(invalid)"
     };

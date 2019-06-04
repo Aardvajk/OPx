@@ -41,9 +41,3 @@ void Context::assertUnique(Location location, const std::string &text)
         throw Error(location, "already defined - ", text);
     }
 }
-
-std::size_t Context::currentPosition(char) const
-{
-    return funcs.back().bytes.position();
-}
-

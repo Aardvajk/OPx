@@ -6,6 +6,8 @@
 #include "framework/Error.h"
 #include "framework/Console.h"
 
+#include "application/Context.h"
+
 #include <pcx/lexical_cast.h>
 #include <pcx/join_str.h>
 
@@ -28,7 +30,7 @@ std::string bytes(ByteReader &rm, std::size_t n)
 
 }
 
-void Disassemble::disassemble(std::ostream &os, const char *data, std::size_t size)
+void Disassemble::disassemble(Context &c, std::ostream &os, const char *data, std::size_t size)
 {
     std::size_t pc = 0;
     ByteReader rm(data, pc);
@@ -46,7 +48,7 @@ void Disassemble::disassemble(std::ostream &os, const char *data, std::size_t si
         os << pad(pc, pcw) << ": ";
 
         rm(op);
-        os << pad(toString(op), 8) << " ";
+        os << pad(toString(op), 7) << " ";
 
         switch(op)
         {
@@ -67,7 +69,7 @@ void Disassemble::disassemble(std::ostream &os, const char *data, std::size_t si
             case Op::Call: rm(r0); os << toString(r0); break;
             case Op::Ret: rm(s0); os << s0; break;
 
-            case Op::Int: rm(i0); os << i0;break;
+            case Op::Service: rm(i0); os << i0;break;
 
             case Op::End: break;
 

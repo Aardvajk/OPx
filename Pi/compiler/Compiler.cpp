@@ -4,7 +4,6 @@
 #include "framework/Console.h"
 
 #include "common/OpCode.h"
-#include "common/Interrupt.h"
 
 #include "application/Context.h"
 

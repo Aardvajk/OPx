@@ -20,7 +20,6 @@ public:
     Token matchId(bool get);
 
     void assertUnique(Location location, const std::string &text);
-    std::size_t currentPosition(char type) const;
 
     Function &func(){ return funcs.back(); }
 

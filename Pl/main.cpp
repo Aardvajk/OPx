@@ -66,9 +66,9 @@ int main(int argc, char *argv[])
         checked_system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
     }
 
-    catch(const Error &e)
+    catch(const Error &error)
     {
-        std::cerr << "pl error: " << e.what() << "\n";
+        std::cerr << "pl error: " << error.what() << "\n";
         return -1;
     }
 }

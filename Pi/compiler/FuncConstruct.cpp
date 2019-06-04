@@ -110,9 +110,9 @@ void storeInstruction(Context &c, bool get)
 
 void allocSInstruction(Context &c, bool get)
 {
-    auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    auto amount = c.scanner.match(Token::Type::IntLiteral, get);
 
-    c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
+    c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(amount.text());
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -152,11 +152,11 @@ void callInstruction(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, get);
 }
 
-void intInstruction(Context &c, bool get)
+void serviceInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
 
-    c.func().bytes << OpCode::Op::Int << pcx::lexical_cast<int>(id.text());
+    c.func().bytes << OpCode::Op::Service << pcx::lexical_cast<int>(id.text());
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -190,7 +190,7 @@ void FuncConstruct::entity(Context &c, bool get)
         case Instruction::Code::Jmp: jmpInstruction(c, false); break;
         case Instruction::Code::Call: callInstruction(c, false); break;
 
-        case Instruction::Code::Int: intInstruction(c, false); break;
+        case Instruction::Code::Service: serviceInstruction(c, false); break;
 
         default: throw Error(tok.location(), "instruction expected - ", tok.text());
     }

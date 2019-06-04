@@ -9,7 +9,7 @@ class Source;
 namespace Lexer
 {
 
-enum class Mode { Pc, Pi };
+enum class Mode { Pc, Pi, Map };
 
 Token next(Mode mode, Source &source);
 

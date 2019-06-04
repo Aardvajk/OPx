@@ -2,11 +2,10 @@
 #include "framework/Console.h"
 #include "framework/LoadBinaryFile.h"
 
+#include "application/Context.h"
 #include "application/Loader.h"
+#include "application/Process.h"
 #include "application/Disassmble.h"
-
-#include <pcx/join_str.h>
-#include <pcx/str.h>
 
 #include <iostream>
 #include <vector>
@@ -14,6 +13,8 @@
 
 int main(int argc, char *argv[])
 {
+    Context c;
+
     try
     {
         if(argc < 2)
@@ -21,43 +22,28 @@ int main(int argc, char *argv[])
             throw Error("no source specified");
         }
 
-        for(int i = 1; i < 2; ++i)
+        std::string path = argv[1];
+
+        auto ext = path.length() > 3 ? path.substr(path.length() - 3) : std::string();
+
+        if(ext == ".po")
         {
-            std::string path = argv[i];
+            c.unit = Loader::loadObjectUnit(path, c.segments);
 
-            auto ext = path.length() > 3 ? path.substr(path.length() - 3) : std::string();
+            Process::process(c);
+        }
+        else
+        {
+            auto file = loadBinaryFile(path);
 
-            if(ext == ".po")
-            {
-                std::vector<std::vector<char> > sgs;
-                auto u = Loader::loadObjectUnit(path, sgs);
-
-                for(std::size_t i = 0; i < u.entities.size(); ++i)
-                {
-                    auto &e = u.entities[i];
-
-                    std::cout << banner("disassemble ", u.strings[e.id]);
-
-                    switch(e.type)
-                    {
-                        case 'V': std::cout << pcx::join_str(sgs[i], ",", [](char c){ return pcx::str(int(c)); }) << "\n"; break;
-                        case 'F': Disassemble::disassemble(std::cout, sgs[i].data(), sgs[i].size()); break;
-                    }
-                }
-            }
-            else
-            {
-                auto file = loadBinaryFile(path);
-
-                std::cout << banner("disassemble ", path);
-                Disassemble::disassemble(std::cout, file.data(), file.size());
-            }
+            std::cout << banner("disassemble ", path);
+            Disassemble::disassemble(c, std::cout, file.data(), file.size());
         }
     }
 
-    catch(const Error &e)
+    catch(const Error &error)
     {
-        std::cerr << "pd error: " << e.what() << "\n";
+        std::cerr << "pd error: " << error.what() << "\n";
         return -1;
     }
 }
