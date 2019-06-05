@@ -2,6 +2,7 @@
 #define CONTEXT_H
 
 #include "common/Object.h"
+#include "common/DebugMap.h"
 
 #include <vector>
 
@@ -12,6 +13,8 @@ public:
 
     std::vector<std::vector<char> > segments;
     Object::Unit unit;
+
+    DebugMap dm;
 };
 
 #endif // CONTEXT_H

@@ -10,3 +10,7 @@ func "main()":0
 }
 
 var b:4;
+
+func "foo()":0
+{
+}

@@ -5,9 +5,6 @@
 
 #include "compiler/Compiler.h"
 
-#include <pcx/str.h>
-
-#include "common/OpCode.h"
 #include <fstream>
 
 int main(int argc, char *argv[])
@@ -63,7 +60,19 @@ int main(int argc, char *argv[])
             }
         }
 
-        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/script.po");
+        if(true)
+        {
+            std::ofstream os("C:/Projects/Px/Px/script.po.pmap");
+            if(!os.is_open())
+            {
+                throw Error("unable to create - script.po.pmap");
+            }
+
+            c.vd.write(os);
+            c.pd.write(os);
+        }
+
+        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/script.po C:/Projects/Px/Px/script.po.pmap");
         checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
     }
 

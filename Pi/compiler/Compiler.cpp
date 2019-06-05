@@ -44,6 +44,9 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
         {
             c.globs.back().bytes << char(0);
         }
+
+        c.vd.begin('V', sz, { });
+        c.vd("var ", sym->name, ":", sz);
     }
     else if(type == Sym::Type::Local)
     {
@@ -121,9 +124,16 @@ void funcConstruct(Context &c, bool get)
         r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
         r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
 
+        c.pd.begin('F', 0, pcx::make_callback(&c, &Context::funcPosition));
+
+        c.pd("func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
+        c.pd("{");
+
+        c.pd("-function prologue");
         c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Sp << OpCode::Reg::Bp;
 
+        c.pd("-allocate locals");
         c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
 
         while(c.scanner.token().type() != Token::Type::RightBrace)
@@ -144,10 +154,15 @@ void funcConstruct(Context &c, bool get)
             p.second.patch(c.func().bytes, s->properties["position"].to<std::size_t>() - (p.second.position() + 8));
         }
 
+        c.pd("-free locals");
         c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
 
+        c.pd("-function epilogue");
         c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Bp;
         c.func().bytes << OpCode::Op::Ret << c.func().args;
+
+        c.pd("-end func ", sym->name);
+        c.pd("}");
 
         c.syms.pop();
     }

@@ -17,6 +17,7 @@ INCLUDEPATH += "C:/Projects/pcx"
 LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a"
 
 SOURCES += \
+    common/DebugMap.cpp \
     common/Object.cpp \
     framework/ByteStream.cpp \
     framework/ByteStreamPatch.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
     scanner/Token.cpp
 
 HEADERS += \
+    common/DebugMap.h \
     common/Object.h \
     framework/ByteReader.h \
     framework/Console.h \

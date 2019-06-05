@@ -25,12 +25,6 @@ void Generator::generate(Context &c, const std::string &path)
 
     unit.strings = Object::readStringTable(is);
 
-    std::cout << banner(path, " stringtable");
-    for(auto s: pcx::indexed_range(unit.strings))
-    {
-        std::cout << pad(s.index, 4) << ": " << s.value << "\n";
-    }
-
     auto count = is.get<std::size_t>();
     for(std::size_t i = 0; i < count; ++i)
     {

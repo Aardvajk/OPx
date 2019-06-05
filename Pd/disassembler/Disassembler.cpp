@@ -1,17 +1,14 @@
-#include "Disassmble.h"
+#include "Disassembler.h"
 
-#include <common/OpCode.h>
+#include "common/OpCode.h"
 
-#include "framework/ByteReader.h"
 #include "framework/Error.h"
+#include "framework/ByteReader.h"
 #include "framework/Console.h"
 
-#include "application/Context.h"
-
-#include <pcx/lexical_cast.h>
 #include <pcx/join_str.h>
+#include <pcx/lexical_cast.h>
 
-#include <string>
 #include <vector>
 
 namespace
@@ -30,7 +27,15 @@ std::string bytes(ByteReader &rm, std::size_t n)
 
 }
 
-void Disassemble::disassemble(Context &c, std::ostream &os, const char *data, std::size_t size)
+Disassembler::~Disassembler()
+{
+}
+
+void Disassembler::map(Context &c, std::size_t pc)
+{
+}
+
+void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, std::size_t size)
 {
     std::size_t pc = 0;
     ByteReader rm(data, pc);
@@ -44,6 +49,8 @@ void Disassemble::disassemble(Context &c, std::ostream &os, const char *data, st
         Reg r0, r1;
         std::size_t s0;
         int i0;
+
+        map(c, pc);
 
         os << pad(pc, pcw) << ": ";
 
@@ -78,4 +85,6 @@ void Disassemble::disassemble(Context &c, std::ostream &os, const char *data, st
 
         std::cout << "\n";
     }
+
+    map(c, pc);
 }

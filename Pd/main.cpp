@@ -1,15 +1,13 @@
 #include "framework/Error.h"
 #include "framework/Console.h"
-#include "framework/LoadBinaryFile.h"
 
 #include "application/Context.h"
-#include "application/Loader.h"
 #include "application/Process.h"
-#include "application/Disassmble.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 
 int main(int argc, char *argv[])
 {
@@ -22,23 +20,18 @@ int main(int argc, char *argv[])
             throw Error("no source specified");
         }
 
-        std::string path = argv[1];
-
-        auto ext = path.length() > 3 ? path.substr(path.length() - 3) : std::string();
-
-        if(ext == ".po")
+        if(argc > 2)
         {
-            c.unit = Loader::loadObjectUnit(path, c.segments);
+            std::ifstream is(argv[2]);
+            if(!is.is_open())
+            {
+                throw Error("unable to open - ", argv[2]);
+            }
 
-            Process::process(c);
+            c.dm.read(is);
         }
-        else
-        {
-            auto file = loadBinaryFile(path);
 
-            std::cout << banner("disassemble ", path);
-            Disassemble::disassemble(c, std::cout, file.data(), file.size());
-        }
+        Process::processUnit(c, argv[1]);
     }
 
     catch(const Error &error)

@@ -1,7 +1,19 @@
 #include "Source.h"
 
-Source::Source(Location::Id id, std::istream *is) : i(id), c(0), n(1), is(is)
+Source::Source(Location::Id id, std::istream *is) : i(id), c(0), n(1), own(true), is(is)
 {
+}
+
+Source::Source(Location::Id id, std::istream &is) : i(id), c(0), n(1), own(false), is(&is)
+{
+}
+
+Source::~Source()
+{
+    if(own)
+    {
+        delete is;
+    }
 }
 
 Source::Char Source::get()

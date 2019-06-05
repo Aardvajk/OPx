@@ -20,13 +20,15 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
 
 SOURCES += \
         application/Context.cpp \
-        application/Disassmble.cpp \
         application/Loader.cpp \
         application/Process.cpp \
+        disassembler/Disassembler.cpp \
+        disassembler/ObjectDisassembler.cpp \
         main.cpp
 
 HEADERS += \
     application/Context.h \
-    application/Disassmble.h \
     application/Loader.h \
-    application/Process.h
+    application/Process.h \
+    disassembler/Disassembler.h \
+    disassembler/ObjectDisassembler.h

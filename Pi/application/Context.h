@@ -4,6 +4,8 @@
 #include "scanner/SourceList.h"
 #include "scanner/Scanner.h"
 
+#include "common/DebugMap.h"
+
 #include "components/Global.h"
 #include "components/Function.h"
 #include "components/StringTable.h"
@@ -21,6 +23,8 @@ public:
 
     void assertUnique(Location location, const std::string &text);
 
+    std::size_t funcPosition() const;
+
     Function &func(){ return funcs.back(); }
 
     SourceList sources;
@@ -31,6 +35,9 @@ public:
     StringTable strings;
     std::vector<Global> globs;
     std::vector<Function> funcs;
+
+    DebugMap vd;
+    DebugMap pd;
 };
 
 #endif // CONTEXT_H

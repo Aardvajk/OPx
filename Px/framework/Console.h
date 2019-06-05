@@ -3,6 +3,8 @@
 
 #include <pcx/str.h>
 
+#include <vector>
+
 std::string banner_imp(const std::string &title);
 
 template<typename... Args> std::string banner(Args&&... args)

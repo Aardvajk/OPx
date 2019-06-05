@@ -32,6 +32,7 @@ void generateAddress(Context &c, OpCode::Reg reg, Sym *sym)
 void pushInstruction(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
+    c.pd("-push ", tok.text());
 
     if(tok.type() == Token::Type::IntLiteral)
     {
@@ -77,6 +78,7 @@ void pushInstruction(Context &c, bool get)
 void popInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-pop ", id.text());
 
     c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
 
@@ -86,6 +88,7 @@ void popInstruction(Context &c, bool get)
 void storeInstruction(Context &c, bool get)
 {
     auto tok = c.matchId(get);
+    c.pd("-store ", tok.text());
 
     auto sym = c.syms.find(tok.text());
     if(!sym)
@@ -111,6 +114,7 @@ void storeInstruction(Context &c, bool get)
 void allocSInstruction(Context &c, bool get)
 {
     auto amount = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-allocs ", amount.text());
 
     c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(amount.text());
 
@@ -120,6 +124,7 @@ void allocSInstruction(Context &c, bool get)
 void jmpInstruction(Context &c, bool get)
 {
     auto label = c.matchId(get);
+    c.pd("-jmp ", label.text());
 
     if(auto s = c.syms.findLocal(label.text()))
     {
@@ -146,6 +151,8 @@ void jmpInstruction(Context &c, bool get)
 
 void callInstruction(Context &c, bool get)
 {
+    c.pd("-call");
+
     c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
     c.func().bytes << OpCode::Op::Call << OpCode::Reg::Dx;
 
@@ -155,6 +162,7 @@ void callInstruction(Context &c, bool get)
 void serviceInstruction(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-service ", id.text());
 
     c.func().bytes << OpCode::Op::Service << pcx::lexical_cast<int>(id.text());
 

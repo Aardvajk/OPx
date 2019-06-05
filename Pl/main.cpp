@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
             os.write(pb.data(), std::streamoff(pb.size()));
         }
 
-        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px");
         checked_system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
     }
 

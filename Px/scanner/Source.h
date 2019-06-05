@@ -11,6 +11,8 @@ class Source
 {
 public:
     Source(Location::Id id, std::istream *is);
+    Source(Location::Id id, std::istream &is);
+    ~Source();
 
     using Char = std::istream::int_type;
 
@@ -24,7 +26,8 @@ private:
     Location::Column c, pc;
     Location::Line n;
 
-    pcx::scoped_ptr<std::istream> is;
+    bool own;
+    std::istream *is;
 };
 
 #endif // SOURCE_H
