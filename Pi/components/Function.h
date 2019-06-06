@@ -5,8 +5,6 @@
 
 #include "framework/ByteStream.h"
 
-#include "scanner/Token.h"
-
 #include <vector>
 
 class Sym;
@@ -24,7 +22,6 @@ public:
 
     ByteStream bytes;
 
-    std::vector<std::pair<Token,ByteStreamPatch> > jmpPatches;
     std::vector<Object::Link> links;
 };
 

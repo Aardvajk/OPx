@@ -7,8 +7,6 @@
 
 #include "application/Context.h"
 
-#include "compiler/FuncConstruct.h"
-
 #include <pcx/lexical_cast.h>
 #include <pcx/range_reverse.h>
 
@@ -136,23 +134,7 @@ void funcConstruct(Context &c, bool get)
         c.pd("-allocate locals");
         c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
 
-        while(c.scanner.token().type() != Token::Type::RightBrace)
-        {
-            FuncConstruct::entity(c, false);
-        }
-
         c.scanner.consume(Token::Type::RightBrace, false);
-
-        for(auto p: c.func().jmpPatches)
-        {
-            auto s = c.syms.findLocal(p.first.text());
-            if(!s || (s && s->type != Sym::Type::Label))
-            {
-                throw Error(p.first.location(), "label not found - ", p.first.text());
-            }
-
-            p.second.patch(c.func().bytes, s->properties["position"].to<std::size_t>() - (p.second.position() + 8));
-        }
 
         c.pd("-free locals");
         c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
