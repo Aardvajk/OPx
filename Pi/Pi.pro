@@ -24,7 +24,9 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a" \
 
 SOURCES += \
         application/Context.cpp \
+        compiler/Code.cpp \
         compiler/Compiler.cpp \
+        compiler/Instruction.cpp \
         components/StringTable.cpp \
         main.cpp \
         symbols/Sym.cpp \
@@ -32,7 +34,9 @@ SOURCES += \
 
 HEADERS += \
     application/Context.h \
+    compiler/Code.h \
     compiler/Compiler.h \
+    compiler/Instruction.h \
     components/Function.h \
     components/Global.h \
     components/StringTable.h \

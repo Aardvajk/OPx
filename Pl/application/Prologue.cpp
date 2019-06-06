@@ -6,30 +6,13 @@
 
 #include "framework/ByteStreamPatch.h"
 
-namespace
-{
-
-class AddressProvider
-{
-public:
-    AddressProvider(Context &c) : c(c) { }
-
-    std::size_t position() const { return c.ds.position(); }
-
-private:
-    Context &c;
-};
-
-}
-
 ByteStreamPatch Prologue::generate(Context &c)
 {
-    AddressProvider ap(c);
     ByteStreamPatch p;
 
-    c.vd.begin('F', "", 0, pcx::make_callback(&ap, &AddressProvider::position));
+    c.vd.begin('F', "", 0, pcx::make_callback(&c.ds, &ByteStream::position));
 
-    c.vd("func system_prologue()");
+    c.vd("prologue");
     c.vd("{");
 
     c.vd("-program prologue");
