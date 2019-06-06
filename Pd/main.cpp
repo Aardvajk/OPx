@@ -31,7 +31,22 @@ int main(int argc, char *argv[])
             c.dm.read(is);
         }
 
-        Process::processUnit(c, argv[1]);
+        std::string path = argv[1];
+        if(path.length() > 4 && path.substr(path.length() - 3) == ".po")
+        {
+            Process::processUnit(c, path);
+        }
+        else
+        {
+            if(c.dm.empty())
+            {
+                Process::processExe(c, path);
+            }
+            else
+            {
+                Process::processMappedExe(c, path);
+            }
+        }
     }
 
     catch(const Error &error)

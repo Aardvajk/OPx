@@ -23,12 +23,10 @@ SOURCES += \
         application/Loader.cpp \
         application/Process.cpp \
         disassembler/Disassembler.cpp \
-        disassembler/ObjectDisassembler.cpp \
         main.cpp
 
 HEADERS += \
     application/Context.h \
     application/Loader.h \
     application/Process.h \
-    disassembler/Disassembler.h \
-    disassembler/ObjectDisassembler.h
+    disassembler/Disassembler.h

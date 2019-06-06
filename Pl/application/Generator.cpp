@@ -20,7 +20,7 @@ void Generator::generate(Context &c, const std::string &path)
 
     InputStream is(file);
 
-    c.units.emplace_back();
+    c.units.emplace_back(path);
     auto &unit = c.units.back();
 
     unit.strings = Object::readStringTable(is);
@@ -29,5 +29,21 @@ void Generator::generate(Context &c, const std::string &path)
     for(std::size_t i = 0; i < count; ++i)
     {
         unit.entities.push_back(Object::readEntity(is, pcx::make_callback(&c, &Context::offset), pcx::make_callback(&c, &Context::readData)));
+    }
+
+    std::ifstream dmap(path + ".pmap");
+    if(dmap.is_open())
+    {
+        DebugMap in;
+        in.read(dmap);
+
+        for(std::size_t i = 0; i < in.size(); ++i)
+        {
+            switch(in[i].type)
+            {
+                case 'V': c.vd.push_back(in[i]); break;
+                case 'F': c.pd.push_back(in[i]); break;
+            }
+        }
     }
 }

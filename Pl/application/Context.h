@@ -4,6 +4,7 @@
 #include "framework/ByteStream.h"
 
 #include "common/Object.h"
+#include "common/DebugMap.h"
 
 class InputStream;
 
@@ -23,6 +24,9 @@ public:
 
     ByteStream ds;
     ByteStream ps;
+
+    DebugMap vd;
+    DebugMap pd;
 };
 
 #endif // CONTEXT_H

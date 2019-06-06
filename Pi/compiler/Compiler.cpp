@@ -45,7 +45,7 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
             c.globs.back().bytes << char(0);
         }
 
-        c.vd.begin('V', sz, { });
+        c.vd.begin('V', sym->name, sz, { });
         c.vd("var ", sym->name, ":", sz);
     }
     else if(type == Sym::Type::Local)
@@ -124,7 +124,7 @@ void funcConstruct(Context &c, bool get)
         r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
         r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
 
-        c.pd.begin('F', 0, pcx::make_callback(&c, &Context::funcPosition));
+        c.pd.begin('F', sym->name, 0, pcx::make_callback(&c, &Context::funcPosition));
 
         c.pd("func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
         c.pd("{");
@@ -163,6 +163,8 @@ void funcConstruct(Context &c, bool get)
 
         c.pd("-end func ", sym->name);
         c.pd("}");
+
+        c.pd.back().size = c.func().bytes.position();
 
         c.syms.pop();
     }

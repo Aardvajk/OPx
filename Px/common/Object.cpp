@@ -6,7 +6,7 @@ Object::Entity::Entity(char type, std::size_t id, std::size_t offset) : type(typ
 {
 }
 
-Object::Unit::Unit()
+Object::Unit::Unit(std::string path) : path(std::move(path))
 {
 }
 

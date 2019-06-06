@@ -36,8 +36,9 @@ public:
 class Unit
 {
 public:
-    Unit();
+    Unit(std::string path = { });
 
+    std::string path;
     std::vector<std::string> strings;
     std::vector<Entity> entities;
 };

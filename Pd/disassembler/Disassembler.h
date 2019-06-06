@@ -9,11 +9,15 @@ class Context;
 class Disassembler
 {
 public:
-    virtual ~Disassembler();
+    Disassembler(std::size_t index, std::size_t offset = 0);
 
-    virtual void map(Context &c, std::size_t pc);
-
+    void map(Context &c, std::size_t &pc);
     void disassemble(Context &c, std::ostream &os, const char *data, std::size_t size);
+
+private:
+    std::size_t index;
+    std::size_t offset;
+    std::size_t i;
 };
 
 #endif // DISASSEMBLER_H

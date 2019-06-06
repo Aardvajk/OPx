@@ -21,15 +21,22 @@ public:
     struct Entity
     {
         char type;
+        std::string name;
         std::size_t size;
         std::vector<Comment> comments;
     };
+
+    using iterator = std::vector<Entity>::iterator;
+    using const_iterator = std::vector<Entity>::const_iterator;
+    using value_type = std::vector<Entity>::value_type;
 
     DebugMap();
 
     using Callback = pcx::callback<std::size_t>;
 
-    void begin(char type, std::size_t size, pcx::optional<Callback> callback);
+    void push_back(const Entity &value){ v.push_back(value); }
+
+    void begin(char type, const std::string &name, std::size_t size, pcx::optional<Callback> callback);
 
     template<typename... Args> void operator()(Args&&... args);
 
@@ -39,7 +46,17 @@ public:
     Entity &operator[](std::size_t index){ return v[index]; }
     const Entity &operator[](std::size_t index) const { return v[index]; }
 
+    iterator begin(){ return v.begin(); }
+    iterator end(){ return v.end(); }
+
+    const_iterator begin() const { return v.begin(); }
+    const_iterator end() const { return v.end(); }
+
+    Entity &back(){ return v.back(); }
+    const Entity &back() const { return v.back(); }
+
     std::size_t size() const { return v.size(); }
+    bool empty() const { return v.empty(); }
 
 private:
     std::vector<Entity> v;

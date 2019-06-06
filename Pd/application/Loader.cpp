@@ -31,7 +31,7 @@ void SegmentWrapper::read(char type, InputStream &is)
 
 Object::Unit Loader::loadObjectUnit(const std::string &path, std::vector<std::vector<char> > &segments)
 {
-    Object::Unit unit;
+    Object::Unit unit(path);
 
     std::ifstream file(path, std::ios::binary);
     if(!file.is_open())

@@ -32,10 +32,10 @@ void linkEntity(Context &c, Object::Unit &unit, Object::Entity &entity)
 
 void Linker::link(Context &c)
 {
-    std::cout << banner("linking");
-
     for(auto &unit: c.units)
     {
+        std::cout << banner("linking ", unit.path);
+
         for(auto &entity: unit.entities)
         {
             linkEntity(c, unit, entity);

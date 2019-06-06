@@ -6,6 +6,8 @@
 #include "framework/ByteReader.h"
 #include "framework/Console.h"
 
+#include "application/Context.h"
+
 #include <pcx/join_str.h>
 #include <pcx/lexical_cast.h>
 
@@ -27,19 +29,30 @@ std::string bytes(ByteReader &rm, std::size_t n)
 
 }
 
-Disassembler::~Disassembler()
+Disassembler::Disassembler(std::size_t index, std::size_t offset) : index(index), offset(offset), i(0)
 {
 }
 
-void Disassembler::map(Context &c, std::size_t pc)
+void Disassembler::map(Context &c, std::size_t &pc)
 {
+    if(index < c.dm.size())
+    {
+        auto &cm = c.dm[index].comments;
+        while(i < cm.size() && cm[i].address == pc)
+        {
+            auto &s = cm[i].text;
+
+            std::cout << (s[0] == '-' ? pcx::str("-- ", s.substr(1), " ", std::string(120 - (s.length() + 3), '-')) : pcx::str(s, "\n"));
+            ++i;
+        }
+    }
 }
 
 void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, std::size_t size)
 {
     std::size_t pc = 0;
     ByteReader rm(data, pc);
-    auto pcw = padw(size);
+    auto pcw = padw(offset + size);
 
     while(pc < size)
     {
@@ -52,7 +65,7 @@ void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, s
 
         map(c, pc);
 
-        os << pad(pc, pcw) << ": ";
+        os << pad(pc + offset, pcw) << ": ";
 
         rm(op);
         os << pad(toString(op), 7) << " ";

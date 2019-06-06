@@ -62,6 +62,19 @@ int main(int argc, char *argv[])
             os.write(pb.data(), std::streamoff(pb.size()));
         }
 
+        if(true)
+        {
+            std::ofstream os("C:/Projects/Px/Px/out.px.pmap");
+            if(!os.is_open())
+            {
+                throw Error("unable to create - out.px.pmap");
+            }
+
+            c.vd.write(os);
+            c.pd.write(os);
+        }
+
+        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px C:/Projects/Px/Px/out.px.pmap");
         checked_system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
     }
 

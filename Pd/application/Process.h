@@ -9,6 +9,8 @@ namespace Process
 {
 
 void processUnit(Context &c, const std::string &path);
+void processExe(Context &c, const std::string &path);
+void processMappedExe(Context &c, const std::string &path);
 
 }
 

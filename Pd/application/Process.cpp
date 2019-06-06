@@ -6,7 +6,7 @@
 #include "application/Context.h"
 #include "application/Loader.h"
 
-#include "disassembler/ObjectDisassembler.h"
+#include "disassembler/Disassembler.h"
 
 #include <pcx/join_str.h>
 #include <pcx/str.h>
@@ -15,14 +15,12 @@
 namespace
 {
 
-void processValue(Context &c, std::size_t index)
+void outputValue(Context &c, std::size_t index, std::vector<char> v)
 {
     std::size_t max = 8;
-    std::vector<char> v;
-
-    for(std::size_t i = 0; i < max && i < c.segments[index].size(); ++i)
+    if(v.size() > max)
     {
-        v.push_back(c.segments[index][i]);
+        v.resize(max);
     }
 
     if(index < c.dm.size())
@@ -33,15 +31,15 @@ void processValue(Context &c, std::size_t index)
         }
     }
 
-    std::cout << pcx::join_str(v, ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); }) << (c.segments[index].size() > max ? "..." : "") << "\n";
+    std::cout << pcx::join_str(v, ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); }) << (v.size() > max ? "..." : "") << "\n";
 }
 
 void processFunction(Context &c, std::size_t index)
 {
     auto &sg = c.segments[index];
 
-    ObjectDisassembler od(index);
-    od.disassemble(c, std::cout, sg.data(), sg.size());
+    Disassembler ds(index);
+    ds.disassemble(c, std::cout, sg.data(), sg.size());
 }
 
 }
@@ -60,16 +58,52 @@ void Process::processUnit(Context &c, const std::string &path)
         std::cout << pad(s.index, pw) << ": " << s.value << "\n";
     }
 
-    for(std::size_t i = 0; i < c.unit.entities.size(); ++i)
+    for(auto e: pcx::indexed_range(u.entities))
     {
-        auto &e = u.entities[i];
+        std::cout << banner(u.strings[e.value.id]);
 
-        std::cout << banner("disassemble ", u.strings[e.id]);
-
-        switch(e.type)
+        switch(e.value.type)
         {
-            case 'V': processValue(c, i); break;
-            case 'F': processFunction(c, i); break;
+            case 'V': outputValue(c, e.index, c.segments[e.index]); break;
+            case 'F': processFunction(c, e.index); break;
         }
+    }
+}
+
+void Process::processExe(Context &c, const std::string &path)
+{
+    auto v = loadBinaryFile(path);
+
+    std::cout << banner("disassemble ", path);
+
+    Disassembler ds(0);
+    ds.disassemble(c, std::cout, v.data(), v.size());
+}
+
+void Process::processMappedExe(Context &c, const std::string &path)
+{
+    auto data = loadBinaryFile(path);
+    std::size_t pc = 0;
+
+    std::cout << banner("disassemble ", path);
+
+    for(auto d: pcx::indexed_range(c.dm))
+    {
+        if(!d.value.name.empty())
+        {
+            std::cout << banner(d.value.name);
+        }
+
+        if(d.value.type == 'V')
+        {
+            outputValue(c, d.index, { data.data() + pc, data.data() + pc + d.value.size });
+        }
+        else if(d.value.type == 'F')
+        {
+            Disassembler ds(d.index, pc);
+            ds.disassemble(c, std::cout, data.data() + pc, d.value.size);
+        }
+
+        pc += d.value.size;
     }
 }
