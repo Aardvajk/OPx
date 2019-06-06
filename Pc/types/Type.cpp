@@ -22,7 +22,7 @@ std::string toString(const Type &type)
     }
     else
     {
-        s += "func(" + pcx::join_str(type.args, ",", toString) + ")";
+        s += "(" + pcx::join_str(type.args, ",", toString) + ")";
     }
 
     if(type.returnType)
@@ -74,4 +74,9 @@ pcx::optional<std::size_t> Type::size() const
     }
 
     return { };
+}
+
+bool Type::function() const
+{
+    return returnType;
 }

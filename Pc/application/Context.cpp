@@ -119,6 +119,16 @@ std::string Context::assertUnique(Location location, const std::string &name) co
     return name;
 }
 
+std::size_t Context::assertSize(Location location, const Type *type) const
+{
+    if(auto s = type->size())
+    {
+        return *s;
+    }
+
+    throw Error(location, "use of ", type->function() ? "function" : "incomplete", " type - ", type->text());
+}
+
 const Type *Context::identifyType(Node *node)
 {
     TypeVisitor tn(*this);

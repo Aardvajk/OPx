@@ -4,6 +4,10 @@ Visitor::Visitor()
 {
 }
 
+Visitor::~Visitor()
+{
+}
+
 void Visitor::visit(BlockNode &node)
 {
 }

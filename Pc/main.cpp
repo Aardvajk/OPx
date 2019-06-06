@@ -9,9 +9,11 @@
 
 #include "visitors/AstPrinter.h"
 
+#include "generator/Generator.h"
+
 #include "tests/Tests.h"
 
-std::string banner(const std::string &title);
+#include <fstream>
 
 int main(int argc, char *argv[])
 {
@@ -34,7 +36,23 @@ int main(int argc, char *argv[])
         AstPrinter as(std::cout);
         n->accept(as);
 
-        std::cout << banner("");
+        std::cout << banner("generate");
+        Generator g(c, std::cout);
+        n->accept(g);
+
+        if(true)
+        {
+            std::ofstream os("C:/Projects/Px/Px/script.pi");
+            if(!os.is_open())
+            {
+                throw Error("unable to create - script.pi");
+            }
+
+            Generator g(c, os);
+            n->accept(g);
+        }
+
+        checked_system("C:/Projects/Px/Px/build-Pi/release/pi C:/Projects/Px/Px/script.pi");
     }
 
     catch(const Error &error)

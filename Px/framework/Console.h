@@ -5,11 +5,23 @@
 
 #include <vector>
 
-std::string banner_imp(const std::string &title);
+std::string banner_imp(std::string title, char ch);
 
 template<typename... Args> std::string banner(Args&&... args)
 {
-    return banner_imp(pcx::str(std::forward<Args>(args)...));
+    return banner_imp(pcx::str(std::forward<Args>(args)...), '=');
+}
+
+template<typename... Args> std::string custom_banner(char ch, Args&&... args)
+{
+    return banner_imp(pcx::str(std::forward<Args>(args)...), ch);
+}
+
+std::string elided_imp(std::string text);
+
+template<typename... Args> std::string elided(Args&&... args)
+{
+    return elided_imp(pcx::str(std::forward<Args>(args)...));
 }
 
 std::size_t padw(std::size_t n);

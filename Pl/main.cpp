@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
         Linker::link(c);
 
-        auto me = c.find("main()");
+        auto me = c.find("main():std.null");
         if(!me)
         {
             throw Error("main() not found");

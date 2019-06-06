@@ -1,23 +1,14 @@
-class foo
+namespace foo
 {
-    public using namespace std;
-    class bar;
 
-    var a:int;
-    var b:int;
-    var c:ptr bar;
-
-    class bar
-    {
-        var a:int;
-    }
-
-    var d:bar;
-    var e:null;
+func bar(a:std.int):std.int
+{
 }
 
-class foox
+var a:std.int = 123;
+
+}
+
+func main()
 {
-    using namespace foo;
-    var a:int;
 }

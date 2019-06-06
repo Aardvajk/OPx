@@ -94,24 +94,7 @@ void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
 
 void usingAliasConstruct(Context &c, Sym::Attrs attrs, bool get)
 {
-    auto nn = CommonConstructs::name(c, get);
-
-    NodePtr an;
-    if(c.scanner.token().type() == Token::Type::Assign)
-    {
-        if(!NameVisitors::isNameSimple(nn.get()))
-        {
-            throw Error(nn->location(), "id expected - ", NameVisitors::prettyName(nn.get()));
-        }
-
-        an = CommonConstructs::name(c, true);
-    }
-
-    auto proxy = c.find(SymFinder::Policy::Full, an ? an.get() : nn.get());
-    auto name = c.assertUnique(nn->location(), NameVisitors::lastIdOfName(nn.get()));
-
-    auto s = c.tree.current()->add(new Sym(Sym::Type::Using, attrs, nn->location(), name));
-    s->setProperty("proxy", proxy);
+    throw 0;
 }
 
 void usingConstruct(Context &c, Sym::Attrs attrs, bool get)

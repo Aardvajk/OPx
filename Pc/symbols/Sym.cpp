@@ -14,16 +14,6 @@ Sym *Sym::add(Sym *sym)
     return sym;
 }
 
-Sym *Sym::resolved()
-{
-    if(auto pr = property("proxy"))
-    {
-        return pr.to<Sym*>()->resolved();
-    }
-
-    return this;
-}
-
 Sym *Sym::child(const std::string &name)
 {
     for(auto s: children())
@@ -87,7 +77,7 @@ pcx::any Sym::property(const std::string &name) const
 
 const char *Sym::toString(Type type)
 {
-    static const char *s[] = { "namespace", "primitive", "class", "using", "using-scope", "scope", "var", "func", "(invalid)" };
+    static const char *s[] = { "namespace", "primitive", "class", "using-scope", "scope", "var", "func", "(invalid)" };
     return s[static_cast<int>(type)];
 }
 

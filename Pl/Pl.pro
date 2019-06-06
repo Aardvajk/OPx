@@ -18,6 +18,8 @@ INCLUDEPATH += "C:/Projects/pcx" \
 LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
         "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
+PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
+
 SOURCES += \
         application/Context.cpp \
         application/Generator.cpp \

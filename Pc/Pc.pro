@@ -17,10 +17,15 @@ INCLUDEPATH += "C:/Projects/pcx" \
 LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
         "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
-PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
+PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a" \
+                 "C:/Projects/Px/Px/build-Pi/release/Pi.exe" \
+                 "C:/Projects/Px/Px/build-Pd/release/Pd.exe" \
+                 "C:/Projects/Px/Px/build-Pl/release/Pl.exe" \
+                 "C:/Projects/Px/Px/build-Pv/release/Pv.exe"
 
 SOURCES += main.cpp \
     application/Context.cpp \
+    generator/Generator.cpp \
     nodes/Node.cpp \
     nodes/BlockNode.cpp \
     nodes/IdNode.cpp \
@@ -54,6 +59,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     application/Context.h \
+    generator/Generator.h \
     nodes/Node.h \
     nodes/BlockNode.h \
     nodes/IdNode.h \
@@ -88,9 +94,6 @@ HEADERS += \
 DISTFILES += \
     script.txt \
     tests/scripts/lookup.txt \
-    tests/scripts/aliases.txt \
-    tests/scripts/lookupfails.txt \
-    tests/scripts/ambiguous.txt \
     tests/scripts/funclookup.txt \
     tests/scripts/classlookup.txt \
     tests/scripts/lookupfwd.txt

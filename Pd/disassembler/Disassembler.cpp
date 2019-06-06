@@ -40,9 +40,9 @@ void Disassembler::map(Context &c, std::size_t &pc)
         auto &cm = c.dm[index].comments;
         while(i < cm.size() && cm[i].address == pc)
         {
-            auto &s = cm[i].text;
+            auto s = cm[i].text;
 
-            std::cout << (s[0] == '-' ? pcx::str("-- ", s.substr(1), " ", std::string(120 - (s.length() + 3), '-')) : pcx::str(s, "\n"));
+            std::cout << (s[0] == '-' ? custom_banner('-', s.substr(1)) : elided(s));
             ++i;
         }
     }

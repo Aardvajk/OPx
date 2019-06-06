@@ -31,7 +31,7 @@ void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string 
 
         if(s->name() == name)
         {
-            result.push_back({ s->resolved(), access.empty() ? s->accessibleBy(start) : access.back() });
+            result.push_back({ s, access.empty() ? s->accessibleBy(start) : access.back() });
         }
     }
 }

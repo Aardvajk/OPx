@@ -15,6 +15,7 @@ class Visitor
 {
 public:
     Visitor();
+    virtual ~Visitor();
 
     virtual void visit(BlockNode &node);
     virtual void visit(NamespaceNode &node);

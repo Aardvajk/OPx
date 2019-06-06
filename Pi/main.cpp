@@ -13,8 +13,12 @@ int main(int argc, char *argv[])
 
     try
     {
-        c.open("C:/Projects/Px/Px/Pi/script.txt");
+        if(argc < 2)
+        {
+            throw Error("no source specified");
+        }
 
+        c.open(argv[1]);
         compile(c);
 
         if(true)

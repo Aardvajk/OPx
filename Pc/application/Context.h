@@ -28,6 +28,7 @@ public:
     Sym *searchLocal(const std::string &name) const;
 
     std::string assertUnique(Location location, const std::string &name) const;
+    std::size_t assertSize(Location location, const Type *type) const;
 
     const Type *identifyType(Node *node);
 
