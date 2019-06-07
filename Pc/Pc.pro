@@ -25,6 +25,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a" \
 
 SOURCES += main.cpp \
     application/Context.cpp \
+    generator/ByteLister.cpp \
     generator/Generator.cpp \
     nodes/Node.cpp \
     nodes/BlockNode.cpp \
@@ -59,6 +60,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     application/Context.h \
+    generator/ByteLister.h \
     generator/Generator.h \
     nodes/Node.h \
     nodes/BlockNode.h \

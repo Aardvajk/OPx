@@ -3,6 +3,9 @@
 #include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
+#include "nodes/IntLiteralNode.h"
+
+#include <pcx/str.h>
 
 NameVisitors::IsNameSimple::IsNameSimple() : r(false)
 {
@@ -67,6 +70,11 @@ void NameVisitors::PrettyName::visit(DotNode &node)
 {
     r += node.name + ".";
     node.child->accept(*this);
+}
+
+void NameVisitors::PrettyName::visit(IntLiteralNode &node)
+{
+    r += pcx::str(node.value);
 }
 
 std::string NameVisitors::prettyName(Node *node)

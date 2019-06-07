@@ -17,10 +17,13 @@ namespace
 
 void outputValue(Context &c, std::size_t index, std::vector<char> v)
 {
-    std::size_t max = 8;
+    std::size_t max = 20;
+    bool reduced = false;
+
     if(v.size() > max)
     {
         v.resize(max);
+        reduced = true;
     }
 
     if(index < c.dm.size())
@@ -31,7 +34,7 @@ void outputValue(Context &c, std::size_t index, std::vector<char> v)
         }
     }
 
-    std::cout << pcx::join_str(v, ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); }) << (v.size() > max ? "..." : "") << "\n";
+    std::cout << pcx::join_str(v, ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); }) << (reduced ? "..." : "") << "\n";
 }
 
 void processFunction(Context &c, std::size_t index)

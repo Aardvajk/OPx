@@ -55,7 +55,7 @@ std::string prependParen(const std::string &s)
 
 void dump(int tab, const Sym *sym, std::ostream &os)
 {
-    auto ts = std::string(tab * 4, ' ');
+    auto ts = std::string(std::size_t(tab * 4), ' ');
 
     os << ts;
 
@@ -67,11 +67,16 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
     os << typeToString(sym) << " [" << sym << "]" << prepend(sym->fullname()) << prependParen(sym->name());
 
-    if(auto pr = sym->property("proxy"))
+    if(auto pr = sym->property("proxy-scope"))
     {
         auto ps = pr.to<const Sym*>();
-
         os << " proxy" << prepend(ps->fullname()) << " [" << ps << "]";
+    }
+
+    if(auto pr = sym->property("proxy-type"))
+    {
+        auto pt = pr.to<const Type*>();
+        os << " proxy " << pt->text() << " [" << pt << "]";
     }
 
     if(auto pr = sym->property("type"))

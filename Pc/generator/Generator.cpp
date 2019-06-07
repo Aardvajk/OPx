@@ -14,6 +14,12 @@
 
 #include "types/Type.h"
 
+#include "visitors/NameVisitors.h"
+
+#include "generator/ByteLister.h"
+
+#include <pcx/join_str.h>
+
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -41,10 +47,23 @@ void Generator::visit(ClassNode &node)
 
 void Generator::visit(VarNode &node)
 {
-    auto type = node.sym->property("type").to<const Type*>();
-    auto size = c.assertSize(node.location(), type);
+    if(node.sym->container()->type() == Sym::Type::Namespace)
+    {
+        auto type = node.sym->property("type").to<const Type*>();
+        auto size = c.assertSize(node.location(), type);
 
-    os << "var \"" << node.sym->fullname() << "\":" << size << ";\n";
+        os << "var \"" << node.sym->fullname() << "\":" << size;
+
+        if(node.value)
+        {
+            ByteLister b;
+            node.value->accept(b);
+
+            os << " = " << pcx::join_str(b.result(), ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); });
+        }
+
+        os << ";\n";
+    }
 }
 
 void Generator::visit(FuncNode &node)

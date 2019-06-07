@@ -1,14 +1,14 @@
 namespace foo
 {
 
-func bar(a:std.int):std.int
+class woo
 {
+    var a:std.int;
 }
 
-var a:std.int = 123;
-
 }
 
-func main()
-{
-}
+using namespace foo;
+using bar = woo;
+
+var a:bar;

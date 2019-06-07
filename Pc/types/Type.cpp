@@ -60,6 +60,14 @@ std::string Type::text() const
 
 pcx::optional<std::size_t> Type::size() const
 {
+    if(sym)
+    {
+        if(auto pr = sym->property("proxy-type"))
+        {
+            return pr.to<const Type*>()->size();
+        }
+    }
+
     if(ptr)
     {
         return 8;

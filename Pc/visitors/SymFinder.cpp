@@ -21,7 +21,7 @@ void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string 
                 access.push_back(false);
             }
 
-            findIn(policy, start, s->property("proxy").to<Sym*>(), name, access, result);
+            findIn(policy, start, s->property("proxy-scope").to<Sym*>(), name, access, result);
 
             if(!a)
             {

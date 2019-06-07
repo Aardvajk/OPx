@@ -15,7 +15,7 @@ class Sym
 public:
     enum class Type
     {
-        Namespace, Primitive, Class, UsingScope, Scope, Var, Func, Invalid
+        Namespace, Primitive, Class, UsingScope, UsingType, Scope, Var, Func, Invalid
     };
 
     enum class Attr
@@ -30,6 +30,7 @@ public:
 
     Sym *add(Sym *sym);
     Sym *child(const std::string &name);
+    Sym *container();
 
     void setProperty(const std::string &name, pcx::any value);
 
