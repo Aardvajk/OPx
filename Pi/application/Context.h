@@ -23,8 +23,9 @@ public:
 
     void assertUnique(Location location, const std::string &text);
 
-    std::size_t funcPosition() const;
+    Sym *find(Location location, const std::string &name);
 
+    std::size_t funcPosition() const;
     Function &func(){ return funcs.back(); }
 
     SourceList sources;

@@ -1,21 +1,15 @@
 var a = "Paul Cook.\n", 0;
 var b = "This is working but needs a tidy up.\n", 0;
+var c = int(123);
+var d = long(25);
 
 func "main():std.null":0
 {
-    addr dx, a;
-    push dx;
-
+    push d;
     svc 2;
-    jmp foo;
-    svc 2;
-
-foo:
-    addr dx, b;
-    push dx;
-
-    svc 2;
-
-    pop 16;
+    push c;
+    svc 1;
+    pop 4;
+    pop 8;
 }
 

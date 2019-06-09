@@ -43,15 +43,36 @@ void jmpConstruct(Context &c, bool get)
 
 void pushConstruct(Context &c, bool get)
 {
-    auto reg = c.scanner.next(get);
+    bool address = false;
 
-    if(reg.text() == "dx")
+    auto next = c.scanner.next(get);
+    if(next.type() == Token::Type::Amp)
     {
-        c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Dx;
+        address = true;
+        c.scanner.next(true);
     }
-    else
+
+    auto id = c.scanner.match(Token::Type::Id, false);
+
+    if(auto s = c.find(id.location(), id.text()))
     {
-        throw Error(reg.location(), "invalid push - ", reg.text());
+        ByteStreamPatch p;
+
+        if(address)
+        {
+            c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
+            c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Dx;
+        }
+        else
+        {
+            auto size = s->properties["size"].to<std::size_t>();
+
+            c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
+            c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << size;
+            c.func().bytes << OpCode::Op::CopyAA << OpCode::Reg::Dx << OpCode::Reg::Sp << size;
+        }
+
+        c.func().links.emplace_back(p.position(), c.strings.insert(id.text()));
     }
 
     c.scanner.consume(Token::Type::Semicolon, true);
@@ -62,34 +83,6 @@ void popConstruct(Context &c, bool get)
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
 
     c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
-
-    c.scanner.consume(Token::Type::Semicolon, true);
-}
-
-void addrConstruct(Context &c, bool get)
-{
-    auto reg = c.scanner.next(get);
-
-    if(reg.text() != "dx")
-    {
-        throw Error(reg.location(), "invalid addr - ", reg.text());
-    }
-
-    c.scanner.consume(Token::Type::Comma, true);
-    auto id = c.scanner.match(Token::Type::Id, false);
-
-    if(auto s = c.syms.find(id.text()))
-    {
-        ByteStreamPatch p;
-
-        c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
-
-        c.func().links.emplace_back(p.position(), c.strings.insert(id.text()));
-    }
-    else
-    {
-        throw Error(id.location(), "invalid addr - ", id.text());
-    }
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -127,8 +120,6 @@ void Code::construct(Context &c, bool get)
 
         case Instruction::Type::Push: pushConstruct(c, true); break;
         case Instruction::Type::Pop: popConstruct(c, true); break;
-
-        case Instruction::Type::Addr: addrConstruct(c, true); break;
 
         case Instruction::Type::Svc: svcConstruct(c, true); break;
 

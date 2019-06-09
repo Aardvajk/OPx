@@ -13,8 +13,6 @@ enum class Type
     Push,
     Pop,
 
-    Addr,
-
     Svc,
     Invalid
 };

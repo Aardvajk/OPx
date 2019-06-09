@@ -29,6 +29,16 @@ void commonSizeConstruct(Context &c, Sym *sym, const std::string &property, bool
     c.scanner.next(true);
 }
 
+template<typename T> void writeBytes(std::vector<char> &v, const T &value)
+{
+    const char *s = reinterpret_cast<const char*>(&value);
+
+    for(std::size_t i = 0; i < sizeof(T); ++i)
+    {
+        v.push_back(s[i]);
+    }
+}
+
 void byteListConstruct(Context &c, std::vector<char> &v, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -40,6 +50,22 @@ void byteListConstruct(Context &c, std::vector<char> &v, bool get)
         {
             v.push_back(s[i]);
         }
+    }
+    else if(tok.text() == "int" || tok.text() == "long")
+    {
+        c.scanner.match(Token::Type::LeftParen, true);
+        auto value = c.scanner.match(Token::Type::IntLiteral, true);
+
+        if(tok.text() == "int")
+        {
+            writeBytes(v, pcx::lexical_cast<int>(value.text()));
+        }
+        else if(tok.text() == "long")
+        {
+            writeBytes(v, pcx::lexical_cast<std::size_t>(value.text()));
+        }
+
+        c.scanner.match(Token::Type::RightParen, true);
     }
     else
     {

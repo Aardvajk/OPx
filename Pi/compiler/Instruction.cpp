@@ -10,8 +10,6 @@ const char *s[] =
     "push",
     "pop",
 
-    "addr",
-
     "svc",
     ""
 };
