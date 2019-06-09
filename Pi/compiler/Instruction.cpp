@@ -6,6 +6,7 @@ namespace
 const char *s[] =
 {
     "jmp",
+    "call",
 
     "push",
     "pop",

@@ -9,6 +9,7 @@ namespace Instruction
 enum class Type
 {
     Jmp,
+    Call,
 
     Push,
     Pop,

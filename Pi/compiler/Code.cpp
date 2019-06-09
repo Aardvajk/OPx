@@ -15,7 +15,7 @@ namespace
 
 void jmpConstruct(Context &c, bool get)
 {
-    auto id = c.scanner.match(Token::Type::Id, get);
+    auto id = c.matchId(get);
 
     if(auto s = c.syms.findLocal(id.text()))
     {
@@ -41,6 +41,14 @@ void jmpConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void callConstruct(Context &c, bool get)
+{
+    c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
+    c.func().bytes << OpCode::Op::Call << OpCode::Reg::Dx;
+
+    c.scanner.consume(Token::Type::Semicolon, get);
+}
+
 void pushConstruct(Context &c, bool get)
 {
     bool address = false;
@@ -52,7 +60,7 @@ void pushConstruct(Context &c, bool get)
         c.scanner.next(true);
     }
 
-    auto id = c.scanner.match(Token::Type::Id, false);
+    auto id = c.matchId(false);
 
     if(auto s = c.find(id.location(), id.text()))
     {
@@ -117,6 +125,7 @@ void Code::construct(Context &c, bool get)
     switch(ins)
     {
         case Instruction::Type::Jmp: jmpConstruct(c, true); break;
+        case Instruction::Type::Call: callConstruct(c, true); break;
 
         case Instruction::Type::Push: pushConstruct(c, true); break;
         case Instruction::Type::Pop: popConstruct(c, true); break;
