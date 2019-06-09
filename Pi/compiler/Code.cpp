@@ -64,23 +64,30 @@ void pushConstruct(Context &c, bool get)
 
     if(auto s = c.find(id.location(), id.text()))
     {
-        ByteStreamPatch p;
-
-        if(address)
+        if(s->type == Sym::Type::Global || s->type == Sym::Type::Func)
         {
-            c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
-            c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Dx;
+            ByteStreamPatch p;
+
+            if(address)
+            {
+                c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
+                c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Dx;
+            }
+            else
+            {
+                auto size = s->properties["size"].to<std::size_t>();
+
+                c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
+                c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << size;
+                c.func().bytes << OpCode::Op::CopyAA << OpCode::Reg::Dx << OpCode::Reg::Sp << size;
+            }
+
+            c.func().links.emplace_back(p.position(), c.strings.insert(id.text()));
         }
         else
         {
-            auto size = s->properties["size"].to<std::size_t>();
-
-            c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
-            c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << size;
-            c.func().bytes << OpCode::Op::CopyAA << OpCode::Reg::Dx << OpCode::Reg::Sp << size;
+            throw Error("not implemented - ", s->name);
         }
-
-        c.func().links.emplace_back(p.position(), c.strings.insert(id.text()));
     }
 
     c.scanner.consume(Token::Type::Semicolon, true);
