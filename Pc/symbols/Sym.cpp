@@ -96,7 +96,7 @@ pcx::any Sym::property(const std::string &name) const
 
 const char *Sym::toString(Type type)
 {
-    static const char *s[] = { "namespace", "primitive", "class", "using-scope", "using-type", "scope", "var", "func", "(invalid)" };
+    static const char *s[] = { "namespace", "primitive", "class", "using-scope", "scope", "var", "func", "(invalid)" };
     return s[static_cast<int>(type)];
 }
 
@@ -107,7 +107,7 @@ bool Sym::isPrimaryScope(Type type)
 
 bool Sym::isType(Type type)
 {
-    return type == Type::Primitive || type == Type::Class || type == Type::UsingType;
+    return type == Type::Primitive || type == Type::Class;
 }
 
 Sym::Attrs Sym::defaultAttrs(Type type)

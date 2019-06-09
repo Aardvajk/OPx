@@ -12,6 +12,8 @@
 
 #include "compiler/TypeConstructs.h"
 
+#include "types/TypeCompare.h"
+
 #include <pcx/scoped_push.h>
 
 namespace
@@ -19,8 +21,15 @@ namespace
 
 void typeTest(Context &c, bool get)
 {
-    auto tn = TypeConstructs::type(c, get);
-    std::cout << tn->text() << "\n";
+    auto tn0 = TypeConstructs::type(c, get);
+    std::cout << tn0->text() << "\n";
+
+    c.scanner.consume(Token::Type::Assign, false);
+
+    auto tn1 = TypeConstructs::type(c, get);
+    std::cout << tn1->text() << "\n";
+
+    std::cout << "result: " << TypeCompare::exact(tn0.get(), tn1.get()) << "\n";
 
     c.scanner.consume(Token::Type::Semicolon, false);
 }

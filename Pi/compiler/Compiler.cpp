@@ -3,6 +3,8 @@
 #include "framework/Error.h"
 #include "framework/Console.h"
 
+#include "scanner/Lexer.h"
+
 #include "common/OpCode.h"
 
 #include "application/Context.h"
@@ -29,10 +31,22 @@ void commonSizeConstruct(Context &c, Sym *sym, const std::string &property, bool
 
 void byteListConstruct(Context &c, std::vector<char> &v, bool get)
 {
-    auto val = c.scanner.match(Token::Type::IntLiteral, get);
-    v.push_back(char(pcx::lexical_cast<int>(val.text())));
+    auto tok = c.scanner.next(get);
 
-    auto tok = c.scanner.next(true);
+    if(tok.type() == Token::Type::StringLiteral)
+    {
+        auto s = Lexer::decodeString(tok.text());
+        for(std::size_t i = 0; i < s.length(); ++i)
+        {
+            v.push_back(s[i]);
+        }
+    }
+    else
+    {
+        v.push_back(char(pcx::lexical_cast<int>(tok.text())));
+    }
+
+    tok = c.scanner.next(true);
     if(tok.type() == Token::Type::Comma)
     {
         byteListConstruct(c, v, true);
@@ -45,7 +59,12 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(type, id.text()));
-    commonSizeConstruct(c, sym, "size", true);
+
+    auto next = c.scanner.next(true);
+    if(next.type() == Token::Type::Colon)
+    {
+        commonSizeConstruct(c, sym, "size", false);
+    }
 
     if(type == Sym::Type::Global)
     {
@@ -53,6 +72,12 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
         if(c.scanner.token().type() == Token::Type::Assign)
         {
             byteListConstruct(c, v, true);
+
+            if(!sym->properties["size"])
+            {
+                sym->properties["size"] = std::size_t(v.size());
+            }
+
             if(v.size() > sym->properties["size"].to<std::size_t>())
             {
                 throw Error(c.scanner.token().location(), "too many bytes - ", id.text());

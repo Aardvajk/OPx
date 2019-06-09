@@ -93,27 +93,6 @@ void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
     s->setProperty("proxy-scope", proxy);
 }
 
-void usingAliasConstruct(Context &c, Sym::Attrs attrs, bool get)
-{
-    auto nn = CommonConstructs::name(c, get);
-
-    if(c.scanner.token().type() == Token::Type::Assign)
-    {
-        if(!NameVisitors::isNameSimple(nn.get()))
-        {
-            throw Error(nn->location(), "id expected - ", NameVisitors::prettyName(nn.get()));
-        }
-
-        auto name = NameVisitors::lastIdOfName(nn.get());
-        c.assertUnique(nn->location(), name);
-
-        auto type = TypeConstructs::type(c, true);
-
-        auto s = c.tree.current()->add(new Sym(Sym::Type::UsingType, attrs, nn->location(), name));
-        s->setProperty("proxy-type", c.types.insert(type.get()));
-    }
-}
-
 void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -122,7 +101,7 @@ void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
     {
         case Token::Type::RwNamespace: usingScopeConstruct(c, attrs, true); break;
 
-        default: usingAliasConstruct(c, attrs, false);
+        default: throw Error(tok.location(), "using aliases not implemented - ", tok.text());
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);

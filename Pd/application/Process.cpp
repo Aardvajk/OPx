@@ -11,11 +11,12 @@
 #include <pcx/join_str.h>
 #include <pcx/str.h>
 #include <pcx/indexed_range.h>
+#include <pcx/optional.h>
 
 namespace
 {
 
-void outputValue(Context &c, std::size_t index, std::vector<char> v)
+void outputValue(Context &c, std::size_t index, pcx::optional<std::size_t> address, std::vector<char> v)
 {
     std::size_t max = 20;
     bool reduced = false;
@@ -32,6 +33,11 @@ void outputValue(Context &c, std::size_t index, std::vector<char> v)
         {
             std::cout << i.text << "\n";
         }
+    }
+
+    if(address)
+    {
+        std::cout << *address << ": ";
     }
 
     std::cout << pcx::join_str(v, ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); }) << (reduced ? "..." : "") << "\n";
@@ -67,7 +73,7 @@ void Process::processUnit(Context &c, const std::string &path)
 
         switch(e.value.type)
         {
-            case 'V': outputValue(c, e.index, c.segments[e.index]); break;
+            case 'V': outputValue(c, e.index, { }, c.segments[e.index]); break;
             case 'F': processFunction(c, e.index); break;
         }
     }
@@ -99,7 +105,7 @@ void Process::processMappedExe(Context &c, const std::string &path)
 
         if(d.value.type == 'V')
         {
-            outputValue(c, d.index, { data.data() + pc, data.data() + pc + d.value.size });
+            outputValue(c, d.index, pc, { data.data() + pc, data.data() + pc + d.value.size });
         }
         else if(d.value.type == 'F')
         {

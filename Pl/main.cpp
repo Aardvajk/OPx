@@ -41,10 +41,10 @@ int main(int argc, char *argv[])
         auto me = c.find("main():std.null");
         if(!me)
         {
-            throw Error("main() not found");
+            throw Error("main():std.null not found");
         }
 
-        std::cout << "linking main() to " << c.ds.position() + me->offset << "\n";
+        std::cout << "linking main():std.null to " << c.ds.position() + me->offset << "\n";
         mp.patch(c.ds, c.ds.position() + me->offset);
 
         if(true)

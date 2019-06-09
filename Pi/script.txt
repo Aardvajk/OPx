@@ -1,11 +1,21 @@
-var a:4 = 9;
+var a = "Paul Cook.\n", 0;
+var b = "This is working but needs a tidy up.\n", 0;
 
 func "main():std.null":0
 {
+    addr dx, a;
+    push dx;
+
+    svc 2;
+    jmp foo;
+    svc 2;
+
+foo:
+    addr dx, b;
+    push dx;
+
+    svc 2;
+
+    pop 16;
 }
 
-var b:4 = 1, 2, 3, 4;
-
-func "foo()":0
-{
-}

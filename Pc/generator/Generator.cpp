@@ -79,5 +79,7 @@ void Generator::visit(FuncNode &node)
         node.block->accept(*this);
     }
 
+    os << "    svc 1234;\n";
+
     os << "}\n";
 }

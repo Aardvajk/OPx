@@ -10,6 +10,11 @@ enum class Type
 {
     Jmp,
 
+    Push,
+    Pop,
+
+    Addr,
+
     Svc,
     Invalid
 };

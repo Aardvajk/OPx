@@ -7,6 +7,11 @@ const char *s[] =
 {
     "jmp",
 
+    "push",
+    "pop",
+
+    "addr",
+
     "svc",
     ""
 };

@@ -18,6 +18,12 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<int>();
         std::cout << "integer " << i << "\n";
     }
+    else if(code == 2)
+    {
+        auto i = sr.get<std::size_t>();
+
+        std::cout << mm[i];
+    }
     else if(code >= 1000)
     {
         std::cout << "int " << code << "\n";
