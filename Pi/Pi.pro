@@ -26,22 +26,45 @@ SOURCES += \
         application/Context.cpp \
         compiler/Code.cpp \
         compiler/Compiler.cpp \
+        compiler/Expr.cpp \
         compiler/Instruction.cpp \
         components/StringTable.cpp \
         main.cpp \
+        nodes/AddrOfNode.cpp \
+        nodes/IdNode.cpp \
+        nodes/Node.cpp \
+        nodes/StringNode.cpp \
         symbols/Sym.cpp \
-        symbols/SymStack.cpp
+        symbols/SymStack.cpp \
+        visitors/AddrVisitor.cpp \
+        visitors/AstPrinter.cpp \
+        visitors/ByteWriter.cpp \
+        visitors/PushVisitor.cpp \
+        visitors/StoreVisitor.cpp \
+        visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
     compiler/Code.h \
     compiler/Compiler.h \
+    compiler/Expr.h \
     compiler/Instruction.h \
     components/Function.h \
     components/Global.h \
     components/StringTable.h \
+    nodes/AddrOfNode.h \
+    nodes/IdNode.h \
+    nodes/LiteralNode.h \
+    nodes/Node.h \
+    nodes/StringNode.h \
     symbols/Sym.h \
-    symbols/SymStack.h
+    symbols/SymStack.h \
+    visitors/AddrVisitor.h \
+    visitors/AstPrinter.h \
+    visitors/ByteWriter.h \
+    visitors/PushVisitor.h \
+    visitors/StoreVisitor.h \
+    visitors/Visitor.h
 
 DISTFILES += \
     script.txt

@@ -9,6 +9,7 @@ class IdNode;
 class DotNode;
 class VarNode;
 class FuncNode;
+class ScopeNode;
 class IntLiteralNode;
 
 class Visitor
@@ -25,6 +26,7 @@ public:
     virtual void visit(DotNode &node);
     virtual void visit(VarNode &node);
     virtual void visit(FuncNode &node);
+    virtual void visit(ScopeNode &node);
     virtual void visit(IntLiteralNode &node);
 };
 

@@ -8,6 +8,7 @@
 #include "nodes/DotNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/ScopeNode.h"
 #include "nodes/IntLiteralNode.h"
 
 #include "symbols/Sym.h"
@@ -88,6 +89,12 @@ void AstPrinter::visit(VarNode &node)
 void AstPrinter::visit(FuncNode &node)
 {
     tab() << "func " << node.sym->fullname() << ":" << node.sym->property("type").to<const Type*>()->text() << "\n";
+    node.block->accept(*this);
+}
+
+void AstPrinter::visit(ScopeNode &node)
+{
+    tab() << "scope\n";
     if(node.block)
     {
         node.block->accept(*this);

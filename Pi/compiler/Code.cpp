@@ -7,6 +7,11 @@
 #include "application/Context.h"
 
 #include "compiler/Instruction.h"
+#include "compiler/Expr.h"
+
+#include "visitors/AstPrinter.h"
+#include "visitors/PushVisitor.h"
+#include "visitors/StoreVisitor.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -16,6 +21,7 @@ namespace
 void jmpConstruct(Context &c, bool get)
 {
     auto id = c.matchId(get);
+    c.pd("-jmp ", id.text());
 
     if(auto s = c.syms.findLocal(id.text()))
     {
@@ -43,6 +49,8 @@ void jmpConstruct(Context &c, bool get)
 
 void callConstruct(Context &c, bool get)
 {
+    c.pd("-call");
+
     c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
     c.func().bytes << OpCode::Op::Call << OpCode::Reg::Dx;
 
@@ -51,60 +59,52 @@ void callConstruct(Context &c, bool get)
 
 void pushConstruct(Context &c, bool get)
 {
-    bool address = false;
+    auto expr = Expr::get(c, true);
 
-    auto next = c.scanner.next(get);
-    if(next.type() == Token::Type::Amp)
+    c.pd("-push ", astReconstruct(expr.get()));
+
+    PushVisitor pv(c);
+    expr->accept(pv);
+
+    if(!pv.okay())
     {
-        address = true;
-        c.scanner.next(true);
+        throw Error(expr->location(), "push syntax invalid - ", astReconstruct(expr.get()));
     }
 
-    auto id = c.matchId(false);
-
-    if(auto s = c.find(id.location(), id.text()))
-    {
-        if(s->type == Sym::Type::Global || s->type == Sym::Type::Func)
-        {
-            ByteStreamPatch p;
-
-            if(address)
-            {
-                c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
-                c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Dx;
-            }
-            else
-            {
-                auto size = s->properties["size"].to<std::size_t>();
-
-                c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
-                c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << size;
-                c.func().bytes << OpCode::Op::CopyAA << OpCode::Reg::Dx << OpCode::Reg::Sp << size;
-            }
-
-            c.func().links.emplace_back(p.position(), c.strings.insert(id.text()));
-        }
-        else
-        {
-            throw Error("not implemented - ", s->name);
-        }
-    }
-
-    c.scanner.consume(Token::Type::Semicolon, true);
+    c.scanner.consume(Token::Type::Semicolon, false);
 }
 
 void popConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-pop ", id.text());
 
     c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << pcx::lexical_cast<std::size_t>(id.text());
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void storeConstruct(Context &c, bool get)
+{
+    auto expr = Expr::get(c, true);
+
+    c.pd("-store ", astReconstruct(expr.get()));
+
+    StoreVisitor sv(c);
+    expr->accept(sv);
+
+    if(!sv.okay())
+    {
+        throw Error(expr->location(), "store syntax invalid - ", astReconstruct(expr.get()));
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, false);
+}
+
 void svcConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-svc ", id.text());
 
     c.func().bytes << OpCode::Op::Service << pcx::lexical_cast<int>(id.text());
 
@@ -114,6 +114,8 @@ void svcConstruct(Context &c, bool get)
 void labelConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::Id, get);
+    c.pd("-label ", id.text());
+
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(Sym::Type::Label, id.text()));
@@ -136,6 +138,8 @@ void Code::construct(Context &c, bool get)
 
         case Instruction::Type::Push: pushConstruct(c, true); break;
         case Instruction::Type::Pop: popConstruct(c, true); break;
+
+        case Instruction::Type::Store: storeConstruct(c, true); break;
 
         case Instruction::Type::Svc: svcConstruct(c, true); break;
 

@@ -1,21 +1,23 @@
-var a = "Paul Cook.\n", 0;
-var b = "This is working but needs a tidy up.\n", 0;
-var c = int(123);
-var d = int(25);
-
-func "foo():std.null":0;
+var a = string("paul\n\0");
+var b = string("cook\n\0");
 
 func "main():std.null":0
 {
-    push c;
-    push &"foo():std.null";
-    call;
+    var p:8;
+
+    push &b;
+    store p;
+    pop 8;
+
+    push p;
+    svc 2;
+    pop 8;
+
+    push &a;
+    store p;
+    pop 8;
+
+    push p;
+    svc 2;
+    pop 8;
 }
-
-func "foo():std.null":0
-{
-    var a:4;
-
-    push a;
-}
-

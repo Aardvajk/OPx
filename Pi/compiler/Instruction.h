@@ -14,6 +14,8 @@ enum class Type
     Push,
     Pop,
 
+    Store,
+
     Svc,
     Invalid
 };

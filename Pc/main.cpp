@@ -25,8 +25,6 @@ int main(int argc, char *argv[])
     {
         c.open("C:/Projects/Px/Px/Pc/script.txt");
 
-        std::cout << banner("");
-
         auto n = Compiler::compile(c);
 
         std::cout << banner("symbols");

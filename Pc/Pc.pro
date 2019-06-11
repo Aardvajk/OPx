@@ -25,11 +25,14 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a" \
 
 SOURCES += main.cpp \
     application/Context.cpp \
+    compiler/FuncConstructs.cpp \
     generator/ByteLister.cpp \
     generator/Generator.cpp \
+    generator/LocalsGenerator.cpp \
     nodes/Node.cpp \
     nodes/BlockNode.cpp \
     nodes/IdNode.cpp \
+    nodes/ScopeNode.cpp \
     visitors/AstPrinter.cpp \
     nodes/ClassNode.cpp \
     nodes/DotNode.cpp \
@@ -60,11 +63,14 @@ SOURCES += main.cpp \
 
 HEADERS += \
     application/Context.h \
+    compiler/FuncConstructs.h \
     generator/ByteLister.h \
     generator/Generator.h \
+    generator/LocalsGenerator.h \
     nodes/Node.h \
     nodes/BlockNode.h \
     nodes/IdNode.h \
+    nodes/ScopeNode.h \
     visitors/Visitor.h \
     visitors/AstPrinter.h \
     nodes/ClassNode.h \

@@ -10,7 +10,6 @@ namespace VarConstructs
 {
 
 void var(Context &c, BlockNode *block, Sym::Attrs attrs, bool get);
-void func(Context &c, BlockNode *block, Sym::Attrs attrs, bool get);
 
 }
 

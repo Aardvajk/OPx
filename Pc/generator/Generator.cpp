@@ -17,6 +17,7 @@
 #include "visitors/NameVisitors.h"
 
 #include "generator/ByteLister.h"
+#include "generator/LocalsGenerator.h"
 
 #include <pcx/join_str.h>
 
@@ -74,12 +75,16 @@ void Generator::visit(FuncNode &node)
     os << "func \"" << node.sym->fullname() << type->text() << "\":" << size << "\n";
     os << "{\n";
 
-    if(node.block)
+    auto &cs = node.sym->children();
+    for(std::size_t i = 0; i < cs.size() && cs[i]->property("argument").value<bool>(); ++i)
     {
-        node.block->accept(*this);
+        os << "    arg \"" << cs[i]->fullname() << "\":" << c.assertSize(node.location(), cs[i]->property("type").to<const Type*>()) << ";\n";
     }
 
-    os << "    svc 1234;\n";
+    LocalsGenerator lg(c, os);
+    node.block->accept(lg);
+
+    node.block->accept(*this);
 
     os << "}\n";
 }

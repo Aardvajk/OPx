@@ -1,3 +1,10 @@
+func foo(a:std.int, b:std.int)
+{
+    var c:std.int;
+}
+
+func woo();
+
 func main():std.null
 {
 }

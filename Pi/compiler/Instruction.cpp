@@ -11,6 +11,8 @@ const char *s[] =
     "push",
     "pop",
 
+    "store",
+
     "svc",
     ""
 };

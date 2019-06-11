@@ -14,6 +14,7 @@
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/VarConstructs.h"
+#include "compiler/FuncConstructs.h"
 #include "compiler/TypeConstructs.h"
 
 namespace
@@ -120,7 +121,7 @@ void DeclarationConstructs::entity(Context &c, BlockNode *block, Sym::Attrs attr
         case Token::Type::RwUsing: usingConstruct(c, attrs, true); break;
 
         case Token::Type::RwVar: VarConstructs::var(c, block, attrs, true); break;
-        case Token::Type::RwFunc: VarConstructs::func(c, block, attrs, true); break;
+        case Token::Type::RwFunc: FuncConstructs::func(c, block, attrs, true); break;
 
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }
