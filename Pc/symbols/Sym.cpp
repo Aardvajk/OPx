@@ -29,7 +29,7 @@ Sym *Sym::child(const std::string &name)
 
 Sym *Sym::container()
 {
-    auto s = parent();
+    auto s = this;
 
     while(s)
     {

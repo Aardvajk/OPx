@@ -25,6 +25,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a" \
 
 SOURCES += main.cpp \
     application/Context.cpp \
+    compiler/CodeConstructs.cpp \
     compiler/FuncConstructs.cpp \
     generator/ByteLister.cpp \
     generator/Generator.cpp \
@@ -63,6 +64,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     application/Context.h \
+    compiler/CodeConstructs.h \
     compiler/FuncConstructs.h \
     generator/ByteLister.h \
     generator/Generator.h \

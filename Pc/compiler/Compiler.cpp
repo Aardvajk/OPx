@@ -8,30 +8,21 @@
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/DeclarationConstructs.h"
+#include "compiler/CodeConstructs.h"
 #include "compiler/TestConstructs.h"
-
-#include "compiler/TypeConstructs.h"
-
-#include "types/TypeCompare.h"
-
-#include <pcx/scoped_push.h>
 
 namespace
 {
 
-void typeTest(Context &c, bool get)
+void code(Context &c, BlockNode *block, bool get)
 {
-    auto tn0 = TypeConstructs::type(c, get);
-    std::cout << tn0->text() << "\n";
+    auto tok = c.scanner.next(get);
+    if(c.tree.current()->container()->type() != Sym::Type::Func)
+    {
+        throw Error(tok.location(), "declaration expected - ", tok.text());
+    }
 
-    c.scanner.consume(Token::Type::Assign, false);
-
-    auto tn1 = TypeConstructs::type(c, get);
-    std::cout << tn1->text() << "\n";
-
-    std::cout << "result: " << TypeCompare::exact(tn0.get(), tn1.get()) << "\n";
-
-    c.scanner.consume(Token::Type::Semicolon, false);
+    CodeConstructs::entity(c, block, false);
 }
 
 }
@@ -53,7 +44,7 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwLookup: TestConstructs::lookup(c, true); break;
         case Token::Type::RwTriggerError: TestConstructs::triggerError(c, block, true); break;
 
-        default: typeTest(c, false);
+        default: code(c, block, false);
     }
 }
 
