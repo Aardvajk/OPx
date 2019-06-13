@@ -10,6 +10,7 @@
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/IntLiteralNode.h"
+#include "nodes/ExprNode.h"
 
 #include "symbols/Sym.h"
 
@@ -104,6 +105,14 @@ void AstPrinter::visit(ScopeNode &node)
 void AstPrinter::visit(IntLiteralNode &node)
 {
     tab() << "int literal " << node.value << "\n";
+}
+
+void AstPrinter::visit(ExprNode &node)
+{
+    tab() << "expr\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.node->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

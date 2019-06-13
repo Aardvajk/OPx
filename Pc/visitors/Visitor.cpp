@@ -47,3 +47,7 @@ void Visitor::visit(ScopeNode &node)
 void Visitor::visit(IntLiteralNode &node)
 {
 }
+
+void Visitor::visit(ExprNode &node)
+{
+}

@@ -20,6 +20,7 @@ public:
     virtual void visit(FuncNode &node) override;
     virtual void visit(ScopeNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
+    virtual void visit(ExprNode &node) override;
 
 private:
     std::ostream &tab() const;

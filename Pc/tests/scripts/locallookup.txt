@@ -1,0 +1,15 @@
+func foo()
+{
+    var a:std.int;
+    lookup(a, "foo.a");
+
+    {
+        var a:std.int;
+        lookup(a, "foo..a");
+
+        {
+            var a:std.null;
+            lookup(a, "foo...a");
+        }
+    }
+}

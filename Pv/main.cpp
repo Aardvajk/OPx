@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         std::cout << banner("shutdown");
         m.shutdown();
 
-        std::cout << banner("");
+        std::cout << banner();
     }
 
     catch(const Error &error)

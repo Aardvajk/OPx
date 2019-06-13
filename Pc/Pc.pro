@@ -30,6 +30,7 @@ SOURCES += main.cpp \
     generator/ByteLister.cpp \
     generator/Generator.cpp \
     generator/LocalsGenerator.cpp \
+    nodes/ExprNode.cpp \
     nodes/Node.cpp \
     nodes/BlockNode.cpp \
     nodes/IdNode.cpp \
@@ -69,6 +70,7 @@ HEADERS += \
     generator/ByteLister.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
+    nodes/ExprNode.h \
     nodes/Node.h \
     nodes/BlockNode.h \
     nodes/IdNode.h \
@@ -103,6 +105,7 @@ HEADERS += \
 
 DISTFILES += \
     script.txt \
+    tests/scripts/locallookup.txt \
     tests/scripts/lookup.txt \
     tests/scripts/funclookup.txt \
     tests/scripts/classlookup.txt \
