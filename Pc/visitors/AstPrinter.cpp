@@ -11,12 +11,14 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/IntLiteralNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/CallNode.h"
 
 #include "symbols/Sym.h"
 
 #include "types/Type.h"
 
 #include <pcx/scoped_counter.h>
+#include <pcx/join_str.h>
 
 #include <iostream>
 
@@ -113,6 +115,14 @@ void AstPrinter::visit(ExprNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.node->accept(*this);
+}
+
+void AstPrinter::visit(CallNode &node)
+{
+    tab() << "call\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.target->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

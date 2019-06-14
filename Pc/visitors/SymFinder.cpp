@@ -9,7 +9,7 @@
 namespace
 {
 
-void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string &name, std::vector<bool> &access, std::vector<SymFinder::Result> &result)
+void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string &name, std::vector<bool> &access, std::vector<SymResult> &result)
 {
     for(auto s: scope->children())
     {
@@ -36,7 +36,7 @@ void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string 
     }
 }
 
-void findFirst(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string &name, std::vector<bool> &access, std::vector<SymFinder::Result> &result)
+void findFirst(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string &name, std::vector<bool> &access, std::vector<SymResult> &result)
 {
     while(scope)
     {
@@ -92,7 +92,7 @@ void SymFinder::visit(DotNode &node)
     }
     else
     {
-        std::vector<Result> v;
+        std::vector<SymResult> v;
         for(auto s: scopes)
         {
             findIn(policy, start, s.sym, node.name, access, v);

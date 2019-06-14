@@ -12,6 +12,7 @@ class FuncNode;
 class ScopeNode;
 class IntLiteralNode;
 class ExprNode;
+class CallNode;
 
 class Visitor
 {
@@ -30,6 +31,7 @@ public:
     virtual void visit(ScopeNode &node);
     virtual void visit(IntLiteralNode &node);
     virtual void visit(ExprNode &node);
+    virtual void visit(CallNode &node);
 };
 
 #endif // VISITOR_H

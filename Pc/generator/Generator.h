@@ -10,7 +10,7 @@ class Context;
 class Generator : public Visitor
 {
 public:
-    explicit Generator(Context &c, std::ostream &os);
+    Generator(Context &c, std::ostream &os);
 
     virtual void visit(BlockNode &node) override;
     virtual void visit(NamespaceNode &node) override;

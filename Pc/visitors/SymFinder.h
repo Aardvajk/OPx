@@ -3,6 +3,8 @@
 
 #include "visitors/Visitor.h"
 
+#include "symbols/SymResult.h"
+
 #include <utility>
 #include <vector>
 
@@ -13,15 +15,9 @@ class SymFinder : public Visitor
 public:
     enum class Policy { Full, Limited };
 
-    struct Result
-    {
-        Sym *sym;
-        bool accessible;
-    };
-
     SymFinder(Policy policy, Sym *root, Sym *start);
 
-    std::vector<Result> result() const { return v; }
+    std::vector<SymResult> result() const { return v; }
 
     virtual void visit(GlobalNode &node) override;
     virtual void visit(IdNode &node) override;
@@ -33,8 +29,8 @@ private:
     Sym *root;
     Sym *start;
 
-    std::vector<Result> scopes;
-    std::vector<Result> v;
+    std::vector<SymResult> scopes;
+    std::vector<SymResult> v;
 
     std::vector<bool> access;
 };

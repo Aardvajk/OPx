@@ -21,7 +21,7 @@
 namespace
 {
 
-std::string formatResult(const SymFinder::Result &r)
+std::string formatResult(const SymResult &r)
 {
     return pcx::str(r.accessible ? "" : "private ", r.sym->fullname());
 }

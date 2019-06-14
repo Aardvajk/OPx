@@ -69,7 +69,7 @@ Sym *Context::matchFunction(SymFinder::Policy policy, Node *name, const Type *ty
     SymFinder sf(policy, tree.root(), tree.current());
     name->accept(sf);
 
-    std::vector<SymFinder::Result> r;
+    std::vector<SymResult> r;
     for(auto s: sf.result())
     {
         if(s.sym->type() != Sym::Type::Func)

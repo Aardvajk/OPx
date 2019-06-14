@@ -1,0 +1,17 @@
+func a(:std.int)
+{
+}
+
+func main()
+{
+    var a:std.int;
+
+    10;
+    123;
+
+    {
+        a();
+        var a:std.int;
+        a();
+    }
+}

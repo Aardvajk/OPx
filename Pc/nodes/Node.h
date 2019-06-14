@@ -5,8 +5,10 @@
 
 #include <pcx/scoped_ptr.h>
 #include <pcx/ptr_vector.h>
+#include <pcx/any.h>
 
 #include <string>
+#include <unordered_map>
 
 class Visitor;
 
@@ -18,10 +20,14 @@ public:
 
     virtual void accept(Visitor &v) = 0;
 
+    void setProperty(const std::string &name, pcx::any value);
+
     Location location() const { return n; }
+    pcx::any property(const std::string &name) const;
 
 private:
     Location n;
+    std::unordered_map<std::string, pcx::any> pm;
 };
 
 using NodePtr = pcx::scoped_ptr<Node>;

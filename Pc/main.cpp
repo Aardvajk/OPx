@@ -38,21 +38,21 @@ int main(int argc, char *argv[])
         Generator g(c, std::cout);
         n->accept(g);
 
-        std::cout << banner();
+//        std::cout << banner();
 
-//        if(true)
-//        {
-//            std::ofstream os("C:/Projects/Px/Px/script.pi");
-//            if(!os.is_open())
-//            {
-//                throw Error("unable to create - script.pi");
-//            }
+        if(true)
+        {
+            std::ofstream os("C:/Projects/Px/Px/script.pi");
+            if(!os.is_open())
+            {
+                throw Error("unable to create - script.pi");
+            }
 
-//            Generator g(c, os);
-//            n->accept(g);
-//        }
+            Generator g(c, os);
+            n->accept(g);
+        }
 
-//        checked_system("C:/Projects/Px/Px/build-Pi/release/pi C:/Projects/Px/Px/script.pi");
+        checked_system("C:/Projects/Px/Px/build-Pi/release/pi C:/Projects/Px/Px/script.pi");
     }
 
     catch(const Error &error)

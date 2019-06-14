@@ -5,6 +5,8 @@
 
 #include <string>
 
+class Sym;
+
 class IdNode : public Node
 {
 public:

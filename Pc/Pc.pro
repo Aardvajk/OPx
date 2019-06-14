@@ -28,8 +28,11 @@ SOURCES += main.cpp \
     compiler/CodeConstructs.cpp \
     compiler/FuncConstructs.cpp \
     generator/ByteLister.cpp \
+    generator/CodeGenerator.cpp \
+    generator/ExprGenerator.cpp \
     generator/Generator.cpp \
     generator/LocalsGenerator.cpp \
+    nodes/CallNode.cpp \
     nodes/ExprNode.cpp \
     nodes/Node.cpp \
     nodes/BlockNode.cpp \
@@ -42,6 +45,7 @@ SOURCES += main.cpp \
     symbols/Sym.cpp \
     symbols/SymTree.cpp \
     symbols/SymGuard.cpp \
+    visitors/LookupVisitor.cpp \
     visitors/Visitor.cpp \
     visitors/SymFinder.cpp \
     visitors/NameVisitors.cpp \
@@ -68,13 +72,18 @@ HEADERS += \
     compiler/CodeConstructs.h \
     compiler/FuncConstructs.h \
     generator/ByteLister.h \
+    generator/CodeGenerator.h \
+    generator/ExprGenerator.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
+    nodes/CallNode.h \
     nodes/ExprNode.h \
     nodes/Node.h \
     nodes/BlockNode.h \
     nodes/IdNode.h \
     nodes/ScopeNode.h \
+    symbols/SymResult.h \
+    visitors/LookupVisitor.h \
     visitors/Visitor.h \
     visitors/AstPrinter.h \
     nodes/ClassNode.h \

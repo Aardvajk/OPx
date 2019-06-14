@@ -18,6 +18,7 @@
 
 #include "generator/ByteLister.h"
 #include "generator/LocalsGenerator.h"
+#include "generator/CodeGenerator.h"
 
 #include <pcx/join_str.h>
 
@@ -81,10 +82,13 @@ void Generator::visit(FuncNode &node)
         os << "    arg \"" << cs[i]->fullname() << "\":" << c.assertSize(node.location(), cs[i]->property("type").to<const Type*>()) << ";\n";
     }
 
+    auto g = c.tree.open(node.sym);
+
     LocalsGenerator lg(c, os);
     node.block->accept(lg);
 
-    node.block->accept(*this);
+    CodeGenerator cg(c, os);
+    node.block->accept(cg);
 
     os << "}\n";
 }
