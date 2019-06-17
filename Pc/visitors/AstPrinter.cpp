@@ -123,6 +123,12 @@ void AstPrinter::visit(CallNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.target->accept(*this);
+
+    for(auto &a: node.args)
+    {
+        auto g = pcx::scoped_counter(tc);
+        a.accept(*this);
+    }
 }
 
 std::ostream &AstPrinter::tab() const

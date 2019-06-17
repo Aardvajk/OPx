@@ -1,17 +1,20 @@
-func a(:std.int)
+namespace a
 {
+
+namespace ab
+{
+
+func cd(a:std.int, b:std.int):std.int
+{
+}
+
+}
+
 }
 
 func main()
 {
-    var a:std.int;
+    using namespace a;
 
-    10;
-    123;
-
-    {
-        a();
-        var a:std.int;
-        a();
-    }
+    ab.cd(1, 2);
 }

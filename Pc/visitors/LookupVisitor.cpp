@@ -5,7 +5,9 @@
 #include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
 
+#include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
+#include "nodes/DotNode.h"
 
 #include <iostream>
 
@@ -26,7 +28,17 @@ LookupVisitor::LookupVisitor(Context &c) : c(c)
 {
 }
 
+void LookupVisitor::visit(GlobalNode &node)
+{
+    lookup(c, node);
+}
+
 void LookupVisitor::visit(IdNode &node)
+{
+    lookup(c, node);
+}
+
+void LookupVisitor::visit(DotNode &node)
 {
     lookup(c, node);
 }

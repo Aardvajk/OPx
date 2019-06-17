@@ -61,7 +61,7 @@ void Generator::visit(VarNode &node)
             ByteLister b;
             node.value->accept(b);
 
-            os << " = " << pcx::join_str(b.result(), ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); });
+            os << " = " << pcx::join_str(b.result(), ",", [](char c){ return pcx::str("char(", int(static_cast<unsigned char>(c)), ")"); });
         }
 
         os << ";\n";
@@ -89,6 +89,21 @@ void Generator::visit(FuncNode &node)
 
     CodeGenerator cg(c, os);
     node.block->accept(cg);
+
+    os << "    push int(" << (node.sym->fullname() == "main" ? 123 : 456) << ");\n";
+    os << "    svc 1;\n";
+    os << "    pop 4;\n";
+
+    if(node.sym->fullname() != "main")
+    {
+        os << "    push \"a.ab.cd.a\";\n";
+        os << "    svc 1;\n";
+        os << "    pop 4;\n";
+
+        os << "    push \"a.ab.cd.b\";\n";
+        os << "    svc 1;\n";
+        os << "    pop 4;\n";
+    }
 
     os << "}\n";
 }

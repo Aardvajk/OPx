@@ -11,6 +11,7 @@ public:
     virtual void accept(Visitor &v) override;
 
     NodePtr target;
+    NodeList args;
 };
 
 #endif // CALLNODE_H

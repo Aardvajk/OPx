@@ -13,6 +13,7 @@ enum class Type
 
     Push,
     Pop,
+    AllocS,
 
     Store,
 

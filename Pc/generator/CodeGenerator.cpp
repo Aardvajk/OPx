@@ -31,7 +31,5 @@ void CodeGenerator::visit(ExprNode &node)
     ExprGenerator eg(c, os);
     node.node->accept(eg);
 
-    os << "    svc 1;\n";
-
     os << "    pop " << eg.size() << ";\n";
 }

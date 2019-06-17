@@ -24,6 +24,7 @@ public:
     Sym *find(SymFinder::Policy policy, Node *name);
 
     Sym *matchFunction(SymFinder::Policy policy, Node *name, const Type *type);
+    Sym *matchFunction(Location location, const std::vector<SymResult> &syms, const Type *type);
 
     Sym *searchLocal(const std::string &name) const;
 

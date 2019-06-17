@@ -69,12 +69,18 @@ Sym *Context::matchFunction(SymFinder::Policy policy, Node *name, const Type *ty
     SymFinder sf(policy, tree.root(), tree.current());
     name->accept(sf);
 
+    return matchFunction(name->location(), sf.result(), type);
+}
+
+Sym *Context::matchFunction(Location location, const std::vector<SymResult> &syms, const Type *type)
+{
     std::vector<SymResult> r;
-    for(auto s: sf.result())
+
+    for(auto s:syms)
     {
         if(s.sym->type() != Sym::Type::Func)
         {
-            throw Error(name->location(), "function expected - ", s.sym->fullname());
+            throw Error(location, "function expected - ", s.sym->fullname());
         }
 
         if(TypeCompare::args(type, s.sym->property("type").to<const Type*>()))
@@ -85,12 +91,12 @@ Sym *Context::matchFunction(SymFinder::Policy policy, Node *name, const Type *ty
 
     if(r.size() > 1)
     {
-        throw Error(name->location(), "ambiguous - ", NameVisitors::prettyName(name));
+        throw Error(location, "ambiguous - ", r.front().sym->fullname());
     }
 
     if(!r.empty() && !r.front().accessible)
     {
-        throw Error(name->location(), "not accessible - ", r.front().sym->fullname());
+        throw Error(location, "not accessible - ", r.front().sym->fullname());
     }
 
     return r.empty() ? nullptr : r.front().sym;

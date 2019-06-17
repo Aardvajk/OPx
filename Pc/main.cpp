@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     catch(const Error &error)
     {
-        std::cerr << "error";
+        std::cerr << "pc error";
         if(auto n = error.location())
         {
             std::cerr << " " << c.sources.path(n.id()) << " " << n.line() << "," << n.column();
