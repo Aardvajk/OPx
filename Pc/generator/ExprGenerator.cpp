@@ -48,8 +48,11 @@ void ExprGenerator::visit(CallNode &node)
 
     os << "    allocs " << sz << ";\n";
 
-    os << "    push int(777);\n";
-    os << "    push int(888);\n";
+    for(auto &a: node.args)
+    {
+        ExprGenerator eg(c, os);
+        a.accept(eg);
+    }
 
     os << "    push &\"" << sym->fullname() << type->text() << "\";\n";
     os << "    call;\n";

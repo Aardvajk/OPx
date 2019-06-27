@@ -38,8 +38,6 @@ int main(int argc, char *argv[])
         Generator g(c, std::cout);
         n->accept(g);
 
-//        std::cout << banner();
-
         if(true)
         {
             std::ofstream os("C:/Projects/Px/Px/script.pi");

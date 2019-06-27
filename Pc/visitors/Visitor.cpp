@@ -36,6 +36,10 @@ void Visitor::visit(VarNode &node)
 {
 }
 
+void Visitor::visit(FuncDecNode &node)
+{
+}
+
 void Visitor::visit(FuncNode &node)
 {
 }

@@ -21,9 +21,11 @@ int main(int argc, char *argv[])
         c.open(argv[1]);
         compile(c);
 
+        std::string output = "script.po";
+
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/script.po", std::ios::binary);
+            std::ofstream os("C:/Projects/Px/Px/" + output, std::ios::binary);
             ByteStream bs(os);
 
             bs << c.strings.size();
@@ -66,18 +68,18 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/script.po.pmap");
+            std::ofstream os("C:/Projects/Px/Px/" + output + ".pmap");
             if(!os.is_open())
             {
-                throw Error("unable to create - script.po.pmap");
+                throw Error("unable to create - ", output, ".pmap");
             }
 
             c.vd.write(os);
             c.pd.write(os);
         }
 
-        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/script.po C:/Projects/Px/Px/script.po.pmap");
-        checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po");
+        checked_system(pcx::str("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/", output, " C:/Projects/Px/Px/", output, ".pmap"));
+        checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po C:/Projects/Px/Px/lib.po");
     }
 
     catch(const Error &error)

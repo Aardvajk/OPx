@@ -7,6 +7,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/FuncDecNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/IntLiteralNode.h"
@@ -87,7 +88,12 @@ void AstPrinter::visit(VarNode &node)
         auto g = pcx::scoped_counter(tc);
         node.value->accept(*this);
     }
- }
+}
+
+void AstPrinter::visit(FuncDecNode &node)
+{
+    tab() << "funcdec " << node.sym->fullname() << ":" << node.sym->property("type").to<const Type*>()->text() << "\n";
+}
 
 void AstPrinter::visit(FuncNode &node)
 {

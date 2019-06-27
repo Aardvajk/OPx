@@ -1,20 +1,12 @@
-namespace a
+namespace std
 {
 
-namespace ab
-{
-
-func cd(a:std.int, b:std.int):std.int
-{
-}
-
-}
+func print(value:std.int);
 
 }
 
 func main()
 {
-    using namespace a;
-
-    ab.cd(1, 2);
+    std.print(98);
+    std.print(36);
 }

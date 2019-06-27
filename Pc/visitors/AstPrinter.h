@@ -17,6 +17,7 @@ public:
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
     virtual void visit(VarNode &node) override;
+    virtual void visit(FuncDecNode &node) override;
     virtual void visit(FuncNode &node) override;
     virtual void visit(ScopeNode &node) override;
     virtual void visit(IntLiteralNode &node) override;

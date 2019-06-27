@@ -8,6 +8,7 @@ class GlobalNode;
 class IdNode;
 class DotNode;
 class VarNode;
+class FuncDecNode;
 class FuncNode;
 class ScopeNode;
 class IntLiteralNode;
@@ -27,6 +28,7 @@ public:
     virtual void visit(IdNode &node);
     virtual void visit(DotNode &node);
     virtual void visit(VarNode &node);
+    virtual void visit(FuncDecNode &node);
     virtual void visit(FuncNode &node);
     virtual void visit(ScopeNode &node);
     virtual void visit(IntLiteralNode &node);

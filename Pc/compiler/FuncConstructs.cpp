@@ -12,6 +12,7 @@
 #include "types/TypeCompare.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/FuncDecNode.h"
 #include "nodes/FuncNode.h"
 
 namespace
@@ -117,6 +118,9 @@ void FuncConstructs::func(Context &c, BlockNode *block, Sym::Attrs attrs, bool g
     }
     else
     {
+        auto n = new FuncDecNode(nn->location(), sym);
+        block->nodes.push_back(n);
+
         c.scanner.consume(Token::Type::Semicolon, false);
     }
 }

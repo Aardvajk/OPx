@@ -129,78 +129,85 @@ void funcConstruct(Context &c, bool get)
         throw Error(id.location(), "return size different - ", id.text());
     }
 
-    c.scanner.match(Token::Type::LeftBrace, false);
-
-    c.syms.push();
-    c.funcs.emplace_back(sym, c.strings.insert(id.text()));
-
-    std::vector<Sym*> args;
-
-    c.scanner.next(true);
-    while(c.scanner.token().type() == Token::Type::RwArg)
+    if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
-        varConstruct(c, Sym::Type::Arg, &args, true);
-    }
+        c.scanner.match(Token::Type::LeftBrace, false);
 
-    while(c.scanner.token().type() == Token::Type::RwVar)
-    {
-        varConstruct(c, Sym::Type::Local, nullptr, true);
-    }
+        c.syms.push();
+        c.funcs.emplace_back(sym, c.strings.insert(id.text()));
 
-    for(auto s: pcx::range_reverse(args))
-    {
-        s->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
-        c.func().args += s->properties["size"].to<std::size_t>();
-    }
+        std::vector<Sym*> args;
 
-    auto r = c.syms.add(new Sym(Sym::Type::Arg, "@ret"));
-    r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
-    r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
-
-    c.pd.begin('F', sym->name, 0, pcx::make_callback(&c, &Context::funcPosition));
-
-    c.pd("func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
-    c.pd("{");
-
-    c.pd("-function prologue");
-    c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Bp;
-    c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Sp << OpCode::Reg::Bp;
-
-    c.pd("-allocate locals");
-    c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
-
-    while(c.scanner.token().type() != Token::Type::RightBrace)
-    {
-        Code::construct(c, false);
-    }
-
-    c.scanner.consume(Token::Type::RightBrace, false);
-
-    for(auto &j: c.func().jumps)
-    {
-        auto s = c.syms.findLocal(j.first.text());
-        if(!s || s->type != Sym::Type::Label)
+        c.scanner.next(true);
+        while(c.scanner.token().type() == Token::Type::RwArg)
         {
-            throw Error(j.first.location(), "label expected - ", j.first.text());
+            varConstruct(c, Sym::Type::Arg, &args, true);
         }
 
-        auto pos = s->properties["position"].to<std::size_t>();
-        j.second.patch(c.func().bytes, pos - (j.second.position() + sizeof(std::size_t)));
+        while(c.scanner.token().type() == Token::Type::RwVar)
+        {
+            varConstruct(c, Sym::Type::Local, nullptr, true);
+        }
+
+        for(auto s: pcx::range_reverse(args))
+        {
+            s->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
+            c.func().args += s->properties["size"].to<std::size_t>();
+        }
+
+        auto r = c.syms.add(new Sym(Sym::Type::Arg, "@ret"));
+        r->properties["size"] = sym->properties["returnSize"].to<std::size_t>();
+        r->properties["offset"] = c.func().args + (sizeof(std::size_t) * 2);
+
+        c.pd.begin('F', sym->name, 0, pcx::make_callback(&c, &Context::funcPosition));
+
+        c.pd("func ", sym->name, ":", sym->properties["returnSize"].to<std::size_t>());
+        c.pd("{");
+
+        c.pd("-function prologue");
+        c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Bp;
+        c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Sp << OpCode::Reg::Bp;
+
+        c.pd("-allocate locals");
+        c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << c.func().locals;
+
+        while(c.scanner.token().type() != Token::Type::RightBrace)
+        {
+            Code::construct(c, false);
+        }
+
+        c.scanner.consume(Token::Type::RightBrace, false);
+
+        for(auto &j: c.func().jumps)
+        {
+            auto s = c.syms.findLocal(j.first.text());
+            if(!s || s->type != Sym::Type::Label)
+            {
+                throw Error(j.first.location(), "label expected - ", j.first.text());
+            }
+
+            auto pos = s->properties["position"].to<std::size_t>();
+            j.second.patch(c.func().bytes, pos - (j.second.position() + sizeof(std::size_t)));
+        }
+
+        c.pd("-free locals");
+        c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
+
+        c.pd("-function epilogue");
+        c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Bp;
+        c.func().bytes << OpCode::Op::Ret << c.func().args;
+
+        c.pd("-end func ", sym->name);
+        c.pd("}");
+
+        c.pd.back().size = c.func().bytes.position();
+
+        c.syms.pop();
     }
-
-    c.pd("-free locals");
-    c.func().bytes << OpCode::Op::AddRI << OpCode::Reg::Sp << c.func().locals;
-
-    c.pd("-function epilogue");
-    c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Bp;
-    c.func().bytes << OpCode::Op::Ret << c.func().args;
-
-    c.pd("-end func ", sym->name);
-    c.pd("}");
-
-    c.pd.back().size = c.func().bytes.position();
-
-    c.syms.pop();
+    else
+    {
+        c.scanner.consume(Token::Type::Semicolon, false);
+    }
 }
 
 void construct(Context &c, bool get)

@@ -1,23 +1,6 @@
-var a = string("paul\n\0");
-var b = string("cook\n\0");
+func "foo():bar":0;
 
 func "main():std.null":0
 {
-    var p:8;
-
-    push &b;
-    store p;
-    pop 8;
-
-    push p;
-    svc 2;
-    pop 8;
-
-    push &a;
-    store p;
-    pop 8;
-
-    push p;
-    svc 2;
-    pop 8;
+    push &"foo():bar";
 }

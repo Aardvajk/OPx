@@ -1,0 +1,7 @@
+func "std.print(std.int):std.null":0
+{
+    arg "std.print.i":4;
+    push "std.print.i";
+    svc 1;
+    pop 4;
+}

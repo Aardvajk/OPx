@@ -8,6 +8,7 @@
 #include "nodes/NamespaceNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/FuncDecNode.h"
 #include "nodes/FuncNode.h"
 
 #include "symbols/Sym.h"
@@ -68,6 +69,14 @@ void Generator::visit(VarNode &node)
     }
 }
 
+void Generator::visit(FuncDecNode &node)
+{
+    auto type = node.sym->property("type").to<const Type*>();
+    auto size = c.assertSize(node.location(), type->returnType.get());
+
+    os << "func \"" << node.sym->fullname() << type->text() << "\":" << size << ";\n";
+}
+
 void Generator::visit(FuncNode &node)
 {
     auto type = node.sym->property("type").to<const Type*>();
@@ -89,10 +98,6 @@ void Generator::visit(FuncNode &node)
 
     CodeGenerator cg(c, os);
     node.block->accept(cg);
-
-    os << "    push int(" << (node.sym->fullname() == "main" ? 123 : 456) << ");\n";
-    os << "    svc 1;\n";
-    os << "    pop 4;\n";
 
     if(node.sym->fullname() != "main")
     {
