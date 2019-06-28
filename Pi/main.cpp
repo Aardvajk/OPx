@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
         }
 
         checked_system(pcx::str("C:/Projects/Px/Px/build-Pd/release/pd ", output, " ", output, ".pmap"));
-        checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po C:/Projects/Px/Px/lib.po");
+        checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/out.px C:/Projects/Px/Px/script.po C:/Projects/Px/Px/lib.po");
     }
 
     catch(const Error &error)

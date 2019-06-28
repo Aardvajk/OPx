@@ -18,11 +18,18 @@ int main(int argc, char *argv[])
     {
         if(argc < 2)
         {
-            throw Error("no source specified");
+            throw Error("no output specified");
+        }
+
+        std::string output = argv[1];
+
+        if(argc < 3)
+        {
+            throw Error("no sources specified");
         }
 
         std::vector<std::string> paths;
-        for(int i = 1; i < argc; ++i)
+        for(int i = 2; i < argc; ++i)
         {
             paths.push_back(argv[i]);
         }
@@ -49,10 +56,10 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/out.px", std::ios::binary);
+            std::ofstream os(output, std::ios::binary);
             if(!os.is_open())
             {
-                throw Error("unable to create - out.px");
+                throw Error("unable to create - ", output);
             }
 
             auto db = c.ds.data();
@@ -64,18 +71,20 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/out.px.pmap");
+            auto s = pcx::str(output, ".pmap");
+
+            std::ofstream os(s);
             if(!os.is_open())
             {
-                throw Error("unable to create - out.px.pmap");
+                throw Error("unable to create - ", s);
             }
 
             c.vd.write(os);
             c.pd.write(os);
         }
 
-        checked_system("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/out.px C:/Projects/Px/Px/out.px.pmap");
-        checked_system("C:/Projects/Px/Px/build-Pv/release/pv C:/Projects/Px/Px/out.px");
+        checked_system(pcx::str("C:/Projects/Px/Px/build-Pd/release/pd ", output, " ", output, ".pmap"));
+        checked_system(pcx::str("C:/Projects/Px/Px/build-Pv/release/pv ", output));
     }
 
     catch(const Error &error)
