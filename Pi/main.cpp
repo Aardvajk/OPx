@@ -21,11 +21,16 @@ int main(int argc, char *argv[])
         c.open(argv[1]);
         compile(c);
 
-        std::string output = "script.po";
+        if(argc < 3)
+        {
+            throw Error("no output specified");
+        }
+
+        std::string output = argv[2];
 
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/" + output, std::ios::binary);
+            std::ofstream os(output, std::ios::binary);
             ByteStream bs(os);
 
             bs << c.strings.size();
@@ -68,7 +73,7 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/" + output + ".pmap");
+            std::ofstream os(output + ".pmap");
             if(!os.is_open())
             {
                 throw Error("unable to create - ", output, ".pmap");
@@ -78,7 +83,7 @@ int main(int argc, char *argv[])
             c.pd.write(os);
         }
 
-        checked_system(pcx::str("C:/Projects/Px/Px/build-Pd/release/pd C:/Projects/Px/Px/", output, " C:/Projects/Px/Px/", output, ".pmap"));
+        checked_system(pcx::str("C:/Projects/Px/Px/build-Pd/release/pd ", output, " ", output, ".pmap"));
         checked_system("C:/Projects/Px/Px/build-Pl/release/pl C:/Projects/Px/Px/script.po C:/Projects/Px/Px/lib.po");
     }
 

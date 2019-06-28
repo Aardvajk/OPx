@@ -67,5 +67,4 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    lib.pi \
     script.txt

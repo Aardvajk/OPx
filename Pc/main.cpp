@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
             n->accept(g);
         }
 
-        checked_system("C:/Projects/Px/Px/build-Pi/release/pi C:/Projects/Px/Px/script.pi");
+        checked_system("C:/Projects/Px/Px/build-Pi/release/pi C:/Projects/Px/Px/script.pi C:/Projects/Px/Px/script.po");
     }
 
     catch(const Error &error)
