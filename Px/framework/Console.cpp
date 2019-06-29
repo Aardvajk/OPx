@@ -2,7 +2,6 @@
 
 #include "framework/Error.h"
 
-#include <cstdlib>
 #include <iostream>
 
 std::string banner_imp(std::string title, char ch)
@@ -38,12 +37,4 @@ std::string elided_imp(std::string text)
 std::size_t padw(std::size_t n)
 {
     return n ? pcx::str(n - 1).length() : 1;
-}
-
-void checked_system(const std::string &command)
-{
-    if(std::system(command.c_str()))
-    {
-        throw Error("crashed - ", command);
-    }
 }

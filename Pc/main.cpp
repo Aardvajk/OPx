@@ -61,8 +61,6 @@ int main(int argc, char *argv[])
             Generator g(c, os);
             n->accept(g);
         }
-
-        checked_system(pcx::str("C:/Projects/Px/Px/build-Pi/release/pi ", output, " C:/Projects/Px/Px/script.po"));
     }
 
     catch(const Error &error)

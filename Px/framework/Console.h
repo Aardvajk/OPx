@@ -37,6 +37,4 @@ template<typename T> std::string pad(const T &text, std::size_t width)
     return s;
 }
 
-void checked_system(const std::string &command);
-
 #endif // CONSOLE_H

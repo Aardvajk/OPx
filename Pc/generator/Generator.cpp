@@ -99,16 +99,9 @@ void Generator::visit(FuncNode &node)
     CodeGenerator cg(c, os);
     node.block->accept(cg);
 
-    if(node.sym->fullname() != "main")
-    {
-        os << "    push \"a.ab.cd.a\";\n";
-        os << "    svc 1;\n";
-        os << "    pop 4;\n";
-
-        os << "    push \"a.ab.cd.b\";\n";
-        os << "    svc 1;\n";
-        os << "    pop 4;\n";
-    }
+    os << "    push int(123);\n";
+    os << "    svc 1;\n";
+    os << "    pop 4;\n";
 
     os << "}\n";
 }

@@ -1,6 +1,0 @@
-func "foo():bar":0;
-
-func "main():std.null":0
-{
-    push &"foo():bar";
-}

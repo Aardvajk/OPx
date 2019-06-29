@@ -82,9 +82,6 @@ int main(int argc, char *argv[])
             c.vd.write(os);
             c.pd.write(os);
         }
-
-        checked_system(pcx::str("C:/Projects/Px/Px/build-Pd/release/pd ", output, " ", output, ".pmap"));
-        checked_system(pcx::str("C:/Projects/Px/Px/build-Pv/release/pv ", output));
     }
 
     catch(const Error &error)
