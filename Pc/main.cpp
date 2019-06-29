@@ -23,7 +23,17 @@ int main(int argc, char *argv[])
 
     try
     {
-        c.open("C:/Projects/Px/Px/Pc/script.txt");
+        if(argc < 2)
+        {
+            throw Error("no source specified");
+        }
+
+        if(argc < 3)
+        {
+            throw Error("no output specified");
+        }
+
+        c.open(argv[1]);
 
         auto n = Compiler::compile(c);
 
@@ -38,19 +48,21 @@ int main(int argc, char *argv[])
         Generator g(c, std::cout);
         n->accept(g);
 
+        std::string output = argv[2];
+
         if(true)
         {
-            std::ofstream os("C:/Projects/Px/Px/script.pi");
+            std::ofstream os(output);
             if(!os.is_open())
             {
-                throw Error("unable to create - script.pi");
+                throw Error("unable to create - ", output);
             }
 
             Generator g(c, os);
             n->accept(g);
         }
 
-        checked_system("C:/Projects/Px/Px/build-Pi/release/pi C:/Projects/Px/Px/script.pi C:/Projects/Px/Px/script.po");
+        checked_system(pcx::str("C:/Projects/Px/Px/build-Pi/release/pi ", output, " C:/Projects/Px/Px/script.po"));
     }
 
     catch(const Error &error)
