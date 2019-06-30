@@ -51,7 +51,6 @@ int main(int argc, char *argv[])
             throw Error("main():std.null not found");
         }
 
-        std::cout << "linking main():std.null to " << c.ds.position() + me->offset << "\n";
         mp.patch(c.ds, c.ds.position() + me->offset);
 
         if(true)

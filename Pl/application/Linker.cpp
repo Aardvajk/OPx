@@ -22,8 +22,6 @@ void linkEntity(Context &c, Object::Unit &unit, Object::Entity &entity)
 
         auto addr = (e->type == 'F' ? c.ds.position() : 0) + e->offset;
 
-        std::cout << "linking " << name << " to " << addr << "\n";
-
         c.ps.writeAt(ln.address + entity.offset, &addr, sizeof(std::size_t));
     }
 }
@@ -34,8 +32,6 @@ void Linker::link(Context &c)
 {
     for(auto &unit: c.units)
     {
-        std::cout << banner("linking ", unit.path);
-
         for(auto &entity: unit.entities)
         {
             linkEntity(c, unit, entity);

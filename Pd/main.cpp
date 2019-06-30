@@ -20,18 +20,17 @@ int main(int argc, char *argv[])
             throw Error("no source specified");
         }
 
-        if(argc > 2)
-        {
-            std::ifstream is(argv[2]);
-            if(!is.is_open())
-            {
-                throw Error("unable to open - ", argv[2]);
-            }
+        std::string path = argv[1];
 
-            c.dm.read(is);
+        if(true)
+        {
+            std::ifstream is(path + ".pmap");
+            if(is.is_open())
+            {
+                c.dm.read(is);
+            }
         }
 
-        std::string path = argv[1];
         if(path.length() > 4 && path.substr(path.length() - 3) == ".po")
         {
             Process::processUnit(c, path);
