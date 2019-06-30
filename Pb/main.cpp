@@ -1,14 +1,11 @@
 #include <cstdlib>
 #include <vector>
-#include <windows.h>
 
 #include <pcx/str.h>
 #include <pcx/textfile.h>
 
 int main(int argc, char *argv[])
 {
-    SetCurrentDirectory("C:/Projects/Px/Px/workspace");
-
     std::vector<std::string> pb;
     pb.push_back("@echo off\n");
 
