@@ -28,3 +28,5 @@ SOURCES += \
 DISTFILES += \
     ../workspace/pb.bat \
     ../workspace/script.pc
+
+HEADERS +=
