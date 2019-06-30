@@ -24,6 +24,3 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a" \
 
 SOURCES += \
         main.cpp
-
-DISTFILES += \
-    ../workspace/script.pc
