@@ -18,6 +18,26 @@ Source::Char skip(Source &source)
         ch = source.get();
     }
 
+    if(ch == '/')
+    {
+        ch = source.get();
+        if(ch == '/')
+        {
+            ch = source.get();
+            while(ch && ch != '\n')
+            {
+                ch = source.get();
+            }
+
+            return skip(source);
+        }
+        else
+        {
+            source.unget(ch);
+            return '/';
+        }
+    }
+
     return ch;
 }
 
