@@ -5,6 +5,7 @@
 #include "nodes/BlockNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "generator/ExprGenerator.h"
 
@@ -32,4 +33,8 @@ void CodeGenerator::visit(ExprNode &node)
     node.node->accept(eg);
 
     os << "    pop " << eg.size() << ";\n";
+}
+
+void CodeGenerator::visit(ReturnNode &node)
+{
 }

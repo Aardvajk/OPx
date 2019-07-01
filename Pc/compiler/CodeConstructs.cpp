@@ -10,6 +10,7 @@
 #include "nodes/BlockNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 namespace
 {
@@ -37,6 +38,22 @@ void scopeConstruct(Context &c, BlockNode *block, bool get)
     block->nodes.push_back(sn.release());
 }
 
+void returnConstruct(Context &c, BlockNode *block, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::RwReturn, get);
+
+    auto n = new ReturnNode(tok.location());
+    block->nodes.push_back(n);
+
+    tok = c.scanner.next(true);
+    if(tok.type() != Token::Type::Semicolon)
+    {
+        n->expr = Expr::get(c, false);
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, false);
+}
+
 }
 
 void CodeConstructs::entity(Context &c, BlockNode *block, bool get)
@@ -45,6 +62,8 @@ void CodeConstructs::entity(Context &c, BlockNode *block, bool get)
     switch(tok.type())
     {
         case Token::Type::LeftBrace: scopeConstruct(c, block, false); break;
+
+        case Token::Type::RwReturn: returnConstruct(c, block, false); break;
 
         default: exprConstruct(c, block, false);
     }

@@ -13,6 +13,7 @@
 #include "nodes/IntLiteralNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "symbols/Sym.h"
 
@@ -134,6 +135,17 @@ void AstPrinter::visit(CallNode &node)
     {
         auto g = pcx::scoped_counter(tc);
         a.accept(*this);
+    }
+}
+
+void AstPrinter::visit(ReturnNode &node)
+{
+    tab() << "return\n";
+
+    if(node.expr)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.expr->accept(*this);
     }
 }
 
