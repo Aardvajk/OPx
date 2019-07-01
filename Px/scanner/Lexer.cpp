@@ -115,6 +115,19 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == '=') return Token(Token::Type::Assign, loc, ch);
     if(ch == '&') return Token(Token::Type::Amp, loc, ch);
 
+    if(ch == '\'')
+    {
+        auto v = source.get();
+
+        ch = source.get();
+        if(ch != '\'')
+        {
+            throw Error(loc, "non-terminated character");
+        }
+
+        return Token(Token::Type::CharLiteral, loc, v);
+    }
+
     if(ch == '\"')
     {
         std::string s;

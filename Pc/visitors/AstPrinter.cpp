@@ -10,6 +10,7 @@
 #include "nodes/FuncDecNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
+#include "nodes/CharLiteralNode.h"
 #include "nodes/IntLiteralNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
@@ -109,6 +110,11 @@ void AstPrinter::visit(ScopeNode &node)
     {
         node.block->accept(*this);
     }
+}
+
+void AstPrinter::visit(CharLiteralNode &node)
+{
+    tab() << "char literal " << node.value << "\n";
 }
 
 void AstPrinter::visit(IntLiteralNode &node)

@@ -29,6 +29,7 @@ SOURCES += main.cpp \
     generator/Generator.cpp \
     generator/LocalsGenerator.cpp \
     nodes/CallNode.cpp \
+    nodes/CharLiteralNode.cpp \
     nodes/ExprNode.cpp \
     nodes/FuncDecNode.cpp \
     nodes/Node.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     nodes/CallNode.h \
+    nodes/CharLiteralNode.h \
     nodes/ExprNode.h \
     nodes/FuncDecNode.h \
     nodes/Node.h \
