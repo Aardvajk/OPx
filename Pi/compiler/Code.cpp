@@ -123,7 +123,7 @@ void svcConstruct(Context &c, bool get)
 
 void labelConstruct(Context &c, bool get)
 {
-    auto id = c.scanner.match(Token::Type::Id, get);
+    auto id = c.matchId(get);
     c.pd("-label ", id.text());
 
     c.assertUnique(id.location(), id.text());
