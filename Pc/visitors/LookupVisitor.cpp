@@ -62,6 +62,10 @@ void LookupVisitor::visit(CallNode &node)
     }
 
     auto sym = c.matchFunction(node.target->location(), node.target->property("syms").value<std::vector<SymResult> >(), &searchType);
+    if(!sym)
+    {
+        throw Error(node.location(), "no function found - ", NameVisitors::prettyName(node.target.get()));
+    }
 
     node.setProperty("sym", sym);
 }
