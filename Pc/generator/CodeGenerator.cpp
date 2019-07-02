@@ -37,4 +37,14 @@ void CodeGenerator::visit(ExprNode &node)
 
 void CodeGenerator::visit(ReturnNode &node)
 {
+    if(node.expr)
+    {
+        ExprGenerator eg(c, os);
+        node.expr->accept(eg);
+
+        os << "    store \"@ret\";\n";
+        os << "    pop " << eg.size() << ";\n";
+    }
+
+    os << "    jmp \"#end_function\";\n";
 }

@@ -15,6 +15,7 @@ public:
 
     virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
+    virtual void visit(CallNode &node) override;
 
 private:
     Context &c;

@@ -99,5 +99,6 @@ void Generator::visit(FuncNode &node)
     CodeGenerator cg(c, os);
     node.block->accept(cg);
 
+    os << "\"#end_function\":\n";
     os << "}\n";
 }
