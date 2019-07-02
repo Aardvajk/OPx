@@ -16,9 +16,7 @@ int main(int argc, char *argv[])
         std::string exe;
         is >> exe;
 
-        auto cmd = pcx::str("C:\\Projects\\Px\\Px\\build-", exe, "\\release\\", s);
-
-        if(std::system(cmd.c_str()))
+        if(std::system(pcx::str("C:\\Projects\\Px\\Px\\build-", exe, "\\release\\", s).c_str()))
         {
             return -1;
         }
