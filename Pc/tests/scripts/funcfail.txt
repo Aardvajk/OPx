@@ -10,6 +10,7 @@ trigger_error("no function found - stdx.print")
 
 func main()
 {
+    stdx.print(123);
     stdx.print('\'');
 }
 
