@@ -3,6 +3,7 @@
 #include "nodes/GlobalNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/DotNode.h"
+#include "nodes/CharLiteralNode.h"
 #include "nodes/IntLiteralNode.h"
 
 #include <pcx/str.h>
@@ -70,6 +71,11 @@ void NameVisitors::PrettyName::visit(DotNode &node)
 {
     r += node.name + ".";
     node.child->accept(*this);
+}
+
+void NameVisitors::PrettyName::visit(CharLiteralNode &node)
+{
+    r += pcx::str(node.value);
 }
 
 void NameVisitors::PrettyName::visit(IntLiteralNode &node)

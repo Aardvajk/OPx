@@ -1,5 +1,6 @@
 #include "ByteLister.h"
 
+#include "nodes/CharLiteralNode.h"
 #include "nodes/IntLiteralNode.h"
 
 #include <cstring>
@@ -17,6 +18,11 @@ template<typename T> void writeValue(T value, std::vector<char> &v)
 
 ByteLister::ByteLister()
 {
+}
+
+void ByteLister::visit(CharLiteralNode &node)
+{
+    writeValue(node.value, v);
 }
 
 void ByteLister::visit(IntLiteralNode &node)

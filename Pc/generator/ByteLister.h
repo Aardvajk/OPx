@@ -12,6 +12,7 @@ public:
 
     std::vector<char> result() const { return v; }
 
+    virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
 
 private:

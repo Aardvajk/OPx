@@ -13,6 +13,7 @@ public:
 
     const Type *result() const { return type; }
 
+    virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
 
 private:

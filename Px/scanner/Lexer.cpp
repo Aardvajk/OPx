@@ -10,6 +10,18 @@
 namespace
 {
 
+Source::Char translateEscapeChar(Source::Char ch)
+{
+    switch(ch)
+    {
+        case 'n': return '\n';
+        case 't': return '\t';
+        case '0': return '\0';
+
+        default: return ch;
+    }
+}
+
 Source::Char skip(Source &source)
 {
     auto ch = source.get();
@@ -39,6 +51,23 @@ Source::Char skip(Source &source)
     }
 
     return ch;
+}
+
+Token charConstant(Source &source, Location location)
+{
+    auto v = source.get();
+    if(v == '\\')
+    {
+        v = translateEscapeChar(source.get());
+    }
+
+    auto ch = source.get();
+    if(ch != '\'')
+    {
+        throw Error(location, "non-terminated character");
+    }
+
+    return Token(Token::Type::CharLiteral, location, v);
 }
 
 Token stringConstant(Source &source, Location location, std::string &s)
@@ -117,15 +146,7 @@ Token Lexer::next(Mode mode, Source &source)
 
     if(ch == '\'')
     {
-        auto v = source.get();
-
-        ch = source.get();
-        if(ch != '\'')
-        {
-            throw Error(loc, "non-terminated character");
-        }
-
-        return Token(Token::Type::CharLiteral, loc, v);
+        return charConstant(source, loc);
     }
 
     if(ch == '\"')
@@ -196,15 +217,7 @@ std::string Lexer::decodeString(const std::string &text)
 
         if(ch == '\\' && i < text.length() - 1)
         {
-            ch = text[++i];
-            switch(ch)
-            {
-                case 'n': ch = '\n'; break;
-                case 't': ch = '\t'; break;
-                case '0': ch = '\0'; break;
-                case '\"': ch = '\"'; break;
-                case '\'': ch = '\''; break;
-            }
+            ch = translateEscapeChar(text[++i]);
         }
 
         s += ch;

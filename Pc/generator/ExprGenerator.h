@@ -14,6 +14,7 @@ public:
 
     std::size_t size() const { return sz; }
 
+    virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(CallNode &node) override;
 

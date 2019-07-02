@@ -19,6 +19,7 @@ Context::Context() : scanner(Lexer::Mode::Pc)
     auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, Sym::Attr::Public, { }, "std"));
 
     ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "null"))->setProperty("size", std::size_t(0));
+    ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "char"))->setProperty("size", std::size_t(1));
     ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "int"))->setProperty("size", std::size_t(4));
 }
 

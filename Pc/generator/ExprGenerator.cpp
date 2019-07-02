@@ -4,11 +4,18 @@
 
 #include "application/Context.h"
 
+#include "nodes/CharLiteralNode.h"
 #include "nodes/IntLiteralNode.h"
 #include "nodes/CallNode.h"
 
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os), sz(0)
 {
+}
+
+void ExprGenerator::visit(CharLiteralNode &node)
+{
+    os << "    push char(" << static_cast<unsigned int>(node.value) << ");\n";
+    sz = sizeof(int);
 }
 
 void ExprGenerator::visit(IntLiteralNode &node)
