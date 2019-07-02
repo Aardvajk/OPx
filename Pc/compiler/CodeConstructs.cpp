@@ -67,7 +67,7 @@ void returnConstruct(Context &c, BlockNode *block, bool get)
 
     if(!TypeCompare::exact(tv.result(), rt))
     {
-        throw Error(n->expr->location(), "mismatched return type");
+        throw Error(n->expr->location(), "mismatched return type - ", tv.result()->text());
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);
