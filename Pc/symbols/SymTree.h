@@ -13,8 +13,6 @@ public:
 
     SymGuard open(Sym *sym);
 
-    Sym *container(Sym *sym);
-
     Sym *root(){ return r.get(); }
     Sym *current(){ return cs; }
 

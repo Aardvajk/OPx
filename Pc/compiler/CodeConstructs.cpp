@@ -13,6 +13,10 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/NullLiteralNode.h"
 
+#include "visitors/TypeVisitor.h"
+
+#include "types/TypeCompare.h"
+
 namespace
 {
 
@@ -54,6 +58,16 @@ void returnConstruct(Context &c, BlockNode *block, bool get)
     else
     {
         n->expr = new NullLiteralNode(tok.location());
+    }
+
+    TypeVisitor tv(c);
+    n->expr->accept(tv);
+
+    auto rt = c.tree.current()->container()->property("type").to<const Type*>()->returnType.get();
+
+    if(!TypeCompare::exact(tv.result(), rt))
+    {
+        throw Error(n->expr->location(), "mismatched return type");
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);
