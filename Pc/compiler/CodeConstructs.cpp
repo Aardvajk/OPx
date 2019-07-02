@@ -11,6 +11,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/NullLiteralNode.h"
 
 namespace
 {
@@ -49,6 +50,10 @@ void returnConstruct(Context &c, BlockNode *block, bool get)
     if(tok.type() != Token::Type::Semicolon)
     {
         n->expr = Expr::get(c, false);
+    }
+    else
+    {
+        n->expr = new NullLiteralNode(tok.location());
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);

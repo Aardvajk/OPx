@@ -12,6 +12,12 @@ ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os), sz(0)
 {
 }
 
+void ExprGenerator::visit(NullLiteralNode &node)
+{
+    os << "    allocs 0;\n";
+    sz = 0;
+}
+
 void ExprGenerator::visit(CharLiteralNode &node)
 {
     os << "    push char(" << static_cast<unsigned int>(node.value) << ");\n";

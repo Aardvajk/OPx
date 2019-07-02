@@ -35,6 +35,7 @@ SOURCES += main.cpp \
     nodes/Node.cpp \
     nodes/BlockNode.cpp \
     nodes/IdNode.cpp \
+    nodes/NullLiteralNode.cpp \
     nodes/ReturnNode.cpp \
     nodes/ScopeNode.cpp \
     visitors/AstPrinter.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     nodes/Node.h \
     nodes/BlockNode.h \
     nodes/IdNode.h \
+    nodes/NullLiteralNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
     symbols/SymResult.h \

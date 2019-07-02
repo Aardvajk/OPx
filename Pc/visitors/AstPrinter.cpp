@@ -112,6 +112,11 @@ void AstPrinter::visit(ScopeNode &node)
     }
 }
 
+void AstPrinter::visit(NullLiteralNode &node)
+{
+    tab() << "null literal\n";
+}
+
 void AstPrinter::visit(CharLiteralNode &node)
 {
     tab() << "char literal " << node.value << "\n";
@@ -148,11 +153,8 @@ void AstPrinter::visit(ReturnNode &node)
 {
     tab() << "return\n";
 
-    if(node.expr)
-    {
-        auto g = pcx::scoped_counter(tc);
-        node.expr->accept(*this);
-    }
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

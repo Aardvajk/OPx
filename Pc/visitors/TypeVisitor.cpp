@@ -8,6 +8,11 @@ TypeVisitor::TypeVisitor(Context &c) : c(c), type(nullptr)
 {
 }
 
+void TypeVisitor::visit(NullLiteralNode &node)
+{
+    type = c.types.insert(Type(c.tree.root()->child("std")->child("null")));
+}
+
 void TypeVisitor::visit(CharLiteralNode &node)
 {
     type = c.types.insert(Type(c.tree.root()->child("std")->child("char")));
