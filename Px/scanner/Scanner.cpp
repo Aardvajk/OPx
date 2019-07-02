@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-Scanner::Scanner(Lexer::Mode mode) : mode(mode)
+Scanner::Scanner(Lexer::Mode mode) : mode(mode), braces(0)
 {
 }
 
@@ -25,6 +25,14 @@ Token Scanner::next(bool get)
     if(get)
     {
         state.back().tok = Lexer::next(mode, *state.back().src);
+
+        switch(state.back().tok.type())
+        {
+            case Token::Type::LeftBrace: ++braces; break;
+            case Token::Type::RightBrace: --braces; break;
+
+            default: break;
+        }
     }
 
     return state.back().tok;
@@ -47,22 +55,15 @@ Token Scanner::consume(Token::Type type, bool get)
     return next(true);
 }
 
-void Scanner::recover(int braces, bool get)
+void Scanner::recover(bool get)
 {
-    auto tok = next(get);
-    while(true)
+    next(get);
+    while(braces)
     {
-        switch(tok.type())
-        {
-            case Token::Type::LeftBrace: ++braces; break;
-            case Token::Type::RightBrace: if(--braces == 0){ next(true); return; } break;
-            case Token::Type::Eof: throw Error(tok.location(), "unable to recover");
-
-            default: break;
-        }
-
-        tok = next(true);
+        next(true);
     }
+
+    next(true);
 }
 
 Token Scanner::token() const

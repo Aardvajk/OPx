@@ -21,7 +21,7 @@ public:
     Token match(Token::Type type, bool get);
     Token consume(Token::Type type, bool get);
 
-    void recover(int braces, bool get);
+    void recover(bool get);
 
     Token token() const;
 
@@ -34,6 +34,7 @@ private:
 
     Lexer::Mode mode;
     std::vector<State> state;
+    int braces;
 };
 
 #endif // SCANNER_H

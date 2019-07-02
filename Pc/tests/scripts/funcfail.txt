@@ -1,0 +1,23 @@
+namespace stdx
+{
+
+func print(:std.int);
+
+}
+
+trigger_error("no function found - stdx.print")
+{
+
+func main()
+{
+    stdx.print('\'');
+}
+
+}
+
+namespace stdx
+{
+
+func print(:std.char);
+
+}

@@ -115,6 +115,7 @@ HEADERS += \
     visitors/TypeVisitor.h
 
 DISTFILES += \
+    tests/scripts/funcfail.txt \
     tests/scripts/locallookup.txt \
     tests/scripts/lookup.txt \
     tests/scripts/funclookup.txt \

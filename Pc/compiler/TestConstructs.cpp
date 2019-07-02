@@ -91,7 +91,7 @@ void TestConstructs::triggerError(Context &c, BlockNode *block, bool get)
             throw Error(tok.location(), "trigger_error failed - expected: ", Lexer::encodeString(expected), " - result: ", Lexer::encodeString(result));
         }
 
-        c.scanner.recover(1, false);
+        c.scanner.recover(false);
         return;
     }
 
