@@ -115,10 +115,20 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 void funcConstruct(Context &c, bool get)
 {
     auto id = c.matchId(get);
-    c.assertUnique(id.location(), id.text());
 
-    Sym *sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
-    sym->properties["size"] = sizeof(std::size_t);
+    Sym *sym = c.syms.find(id.text());
+    if(sym)
+    {
+        if(sym->type != Sym::Type::Func)
+        {
+            throw Error(id.location(), "function expected - ", id.text());
+        }
+    }
+    else
+    {
+        sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
+        sym->properties["size"] = sizeof(std::size_t);
+    }
 
     auto rs = sym->properties["returnSize"];
 
@@ -131,6 +141,13 @@ void funcConstruct(Context &c, bool get)
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
+        if(sym->properties["defined"].value<bool>())
+        {
+            throw Error(id.location(), "already defined - ", id.text());
+        }
+
+        sym->properties["defined"] = true;
+
         c.scanner.match(Token::Type::LeftBrace, false);
 
         c.syms.push();
