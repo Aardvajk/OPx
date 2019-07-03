@@ -70,6 +70,8 @@ void returnConstruct(Context &c, BlockNode *block, bool get)
         throw Error(n->expr->location(), "mismatched return type - ", tv.result()->text());
     }
 
+    c.tree.current()->setProperty("returned", true);
+
     c.scanner.consume(Token::Type::Semicolon, false);
 }
 

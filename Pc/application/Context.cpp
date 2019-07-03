@@ -21,6 +21,8 @@ Context::Context() : scanner(Lexer::Mode::Pc)
     ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "null"))->setProperty("size", std::size_t(0));
     ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "char"))->setProperty("size", std::size_t(1));
     ns->add(new Sym(Sym::Type::Primitive, Sym::Attr::Public, { }, "int"))->setProperty("size", std::size_t(4));
+
+    types.insert(Type(tree.root()->child("std")->child("null")));
 }
 
 void Context::open(const std::string &path)

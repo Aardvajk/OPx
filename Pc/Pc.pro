@@ -53,8 +53,6 @@ SOURCES += main.cpp \
     nodes/GlobalNode.cpp \
     symbols/SymPrinter.cpp \
     compiler/CommonConstructs.cpp \
-    compiler/TestConstructs.cpp \
-    tests/Tests.cpp \
     compiler/DeclarationConstructs.cpp \
     types/Type.cpp \
     compiler/TypeConstructs.cpp \
@@ -102,8 +100,6 @@ HEADERS += \
     nodes/GlobalNode.h \
     symbols/SymPrinter.h \
     compiler/CommonConstructs.h \
-    compiler/TestConstructs.h \
-    tests/Tests.h \
     compiler/DeclarationConstructs.h \
     types/Type.h \
     compiler/TypeConstructs.h \
@@ -115,11 +111,3 @@ HEADERS += \
     compiler/Expr.h \
     nodes/IntLiteralNode.h \
     visitors/TypeVisitor.h
-
-DISTFILES += \
-    tests/scripts/funcfail.txt \
-    tests/scripts/locallookup.txt \
-    tests/scripts/lookup.txt \
-    tests/scripts/funclookup.txt \
-    tests/scripts/classlookup.txt \
-    tests/scripts/lookupfwd.txt

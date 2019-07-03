@@ -114,6 +114,17 @@ void FuncConstructs::func(Context &c, BlockNode *block, Sym::Attrs attrs, bool g
 
         n->block = CommonConstructs::scopeContents(c, nn->location(), false);
 
+        if(!sym->property("returned").value<bool>())
+        {
+            auto a = sym->property("type").to<const Type*>()->returnType.get();
+            auto b = c.types.nullType();
+
+            if(!TypeCompare::exact(sym->property("type").to<const Type*>()->returnType.get(), c.types.nullType()))
+            {
+                throw Error(c.scanner.token().location(), "function should return a value - ", NameVisitors::prettyName(nn.get()));
+            }
+        }
+
         sym->setProperty("defined", true);
     }
     else

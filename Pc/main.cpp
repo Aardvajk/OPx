@@ -11,14 +11,10 @@
 
 #include "generator/Generator.h"
 
-#include "tests/Tests.h"
-
 #include <fstream>
 
 int main(int argc, char *argv[])
 {
-    if(!runTests()) return -1;
-
     Context c;
 
     try

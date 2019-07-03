@@ -100,7 +100,6 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
     {
         static const char *s[] = { "class", "namespace", "using", "public", "private", "var", " ", "func", "ptr",
                                    "return",
-                                   "lookup", "trigger_error", "",
                                    "" };
 
         for(int i = 0; s[i][0]; ++i)

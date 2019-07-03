@@ -9,7 +9,6 @@
 #include "compiler/CommonConstructs.h"
 #include "compiler/DeclarationConstructs.h"
 #include "compiler/CodeConstructs.h"
-#include "compiler/TestConstructs.h"
 
 namespace
 {
@@ -40,9 +39,6 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
 
         case Token::Type::RwPublic: DeclarationConstructs::entity(c, block, Sym::Attr::Public, true); break;
         case Token::Type::RwPrivate: DeclarationConstructs::entity(c, block, Sym::Attr::Private, true); break;
-
-        case Token::Type::RwLookup: TestConstructs::lookup(c, true); break;
-        case Token::Type::RwTriggerError: TestConstructs::triggerError(c, block, true); break;
 
         default: code(c, block, false);
     }

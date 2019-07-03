@@ -24,3 +24,8 @@ const Type *TypeCache::insert(const Type &type)
 {
     return insert(&type);
 }
+
+const Type *TypeCache::nullType() const
+{
+    return v.ptr(0);
+}

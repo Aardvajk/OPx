@@ -21,7 +21,7 @@ void ExprGenerator::visit(NullLiteralNode &node)
 void ExprGenerator::visit(CharLiteralNode &node)
 {
     os << "    push char(" << static_cast<unsigned int>(node.value) << ");\n";
-    sz = sizeof(int);
+    sz = sizeof(char);
 }
 
 void ExprGenerator::visit(IntLiteralNode &node)

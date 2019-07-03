@@ -11,14 +11,20 @@ int main(int argc, char *argv[])
 
     for(auto s: pb)
     {
-        std::istringstream is(s);
-
-        std::string exe;
-        is >> exe;
-
-        if(std::system(pcx::str("C:\\Projects\\Px\\Px\\build-", exe, "\\release\\", s).c_str()))
+        if(s.length() < 2 || s.substr(0, 2) != "//")
         {
-            return -1;
+            std::istringstream is(s);
+
+            std::string exe;
+            is >> exe;
+
+            if(!exe.empty())
+            {
+                if(std::system(pcx::str("C:\\Projects\\Px\\Px\\build-", exe, "\\release\\", s).c_str()))
+                {
+                    return -1;
+                }
+            }
         }
     }
 }
