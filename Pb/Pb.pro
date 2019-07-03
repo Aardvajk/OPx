@@ -27,6 +27,7 @@ SOURCES += \
 
 DISTFILES += \
     ../workspace/pb.bat \
-    ../workspace/script.pc
+    ../workspace/script.pc \
+    ../workspace/test.pi
 
 HEADERS +=

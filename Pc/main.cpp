@@ -44,6 +44,8 @@ int main(int argc, char *argv[])
         Generator g(c, std::cout);
         n->accept(g);
 
+        std::cout << banner();
+
         std::string output = argv[2];
 
         if(true)
