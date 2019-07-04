@@ -16,6 +16,14 @@ void VarConstructs::var(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
 
     c.assertUnique(tok.location(), tok.text());
 
+    switch(c.tree.current()->container()->type())
+    {
+        case Sym::Type::Func: attrs |= Sym::Attr::Local; break;
+        case Sym::Type::Class: attrs |= Sym::Attr::Member; break;
+
+        default: attrs |= Sym::Attr::Global;
+    }
+
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, attrs, tok.location(), tok.text()));
 
     NodePtr value;
@@ -44,7 +52,7 @@ void VarConstructs::var(Context &c, BlockNode *block, Sym::Attrs attrs, bool get
 
     sym->setProperty("type", type);
 
-    if(c.tree.current()->type() == Sym::Type::Class)
+    if(c.tree.current()->container()->type() == Sym::Type::Class)
     {
         auto size = c.assertSize(tok.location(), type);
         c.tree.current()->setProperty("size", c.tree.current()->property("size").value<std::size_t>() + size);

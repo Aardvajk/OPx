@@ -1,6 +1,7 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
+class Node;
 class BlockNode;
 class NamespaceNode;
 class ClassNode;

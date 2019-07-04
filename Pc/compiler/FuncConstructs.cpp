@@ -31,10 +31,8 @@ void args(Context &c, pcx::ptr_vector<Sym> &syms, bool get)
 
     c.scanner.match(Token::Type::Colon, false);
 
-    auto sym = new Sym(Sym::Type::Var, { }, tok.location(), name.text());
+    auto sym = new Sym(Sym::Type::Var, Sym::Attr::Argument, tok.location(), name.text());
     syms.push_back(sym);
-
-    sym->setProperty("argument", true);
 
     auto tn = TypeConstructs::type(c, true);
     sym->setProperty("type", c.types.insert(tn.get()));

@@ -86,7 +86,7 @@ void Generator::visit(FuncNode &node)
     os << "{\n";
 
     auto &cs = node.sym->children();
-    for(std::size_t i = 0; i < cs.size() && cs[i]->property("argument").value<bool>(); ++i)
+    for(std::size_t i = 0; i < cs.size() && (cs[i]->attrs() & Sym::Attr::Argument); ++i)
     {
         os << "    arg \"" << cs[i]->fullname() << "\":" << c.assertSize(node.location(), cs[i]->property("type").to<const Type*>()) << ";\n";
     }

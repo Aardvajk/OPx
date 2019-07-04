@@ -21,7 +21,12 @@ public:
     enum class Attr
     {
         Public = 1,
-        Private = 2
+        Private = 2,
+
+        Global = 4,
+        Argument = 8,
+        Local = 16,
+        Member = 32
     };
 
     using Attrs = pcx::flags<Attr>;

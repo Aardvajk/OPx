@@ -135,7 +135,7 @@ std::size_t Context::assertSize(Location location, const Type *type) const
         return *s;
     }
 
-    throw Error(location, "use of ", type->function() ? "function" : "incomplete", " type - ", type->text());
+    throw Error(location, "use of ", type->isFunction() ? "function" : "incomplete", " type - ", type->text());
 }
 
 const Type *Context::identifyType(Node *node)

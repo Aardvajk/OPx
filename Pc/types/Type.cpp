@@ -33,11 +33,6 @@ std::string toString(const Type &type)
     return s;
 }
 
-pcx::any property(Sym *sym, const std::string &name)
-{
-    return sym ? sym->property(name) : pcx::any();
-}
-
 }
 
 Type::Type(Sym *sym) : sym(sym), ptr(0)
@@ -65,11 +60,6 @@ std::string Type::text() const
 
 pcx::optional<std::size_t> Type::size() const
 {
-    if(auto pr = property(sym, "proxy-type"))
-    {
-        return pr.to<const Type*>()->size();
-    }
-
     if(ptr)
     {
         return 8;
@@ -86,12 +76,12 @@ pcx::optional<std::size_t> Type::size() const
     return { };
 }
 
-bool Type::function() const
+bool Type::isFunction() const
 {
-    if(auto pr = property(sym, "proxy-type"))
-    {
-        return pr.to<const Type*>()->function();
-    }
-
     return returnType;
+}
+
+bool Type::isClass() const
+{
+    return sym && sym->type() == Sym::Type::Class;
 }

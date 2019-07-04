@@ -29,19 +29,15 @@ void CodeGenerator::visit(ScopeNode &node)
 
 void CodeGenerator::visit(ExprNode &node)
 {
-    ExprGenerator eg(c, os);
-    node.node->accept(eg);
-
-    os << "    pop " << eg.size() << ";\n";
+    auto sz = ExprGenerator::generate(c, os, *node.node);
+    os << "    pop " << sz << ";\n";
 }
 
 void CodeGenerator::visit(ReturnNode &node)
 {
-    ExprGenerator eg(c, os);
-    node.expr->accept(eg);
-
+    auto sz = ExprGenerator::generate(c, os, *node.expr);
     os << "    push &\"@ret\";\n";
-    os << "    store " << eg.size() << ";\n";
-    os << "    pop " << eg.size() << ";\n";
+    os << "    store " << sz << ";\n";
+    os << "    pop " << sz << ";\n";
     os << "    jmp \"#end_function\";\n";
 }

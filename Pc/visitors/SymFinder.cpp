@@ -6,6 +6,8 @@
 
 #include "symbols/Sym.h"
 
+#include "types/Type.h"
+
 namespace
 {
 
@@ -97,6 +99,19 @@ void SymFinder::visit(DotNode &node)
         {
             findIn(policy, start, s.sym, node.name, access, v);
             scopes = v;
+        }
+    }
+
+    if(scopes.size() == 1)
+    {
+        if(scopes.front().sym->type() == Sym::Type::Var)
+        {
+            auto type = scopes.front().sym->property("type").to<const Type*>();
+            if(type->isClass())
+            {
+                scopes.clear();
+                scopes.push_back({ type->sym, true });
+            }
         }
     }
 

@@ -21,6 +21,11 @@ void lookup(Context &c, Node &node)
     SymFinder sf(SymFinder::Policy::Full, c.tree.root(), c.tree.current());
     node.accept(sf);
 
+    if(sf.result().empty())
+    {
+        throw Error(node.location(), "not found - ", NameVisitors::prettyName(&node));
+    }
+
     node.setProperty("syms", sf.result());
 }
 

@@ -14,6 +14,9 @@
 
 #include <pcx/lexical_cast.h>
 
+
+#include "visitors/NameVisitors.h"
+
 namespace
 {
 

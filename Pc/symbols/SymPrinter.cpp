@@ -24,10 +24,11 @@ std::string typeToString(const Sym *sym)
 {
     if(sym->type() == Sym::Type::Var)
     {
-        if(sym->property("argument").value<bool>())
-        {
-            return "arg";
-        }
+        if(sym->attrs() & Sym::Attr::Argument) return "argument";
+        if(sym->attrs() & Sym::Attr::Local) return "local";
+        if(sym->attrs() & Sym::Attr::Member) return "member";
+
+        return "var";
     }
 
     return Sym::toString(sym->type());
@@ -71,12 +72,6 @@ void dump(int tab, const Sym *sym, std::ostream &os)
     {
         auto ps = pr.to<const Sym*>();
         os << " proxy" << prepend(ps->fullname()) << " [" << ps << "]";
-    }
-
-    if(auto pr = sym->property("proxy-type"))
-    {
-        auto pt = pr.to<const Type*>();
-        os << " proxy " << pt->text() << " [" << pt << "]";
     }
 
     if(auto pr = sym->property("type"))

@@ -18,7 +18,9 @@ public:
 
     std::string text() const;
     pcx::optional<std::size_t> size() const;
-    bool function() const;
+
+    bool isFunction() const;
+    bool isClass() const;
 
     Sym *sym;
     unsigned ptr;
