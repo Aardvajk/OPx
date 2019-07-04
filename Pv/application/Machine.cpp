@@ -47,6 +47,9 @@ void Machine::execute()
             case Op::Call: rm(v.r0); s.push(rg.pc()); rg.pc() = rg[v.r0]; break;
             case Op::Ret: rm(v.s0); s.pop(rg.pc()); rg.sp() += v.s0; break;
 
+            case Op::AddS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 + v.s1); break;
+            case Op::AddI: s.pop(v.i0); s.pop(v.i1); s.push(v.i0 + v.i1); break;
+
             case Op::Service: rm(v.i0); sp(v.i0, mm, rg); break;
 
             case Op::End: return;

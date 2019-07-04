@@ -15,6 +15,8 @@ const char *s[] =
     "load",
     "store",
 
+    "add",
+
     "svc",
     ""
 };

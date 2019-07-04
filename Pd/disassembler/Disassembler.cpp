@@ -89,7 +89,10 @@ void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, s
             case Op::Call: rm(r0); os << toString(r0); break;
             case Op::Ret: rm(s0); os << s0; break;
 
-            case Op::Service: rm(i0); os << i0;break;
+            case Op::AddS: break;
+            case Op::AddI: break;
+
+            case Op::Service: rm(i0); os << i0; break;
 
             case Op::End: break;
 

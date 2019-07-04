@@ -6,9 +6,40 @@
 #include "scanner/Token.h"
 
 #include <cctype>
+#include <vector>
 
 namespace
 {
+
+struct Reserved
+{
+    const char *text;
+    Token::Type type;
+};
+
+static const std::vector<Reserved> pcReserved =
+{
+    { "class", Token::Type::RwClass },
+    { "namespace", Token::Type::RwNamespace },
+    { "using", Token::Type::RwUsing },
+    { "public", Token::Type::RwPublic },
+    { "private", Token::Type::RwPrivate },
+    { "var", Token::Type::RwVar },
+    { "func", Token::Type::RwFunc },
+    { "ptr", Token::Type::RwPtr },
+    { "return", Token::Type::RwReturn }
+};
+
+static const std::vector<Reserved> piReserved =
+{
+    { "var", Token::Type::RwVar },
+    { "func", Token::Type::RwFunc },
+    { "arg", Token::Type::RwArg },
+    { "char", Token::Type::RwChar },
+    { "int", Token::Type::RwInt },
+    { "size", Token::Type::RwSize },
+    { "string", Token::Type::RwString }
+};
 
 Source::Char translateEscapeChar(Source::Char ch)
 {
@@ -94,30 +125,28 @@ Token stringConstant(Source &source, Location location, std::string &s)
     return Token(Token::Type::StringLiteral, location, s);
 }
 
-Token::Type reserved(Lexer::Mode mode, const std::string &text)
+Token::Type reserved(const std::vector<Reserved> &words, const std::string &text)
 {
-    if(mode == Lexer::Mode::Pc)
+    for(auto &w: words)
     {
-        static const char *s[] = { "class", "namespace", "using", "public", "private", "var", " ", "func", "ptr",
-                                   "return",
-                                   "" };
-
-        for(int i = 0; s[i][0]; ++i)
+        if(w.text == text)
         {
-            if(text == s[i])
-            {
-                return static_cast<Token::Type>(static_cast<int>(Token::Type::RwClass) + i);
-            }
+            return w.type;
         }
-    }
-    else if(mode == Lexer::Mode::Pi)
-    {
-        if(text == "var") return Token::Type::RwVar;
-        if(text == "func") return Token::Type::RwFunc;
-        if(text == "arg") return Token::Type::RwArg;
     }
 
     return Token::Type::Id;
+}
+
+Token::Type reserved(Lexer::Mode mode, const std::string &text)
+{
+    switch(mode)
+    {
+        case Lexer::Mode::Pc: return reserved(pcReserved, text);
+        case Lexer::Mode::Pi: return reserved(piReserved, text);
+
+        default: return Token::Type::Id;
+    }
 }
 
 }

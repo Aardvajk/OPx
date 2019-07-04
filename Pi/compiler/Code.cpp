@@ -118,6 +118,22 @@ void storeConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void addConstruct(Context &c, bool get)
+{
+    auto id = c.scanner.next(get);
+    c.pd("-add ", id.text());
+
+    switch(id.type())
+    {
+        case Token::Type::RwInt: c.func().bytes << OpCode::Op::AddI; break;
+        case Token::Type::RwSize: c.func().bytes << OpCode::Op::AddS; break;
+
+        default: throw Error(id.location(), "invalid add type - ", id.text());
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void svcConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
@@ -159,6 +175,8 @@ void Code::construct(Context &c, bool get)
 
         case Instruction::Type::Load: loadConstruct(c, true); break;
         case Instruction::Type::Store: storeConstruct(c, true); break;
+
+        case Instruction::Type::Add: addConstruct(c, true); break;
 
         case Instruction::Type::Svc: svcConstruct(c, true); break;
 

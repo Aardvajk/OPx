@@ -16,6 +16,7 @@ public:
         Dot, Comma, Semicolon, Colon, Assign, Amp,
         RwClass, RwNamespace, RwUsing, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr,
         RwReturn,
+        RwChar, RwInt, RwSize, RwString,
         Eof, Invalid
     };
 

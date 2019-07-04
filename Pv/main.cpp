@@ -21,8 +21,12 @@ void intProc(int code, Memory &mm, Registers &rg)
     else if(code == 2)
     {
         auto i = sr.get<char>();
-
         std::cout << "char " << i << "\n";
+    }
+    else if(code == 3)
+    {
+        auto i = sr.get<std::size_t>();
+        std::cout << "size " << i << "\n";
     }
     else if(code >= 1000)
     {

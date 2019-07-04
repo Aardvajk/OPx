@@ -18,6 +18,8 @@ enum class Type
     Load,
     Store,
 
+    Add,
+
     Svc,
     Invalid
 };
