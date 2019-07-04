@@ -44,8 +44,8 @@ void Machine::execute()
             case Op::PushR: rm(v.r0); s.push(rg[v.r0]); break;
             case Op::PopR: rm(v.r0); s.pop(rg[v.r0]); break;
 
-            case Op::Call: rm(v.r0); rg.sp() -= sizeof(std::size_t); std::memcpy(mm(rg.sp()), &(rg.pc()), sizeof(std::size_t)); rg.pc() = rg[v.r0]; break;
-            case Op::Ret: rm(v.s0); std::memcpy(&(rg.pc()), mm(rg.sp()), sizeof(std::size_t)); rg.sp() += sizeof(std::size_t) + v.s0; break;
+            case Op::Call: rm(v.r0); s.push(rg.pc()); rg.pc() = rg[v.r0]; break;
+            case Op::Ret: rm(v.s0); s.pop(rg.pc()); rg.sp() += v.s0; break;
 
             case Op::Service: rm(v.i0); sp(v.i0, mm, rg); break;
 
