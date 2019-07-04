@@ -28,4 +28,5 @@ HEADERS += \
     application/Machine.h \
     components/Memory.h \
     components/Registers.h \
+    components/Stack.h \
     components/Vars.h

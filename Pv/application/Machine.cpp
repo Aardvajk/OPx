@@ -3,6 +3,7 @@
 #include "framework/Error.h"
 #include "framework/ByteReader.h"
 
+#include "components/Stack.h"
 #include "components/Vars.h"
 
 Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), sp(sp)
@@ -18,6 +19,7 @@ Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), sp(
 void Machine::execute()
 {
     ByteReader rm(mm(0), rg.pc());
+    Stack s(mm, rg);
     Vars v;
 
     while(true)
@@ -39,8 +41,8 @@ void Machine::execute()
             case Op::CopyAI: rm(v.r0, v.s0); std::memcpy(mm(rg[v.r0]), mm(rg.pc()), v.s0); rg.pc() += v.s0; break;
             case Op::CopyAA: rm(v.r0, v.r1, v.s0); std::memcpy(mm(rg[v.r1]), mm(rg[v.r0]), v.s0); break;
 
-            case Op::PushR: rm(v.r0); rg.sp() -= sizeof(std::size_t); std::memcpy(mm(rg.sp()), &(rg[v.r0]), sizeof(std::size_t)); break;
-            case Op::PopR: rm(v.r0); std::memcpy(&(rg[v.r0]), mm(rg.sp()), sizeof(std::size_t)); rg.sp() += sizeof(std::size_t); break;
+            case Op::PushR: rm(v.r0); s.push(rg[v.r0]); break;
+            case Op::PopR: rm(v.r0); s.pop(rg[v.r0]); break;
 
             case Op::Call: rm(v.r0); rg.sp() -= sizeof(std::size_t); std::memcpy(mm(rg.sp()), &(rg.pc()), sizeof(std::size_t)); rg.pc() = rg[v.r0]; break;
             case Op::Ret: rm(v.s0); std::memcpy(&(rg.pc()), mm(rg.sp()), sizeof(std::size_t)); rg.sp() += sizeof(std::size_t) + v.s0; break;
