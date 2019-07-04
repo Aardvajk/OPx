@@ -27,6 +27,7 @@ std::size_t generateId(Context &c, std::ostream &os, Node &node)
     auto sym = syms.front().sym;
     if(sym->attrs() & Sym::Attr::Member)
     {
+        throw Error(node.location(), "member generate not implemented - ", NameVisitors::prettyName(&node));
     }
 
     os << "    push \"" << sym->fullname() << "\";\n";
@@ -74,8 +75,8 @@ void ExprGenerator::visit(IntLiteralNode &node)
 
 void ExprGenerator::visit(CallNode &node)
 {
-    auto sym = node.property("sym").to<const Sym*>();
-    auto type = sym->property("type").to<const Type*>();
+    auto func = node.property("func").to<const Sym*>();
+    auto type = func->property("type").to<const Type*>();
 
     sz = c.assertSize(node.target->location(), type->returnType.get());
 
@@ -86,7 +87,7 @@ void ExprGenerator::visit(CallNode &node)
         ExprGenerator::generate(c, os, a);
     }
 
-    os << "    push &\"" << sym->fullname() << type->text() << "\";\n";
+    os << "    push &\"" << func->fullname() << type->text() << "\";\n";
     os << "    call;\n";
 }
 

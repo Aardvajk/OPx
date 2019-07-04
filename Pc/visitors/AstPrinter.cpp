@@ -61,6 +61,16 @@ void AstPrinter::visit(ClassNode &node)
     }
 }
 
+#include "symbols/SymResult.h"
+
+void print(Node &node)
+{
+    for(auto s: node.property("syms").value<std::vector<SymResult> >())
+    {
+        std::cout << "---> " << s.sym->fullname() << "\n";
+    }
+}
+
 void AstPrinter::visit(GlobalNode &node)
 {
     tab() << "global\n";
@@ -72,11 +82,13 @@ void AstPrinter::visit(GlobalNode &node)
 void AstPrinter::visit(IdNode &node)
 {
     tab() << "id " << node.name << "\n";
+    print(node);
 }
 
 void AstPrinter::visit(DotNode &node)
 {
     tab() << "dot " << node.name << "\n";
+    print(node);
 
     auto g = pcx::scoped_counter(tc);
     node.child->accept(*this);
