@@ -11,7 +11,6 @@
 
 #include "visitors/AstPrinter.h"
 #include "visitors/PushVisitor.h"
-#include "visitors/StoreVisitor.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -96,19 +95,13 @@ void allocSConstruct(Context &c, bool get)
 
 void storeConstruct(Context &c, bool get)
 {
-    auto expr = Expr::get(c, true);
+    auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-store ", id.text());
 
-    c.pd("-store ", astReconstruct(expr.get()));
+    c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
+    c.func().bytes << OpCode::Op::CopyAA << OpCode::Reg::Sp << OpCode::Reg::Dx << pcx::lexical_cast<std::size_t>(id.text());
 
-    StoreVisitor sv(c);
-    expr->accept(sv);
-
-    if(!sv.okay())
-    {
-        throw Error(expr->location(), "store syntax invalid - ", astReconstruct(expr.get()));
-    }
-
-    c.scanner.consume(Token::Type::Semicolon, false);
+    c.scanner.consume(Token::Type::Semicolon, true);
 }
 
 void svcConstruct(Context &c, bool get)

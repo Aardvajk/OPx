@@ -37,7 +37,6 @@ SOURCES += \
         visitors/AstPrinter.cpp \
         visitors/ByteWriter.cpp \
         visitors/PushVisitor.cpp \
-        visitors/StoreVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
@@ -60,7 +59,6 @@ HEADERS += \
     visitors/AstPrinter.h \
     visitors/ByteWriter.h \
     visitors/PushVisitor.h \
-    visitors/StoreVisitor.h \
     visitors/Visitor.h
 
 DISTFILES +=

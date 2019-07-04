@@ -40,7 +40,8 @@ void CodeGenerator::visit(ReturnNode &node)
     ExprGenerator eg(c, os);
     node.expr->accept(eg);
 
-    os << "    store \"@ret\";\n";
+    os << "    push &\"@ret\";\n";
+    os << "    store " << eg.size() << ";\n";
     os << "    pop " << eg.size() << ";\n";
     os << "    jmp \"#end_function\";\n";
 }
