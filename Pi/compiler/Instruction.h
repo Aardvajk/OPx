@@ -15,6 +15,7 @@ enum class Type
     Pop,
     AllocS,
 
+    Load,
     Store,
 
     Svc,

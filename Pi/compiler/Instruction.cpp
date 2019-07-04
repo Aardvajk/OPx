@@ -12,6 +12,7 @@ const char *s[] =
     "pop",
     "allocs",
 
+    "load",
     "store",
 
     "svc",

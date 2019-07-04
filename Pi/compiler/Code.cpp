@@ -93,6 +93,20 @@ void allocSConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void loadConstruct(Context &c, bool get)
+{
+    auto id = c.scanner.match(Token::Type::IntLiteral, get);
+    c.pd("-load ", id.text());
+
+    auto sz = pcx::lexical_cast<std::size_t>(id.text());
+
+    c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
+    c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << sz;
+    c.func().bytes << OpCode::Op::CopyAA << OpCode::Reg::Dx << OpCode::Reg::Sp << sz;
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void storeConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
@@ -143,6 +157,7 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::Pop: popConstruct(c, true); break;
         case Instruction::Type::AllocS: allocSConstruct(c, true); break;
 
+        case Instruction::Type::Load: loadConstruct(c, true); break;
         case Instruction::Type::Store: storeConstruct(c, true); break;
 
         case Instruction::Type::Svc: svcConstruct(c, true); break;
