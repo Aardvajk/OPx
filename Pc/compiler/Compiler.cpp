@@ -33,7 +33,6 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
     {
         case Token::Type::RwNamespace:
         case Token::Type::RwClass:
-        case Token::Type::RwUsing:
         case Token::Type::RwVar:
         case Token::Type::RwFunc: DeclarationConstructs::entity(c, block, Sym::defaultAttrs(c.tree.current()->type()), false); break;
 

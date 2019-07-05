@@ -68,12 +68,6 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
     os << typeToString(sym) << " [" << sym << "]" << prepend(sym->fullname()) << prependParen(sym->name());
 
-    if(auto pr = sym->property("proxy-scope"))
-    {
-        auto ps = pr.to<const Sym*>();
-        os << " proxy" << prepend(ps->fullname()) << " [" << ps << "]";
-    }
-
     if(auto pr = sym->property("type"))
     {
         os << " type " << pr.to<const Type*>()->text();

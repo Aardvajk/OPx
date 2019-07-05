@@ -15,7 +15,7 @@ class Sym
 public:
     enum class Type
     {
-        Namespace, Primitive, Class, UsingScope, Scope, Var, Func, Invalid
+        Namespace, Primitive, Class, Scope, Var, Func, Invalid
     };
 
     enum class Attr

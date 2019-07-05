@@ -67,8 +67,14 @@ void print(Node &node)
 {
     for(auto s: node.property("syms").value<std::vector<SymResult> >())
     {
-        std::cout << "---> " << s.sym->fullname() << "\n";
+        std::cout << "---> " << Sym::toString(s.sym->type()) << " " << s.sym->fullname() << "\n";
     }
+
+    for(auto s: node.property("found").value<std::vector<SymResult> >())
+    {
+        std::cout << "==:> " << Sym::toString(s.sym->type()) << " " << s.sym->fullname() << "\n";
+    }
+
 }
 
 void AstPrinter::visit(GlobalNode &node)

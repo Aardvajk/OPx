@@ -21,7 +21,6 @@ static const std::vector<Reserved> pcReserved =
 {
     { "class", Token::Type::RwClass },
     { "namespace", Token::Type::RwNamespace },
-    { "using", Token::Type::RwUsing },
     { "public", Token::Type::RwPublic },
     { "private", Token::Type::RwPrivate },
     { "var", Token::Type::RwVar },

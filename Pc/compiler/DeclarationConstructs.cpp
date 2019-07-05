@@ -73,39 +73,16 @@ void classConstruct(Context &c, BlockNode *block, Sym::Attrs attrs, bool get)
         n->block = CommonConstructs::scopeContents(c, nn->location(), false);
 
         sym->setProperty("defined", true);
+
+        if(!sym->property("size"))
+        {
+            sym->setProperty("size", 0);
+        }
     }
     else
     {
         c.scanner.consume(Token::Type::Semicolon, false);
     }
-}
-
-void usingScopeConstruct(Context &c, Sym::Attrs attrs, bool get)
-{
-    auto nn = CommonConstructs::name(c, get);
-    auto proxy = c.find(SymFinder::Policy::Full, nn.get());
-
-    if(!Sym::isPrimaryScope(proxy->type()))
-    {
-        throw Error(nn->location(), "scope expected - ", proxy->fullname());
-    }
-
-    auto s = c.tree.current()->add(new Sym(Sym::Type::UsingScope, attrs, nn->location(), { }));
-    s->setProperty("proxy-scope", proxy);
-}
-
-void usingConstruct(Context &c, Sym::Attrs attrs, bool get)
-{
-    auto tok = c.scanner.next(get);
-
-    switch(tok.type())
-    {
-        case Token::Type::RwNamespace: usingScopeConstruct(c, attrs, true); break;
-
-        default: throw Error(tok.location(), "using aliases not implemented - ", tok.text());
-    }
-
-    c.scanner.consume(Token::Type::Semicolon, false);
 }
 
 }
@@ -117,8 +94,6 @@ void DeclarationConstructs::entity(Context &c, BlockNode *block, Sym::Attrs attr
     {
         case Token::Type::RwNamespace: namespaceConstruct(c, block, attrs, true); break;
         case Token::Type::RwClass: classConstruct(c, block, attrs, true); break;
-
-        case Token::Type::RwUsing: usingConstruct(c, attrs, true); break;
 
         case Token::Type::RwVar: VarConstructs::var(c, block, attrs, true); break;
         case Token::Type::RwFunc: FuncConstructs::func(c, block, attrs, true); break;

@@ -25,12 +25,20 @@ std::size_t generateId(Context &c, std::ostream &os, Node &node)
     }
 
     auto sym = syms.front().sym;
+    if(sym->type() != Sym::Type::Var)
+    {
+        throw Error(node.location(), "expression expected - ",  NameVisitors::prettyName(&node));
+    }
+
     if(sym->attrs() & Sym::Attr::Member)
     {
         throw Error(node.location(), "member generate not implemented - ", NameVisitors::prettyName(&node));
     }
+    else
+    {
+        os << "    push \"" << sym->fullname() << "\";\n";
+    }
 
-    os << "    push \"" << sym->fullname() << "\";\n";
     return c.assertSize(node.location(), sym->property("type").to<const Type*>());
 }
 

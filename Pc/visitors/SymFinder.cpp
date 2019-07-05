@@ -15,25 +15,9 @@ void findIn(SymFinder::Policy policy, Sym *start, Sym *scope, const std::string 
 {
     for(auto s: scope->children())
     {
-        if(s->type() == Sym::Type::UsingScope && policy != SymFinder::Policy::Limited)
-        {
-            auto a = s->accessibleBy(start);
-            if(!a)
-            {
-                access.push_back(false);
-            }
-
-            findIn(policy, start, s->property("proxy-scope").to<Sym*>(), name, access, result);
-
-            if(!a)
-            {
-                access.pop_back();
-            }
-        }
-
         if(s->name() == name)
         {
-            result.push_back({ s, access.empty() ? s->accessibleBy(start) : access.back() });
+            result.push_back({ s, s->accessibleBy(start) });
         }
     }
 }
@@ -84,6 +68,8 @@ void SymFinder::visit(IdNode &node)
             findIn(policy, start, s.sym, node.name, access, v);
         }
     }
+
+    node.setProperty("found", v);
 }
 
 void SymFinder::visit(DotNode &node)
@@ -101,6 +87,8 @@ void SymFinder::visit(DotNode &node)
             scopes = v;
         }
     }
+
+    node.setProperty("found", scopes);
 
     if(scopes.size() == 1)
     {
