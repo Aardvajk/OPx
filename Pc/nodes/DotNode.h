@@ -1,0 +1,17 @@
+#ifndef DOTNODE_H
+#define DOTNODE_H
+
+#include "nodes/Node.h"
+
+class DotNode : public Node
+{
+public:
+    DotNode(Location location, std::string name, NodePtr child) : Node(location), name(std::move(name)), child(child) { }
+
+    virtual void accept(Visitor &v) override;
+
+    std::string name;
+    NodePtr child;
+};
+
+#endif // DOTNODE_H

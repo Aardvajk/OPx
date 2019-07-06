@@ -21,19 +21,51 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
+        compiler/CodeConstructs.cpp \
+        compiler/CommonConstructs.cpp \
         compiler/Compiler.cpp \
+        compiler/DeclarationConstructs.cpp \
+        compiler/ExprConstructs.cpp \
+        compiler/TypeConstructs.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
+        nodes/CallNode.cpp \
+        nodes/ClassNode.cpp \
+        nodes/DotNode.cpp \
+        nodes/ExprNode.cpp \
+        nodes/FuncNode.cpp \
+        nodes/IdNode.cpp \
+        nodes/LiteralNodes.cpp \
+        nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/TypeNode.cpp \
+        nodes/VarNode.cpp \
         visitors/AstPrinter.cpp \
+        visitors/NameVisitors.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
+    compiler/CodeConstructs.h \
+    compiler/CommonConstructs.h \
     compiler/Compiler.h \
+    compiler/DeclarationConstructs.h \
+    compiler/ExprConstructs.h \
+    compiler/TypeConstructs.h \
     nodes/BlockNode.h \
+    nodes/CallNode.h \
+    nodes/ClassNode.h \
+    nodes/DotNode.h \
+    nodes/ExprNode.h \
+    nodes/FuncNode.h \
+    nodes/IdNode.h \
+    nodes/LiteralNodes.h \
+    nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/TypeNode.h \
+    nodes/VarNode.h \
     visitors/AstPrinter.h \
+    visitors/NameVisitors.h \
     visitors/Visitor.h
 
 DISTFILES += \
