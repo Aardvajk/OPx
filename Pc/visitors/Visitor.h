@@ -1,46 +1,14 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
-class Node;
 class BlockNode;
-class NamespaceNode;
-class ClassNode;
-class GlobalNode;
-class IdNode;
-class DotNode;
-class VarNode;
-class FuncDecNode;
-class FuncNode;
-class ScopeNode;
-class NullLiteralNode;
-class CharLiteralNode;
-class IntLiteralNode;
-class ExprNode;
-class CallNode;
-class ReturnNode;
 
 class Visitor
 {
 public:
-    Visitor();
     virtual ~Visitor();
 
     virtual void visit(BlockNode &node);
-    virtual void visit(NamespaceNode &node);
-    virtual void visit(ClassNode &node);
-    virtual void visit(GlobalNode &node);
-    virtual void visit(IdNode &node);
-    virtual void visit(DotNode &node);
-    virtual void visit(VarNode &node);
-    virtual void visit(FuncDecNode &node);
-    virtual void visit(FuncNode &node);
-    virtual void visit(ScopeNode &node);
-    virtual void visit(NullLiteralNode &node);
-    virtual void visit(CharLiteralNode &node);
-    virtual void visit(IntLiteralNode &node);
-    virtual void visit(ExprNode &node);
-    virtual void visit(CallNode &node);
-    virtual void visit(ReturnNode &node);
 };
 
 #endif // VISITOR_H

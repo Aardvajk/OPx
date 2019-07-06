@@ -6,40 +6,12 @@
 
 #include "nodes/BlockNode.h"
 
-#include "compiler/CommonConstructs.h"
-#include "compiler/DeclarationConstructs.h"
-#include "compiler/CodeConstructs.h"
-
-namespace
-{
-
-void code(Context &c, BlockNode *block, bool get)
-{
-    auto tok = c.scanner.next(get);
-    if(c.tree.current()->container()->type() != Sym::Type::Func)
-    {
-        throw Error(tok.location(), "declaration expected - ", tok.text());
-    }
-
-    CodeConstructs::entity(c, block, false);
-}
-
-}
-
 void Compiler::construct(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::RwNamespace:
-        case Token::Type::RwClass:
-        case Token::Type::RwVar:
-        case Token::Type::RwFunc: DeclarationConstructs::entity(c, block, Sym::defaultAttrs(c.tree.current()->type()), false); break;
-
-        case Token::Type::RwPublic: DeclarationConstructs::entity(c, block, Sym::Attr::Public, true); break;
-        case Token::Type::RwPrivate: DeclarationConstructs::entity(c, block, Sym::Attr::Private, true); break;
-
-        default: code(c, block, false);
+        default: throw Error(tok.location(), "construct expected - ", tok.text());
     }
 }
 

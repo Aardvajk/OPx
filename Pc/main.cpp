@@ -3,15 +3,11 @@
 
 #include "application/Context.h"
 
-#include "symbols/SymPrinter.h"
-
 #include "compiler/Compiler.h"
 
 #include "visitors/AstPrinter.h"
 
-#include "generator/Generator.h"
-
-#include <fstream>
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -33,32 +29,11 @@ int main(int argc, char *argv[])
 
         auto n = Compiler::compile(c);
 
-        std::cout << banner("symbols");
-        SymPrinter::print(c.tree.root(), std::cout);
-
         std::cout << banner("nodes");
         AstPrinter as(std::cout);
         n->accept(as);
 
-        std::cout << banner("generate");
-        Generator g(c, std::cout);
-        n->accept(g);
-
         std::cout << banner();
-
-        std::string output = argv[2];
-
-        if(true)
-        {
-            std::ofstream os(output);
-            if(!os.is_open())
-            {
-                throw Error("unable to create - ", output);
-            }
-
-            Generator g(c, os);
-            n->accept(g);
-        }
     }
 
     catch(const Error &error)
@@ -73,4 +48,3 @@ int main(int argc, char *argv[])
         return -1;
     }
 }
-

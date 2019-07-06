@@ -6,7 +6,7 @@
 class BlockNode : public Node
 {
 public:
-    BlockNode(Location location) : Node(location) { }
+    explicit BlockNode(Location location) : Node(location) { }
 
     virtual void accept(Visitor &v) override;
 

@@ -19,95 +19,22 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
 
 PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
-SOURCES += main.cpp \
-    application/Context.cpp \
-    compiler/CodeConstructs.cpp \
-    compiler/FuncConstructs.cpp \
-    generator/ByteLister.cpp \
-    generator/CodeGenerator.cpp \
-    generator/ExprGenerator.cpp \
-    generator/Generator.cpp \
-    generator/LocalsGenerator.cpp \
-    nodes/CallNode.cpp \
-    nodes/CharLiteralNode.cpp \
-    nodes/ExprNode.cpp \
-    nodes/FuncDecNode.cpp \
-    nodes/Node.cpp \
-    nodes/BlockNode.cpp \
-    nodes/IdNode.cpp \
-    nodes/NullLiteralNode.cpp \
-    nodes/ReturnNode.cpp \
-    nodes/ScopeNode.cpp \
-    visitors/AstPrinter.cpp \
-    nodes/ClassNode.cpp \
-    nodes/DotNode.cpp \
-    compiler/Compiler.cpp \
-    symbols/Sym.cpp \
-    symbols/SymTree.cpp \
-    symbols/SymGuard.cpp \
-    visitors/LookupVisitor.cpp \
-    visitors/Visitor.cpp \
-    visitors/SymFinder.cpp \
-    visitors/NameVisitors.cpp \
-    nodes/NamespaceNode.cpp \
-    nodes/GlobalNode.cpp \
-    symbols/SymPrinter.cpp \
-    compiler/CommonConstructs.cpp \
-    compiler/DeclarationConstructs.cpp \
-    types/Type.cpp \
-    compiler/TypeConstructs.cpp \
-    compiler/VarConstructs.cpp \
-    types/TypeCache.cpp \
-    types/TypeCompare.cpp \
-    nodes/VarNode.cpp \
-    nodes/FuncNode.cpp \
-    compiler/Expr.cpp \
-    nodes/IntLiteralNode.cpp \
-    visitors/TypeVisitor.cpp
+SOURCES += \
+        application/Context.cpp \
+        compiler/Compiler.cpp \
+        main.cpp \
+        nodes/BlockNode.cpp \
+        nodes/Node.cpp \
+        visitors/AstPrinter.cpp \
+        visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
-    compiler/CodeConstructs.h \
-    compiler/FuncConstructs.h \
-    generator/ByteLister.h \
-    generator/CodeGenerator.h \
-    generator/ExprGenerator.h \
-    generator/Generator.h \
-    generator/LocalsGenerator.h \
-    nodes/CallNode.h \
-    nodes/CharLiteralNode.h \
-    nodes/ExprNode.h \
-    nodes/FuncDecNode.h \
-    nodes/Node.h \
-    nodes/BlockNode.h \
-    nodes/IdNode.h \
-    nodes/NullLiteralNode.h \
-    nodes/ReturnNode.h \
-    nodes/ScopeNode.h \
-    symbols/SymResult.h \
-    visitors/LookupVisitor.h \
-    visitors/Visitor.h \
-    visitors/AstPrinter.h \
-    nodes/ClassNode.h \
-    nodes/DotNode.h \
     compiler/Compiler.h \
-    symbols/Sym.h \
-    symbols/SymTree.h \
-    symbols/SymGuard.h \
-    visitors/SymFinder.h \
-    visitors/NameVisitors.h \
-    nodes/NamespaceNode.h \
-    nodes/GlobalNode.h \
-    symbols/SymPrinter.h \
-    compiler/CommonConstructs.h \
-    compiler/DeclarationConstructs.h \
-    types/Type.h \
-    compiler/TypeConstructs.h \
-    compiler/VarConstructs.h \
-    types/TypeCache.h \
-    types/TypeCompare.h \
-    nodes/VarNode.h \
-    nodes/FuncNode.h \
-    compiler/Expr.h \
-    nodes/IntLiteralNode.h \
-    visitors/TypeVisitor.h
+    nodes/BlockNode.h \
+    nodes/Node.h \
+    visitors/AstPrinter.h \
+    visitors/Visitor.h
+
+DISTFILES += \
+    script.pc
