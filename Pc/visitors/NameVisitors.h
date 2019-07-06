@@ -19,6 +19,8 @@ public:
 
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
+    virtual void visit(VarNode &node) override;
+    virtual void visit(TypeNode &node) override;
 
 private:
     std::string r;

@@ -18,7 +18,7 @@ class bar.woo.foo
 var a.b:std.int, c, d:woo.bar.foo;
 var e;
 
-func foo.woo(a:std.int, b:std.char, :foo.woo)
+func foo.woo(a:std.int, b:std.char, :foo.woo):oo.bee.doo
 {
     var a:std.foo;
 
@@ -38,7 +38,7 @@ func foo.woo(a:std.int, b:std.char, :foo.woo)
 
 func bar():std.int;
 
-func bar2():std.woo
+func bar2(a:foo, b:bar):std.woo
 {
 }
 

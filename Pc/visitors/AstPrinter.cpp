@@ -15,6 +15,7 @@
 #include "visitors/NameVisitors.h"
 
 #include <pcx/scoped_counter.h>
+#include <pcx/join_str.h>
 
 #include <iostream>
 
@@ -69,41 +70,39 @@ void AstPrinter::visit(ClassNode &node)
 
 void AstPrinter::visit(VarNode &node)
 {
-    tab() << "var " << NameVisitors::prettyName(node.name.get()) << "\n";
+    tab() << "var " << NameVisitors::prettyName(node.name.get());
 
     if(node.type)
     {
-        auto g = pcx::scoped_counter(tc);
-        node.type->accept(*this);
+        os << ":" << NameVisitors::prettyName(node.type.get());
     }
+
+    os << "\n";
 }
 
 void AstPrinter::visit(FuncNode &node)
 {
-    tab() << "func " << NameVisitors::prettyName(node.name.get()) << "\n";
+    tab() << "func " << NameVisitors::prettyName(node.name.get());
 
-    if(!node.args.empty())
+    os << "(";
+
+    std::vector<std::string> av;
+    for(auto &a: node.args)
     {
-        auto g = pcx::scoped_counter(tc);
-        tab() << "args\n";
-
-        for(auto &a: node.args)
-        {
-            a.accept(*this);
-        }
+        av.push_back(NameVisitors::prettyName(&a));
     }
+
+    os << pcx::join_str(av, ", ") << ")";
 
     if(node.type)
     {
-        auto g = pcx::scoped_counter(tc);
-        node.type->accept(*this);
+        os << ":" << NameVisitors::prettyName(node.type.get());
     }
+
+    os << "\n";
 
     if(node.block)
     {
-        auto g = pcx::scoped_counter(tc);
-
-        tab() << "body\n";
         node.block->accept(*this);
     }
 }
