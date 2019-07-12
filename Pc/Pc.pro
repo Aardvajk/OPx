@@ -27,6 +27,7 @@ SOURCES += \
         compiler/DeclarationConstructs.cpp \
         compiler/ExprConstructs.cpp \
         compiler/TypeConstructs.cpp \
+        generator/Generator.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
@@ -40,8 +41,13 @@ SOURCES += \
         nodes/Node.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
+        syms/Sym.cpp \
+        syms/SymGuard.cpp \
+        syms/SymPrinter.cpp \
+        syms/SymTree.cpp \
         visitors/AstPrinter.cpp \
         visitors/NameVisitors.cpp \
+        visitors/SymFinder.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
@@ -52,6 +58,7 @@ HEADERS += \
     compiler/DeclarationConstructs.h \
     compiler/ExprConstructs.h \
     compiler/TypeConstructs.h \
+    generator/Generator.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
@@ -64,8 +71,13 @@ HEADERS += \
     nodes/Node.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
+    syms/Sym.h \
+    syms/SymGuard.h \
+    syms/SymPrinter.h \
+    syms/SymTree.h \
     visitors/AstPrinter.h \
     visitors/NameVisitors.h \
+    visitors/SymFinder.h \
     visitors/Visitor.h
 
 DISTFILES += \

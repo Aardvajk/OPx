@@ -1,57 +1,16 @@
-namespace foo.bar.woo
+namespace a
 {
-
-namespace woo
-{
-
-namespace doo.woo
-{
-
-class foo.woo;
-
-class bar
-{
-
-class bar.woo.foo
-{
-
-var a.b:std.int, c, d:woo.bar.foo;
-var e;
-
-func foo.woo(a:std.int, b:std.char, :foo.woo):oo.bee.doo
-{
-    var a:std.foo;
-
-    class foo
+    namespace b
     {
-        var a:std.foo;
-        func x();
+        namespace c
+        {
+        }
     }
-
-    1;
-    2(1);
-    3();
-    foo;
-    woo.bar(foo, 2, 3);
 }
 
-
-func bar():std.int;
-
-func bar2(a:foo, b:bar):std.woo
+namespace x
 {
-}
 
-}
-
-}
-
-}
-
-}
-
-namespace he.ho.ha
-{
-}
+func a.b.c():func();
 
 }

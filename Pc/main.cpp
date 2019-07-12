@@ -7,6 +7,10 @@
 
 #include "visitors/AstPrinter.h"
 
+#include "generator/Generator.h"
+
+#include "syms/SymPrinter.h"
+
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -30,8 +34,14 @@ int main(int argc, char *argv[])
         auto n = Compiler::compile(c);
 
         std::cout << banner("nodes");
-        AstPrinter as(std::cout);
-        n->accept(as);
+        AstPrinter ap(std::cout);
+        n->accept(ap);
+
+        Generator gn(c, std::cout);
+        n->accept(gn);
+
+        std::cout << banner("symbols");
+        SymPrinter::print(c.tree.root(), std::cout);
 
         std::cout << banner();
     }

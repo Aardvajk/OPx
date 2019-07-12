@@ -109,9 +109,23 @@ void AstPrinter::visit(FuncNode &node)
 
 void AstPrinter::visit(TypeNode &node)
 {
-    tab() << "type\n";
+    tab() << "type ptr(" << node.ptr << ")\n";
 
-    if(node.name)
+    if(node.function)
+    {
+        auto g = pcx::scoped_counter(tc);
+        if(node.returnType)
+        {
+            node.name->accept(*this);
+        }
+
+        for(auto &a: node.args)
+        {
+            auto g = pcx::scoped_counter(tc);
+            a.accept(*this);
+        }
+    }
+    else
     {
         auto g = pcx::scoped_counter(tc);
         node.name->accept(*this);

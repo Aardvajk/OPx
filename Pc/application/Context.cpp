@@ -20,3 +20,14 @@ void Context::open(const std::string &path)
 
     scanner.push(new Source(sources.id(path), is.release()));
 }
+
+void Context::assertUnique(Location location, const std::string &name)
+{
+    for(auto s: tree.current()->children())
+    {
+        if(s->name() == name)
+        {
+            throw Error(location, "already defined - ", name);
+        }
+    }
+}
