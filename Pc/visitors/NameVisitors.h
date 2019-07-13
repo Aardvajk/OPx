@@ -44,6 +44,22 @@ private:
 
 bool isNameSimple(Node *node);
 
+class LastIdOfName : public Visitor
+{
+public:
+    LastIdOfName();
+
+    std::string result() const { return r; }
+
+    virtual void visit(IdNode &node) override;
+    virtual void visit(DotNode &node) override;
+
+private:
+    std::string r;
+};
+
+std::string lastIdOfName(Node *node);
+
 }
 
 #endif // NAMEVISITORS_H

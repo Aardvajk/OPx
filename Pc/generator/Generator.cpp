@@ -32,12 +32,12 @@ void Generator::visit(BlockNode &node)
 
 void Generator::visit(NamespaceNode &node)
 {
-    auto name = NameVisitors::prettyName(node.name.get());
     if(!NameVisitors::isNameSimple(node.name.get()))
     {
-        throw Error(node.location(), "simple name expected - ", name);
+        throw Error(node.location(), "simple name expected - ", NameVisitors::prettyName(node.name.get()));
     }
 
+    auto name = NameVisitors::lastIdOfName(node.name.get());
     c.assertUnique(node.name->location(), name);
 
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), name));

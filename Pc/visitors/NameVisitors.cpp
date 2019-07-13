@@ -99,3 +99,26 @@ bool NameVisitors::isNameSimple(Node *node)
 
     return nv.result();
 }
+
+NameVisitors::LastIdOfName::LastIdOfName()
+{
+}
+
+void NameVisitors::LastIdOfName::visit(IdNode &node)
+{
+    r = node.name;
+}
+
+void NameVisitors::LastIdOfName::visit(DotNode &node)
+{
+    node.child->accept(*this);
+}
+
+std::string NameVisitors::lastIdOfName(Node *node)
+{
+    LastIdOfName in;
+    node->accept(in);
+
+    return in.result();
+}
+
