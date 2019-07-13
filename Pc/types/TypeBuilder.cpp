@@ -4,7 +4,6 @@
 
 #include "application/Context.h"
 
-#include "nodes/VarNode.h"
 #include "nodes/TypeNode.h"
 
 #include "types/Type.h"
@@ -14,11 +13,6 @@
 
 TypeBuilder::TypeBuilder(Context &c) : c(c), r(nullptr)
 {
-}
-
-void TypeBuilder::visit(VarNode &node)
-{
-    node.type->accept(*this);
 }
 
 void TypeBuilder::visit(TypeNode &node)

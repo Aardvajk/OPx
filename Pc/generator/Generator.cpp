@@ -12,6 +12,7 @@
 
 #include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
+#include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
@@ -66,6 +67,9 @@ void Generator::visit(FuncNode &node)
 
     for(auto &a: node.args)
     {
-        t.args.push_back(TypeBuilder::type(c, &a));
+        t.args.push_back(TypeVisitor::type(c, &a));
     }
+
+    std::cout << "function " << NameVisitors::prettyName(node.name.get()) << "\n";
+    std::cout << "    type: " << c.types.insert(t)->text() << "\n";
 }

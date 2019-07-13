@@ -52,6 +52,7 @@ SOURCES += \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         types/TypeBuilder.cpp \
+        visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
@@ -86,6 +87,7 @@ HEADERS += \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
     types/TypeBuilder.h \
+    visitors/TypeVisitor.h \
     visitors/Visitor.h
 
 DISTFILES += \

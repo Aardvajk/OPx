@@ -1,5 +1,5 @@
-#ifndef TYPEBUILDER_H
-#define TYPEBUILDER_H
+#ifndef TYPEVISITOR_H
+#define TYPEVISITOR_H
 
 #include "visitors/Visitor.h"
 
@@ -7,14 +7,14 @@ class Context;
 class Type;
 class Node;
 
-class TypeBuilder : public Visitor
+class TypeVisitor : public Visitor
 {
 public:
-    TypeBuilder(Context &c);
+    explicit TypeVisitor(Context &c);
 
     const Type *result() const { return r; }
 
-    virtual void visit(TypeNode &node) override;
+    virtual void visit(VarNode &node) override;
 
     static const Type *type(Context &c, Node *node);
 
@@ -23,4 +23,4 @@ private:
     const Type *r;
 };
 
-#endif // TYPEBUILDER_H
+#endif // TYPEVISITOR_H
