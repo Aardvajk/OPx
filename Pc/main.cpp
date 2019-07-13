@@ -12,6 +12,7 @@
 #include "syms/SymPrinter.h"
 
 #include <iostream>
+#include "types/Type.h"
 
 int main(int argc, char *argv[])
 {

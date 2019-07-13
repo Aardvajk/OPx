@@ -13,6 +13,9 @@
 #include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
 
+#include "types/Type.h"
+#include "types/TypeBuilder.h"
+
 #include <pcx/scoped_counter.h>
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os), classDepth(0)
@@ -52,29 +55,17 @@ void Generator::visit(ClassNode &node)
     }
 }
 
-#include "types/Type.h"
-#include "visitors/TypeBuilder.h"
-
 void Generator::visit(VarNode &node)
 {
-    std::cout << "var " << NameVisitors::prettyName(&node) << "\n";
-
-    TypeBuilder tb(c);
-    node.type->accept(tb);
-
-    pcx::scoped_ptr<Type> tp = tb.claim();
-
-    std::cout << "    type: " << tp->text() << "\n";
 }
 
 void Generator::visit(FuncNode &node)
 {
-    SymFinder sf(c.tree.current());
-    node.name->accept(sf);
+    Type t;
+    t.returnType = node.type ? TypeBuilder::type(c, node.type.get()) : c.types.nullType();
 
-    std::cout << "search for " << NameVisitors::prettyName(node.name.get()) << "\n";
-    for(auto s: sf.result())
+    for(auto &a: node.args)
     {
-        std::cout << "    " << s->fullname() << " (" << s << ")\n";
+        t.args.push_back(TypeBuilder::type(c, &a));
     }
 }

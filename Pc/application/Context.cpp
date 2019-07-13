@@ -2,6 +2,8 @@
 
 #include "framework/Error.h"
 
+#include "types/Type.h"
+
 #include <pcx/scoped_ptr.h>
 
 #include <fstream>
@@ -14,6 +16,7 @@ Context::Context() : scanner(Lexer::Mode::Pc)
     ns->add(new Sym(Sym::Type::Class, { }, "char"))->setProperty("size", std::size_t(1));
     ns->add(new Sym(Sym::Type::Class, { }, "int"))->setProperty("size", std::size_t(4));
 
+    types.insert(Type(0, ns->child("null")));
 }
 
 void Context::open(const std::string &path)

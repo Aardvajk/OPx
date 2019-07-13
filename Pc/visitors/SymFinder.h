@@ -6,6 +6,7 @@
 #include <vector>
 
 class Sym;
+class Node;
 
 class SymFinder : public Visitor
 {
@@ -16,6 +17,8 @@ public:
 
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
+
+    static std::vector<Sym*> find(Sym *curr, Node *node);
 
 private:
     std::vector<Sym*> curr;

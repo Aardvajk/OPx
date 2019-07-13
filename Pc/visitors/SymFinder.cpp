@@ -57,3 +57,12 @@ void SymFinder::visit(DotNode &node)
         node.child->accept(*this);
     }
 }
+
+std::vector<Sym*> SymFinder::find(Sym *curr, Node *node)
+{
+    SymFinder sf(curr);
+    node->accept(sf);
+
+    return sf.result();
+}
+

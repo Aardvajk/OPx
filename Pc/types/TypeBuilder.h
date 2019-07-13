@@ -3,24 +3,25 @@
 
 #include "visitors/Visitor.h"
 
-#include <pcx/scoped_ptr.h>
-
 class Context;
 class Type;
+class Node;
 
 class TypeBuilder : public Visitor
 {
 public:
     TypeBuilder(Context &c);
-    virtual ~TypeBuilder() override;
 
-    Type *claim();
+    const Type *result() const { return r; }
 
+    virtual void visit(VarNode &node) override;
     virtual void visit(TypeNode &node) override;
+
+    static const Type *type(Context &c, Node *node);
 
 private:
     Context &c;
-    pcx::scoped_ptr<Type> t;
+    const Type *r;
 };
 
 #endif // TYPEBUILDER_H

@@ -1,1 +1,3 @@
-var a:func(std.int, std.char, func(ptr std.char):std.null):std.char;
+func main(a:std.int, :func(std.int):std.char):std.char
+{
+}
