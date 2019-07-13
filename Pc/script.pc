@@ -1,16 +1,1 @@
-namespace a
-{
-    namespace b
-    {
-        namespace c
-        {
-        }
-    }
-}
-
-namespace x
-{
-
-func a.b.c():func();
-
-}
+var a:func(std.int, std.char, func(ptr std.char):std.null):std.char;

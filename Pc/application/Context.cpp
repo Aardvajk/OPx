@@ -8,6 +8,12 @@
 
 Context::Context() : scanner(Lexer::Mode::Pc)
 {
+    auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
+
+    ns->add(new Sym(Sym::Type::Class, { }, "null"))->setProperty("size", std::size_t(0));
+    ns->add(new Sym(Sym::Type::Class, { }, "char"))->setProperty("size", std::size_t(1));
+    ns->add(new Sym(Sym::Type::Class, { }, "int"))->setProperty("size", std::size_t(4));
+
 }
 
 void Context::open(const std::string &path)

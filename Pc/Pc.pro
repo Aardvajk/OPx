@@ -45,9 +45,11 @@ SOURCES += \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
+        types/Type.cpp \
         visitors/AstPrinter.cpp \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
+        visitors/TypeBuilder.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
@@ -75,9 +77,11 @@ HEADERS += \
     syms/SymGuard.h \
     syms/SymPrinter.h \
     syms/SymTree.h \
+    types/Type.h \
     visitors/AstPrinter.h \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
+    visitors/TypeBuilder.h \
     visitors/Visitor.h
 
 DISTFILES += \

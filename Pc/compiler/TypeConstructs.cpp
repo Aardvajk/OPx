@@ -58,7 +58,7 @@ TypeNodePtr primary(Context &c, bool get)
 
 TypeNodePtr outer(Context &c, bool get)
 {
-    std::size_t ptr = 0;
+    unsigned ptr = 0;
 
     auto tok = c.scanner.next(get);
     while(tok.type() == Token::Type::RwPtr)

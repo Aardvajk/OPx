@@ -10,7 +10,7 @@ public:
 
     virtual void accept(Visitor &v) override;
 
-    std::size_t ptr;
+    unsigned ptr;
     bool function;
 
     NodePtr name;

@@ -52,8 +52,19 @@ void Generator::visit(ClassNode &node)
     }
 }
 
+#include "types/Type.h"
+#include "visitors/TypeBuilder.h"
+
 void Generator::visit(VarNode &node)
 {
+    std::cout << "var " << NameVisitors::prettyName(&node) << "\n";
+
+    TypeBuilder tb(c);
+    node.type->accept(tb);
+
+    pcx::scoped_ptr<Type> tp = tb.claim();
+
+    std::cout << "    type: " << tp->text() << "\n";
 }
 
 void Generator::visit(FuncNode &node)
