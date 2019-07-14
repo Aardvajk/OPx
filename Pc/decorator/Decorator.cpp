@@ -18,6 +18,8 @@
 #include "types/TypeBuilder.h"
 #include "types/TypeCompare.h"
 
+#include "decorator/LocalsDecorator.h"
+
 namespace
 {
 
@@ -122,5 +124,15 @@ void Decorator::visit(FuncNode &node)
         }
 
         sym->setProperty("defined", true);
+
+        auto g = c.tree.open(sym);
+
+        for(auto &a: node.args)
+        {
+            a.accept(*this);
+        }
+
+        LocalsDecorator ld(c);
+        node.body->accept(ld);
     }
 }

@@ -28,7 +28,9 @@ SOURCES += \
         compiler/ExprConstructs.cpp \
         compiler/TypeConstructs.cpp \
         decorator/Decorator.cpp \
+        decorator/LocalsDecorator.cpp \
         generator/Generator.cpp \
+        generator/LocalsGenerator.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
@@ -40,6 +42,7 @@ SOURCES += \
         nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/ScopeNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
         syms/Sym.cpp \
@@ -65,7 +68,9 @@ HEADERS += \
     compiler/ExprConstructs.h \
     compiler/TypeConstructs.h \
     decorator/Decorator.h \
+    decorator/LocalsDecorator.h \
     generator/Generator.h \
+    generator/LocalsGenerator.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
@@ -76,6 +81,7 @@ HEADERS += \
     nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/ScopeNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
     syms/Sym.h \

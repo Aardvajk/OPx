@@ -12,6 +12,8 @@
 
 #include "types/Type.h"
 
+#include "generator/LocalsGenerator.h"
+
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -36,9 +38,7 @@ void Generator::visit(ClassNode &node)
 void Generator::visit(VarNode &node)
 {
     auto sym = node.property("sym").to<const Sym*>();
-    auto type = sym->property("type").to<const Type*>();
-
-    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), type) << ";\n";
+    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), sym->property("type").to<const Type*>()) << ";\n";
 }
 
 void Generator::visit(FuncNode &node)
@@ -51,6 +51,16 @@ void Generator::visit(FuncNode &node)
     if(node.body)
     {
         os << "\n{\n";
+
+        for(auto &a: node.args)
+        {
+            auto sym = a.property("sym").to<const Sym*>();
+            os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a.location(), sym->property("type").to<const Type*>()) << ";\n";
+        }
+
+        LocalsGenerator lg(c, os);
+        node.body->accept(lg);
+
         os << "}\n";
     }
     else

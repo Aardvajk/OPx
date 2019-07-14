@@ -1,12 +1,12 @@
-namespace foo
-{
-
-var a:std.char;
-
-}
-
-func bar():std.int;
-
 func main()
 {
+    var a:std.int;
+
+    {
+        var a:std.char;
+
+        {
+            var a:std.null;
+        }
+    }
 }

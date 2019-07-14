@@ -7,6 +7,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/ScopeNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
@@ -105,6 +106,12 @@ void AstPrinter::visit(FuncNode &node)
     {
         node.body->accept(*this);
     }
+}
+
+void AstPrinter::visit(ScopeNode &node)
+{
+    tab() << "scope\n";
+    node.body->accept(*this);
 }
 
 void AstPrinter::visit(TypeNode &node)
