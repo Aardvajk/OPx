@@ -23,6 +23,22 @@
 namespace
 {
 
+Sym *searchNamespace(Context &c, NamespaceNode &node)
+{
+    auto sv = SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get());
+    for(auto s: sv)
+    {
+        if(s->type() != Sym::Type::Namespace)
+        {
+            throw Error(node.location(), "namespace expected - ", s->fullname());
+        }
+
+        return s;
+    }
+
+    return nullptr;
+}
+
 Sym *searchFunction(Context &c, FuncNode &node, const Type *type)
 {
     auto sv = SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get());
@@ -58,10 +74,14 @@ void Decorator::visit(BlockNode &node)
 
 void Decorator::visit(NamespaceNode &node)
 {
-    auto name = c.assertSimpleNameUnique(node.name.get());
+    auto sym = searchNamespace(c, node);
+    if(!sym)
+    {
+        auto name = c.assertSimpleNameUnique(node.name.get());
 
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), name));
-    node.setProperty("sym", sym);
+        sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), name));
+        node.setProperty("sym", sym);
+    }
 
     auto g = c.tree.open(sym);
     node.body->accept(*this);

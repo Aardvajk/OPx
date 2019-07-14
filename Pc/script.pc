@@ -1,17 +1,12 @@
-func main()
+namespace a
 {
-    var a:std.int;
-    1;
-
+    namespace b
     {
-        var a:std.char;
-
-        {
-            var a:std.null;
-            2;
-            3;
-            'A';
-            '\n';
-        }
+        var a:std.int;
     }
+}
+
+namespace a.b
+{
+    var b:std.char;
 }

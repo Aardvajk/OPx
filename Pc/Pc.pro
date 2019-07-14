@@ -29,6 +29,7 @@ SOURCES += \
         compiler/TypeConstructs.cpp \
         decorator/CodeDecorator.cpp \
         decorator/Decorator.cpp \
+        decorator/ExprDecorator.cpp \
         generator/CodeGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/Generator.cpp \
@@ -71,6 +72,7 @@ HEADERS += \
     compiler/TypeConstructs.h \
     decorator/CodeDecorator.h \
     decorator/Decorator.h \
+    decorator/ExprDecorator.h \
     generator/CodeGenerator.h \
     generator/ExprGenerator.h \
     generator/Generator.h \
