@@ -1,4 +1,4 @@
-#include "LocalsDecorator.h"
+#include "CodeDecorator.h"
 
 #include "application/Context.h"
 
@@ -8,11 +8,11 @@
 
 #include "decorator/Decorator.h"
 
-LocalsDecorator::LocalsDecorator(Context &c) : c(c)
+CodeDecorator::CodeDecorator(Context &c) : c(c)
 {
 }
 
-void LocalsDecorator::visit(BlockNode &node)
+void CodeDecorator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
@@ -20,7 +20,7 @@ void LocalsDecorator::visit(BlockNode &node)
     }
 }
 
-void LocalsDecorator::visit(ScopeNode &node)
+void CodeDecorator::visit(ScopeNode &node)
 {
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), { }));
     node.setProperty("sym", sym);
@@ -29,7 +29,7 @@ void LocalsDecorator::visit(ScopeNode &node)
     node.body->accept(*this);
 }
 
-void LocalsDecorator::visit(VarNode &node)
+void CodeDecorator::visit(VarNode &node)
 {
     Decorator d(c);
     node.accept(d);
