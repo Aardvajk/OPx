@@ -29,6 +29,8 @@ SOURCES += \
         compiler/TypeConstructs.cpp \
         decorator/CodeDecorator.cpp \
         decorator/Decorator.cpp \
+        generator/CodeGenerator.cpp \
+        generator/ExprGenerator.cpp \
         generator/Generator.cpp \
         generator/LocalsGenerator.cpp \
         main.cpp \
@@ -69,6 +71,8 @@ HEADERS += \
     compiler/TypeConstructs.h \
     decorator/CodeDecorator.h \
     decorator/Decorator.h \
+    generator/CodeGenerator.h \
+    generator/ExprGenerator.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     nodes/BlockNode.h \

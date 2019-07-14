@@ -40,6 +40,10 @@ void Visitor::visit(TypeNode &node)
 {
 }
 
+void Visitor::visit(CharLiteralNode &node)
+{
+}
+
 void Visitor::visit(IntLiteralNode &node)
 {
 }

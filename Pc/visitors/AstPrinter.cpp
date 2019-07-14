@@ -139,6 +139,11 @@ void AstPrinter::visit(TypeNode &node)
     }
 }
 
+void AstPrinter::visit(CharLiteralNode &node)
+{
+    tab() << "char literal " << node.value << "\n";
+}
+
 void AstPrinter::visit(IntLiteralNode &node)
 {
     tab() << "int literal " << node.value << "\n";

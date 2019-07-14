@@ -1,12 +1,17 @@
 func main()
 {
     var a:std.int;
+    1;
 
     {
         var a:std.char;
 
         {
             var a:std.null;
+            2;
+            3;
+            'A';
+            '\n';
         }
     }
 }
