@@ -35,21 +35,29 @@ void findFirst(Sym *scope, const std::string &name, std::vector<Sym*> &result)
     }
 }
 
+void search(SymFinder::Type type, Sym *scope, const std::string &name, std::vector<Sym*> &result)
+{
+    type == SymFinder::Type::Global ? findFirst(scope, name, result) : findIn(scope, name, result);
 }
 
-SymFinder::SymFinder(Sym *curr) : curr({ curr })
+}
+
+SymFinder::SymFinder(Type type, Sym *curr) : type(type), curr({ curr })
 {
 }
 
 void SymFinder::visit(IdNode &node)
 {
-    findFirst(curr.back(), node.name, r);
+    search(type, curr.back(), node.name, r);
+    type = Type::Local;
 }
 
 void SymFinder::visit(DotNode &node)
 {
     std::vector<Sym*> scopes;
-    findFirst(curr.back(), node.name, scopes);
+
+    search(type, curr.back(), node.name, scopes);
+    type = Type::Local;
 
     for(auto scope: scopes)
     {
@@ -58,9 +66,9 @@ void SymFinder::visit(DotNode &node)
     }
 }
 
-std::vector<Sym*> SymFinder::find(Sym *curr, Node *node)
+std::vector<Sym*> SymFinder::find(Type type, Sym *curr, Node *node)
 {
-    SymFinder sf(curr);
+    SymFinder sf(type, curr);
     node->accept(sf);
 
     return sf.result();

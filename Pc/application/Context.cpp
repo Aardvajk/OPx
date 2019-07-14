@@ -3,6 +3,11 @@
 #include "framework/Error.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
+
+#include "nodes/Node.h"
+
+#include "visitors/NameVisitors.h"
 
 #include <pcx/scoped_ptr.h>
 
@@ -39,4 +44,33 @@ void Context::assertUnique(Location location, const std::string &name)
             throw Error(location, "already defined - ", name);
         }
     }
+}
+
+std::string Context::assertSimpleName(Node *node)
+{
+    if(!NameVisitors::isNameSimple(node))
+    {
+        throw Error(node->location(), "simple name expected - ", NameVisitors::prettyName(node));
+    }
+
+    return NameVisitors::lastIdOfName(node);
+}
+
+std::string Context::assertSimpleNameUnique(Node *node)
+{
+    auto name = assertSimpleName(node);
+    assertUnique(node->location(), name);
+
+    return name;
+}
+
+std::size_t Context::assertSize(Location location, const Type *type)
+{
+    auto sz = type->size();
+    if(!sz)
+    {
+        throw Error(location, "undefined type used - ", type->text());
+    }
+
+    return *sz;
 }

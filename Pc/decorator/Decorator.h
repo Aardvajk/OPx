@@ -1,16 +1,14 @@
-#ifndef GENERATOR_H
-#define GENERATOR_H
+#ifndef DECORATOR_H
+#define DECORATOR_H
 
 #include "visitors/Visitor.h"
 
-#include <iostream>
-
 class Context;
 
-class Generator : public Visitor
+class Decorator : public Visitor
 {
 public:
-    Generator(Context &c, std::ostream &os);
+    explicit Decorator(Context &c);
 
     virtual void visit(BlockNode &node) override;
     virtual void visit(NamespaceNode &node) override;
@@ -20,7 +18,6 @@ public:
 
 private:
     Context &c;
-    std::ostream &os;
 };
 
-#endif // GENERATOR_H
+#endif // DECORATOR_H

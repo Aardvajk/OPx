@@ -11,7 +11,7 @@ public:
     virtual void accept(Visitor &v) override;
 
     NodePtr name;
-    NodePtr block;
+    NodePtr body;
 };
 
 #endif // NAMESPACENODE_H

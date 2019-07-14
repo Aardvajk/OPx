@@ -55,16 +55,16 @@ void AstPrinter::visit(DotNode &node)
 void AstPrinter::visit(NamespaceNode &node)
 {
     tab() << "namespace " << NameVisitors::prettyName(node.name.get()) << "\n";
-    node.block->accept(*this);
+    node.body->accept(*this);
 }
 
 void AstPrinter::visit(ClassNode &node)
 {
     tab() << "class " << NameVisitors::prettyName(node.name.get()) << "\n";
 
-    if(node.block)
+    if(node.body)
     {
-        node.block->accept(*this);
+        node.body->accept(*this);
     }
 }
 
@@ -101,9 +101,9 @@ void AstPrinter::visit(FuncNode &node)
 
     os << "\n";
 
-    if(node.block)
+    if(node.body)
     {
-        node.block->accept(*this);
+        node.body->accept(*this);
     }
 }
 

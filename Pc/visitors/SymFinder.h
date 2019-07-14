@@ -11,16 +11,24 @@ class Node;
 class SymFinder : public Visitor
 {
 public:
-    explicit SymFinder(Sym *curr);
+    enum class Type
+    {
+        Global,
+        Local
+    };
+
+    SymFinder(Type type, Sym *curr);
 
     std::vector<Sym*> result() const { return r; }
 
     virtual void visit(IdNode &node) override;
     virtual void visit(DotNode &node) override;
 
-    static std::vector<Sym*> find(Sym *curr, Node *node);
+    static std::vector<Sym*> find(Type type, Sym *curr, Node *node);
 
 private:
+    Type type;
+
     std::vector<Sym*> curr;
     std::vector<Sym*> r;
 };

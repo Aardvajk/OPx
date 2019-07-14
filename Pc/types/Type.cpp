@@ -43,8 +43,17 @@ Type::Type(unsigned ptr, Sym *sym) : ptr(ptr), sym(sym), returnType(nullptr)
 {
 }
 
-Type::~Type()
+pcx::optional<std::size_t> Type::size() const
 {
+    if(sym)
+    {
+        if(auto p = sym->property("size"))
+        {
+            return p.to<std::size_t>();
+        }
+    }
+
+    return { };
 }
 
 std::string Type::text() const

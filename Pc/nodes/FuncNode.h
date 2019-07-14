@@ -13,7 +13,7 @@ public:
     NodePtr name;
     NodePtr type;
     NodeList args;
-    NodePtr block;
+    NodePtr body;
 };
 
 #endif // FUNCNODE_H

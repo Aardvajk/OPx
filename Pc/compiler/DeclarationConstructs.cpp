@@ -24,7 +24,7 @@ void namespaceConstruct(Context &c, BlockNode *block, bool get)
     auto n = new NamespaceNode(nn->location(), nn);
     block->nodes.push_back(n);
 
-    n->block = CommonConstructs::scopeContents(c, n->location(), false);
+    n->body = CommonConstructs::scopeContents(c, n->location(), false);
 }
 
 void classConstruct(Context &c, BlockNode *block, bool get)
@@ -36,7 +36,7 @@ void classConstruct(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
-        n->block = CommonConstructs::scopeContents(c, n->location(), false);
+        n->body = CommonConstructs::scopeContents(c, n->location(), false);
     }
     else
     {
@@ -111,7 +111,7 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
-        n->block = CommonConstructs::scopeContents(c, n->location(), false);
+        n->body = CommonConstructs::scopeContents(c, n->location(), false);
     }
     else
     {

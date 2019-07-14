@@ -27,6 +27,7 @@ SOURCES += \
         compiler/DeclarationConstructs.cpp \
         compiler/ExprConstructs.cpp \
         compiler/TypeConstructs.cpp \
+        decorator/Decorator.cpp \
         generator/Generator.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
@@ -63,6 +64,7 @@ HEADERS += \
     compiler/DeclarationConstructs.h \
     compiler/ExprConstructs.h \
     compiler/TypeConstructs.h \
+    decorator/Decorator.h \
     generator/Generator.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \

@@ -1,6 +1,8 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+#include <pcx/optional.h>
+
 #include <vector>
 #include <string>
 
@@ -11,7 +13,8 @@ class Type
 public:
     Type();
     Type(unsigned ptr, Sym *sym);
-    ~Type();
+
+    pcx::optional<std::size_t> size() const;
 
     std::string text() const;
 

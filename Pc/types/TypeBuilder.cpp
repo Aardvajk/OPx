@@ -31,7 +31,7 @@ void TypeBuilder::visit(TypeNode &node)
     }
     else
     {
-        auto s = SymFinder::find(c.tree.current(), node.name.get());
+        auto s = SymFinder::find(SymFinder::Type::Global, c.tree.current(), node.name.get());
         if(s.empty() || s.front()->type() != Sym::Type::Class)
         {
             throw Error(node.name->location(), "type expected - ", NameVisitors::prettyName(node.name.get()));

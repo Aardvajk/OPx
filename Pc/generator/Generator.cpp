@@ -1,7 +1,5 @@
 #include "Generator.h"
 
-#include "framework/Error.h"
-
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
@@ -10,16 +8,11 @@
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
 
-#include "visitors/NameVisitors.h"
-#include "visitors/SymFinder.h"
-#include "visitors/TypeVisitor.h"
+#include "syms/Sym.h"
 
 #include "types/Type.h"
-#include "types/TypeBuilder.h"
 
-#include <pcx/scoped_counter.h>
-
-Generator::Generator(Context &c, std::ostream &os) : c(c), os(os), classDepth(0)
+Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
 
@@ -33,43 +26,35 @@ void Generator::visit(BlockNode &node)
 
 void Generator::visit(NamespaceNode &node)
 {
-    if(!NameVisitors::isNameSimple(node.name.get()))
-    {
-        throw Error(node.location(), "simple name expected - ", NameVisitors::prettyName(node.name.get()));
-    }
-
-    auto name = NameVisitors::lastIdOfName(node.name.get());
-    c.assertUnique(node.name->location(), name);
-
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), name));
-
-    auto g = c.tree.open(sym);
-    node.block->accept(*this);
+    node.body->accept(*this);
 }
 
 void Generator::visit(ClassNode &node)
 {
-    if(node.block)
-    {
-        auto g = pcx::scoped_counter(classDepth);
-        node.block->accept(*this);
-    }
 }
 
 void Generator::visit(VarNode &node)
 {
+    auto sym = node.property("sym").to<const Sym*>();
+    auto type = sym->property("type").to<const Type*>();
+
+    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), type) << ";\n";
 }
 
 void Generator::visit(FuncNode &node)
 {
-    Type t;
-    t.returnType = node.type ? TypeBuilder::type(c, node.type.get()) : c.types.nullType();
+    auto sym = node.property("sym").to<const Sym*>();
+    auto type = sym->property("type").to<const Type*>();
 
-    for(auto &a: node.args)
+    os << "func \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
+
+    if(node.body)
     {
-        t.args.push_back(TypeVisitor::type(c, &a));
+        os << "\n{\n";
+        os << "}\n";
     }
-
-    std::cout << "function " << NameVisitors::prettyName(node.name.get()) << "\n";
-    std::cout << "    type: " << c.types.insert(t)->text() << "\n";
+    else
+    {
+        os << ";\n";
+    }
 }

@@ -2,6 +2,8 @@
 
 #include "syms/Sym.h"
 
+#include "types/Type.h"
+
 #include <pcx/str.h>
 
 namespace
@@ -22,6 +24,11 @@ void dump(int tab, const Sym *sym, std::ostream &os)
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
     os << ts << Sym::toString(sym->type()) << " [" << sym << "] " << sym->fullname();
+
+    if(auto t = sym->property("type"))
+    {
+        os << " " << t.to<const Type*>()->text();
+    }
 
     if(auto s = sym->property("size"))
     {
