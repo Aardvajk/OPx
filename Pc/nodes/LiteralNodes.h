@@ -3,6 +3,14 @@
 
 #include "nodes/Node.h"
 
+class NullLiteralNode : public Node
+{
+public:
+    explicit NullLiteralNode(Location location) : Node(location) { }
+
+    virtual void accept(Visitor &v) override;
+};
+
 class CharLiteralNode : public Node
 {
 public:

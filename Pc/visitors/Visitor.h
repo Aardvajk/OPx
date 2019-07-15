@@ -9,6 +9,7 @@ class VarNode;
 class FuncNode;
 class ScopeNode;
 class TypeNode;
+class NullLiteralNode;
 class CharLiteralNode;
 class IntLiteralNode;
 class ExprNode;
@@ -27,6 +28,7 @@ public:
     virtual void visit(FuncNode &node);
     virtual void visit(ScopeNode &node);
     virtual void visit(TypeNode &node);
+    virtual void visit(NullLiteralNode &node);
     virtual void visit(CharLiteralNode &node);
     virtual void visit(IntLiteralNode &node);
     virtual void visit(ExprNode &node);

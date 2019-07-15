@@ -2,6 +2,11 @@
 
 #include "visitors/Visitor.h"
 
+void NullLiteralNode::accept(Visitor &v)
+{
+    v.visit(*this);
+}
+
 void CharLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);

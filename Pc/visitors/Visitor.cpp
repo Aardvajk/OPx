@@ -36,6 +36,10 @@ void Visitor::visit(TypeNode &node)
 {
 }
 
+void Visitor::visit(NullLiteralNode &node)
+{
+}
+
 void Visitor::visit(CharLiteralNode &node)
 {
 }
