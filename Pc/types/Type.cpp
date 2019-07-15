@@ -53,6 +53,11 @@ pcx::optional<std::size_t> Type::size() const
         }
     }
 
+    if(returnType)
+    {
+        return sizeof(std::size_t);
+    }
+
     return { };
 }
 

@@ -13,6 +13,8 @@
 
 #include "syms/SymPrinter.h"
 
+#include <fstream>
+
 int main(int argc, char *argv[])
 {
     Context c;
@@ -43,14 +45,22 @@ int main(int argc, char *argv[])
         std::cout << banner("symbols");
         SymPrinter::print(c.tree.root(), std::cout);
 
-        std::cout << banner("after decorate");
-        AstPrinter ap2(std::cout);
-        n->accept(ap2);
+        std::cout << banner("generate");
 
-        std::cout << banner();
+        Generator gv(c, std::cout);
+        n->accept(gv);
 
-//        Generator gv(c, std::cout);
-//        n->accept(gv);
+        if(true)
+        {
+            std::ofstream os(argv[2]);
+            if(!os.is_open())
+            {
+                throw Error("unable to create - ", argv[2]);
+            }
+
+            Generator gv(c, os);
+            n->accept(gv);
+        }
 
         std::cout << banner();
     }

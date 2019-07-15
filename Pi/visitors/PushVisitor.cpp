@@ -76,6 +76,10 @@ void PushVisitor::visit(IdNode &node)
 
         ok = true;
     }
+    else if(sym->type == Sym::Type::Func)
+    {
+        throw Error(node.location(), "function address must be taken - ", astReconstruct(&node));
+    }
 }
 
 void PushVisitor::visit(AddrOfNode &node)

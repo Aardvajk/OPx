@@ -3,15 +3,10 @@ namespace std
 
 func print(:std.char);
 func print(:std.int);
-func print(:std.int, :std.char):std.int;
 
 }
 
 func main()
 {
-    var a:std.int;
-
     std.print(123);
-    std.print('s');
-    std.print(2, 'z');
 }
