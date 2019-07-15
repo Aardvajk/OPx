@@ -2,7 +2,6 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
-#include "nodes/DotNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
@@ -43,14 +42,12 @@ void AstPrinter::visit(BlockNode &node)
 void AstPrinter::visit(IdNode &node)
 {
     tab() << "id " << node.name << "\n";
-}
 
-void AstPrinter::visit(DotNode &node)
-{
-    tab() << "dot " << node.name << "\n";
-
-    auto g = pcx::scoped_counter(tc);
-    node.child->accept(*this);
+    if(node.child)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.child->accept(*this);
+    }
 }
 
 void AstPrinter::visit(NamespaceNode &node)

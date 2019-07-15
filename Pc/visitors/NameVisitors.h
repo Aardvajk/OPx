@@ -18,7 +18,6 @@ public:
     std::string result() const { return r; }
 
     virtual void visit(IdNode &node) override;
-    virtual void visit(DotNode &node) override;
     virtual void visit(VarNode &node) override;
     virtual void visit(TypeNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
@@ -52,7 +51,6 @@ public:
     std::string result() const { return r; }
 
     virtual void visit(IdNode &node) override;
-    virtual void visit(DotNode &node) override;
 
 private:
     std::string r;

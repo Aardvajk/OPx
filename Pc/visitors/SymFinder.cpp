@@ -1,7 +1,6 @@
 #include "SymFinder.h"
 
 #include "nodes/IdNode.h"
-#include "nodes/DotNode.h"
 
 #include "syms/Sym.h"
 
@@ -48,21 +47,23 @@ SymFinder::SymFinder(Type type, Sym *curr) : type(type), curr({ curr })
 
 void SymFinder::visit(IdNode &node)
 {
-    search(type, curr.back(), node.name, r);
-    type = Type::Local;
-}
-
-void SymFinder::visit(DotNode &node)
-{
-    std::vector<Sym*> scopes;
-
-    search(type, curr.back(), node.name, scopes);
-    type = Type::Local;
-
-    for(auto scope: scopes)
+    if(node.child)
     {
-        auto g = pcx::scoped_push(curr, scope);
-        node.child->accept(*this);
+        std::vector<Sym*> scopes;
+
+        search(type, curr.back(), node.name, scopes);
+        type = Type::Local;
+
+        for(auto scope: scopes)
+        {
+            auto g = pcx::scoped_push(curr, scope);
+            node.child->accept(*this);
+        }
+    }
+    else
+    {
+        search(type, curr.back(), node.name, r);
+        type = Type::Local;
     }
 }
 

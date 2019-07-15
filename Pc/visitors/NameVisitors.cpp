@@ -1,7 +1,6 @@
 #include "NameVisitors.h"
 
 #include "nodes/IdNode.h"
-#include "nodes/DotNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/LiteralNodes.h"
@@ -16,12 +15,11 @@ NameVisitors::PrettyName::PrettyName()
 void NameVisitors::PrettyName::visit(IdNode &node)
 {
     r += node.name;
-}
-
-void NameVisitors::PrettyName::visit(DotNode &node)
-{
-    r += node.name + ".";
-    node.child->accept(*this);
+    if(node.child)
+    {
+        r += ".";
+        node.child->accept(*this);
+    }
 }
 
 void NameVisitors::PrettyName::visit(VarNode &node)
@@ -89,7 +87,10 @@ NameVisitors::IsNameSimple::IsNameSimple() : r(false)
 
 void NameVisitors::IsNameSimple::visit(IdNode &node)
 {
-    r = true;
+    if(!node.child)
+    {
+        r = true;
+    }
 }
 
 bool NameVisitors::isNameSimple(Node *node)
@@ -106,12 +107,14 @@ NameVisitors::LastIdOfName::LastIdOfName()
 
 void NameVisitors::LastIdOfName::visit(IdNode &node)
 {
-    r = node.name;
-}
-
-void NameVisitors::LastIdOfName::visit(DotNode &node)
-{
-    node.child->accept(*this);
+    if(node.child)
+    {
+        node.child->accept(*this);
+    }
+    else
+    {
+        r = node.name;
+    }
 }
 
 std::string NameVisitors::lastIdOfName(Node *node)

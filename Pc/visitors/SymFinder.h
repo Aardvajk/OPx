@@ -22,7 +22,6 @@ public:
     std::vector<Sym*> result() const { return r; }
 
     virtual void visit(IdNode &node) override;
-    virtual void visit(DotNode &node) override;
 
     static std::vector<Sym*> find(Type type, Sym *curr, Node *node);
 

@@ -12,10 +12,6 @@ void Visitor::visit(IdNode &node)
 {
 }
 
-void Visitor::visit(DotNode &node)
-{
-}
-
 void Visitor::visit(NamespaceNode &node)
 {
 }

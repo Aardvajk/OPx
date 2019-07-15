@@ -38,7 +38,6 @@ SOURCES += \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
-        nodes/DotNode.cpp \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
@@ -80,7 +79,6 @@ HEADERS += \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
-    nodes/DotNode.h \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
