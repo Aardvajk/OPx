@@ -78,10 +78,10 @@ void Decorator::visit(NamespaceNode &node)
     if(!sym)
     {
         auto name = c.assertSimpleNameUnique(node.name.get());
-
         sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), name));
-        node.setProperty("sym", sym);
     }
+
+    node.setProperty("sym", sym);
 
     auto g = c.tree.open(sym);
     node.body->accept(*this);

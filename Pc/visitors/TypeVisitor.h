@@ -15,6 +15,8 @@ public:
     const Type *result() const { return r; }
 
     virtual void visit(VarNode &node) override;
+    virtual void visit(CharLiteralNode &node) override;
+    virtual void visit(IntLiteralNode &node) override;
 
     static const Type *type(Context &c, Node *node);
 

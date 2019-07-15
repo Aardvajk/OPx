@@ -2,11 +2,12 @@ namespace a
 {
     namespace b
     {
-        var a:std.int;
+        var c:std.int;
     }
 }
 
 namespace a.b
 {
-    var b:std.char;
+    var d:std.char;
 }
+

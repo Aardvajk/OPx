@@ -4,16 +4,16 @@
 #include "visitors/Visitor.h"
 
 class Context;
+class Type;
 
 class ExprDecorator : public Visitor
 {
 public:
-    explicit ExprDecorator(Context &c);
-
-    virtual void visit(CallNode &node) override;
+    ExprDecorator(Context &c, const Type *expectedType);
 
 private:
     Context &c;
+    const Type *expectedType;
 };
 
 #endif // EXPRDECORATOR_H
