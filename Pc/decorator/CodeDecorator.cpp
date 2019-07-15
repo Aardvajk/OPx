@@ -8,6 +8,7 @@
 #include "nodes/ExprNode.h"
 
 #include "decorator/Decorator.h"
+#include "decorator/ExprDecorator.h"
 
 CodeDecorator::CodeDecorator(Context &c) : c(c)
 {
@@ -38,4 +39,6 @@ void CodeDecorator::visit(VarNode &node)
 
 void CodeDecorator::visit(ExprNode &node)
 {
+    ExprDecorator ed(c, nullptr);
+    node.expr->accept(ed);
 }

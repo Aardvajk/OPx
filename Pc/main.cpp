@@ -43,10 +43,14 @@ int main(int argc, char *argv[])
         std::cout << banner("symbols");
         SymPrinter::print(c.tree.root(), std::cout);
 
+        std::cout << banner("after decorate");
+        AstPrinter ap2(std::cout);
+        n->accept(ap2);
+
         std::cout << banner();
 
-        Generator gv(c, std::cout);
-        n->accept(gv);
+//        Generator gv(c, std::cout);
+//        n->accept(gv);
 
         std::cout << banner();
     }

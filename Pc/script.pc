@@ -1,13 +1,17 @@
-namespace a
+namespace std
 {
-    namespace b
-    {
-        var c:std.int;
-    }
+
+func print(:std.char);
+func print(:std.int);
+func print(:std.int, :std.char):std.int;
+
 }
 
-namespace a.b
+func main()
 {
-    var d:std.char;
-}
+    var a:std.int;
 
+    std.print(123);
+    std.print('s');
+    std.print(2, 'z');
+}

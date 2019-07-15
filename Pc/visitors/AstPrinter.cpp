@@ -39,6 +39,9 @@ void AstPrinter::visit(BlockNode &node)
     tab() << "}\n";
 }
 
+#include "syms/Sym.h"
+#include "types/Type.h"
+
 void AstPrinter::visit(IdNode &node)
 {
     tab() << "id " << node.name << "\n";
@@ -47,6 +50,11 @@ void AstPrinter::visit(IdNode &node)
     {
         auto g = pcx::scoped_counter(tc);
         node.child->accept(*this);
+    }
+
+    if(auto s = node.property("sym"))
+    {
+        std::cout << "^^^ " << s.to<const Sym*>()->fullname() << ":" << s.to<const Sym*>()->property("type").to<const Type*>()->text() << "\n";
     }
 }
 
