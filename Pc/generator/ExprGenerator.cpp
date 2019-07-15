@@ -47,6 +47,7 @@ void ExprGenerator::visit(CallNode &node)
 {
     auto s = node.target->property("sym").to<const Sym*>();
     auto t = s->property("type").to<const Type*>();
+    //TODO above needs to be switched to TypeVisitor when id lookup is supported
 
     auto rs = c.assertSize(node.location(), t->returnType);
     os << "    allocs " << rs << ";\n";
