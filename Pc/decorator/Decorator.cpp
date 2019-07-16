@@ -108,9 +108,7 @@ void Decorator::visit(VarNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
-    Type t;
-    t.returnType = node.type ? TypeBuilder::type(c, node.type.get()) : c.types.nullType();
-
+    auto t = Type::makeFunction(0, node.type ? TypeBuilder::type(c, node.type.get()) : c.types.nullType());
     for(auto &a: node.args)
     {
         t.args.push_back(TypeVisitor::type(c, &a));

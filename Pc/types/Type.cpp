@@ -35,14 +35,6 @@ std::string toString(const Type *type)
 
 }
 
-Type::Type() : ptr(0), sym(nullptr), returnType(nullptr)
-{
-}
-
-Type::Type(unsigned ptr, Sym *sym) : ptr(ptr), sym(sym), returnType(nullptr)
-{
-}
-
 pcx::optional<std::size_t> Type::size() const
 {
     if(sym)
@@ -64,4 +56,28 @@ pcx::optional<std::size_t> Type::size() const
 std::string Type::text() const
 {
     return toString(this);
+}
+
+Type Type::makePrimary(unsigned ptr, const Sym *sym)
+{
+    Type t;
+
+    t.ptr = ptr;
+    t.sym = sym;
+
+    return t;
+}
+
+Type Type::makeFunction(unsigned ptr, const Type *returnType)
+{
+    Type t;
+
+    t.ptr = ptr;
+    t.returnType = returnType;
+
+    return t;
+}
+
+Type::Type() : ptr(0), sym(nullptr), returnType(nullptr)
+{
 }

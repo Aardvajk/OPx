@@ -19,9 +19,7 @@ void TypeBuilder::visit(TypeNode &node)
 {
     if(node.function)
     {
-        Type t(node.ptr, nullptr);
-        t.returnType = node.returnType ? type(c, node.returnType.get()) : c.types.nullType();
-
+        auto t = Type::makeFunction(node.ptr, node.returnType ? type(c, node.returnType.get()) : c.types.nullType());
         for(auto &a: node.args)
         {
             t.args.push_back(type(c, &a));
@@ -37,7 +35,7 @@ void TypeBuilder::visit(TypeNode &node)
             throw Error(node.name->location(), "type expected - ", NameVisitors::prettyName(node.name.get()));
         }
 
-        r = c.types.insert(Type(node.ptr, s.front()));
+        r = c.types.insert(Type::makePrimary(node.ptr, s.front()));
     }
 }
 

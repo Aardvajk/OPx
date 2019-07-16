@@ -11,18 +11,22 @@ class Sym;
 class Type
 {
 public:
-    Type();
-    Type(unsigned ptr, Sym *sym);
-
     pcx::optional<std::size_t> size() const;
 
     std::string text() const;
+    bool function() const { return returnType; }
+
+    static Type makePrimary(unsigned ptr, const Sym *sym);
+    static Type makeFunction(unsigned ptr, const Type *returnType);
 
     unsigned ptr;
-    Sym *sym;
+    const Sym *sym;
 
     std::vector<const Type*> args;
     const Type *returnType;
+
+private:
+    Type();
 };
 
 #endif // TYPE_H

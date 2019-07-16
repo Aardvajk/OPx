@@ -1,8 +1,17 @@
-func f(a:std.int):std.int
+namespace std
 {
-    return a;
+
+func print(:std.char);
+func print(:std.int);
+
+}
+
+func foo():std.int
+{
+    return 123;
 }
 
 func main()
 {
+    std.print(foo());
 }

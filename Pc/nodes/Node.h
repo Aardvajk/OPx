@@ -22,8 +22,8 @@ public:
 
     virtual void accept(Visitor &v) = 0;
 
-    void setProperty(const std::string &name, pcx::any value);
-    pcx::any getProperty(const std::string &name);
+    void setProperty(const std::string &name, pcx::any value){ pm.set(name, value); }
+    pcx::any getProperty(const std::string &name){ return pm[name]; }
 
     Location location() const { return n; }
     template<typename T> T property(const std::string &name) const { return pm.get<T>(name); }

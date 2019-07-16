@@ -54,16 +54,6 @@ Sym *Sym::container()
     return nullptr;
 }
 
-void Sym::setProperty(const std::string &name, pcx::any value)
-{
-    pm.set(name, value);
-}
-
-pcx::any Sym::getProperty(const std::string &name) const
-{
-    return pm[name];
-}
-
 std::string Sym::fullname() const
 {
     if(!ps) return name();

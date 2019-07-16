@@ -30,8 +30,8 @@ public:
     Sym *child(const std::string &name);
     Sym *container();
 
-    void setProperty(const std::string &name, pcx::any value);
-    pcx::any getProperty(const std::string &name) const;
+    void setProperty(const std::string &name, pcx::any value){ pm.set(name, value); }
+    pcx::any getProperty(const std::string &name) const { return pm[name]; }
 
     Type type() const { return t; }
     Location location() const { return n; }

@@ -31,12 +31,12 @@ void TypeVisitor::visit(NullLiteralNode &node)
 
 void TypeVisitor::visit(CharLiteralNode &node)
 {
-    r = c.types.insert(Type(0, c.tree.root()->child("std")->child("char")));
+    r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("char")));
 }
 
 void TypeVisitor::visit(IntLiteralNode &node)
 {
-    r = c.types.insert(Type(0, c.tree.root()->child("std")->child("int")));
+    r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("int")));
 }
 
 void TypeVisitor::visit(CallNode &node)

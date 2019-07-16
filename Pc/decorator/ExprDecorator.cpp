@@ -44,7 +44,7 @@ ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expec
 void ExprDecorator::visit(IdNode &node)
 {
     auto sv = SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node);
-    if(expectedType)
+    if(expectedType && expectedType->function())
     {
         auto s = searchFunction(node.location(), sv, expectedType);
         if(!s)
@@ -77,7 +77,7 @@ void ExprDecorator::visit(CallNode &node)
         p.accept(*this);
     }
 
-    Type t;
+    auto t = Type::makeFunction(0, c.types.nullType());
     for(auto &p: node.params)
     {
         t.args.push_back(TypeVisitor::type(c, &p));
