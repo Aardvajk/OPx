@@ -7,6 +7,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/AssignNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -89,9 +90,24 @@ NodePtr entity(Context &c, bool get)
     }
 }
 
+NodePtr assign(Context &c, bool get)
+{
+    auto n = entity(c, get);
+
+    while(c.scanner.token().type() == Token::Type::Assign)
+    {
+        auto an = new AssignNode(c.scanner.token().location(), n);
+        n = an;
+
+        an->expr = expression(c, true);
+    }
+
+    return n;
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return entity(c, get);
+    return assign(c, get);
 }
 
 }

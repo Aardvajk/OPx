@@ -37,6 +37,7 @@ SOURCES += \
         generator/LocalsGenerator.cpp \
         main.cpp \
         nodes/AddrOfNode.cpp \
+        nodes/AssignNode.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
@@ -54,6 +55,8 @@ SOURCES += \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
+        transform/ExprTransformer.cpp \
+        transform/Transformer.cpp \
         types/Type.cpp \
         types/TypeCache.cpp \
         types/TypeCompare.cpp \
@@ -81,6 +84,7 @@ HEADERS += \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     nodes/AddrOfNode.h \
+    nodes/AssignNode.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
@@ -98,6 +102,8 @@ HEADERS += \
     syms/SymGuard.h \
     syms/SymPrinter.h \
     syms/SymTree.h \
+    transform/ExprTransformer.h \
+    transform/Transformer.h \
     types/Type.h \
     types/TypeCache.h \
     types/TypeCompare.h \

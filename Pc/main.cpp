@@ -7,6 +7,8 @@
 
 #include "visitors/AstPrinter.h"
 
+#include "transform/Transformer.h"
+
 #include "decorator/Decorator.h"
 
 #include "generator/Generator.h"
@@ -42,6 +44,11 @@ int main(int argc, char *argv[])
         auto n = Compiler::compile(c);
 
         std::cout << banner("nodes");
+        visit<AstPrinter>(n, std::cout);
+
+        visit<Transformer>(n, c);
+
+        std::cout << banner("transformed nodes");
         visit<AstPrinter>(n, std::cout);
 
         visit<Decorator>(n, c);

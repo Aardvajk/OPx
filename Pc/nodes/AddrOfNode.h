@@ -6,7 +6,7 @@
 class AddrOfNode : public Node
 {
 public:
-    explicit AddrOfNode(Location location) : Node(location) { }
+    explicit AddrOfNode(Location location, NodePtr expr = { }) : Node(location), expr(expr) { }
 
     virtual void accept(Visitor &v) override;
 

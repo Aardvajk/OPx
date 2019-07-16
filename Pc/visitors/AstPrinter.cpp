@@ -13,6 +13,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -205,6 +206,15 @@ void AstPrinter::visit(AddrOfNode &node)
     tab() << "addrof\n";
 
     auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(AssignNode &node)
+{
+    tab() << "assign\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.target->accept(*this);
     node.expr->accept(*this);
 }
 

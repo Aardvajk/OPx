@@ -16,6 +16,7 @@ class ExprNode;
 class CallNode;
 class ReturnNode;
 class AddrOfNode;
+class AssignNode;
 
 class Visitor
 {
@@ -37,6 +38,7 @@ public:
     virtual void visit(CallNode &node);
     virtual void visit(ReturnNode &node);
     virtual void visit(AddrOfNode &node);
+    virtual void visit(AssignNode &node);
 };
 
 #endif // VISITOR_H
