@@ -36,7 +36,7 @@ NodePtr primary(Context &c, bool get)
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::Id: return CommonConstructs::name(c, false);
+        case Token::Type::Id: return CommonConstructs::extendedName(c, false);
 
         case Token::Type::CharLiteral: n = new CharLiteralNode(tok.location(), tok.text()[0]); c.scanner.next(true); return n;
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;

@@ -9,6 +9,8 @@ namespace CommonConstructs
 {
 
 NodePtr name(Context &c, bool get);
+NodePtr extendedName(Context &c, bool get);
+
 NodePtr scopeContents(Context &c, Location location, bool get);
 
 }

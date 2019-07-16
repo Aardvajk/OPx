@@ -26,6 +26,7 @@ static const std::vector<Reserved> pcReserved =
     { "var", Token::Type::RwVar },
     { "func", Token::Type::RwFunc },
     { "ptr", Token::Type::RwPtr },
+    { "operator", Token::Type::RwOperator },
     { "return", Token::Type::RwReturn }
 };
 

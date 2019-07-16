@@ -91,7 +91,7 @@ void args(Context &c, NodeList &container, bool get)
 
 void funcConstruct(Context &c, BlockNode *block, bool get)
 {
-    auto nn = CommonConstructs::name(c, get);
+    auto nn = CommonConstructs::extendedName(c, get);
 
     auto n = new FuncNode(nn->location(), nn);
     block->nodes.push_back(n);
