@@ -41,9 +41,12 @@ int main(int argc, char *argv[])
 
         auto n = Compiler::compile(c);
 
+        std::cout << banner("nodes");
+        visit<AstPrinter>(n, std::cout);
+
         visit<Decorator>(n, c);
 
-        std::cout << banner("nodes");
+        std::cout << banner("decorated nodes");
         visit<AstPrinter>(n, std::cout);
 
         std::cout << banner("symbols");

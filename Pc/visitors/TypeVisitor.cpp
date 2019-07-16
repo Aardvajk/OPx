@@ -6,6 +6,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
@@ -41,10 +42,15 @@ void TypeVisitor::visit(IntLiteralNode &node)
 
 void TypeVisitor::visit(CallNode &node)
 {
-    TypeVisitor tv(c);
-    node.target->accept(tv);
+    r = TypeVisitor::type(c, node.target.get())->returnType;
+}
 
-    r = tv.result()->returnType;
+void TypeVisitor::visit(AddrOfNode &node)
+{
+    auto t = *(TypeVisitor::type(c, node.expr.get()));
+    ++t.ptr;
+
+    r = c.types.insert(t);
 }
 
 const Type *TypeVisitor::type(Context &c, Node *node)

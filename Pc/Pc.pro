@@ -30,11 +30,13 @@ SOURCES += \
         decorator/CodeDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/ExprDecorator.cpp \
+        generator/AddrGenerator.cpp \
         generator/CodeGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/Generator.cpp \
         generator/LocalsGenerator.cpp \
         main.cpp \
+        nodes/AddrOfNode.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
@@ -73,10 +75,12 @@ HEADERS += \
     decorator/CodeDecorator.h \
     decorator/Decorator.h \
     decorator/ExprDecorator.h \
+    generator/AddrGenerator.h \
     generator/CodeGenerator.h \
     generator/ExprGenerator.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
+    nodes/AddrOfNode.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
@@ -105,4 +109,4 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    script.pc
+    ../workspace/script.pc

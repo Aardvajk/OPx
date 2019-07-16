@@ -6,6 +6,7 @@
 
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -15,6 +16,18 @@ namespace
 {
 
 NodePtr expression(Context &c, bool get);
+
+NodePtr addrOf(Context &c, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Amp, get);
+
+    auto an = new AddrOfNode(tok.location());
+    NodePtr n(an);
+
+    an->expr = expression(c, true);
+
+    return n;
+}
 
 NodePtr primary(Context &c, bool get)
 {
@@ -27,6 +40,8 @@ NodePtr primary(Context &c, bool get)
 
         case Token::Type::CharLiteral: n = new CharLiteralNode(tok.location(), tok.text()[0]); c.scanner.next(true); return n;
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
+
+        case Token::Type::Amp: return addrOf(c, false);
 
         default: throw Error(tok.location(), "expression expected - ", tok.text());
     }

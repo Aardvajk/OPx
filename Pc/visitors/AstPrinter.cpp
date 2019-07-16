@@ -12,6 +12,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -194,6 +195,14 @@ void AstPrinter::visit(CallNode &node)
 void AstPrinter::visit(ReturnNode &node)
 {
     tab() << "return\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(AddrOfNode &node)
+{
+    tab() << "addrof\n";
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);

@@ -59,3 +59,7 @@ void Visitor::visit(CallNode &node)
 void Visitor::visit(ReturnNode &node)
 {
 }
+
+void Visitor::visit(AddrOfNode &node)
+{
+}

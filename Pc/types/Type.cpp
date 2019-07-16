@@ -37,17 +37,17 @@ std::string toString(const Type *type)
 
 pcx::optional<std::size_t> Type::size() const
 {
+    if(ptr || returnType)
+    {
+        return sizeof(std::size_t);
+    }
+
     if(sym)
     {
         if(auto p = sym->getProperty("size"))
         {
             return p.to<std::size_t>();
         }
-    }
-
-    if(returnType)
-    {
-        return sizeof(std::size_t);
     }
 
     return { };

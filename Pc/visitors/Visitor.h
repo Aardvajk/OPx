@@ -15,6 +15,7 @@ class IntLiteralNode;
 class ExprNode;
 class CallNode;
 class ReturnNode;
+class AddrOfNode;
 
 class Visitor
 {
@@ -35,6 +36,7 @@ public:
     virtual void visit(ExprNode &node);
     virtual void visit(CallNode &node);
     virtual void visit(ReturnNode &node);
+    virtual void visit(AddrOfNode &node);
 };
 
 #endif // VISITOR_H

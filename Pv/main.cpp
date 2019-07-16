@@ -28,6 +28,26 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<std::size_t>();
         std::cout << "size " << i << "\n";
     }
+    else if(code == 10)
+    {
+        auto i = sr.get<std::size_t>();
+        auto p = mm(i);
+
+        std::cout << "ptr to int " << i << " value = " << *(reinterpret_cast<const int*>(p)) << "\n";
+    }
+    else if(code == 11)
+    {
+        auto i = sr.get<std::size_t>();
+
+        auto p = mm(i);
+
+        std::size_t bp;
+        std::memcpy(&bp, p, sizeof(std::size_t));
+
+        auto p2 = mm(bp);
+
+        std::cout << "ptr to ptr to int " << i << " value = " << *(reinterpret_cast<const int*>(p2)) << "\n";
+    }
     else if(code >= 1000)
     {
         std::cout << "int " << code << "\n";

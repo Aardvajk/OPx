@@ -7,8 +7,12 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "visitors/TypeVisitor.h"
+#include "visitors/NameVisitors.h"
+
+#include "generator/AddrGenerator.h"
 
 #include "types/Type.h"
 
@@ -68,6 +72,19 @@ void ExprGenerator::visit(CallNode &node)
     os << "    call;\n";
 
     sz = rs;
+}
+
+void ExprGenerator::visit(AddrOfNode &node)
+{
+    AddrGenerator ag(c, os);
+    node.expr->accept(ag);
+
+    if(!ag.result())
+    {
+        throw Error(node.expr->location(), "addressable expected - ", NameVisitors::prettyName(node.expr.get()));
+    }
+
+    sz = sizeof(std::size_t);
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)
