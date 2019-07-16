@@ -41,7 +41,7 @@ void search(SymFinder::Type type, Sym *scope, const std::string &name, std::vect
 
 }
 
-SymFinder::SymFinder(Type type, Sym *curr) : type(type), curr({ curr })
+SymFinder::SymFinder(Type type, Sym *curr, std::vector<Sym*> &result) : type(type), curr({ curr }), r(result)
 {
 }
 
@@ -67,11 +67,9 @@ void SymFinder::visit(IdNode &node)
     }
 }
 
-std::vector<Sym*> SymFinder::find(Type type, Sym *curr, Node *node)
+void SymFinder::find(Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
 {
-    SymFinder sf(type, curr);
+    SymFinder sf(type, curr, result);
     node->accept(sf);
-
-    return sf.result();
 }
 

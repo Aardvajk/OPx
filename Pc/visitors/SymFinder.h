@@ -17,19 +17,17 @@ public:
         Local
     };
 
-    SymFinder(Type type, Sym *curr);
-
-    std::vector<Sym*> result() const { return r; }
+    SymFinder(Type type, Sym *curr, std::vector<Sym*> &result);
 
     virtual void visit(IdNode &node) override;
 
-    static std::vector<Sym*> find(Type type, Sym *curr, Node *node);
+    static void find(Type type, Sym *curr, Node *node, std::vector<Sym*> &result);
 
 private:
     Type type;
 
     std::vector<Sym*> curr;
-    std::vector<Sym*> r;
+    std::vector<Sym*> &r;
 };
 
 #endif // SYMFINDER_H

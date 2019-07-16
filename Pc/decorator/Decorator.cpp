@@ -25,7 +25,9 @@ namespace
 
 Sym *searchNamespace(Context &c, NamespaceNode &node)
 {
-    auto sv = SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get());
+    std::vector<Sym*> sv;
+    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+
     for(auto s: sv)
     {
         if(s->type() != Sym::Type::Namespace)
@@ -41,7 +43,9 @@ Sym *searchNamespace(Context &c, NamespaceNode &node)
 
 Sym *searchFunction(Context &c, FuncNode &node, const Type *type)
 {
-    auto sv = SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get());
+    std::vector<Sym*> sv;
+    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+
     for(auto s: sv)
     {
         if(s->type() != Sym::Type::Func)

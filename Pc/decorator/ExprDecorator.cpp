@@ -44,7 +44,9 @@ ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expec
 
 void ExprDecorator::visit(IdNode &node)
 {
-    auto sv = SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node);
+    std::vector<Sym*> sv;
+    SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node, sv);
+
     if(expectedType && expectedType->function())
     {
         auto s = searchFunction(node.location(), sv, expectedType);
