@@ -1,17 +1,21 @@
 namespace std
 {
 
-func print(:std.char);
 func print(:std.int);
 
 }
 
-func foo():std.int
+func bar()
 {
-    return 123;
+    std.print(123);
+}
+
+func foo():func()
+{
+    return bar;
 }
 
 func main()
 {
-    std.print(foo());
+    foo()();
 }

@@ -8,6 +8,8 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 
+#include "visitors/TypeVisitor.h"
+
 #include "types/Type.h"
 
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
@@ -51,9 +53,7 @@ void ExprGenerator::visit(IntLiteralNode &node)
 
 void ExprGenerator::visit(CallNode &node)
 {
-    auto s = node.target->property<const Sym*>("sym");
-    auto t = s->property<const Type*>("type");
-    //TODO above needs to be switched to TypeVisitor when id lookup is supported
+    auto t = TypeVisitor::type(c, node.target.get());
 
     auto rs = c.assertSize(node.location(), t->returnType);
     os << "    allocs " << rs << ";\n";
