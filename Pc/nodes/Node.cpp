@@ -10,11 +10,10 @@ Node::~Node()
 
 void Node::setProperty(const std::string &name, pcx::any value)
 {
-    pm[name] = value;
+    pm.set(name, value);
 }
 
-pcx::any Node::property(const std::string &name) const
+pcx::any Node::getProperty(const std::string &name)
 {
-    auto i = pm.find(name);
-    return i == pm.end() ? pcx::any() : i->second;
+    return pm[name];
 }

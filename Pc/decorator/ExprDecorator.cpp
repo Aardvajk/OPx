@@ -26,7 +26,7 @@ Sym *searchFunction(Location location, const std::vector<Sym*> &sv, const Type *
             throw Error(location, "function expected - ", s->fullname());
         }
 
-        if(TypeCompare::args(expectedType, s->property("type").to<const Type*>()))
+        if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
         {
             return s;
         }
@@ -85,4 +85,10 @@ void ExprDecorator::visit(CallNode &node)
 
     ExprDecorator ed(c, c.types.insert(t));
     node.target->accept(ed);
+}
+
+void ExprDecorator::decorate(Context &c, const Type *expectedType, Node &node)
+{
+    ExprDecorator ed(c, expectedType);
+    node.accept(ed);
 }

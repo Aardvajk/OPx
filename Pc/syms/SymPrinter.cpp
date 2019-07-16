@@ -13,7 +13,7 @@ bool hasScope(const Sym *sym)
 {
     if(sym->type() == Sym::Type::Class || sym->type() == Sym::Type::Func)
     {
-        return sym->property("defined").value<bool>();
+        return sym->getProperty("defined").value<bool>();
     }
 
     return sym->type() == Sym::Type::Namespace || sym->type() == Sym::Type::Scope;
@@ -25,12 +25,12 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
     os << ts << Sym::toString(sym->type()) << " [" << sym << "] " << sym->fullname();
 
-    if(auto t = sym->property("type"))
+    if(auto t = sym->getProperty("type"))
     {
         os << " " << t.to<const Type*>()->text();
     }
 
-    if(auto s = sym->property("size"))
+    if(auto s = sym->getProperty("size"))
     {
         os << " (" << s.to<std::size_t>() << ")";
     }

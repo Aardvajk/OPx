@@ -47,7 +47,7 @@ pcx::optional<std::size_t> Type::size() const
 {
     if(sym)
     {
-        if(auto p = sym->property("size"))
+        if(auto p = sym->getProperty("size"))
         {
             return p.to<std::size_t>();
         }

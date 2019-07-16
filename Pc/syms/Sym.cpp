@@ -56,7 +56,12 @@ Sym *Sym::container()
 
 void Sym::setProperty(const std::string &name, pcx::any value)
 {
-    pm[name] = value;
+    pm.set(name, value);
+}
+
+pcx::any Sym::getProperty(const std::string &name) const
+{
+    return pm[name];
 }
 
 std::string Sym::fullname() const
@@ -73,12 +78,6 @@ std::string Sym::fullname() const
     }
 
     return pcx::join_str(v, ".");
-}
-
-pcx::any Sym::property(const std::string &name) const
-{
-    auto i = pm.find(name);
-    return i == pm.end() ? pcx::any() : i->second;
 }
 
 const char *Sym::toString(Type v)

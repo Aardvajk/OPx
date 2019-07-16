@@ -9,6 +9,10 @@ TypeCache::TypeCache()
 {
 }
 
+TypeCache::~TypeCache()
+{
+}
+
 const Type *TypeCache::insert(const Type &type)
 {
     for(std::size_t i = 0; i < v.size(); ++i)

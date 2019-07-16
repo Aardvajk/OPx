@@ -49,7 +49,7 @@ Sym *searchFunction(Context &c, FuncNode &node, const Type *type)
             throw Error(node.location(), "function expected - ", s->fullname());
         }
 
-        if(TypeCompare::args(type, s->property("type").to<const Type*>()))
+        if(TypeCompare::args(type, s->property<const Type*>("type")))
         {
             return s;
         }
@@ -121,7 +121,7 @@ void Decorator::visit(FuncNode &node)
     Sym *sym = searchFunction(c, node, type);
     if(sym)
     {
-        if(!TypeCompare::exact(type->returnType, sym->property("type").to<const Type*>()->returnType))
+        if(!TypeCompare::exact(type->returnType, sym->property<const Type*>("type")->returnType))
         {
             throw Error(node.location(), "mismatched returns");
         }
@@ -138,7 +138,7 @@ void Decorator::visit(FuncNode &node)
 
     if(node.body)
     {
-        if(sym->property("defined").value<bool>())
+        if(sym->getProperty("defined").value<bool>())
         {
             throw Error(node.location(), "already defined - ", sym->fullname());
         }

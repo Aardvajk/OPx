@@ -38,14 +38,14 @@ void Generator::visit(ClassNode &node)
 
 void Generator::visit(VarNode &node)
 {
-    auto sym = node.property("sym").to<const Sym*>();
-    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), sym->property("type").to<const Type*>()) << ";\n";
+    auto sym = node.property<const Sym*>("sym");
+    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), sym->property<const Type*>("type")) << ";\n";
 }
 
 void Generator::visit(FuncNode &node)
 {
-    auto sym = node.property("sym").to<const Sym*>();
-    auto type = sym->property("type").to<const Type*>();
+    auto sym = node.property<const Sym*>("sym");
+    auto type = sym->property<const Type*>("type");
 
     os << "func \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
 
@@ -55,8 +55,8 @@ void Generator::visit(FuncNode &node)
 
         for(auto &a: node.args)
         {
-            auto sym = a.property("sym").to<const Sym*>();
-            os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a.location(), sym->property("type").to<const Type*>()) << ";\n";
+            auto sym = a.property<const Sym*>("sym");
+            os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a.location(), sym->property<const Type*>("type")) << ";\n";
         }
 
         LocalsGenerator lg(c, os);
@@ -65,6 +65,7 @@ void Generator::visit(FuncNode &node)
         CodeGenerator cg(c, os);
         node.body->accept(cg);
 
+        os << "\"#end_function\":\n";
         os << "}\n";
     }
     else

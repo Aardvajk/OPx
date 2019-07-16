@@ -16,8 +16,8 @@ ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 
 void ExprGenerator::visit(IdNode &node)
 {
-    auto s = node.property("sym").to<const Sym*>();
-    auto t = s->property("type").to<const Type*>();
+    auto s = node.property<const Sym*>("sym");
+    auto t = s->property<const Type*>("type");
 
     if(s->type() == Sym::Type::Func)
     {
@@ -31,22 +31,28 @@ void ExprGenerator::visit(IdNode &node)
     sz = c.assertSize(node.location(), t);
 }
 
+void ExprGenerator::visit(NullLiteralNode &node)
+{
+    os << "    allocs 0;\n";
+    sz = 0;
+}
+
 void ExprGenerator::visit(CharLiteralNode &node)
 {
     os << "    push char(" << static_cast<unsigned int>(node.value) << ");\n";
-    sz = c.tree.root()->child("std")->child("char")->property("size").to<std::size_t>();
+    sz = c.tree.root()->child("std")->child("char")->property<std::size_t>("size");
 }
 
 void ExprGenerator::visit(IntLiteralNode &node)
 {
     os << "    push int(" << node.value << ");\n";
-    sz = c.tree.root()->child("std")->child("int")->property("size").to<std::size_t>();
+    sz = c.tree.root()->child("std")->child("int")->property<std::size_t>("size");
 }
 
 void ExprGenerator::visit(CallNode &node)
 {
-    auto s = node.target->property("sym").to<const Sym*>();
-    auto t = s->property("type").to<const Type*>();
+    auto s = node.target->property<const Sym*>("sym");
+    auto t = s->property<const Type*>("type");
     //TODO above needs to be switched to TypeVisitor when id lookup is supported
 
     auto rs = c.assertSize(node.location(), t->returnType);

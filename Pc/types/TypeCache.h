@@ -9,6 +9,7 @@ class TypeCache
 {
 public:
     TypeCache();
+    ~TypeCache();
 
     const Type *insert(const Type &type);
 

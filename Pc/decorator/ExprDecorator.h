@@ -7,6 +7,7 @@
 
 class Context;
 class Type;
+class Node;
 
 class ExprDecorator : public Visitor
 {
@@ -15,6 +16,8 @@ public:
 
     virtual void visit(IdNode &node) override;
     virtual void visit(CallNode &node) override;
+
+    static void decorate(Context &c, const Type *expectedType, Node &node);
 
 private:
     Context &c;

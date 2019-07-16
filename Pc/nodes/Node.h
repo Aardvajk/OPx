@@ -1,6 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "framework/PropertyMap.h"
+
 #include "scanner/Location.h"
 
 #include <pcx/scoped_ptr.h>
@@ -21,13 +23,14 @@ public:
     virtual void accept(Visitor &v) = 0;
 
     void setProperty(const std::string &name, pcx::any value);
+    pcx::any getProperty(const std::string &name);
 
     Location location() const { return n; }
-    pcx::any property(const std::string &name) const;
+    template<typename T> T property(const std::string &name) const { return pm.get<T>(name); }
 
 private:
     Location n;
-    std::unordered_map<std::string, pcx::any> pm;
+    PropertyMap pm;
 };
 
 using NodePtr = pcx::scoped_ptr<Node>;

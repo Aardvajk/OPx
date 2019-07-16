@@ -11,8 +11,13 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "visitors/NameVisitors.h"
+
+#include "syms/Sym.h"
+
+#include "types/Type.h"
 
 #include <pcx/scoped_counter.h>
 #include <pcx/join_str.h>
@@ -39,22 +44,22 @@ void AstPrinter::visit(BlockNode &node)
     tab() << "}\n";
 }
 
-#include "syms/Sym.h"
-#include "types/Type.h"
-
 void AstPrinter::visit(IdNode &node)
 {
-    tab() << "id " << node.name << "\n";
+    tab() << "id " << node.name;
+
+    if(auto sp = node.getProperty("sym"))
+    {
+        auto s = sp.to<const Sym*>();
+        os << " -> " << s->fullname() << ":" << s->property<const Type*>("type")->text() << " [" << s << "]";
+    }
+
+    os << "\n";
 
     if(node.child)
     {
         auto g = pcx::scoped_counter(tc);
         node.child->accept(*this);
-    }
-
-    if(auto s = node.property("sym"))
-    {
-        std::cout << "^^^ " << s.to<const Sym*>()->fullname() << ":" << s.to<const Sym*>()->property("type").to<const Type*>()->text() << "\n";
     }
 }
 
@@ -184,6 +189,14 @@ void AstPrinter::visit(CallNode &node)
             p.accept(*this);
         }
     }
+}
+
+void AstPrinter::visit(ReturnNode &node)
+{
+    tab() << "return\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

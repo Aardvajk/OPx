@@ -15,6 +15,12 @@
 
 #include <fstream>
 
+template<typename T, typename... Args> void visit(NodePtr &node, Args&&... args)
+{
+    T v(std::forward<Args>(args)...);
+    node->accept(v);
+}
+
 int main(int argc, char *argv[])
 {
     Context c;
@@ -35,20 +41,16 @@ int main(int argc, char *argv[])
 
         auto n = Compiler::compile(c);
 
-        std::cout << banner("nodes");
-        AstPrinter ap(std::cout);
-        n->accept(ap);
+        visit<Decorator>(n, c);
 
-        Decorator dv(c);
-        n->accept(dv);
+        std::cout << banner("nodes");
+        visit<AstPrinter>(n, std::cout);
 
         std::cout << banner("symbols");
         SymPrinter::print(c.tree.root(), std::cout);
 
         std::cout << banner("generate");
-
-        Generator gv(c, std::cout);
-        n->accept(gv);
+        visit<Generator>(n, c, std::cout);
 
         if(true)
         {
@@ -58,8 +60,7 @@ int main(int argc, char *argv[])
                 throw Error("unable to create - ", argv[2]);
             }
 
-            Generator gv(c, os);
-            n->accept(gv);
+            visit<Generator>(n, c, os);
         }
 
         std::cout << banner();

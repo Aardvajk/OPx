@@ -43,6 +43,7 @@ HEADERS += \
     common/OpCode.h \
     framework/InputStream.h \
     framework/LoadBinaryFile.h \
+    framework/PropertyMap.h \
     scanner/Lexer.h \
     scanner/Location.h \
     scanner/Scanner.h \

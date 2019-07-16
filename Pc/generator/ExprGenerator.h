@@ -18,6 +18,7 @@ public:
     pcx::optional<std::size_t> size() const { return sz; }
 
     virtual void visit(IdNode &node) override;
+    virtual void visit(NullLiteralNode &node) override;
     virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(CallNode &node) override;

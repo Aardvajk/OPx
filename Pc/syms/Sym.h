@@ -1,6 +1,8 @@
 #ifndef SYM_H
 #define SYM_H
 
+#include "framework/PropertyMap.h"
+
 #include "scanner/Location.h"
 
 #include <pcx/any.h>
@@ -29,6 +31,7 @@ public:
     Sym *container();
 
     void setProperty(const std::string &name, pcx::any value);
+    pcx::any getProperty(const std::string &name) const;
 
     Type type() const { return t; }
     Location location() const { return n; }
@@ -42,7 +45,7 @@ public:
     std::vector<Sym*> children(){ return cs; }
     const std::vector<Sym*> children() const { return cs; }
 
-    pcx::any property(const std::string &name) const;
+    template<typename T> T property(const std::string &name) const { return pm.get<T>(name); }
 
     static const char *toString(Type v);
 
@@ -55,7 +58,7 @@ private:
     Sym *ps;
     std::vector<Sym*> cs;
 
-    std::unordered_map<std::string, pcx::any> pm;
+    PropertyMap pm;
 };
 
 #endif // SYM_H

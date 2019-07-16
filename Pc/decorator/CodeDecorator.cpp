@@ -6,9 +6,12 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "decorator/Decorator.h"
 #include "decorator/ExprDecorator.h"
+
+#include "types/Type.h"
 
 CodeDecorator::CodeDecorator(Context &c) : c(c)
 {
@@ -39,6 +42,10 @@ void CodeDecorator::visit(VarNode &node)
 
 void CodeDecorator::visit(ExprNode &node)
 {
-    ExprDecorator ed(c, nullptr);
-    node.expr->accept(ed);
+    ExprDecorator::decorate(c, nullptr, *node.expr);
+}
+
+void CodeDecorator::visit(ReturnNode &node)
+{
+    ExprDecorator::decorate(c, c.tree.current()->container()->property<const Type*>("type")->returnType, *node.expr);
 }
