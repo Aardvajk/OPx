@@ -42,8 +42,5 @@ void Transformer::visit(ScopeNode &node)
 
 void Transformer::visit(ExprNode &node)
 {
-    if(auto r = ExprTransformer::transform(c, node.expr))
-    {
-        node.expr = r;
-    }
+    node.expr = ExprTransformer::transform(c, node.expr);
 }

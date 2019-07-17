@@ -58,7 +58,7 @@ std::string Type::text() const
     return toString(this);
 }
 
-Type Type::makePrimary(unsigned ptr, const Sym *sym)
+Type Type::makePrimary(unsigned ptr, Sym *sym)
 {
     Type t;
 
@@ -68,7 +68,7 @@ Type Type::makePrimary(unsigned ptr, const Sym *sym)
     return t;
 }
 
-Type Type::makeFunction(unsigned ptr, const Type *returnType)
+Type Type::makeFunction(unsigned ptr, Type *returnType)
 {
     Type t;
 

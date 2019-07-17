@@ -17,7 +17,7 @@ TypeVisitor::TypeVisitor(Context &c) : c(c), r(nullptr)
 
 void TypeVisitor::visit(IdNode &node)
 {
-    r = node.property<const Sym*>("sym")->property<const Type*>("type");
+    r = node.property<const Sym*>("sym")->property<Type*>("type");
 }
 
 void TypeVisitor::visit(VarNode &node)
@@ -53,7 +53,7 @@ void TypeVisitor::visit(AddrOfNode &node)
     r = c.types.insert(t);
 }
 
-const Type *TypeVisitor::type(Context &c, Node *node)
+Type *TypeVisitor::type(Context &c, Node *node)
 {
     TypeVisitor tv(c);
     node->accept(tv);

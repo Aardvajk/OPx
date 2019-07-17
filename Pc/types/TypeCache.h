@@ -11,9 +11,9 @@ public:
     TypeCache();
     ~TypeCache();
 
-    const Type *insert(const Type &type);
+    Type *insert(const Type &type);
 
-    const Type *nullType() const;
+    Type *nullType();
 
 private:
     pcx::ptr_vector<Type> v;

@@ -15,11 +15,15 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
+#include <unordered_set>
+
 namespace
 {
 
-Sym *searchFunction(Location location, const std::vector<Sym*> &sv, const Type *expectedType)
+std::vector<Sym*> searchFunction(Location location, const std::vector<Sym*> &sv, const Type *expectedType)
 {
+    std::vector<Sym*> rs;
+
     for(auto s: sv)
     {
         if(s->type() != Sym::Type::Func)
@@ -29,11 +33,11 @@ Sym *searchFunction(Location location, const std::vector<Sym*> &sv, const Type *
 
         if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
         {
-            return s;
+            rs.push_back(s);
         }
     }
 
-    return nullptr;
+    return rs;
 }
 
 }
@@ -49,13 +53,33 @@ void ExprDecorator::visit(IdNode &node)
 
     if(expectedType && expectedType->function())
     {
-        auto s = searchFunction(node.location(), sv, expectedType);
-        if(!s)
+        std::unordered_set<Sym*> search;
+        for(auto &a: expectedType->args)
+        {
+            if(a->sym && a->sym->parent() != c.tree.root())
+            {
+                search.insert(a->sym->parent());
+            }
+        }
+
+        for(auto s: search)
+        {
+            SymFinder::find(SymFinder::Type::Local, s, &node, sv);
+        }
+
+        auto rs = searchFunction(node.location(), sv, expectedType);
+
+        if(rs.empty())
         {
             throw Error(node.location(), "no function matched - ", NameVisitors::prettyName(&node));
         }
 
-        node.setProperty("sym", s);
+        if(rs.size() > 1)
+        {
+            throw Error(node.location(), "ambigous reference - ", NameVisitors::prettyName(&node));
+        }
+
+        node.setProperty("sym", rs.front());
     }
     else
     {

@@ -14,6 +14,9 @@ ExprTransformer::ExprTransformer(Context &c) : c(c)
 
 void ExprTransformer::visit(AssignNode &node)
 {
+    node.target = ExprTransformer::transform(c, node.target);
+    node.expr = ExprTransformer::transform(c, node.expr);
+
     auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
     rn = cn;
 
@@ -26,5 +29,7 @@ NodePtr ExprTransformer::transform(Context &c, NodePtr &node)
     ExprTransformer et(c);
     node->accept(et);
 
-    return et.result();
+    auto r = et.result();
+
+    return r ? r : node;
 }

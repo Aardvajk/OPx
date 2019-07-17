@@ -13,7 +13,7 @@ TypeCache::~TypeCache()
 {
 }
 
-const Type *TypeCache::insert(const Type &type)
+Type *TypeCache::insert(const Type &type)
 {
     for(std::size_t i = 0; i < v.size(); ++i)
     {
@@ -27,7 +27,7 @@ const Type *TypeCache::insert(const Type &type)
     return v.back_ptr();
 }
 
-const Type *TypeCache::nullType() const
+Type *TypeCache::nullType()
 {
     return v.ptr(0);
 }

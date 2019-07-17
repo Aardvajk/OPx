@@ -16,14 +16,14 @@ public:
     std::string text() const;
     bool function() const { return returnType; }
 
-    static Type makePrimary(unsigned ptr, const Sym *sym);
-    static Type makeFunction(unsigned ptr, const Type *returnType);
+    static Type makePrimary(unsigned ptr, Sym *sym);
+    static Type makeFunction(unsigned ptr, Type *returnType);
 
     unsigned ptr;
-    const Sym *sym;
+    Sym *sym;
 
-    std::vector<const Type*> args;
-    const Type *returnType;
+    std::vector<Type*> args;
+    Type *returnType;
 
 private:
     Type();

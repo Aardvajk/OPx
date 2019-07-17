@@ -12,15 +12,15 @@ class TypeBuilder : public Visitor
 public:
     TypeBuilder(Context &c);
 
-    const Type *result() const { return r; }
+    Type *result(){ return r; }
 
     virtual void visit(TypeNode &node) override;
 
-    static const Type *type(Context &c, Node *node);
+    static Type *type(Context &c, Node *node);
 
 private:
     Context &c;
-    const Type *r;
+    Type *r;
 };
 
 #endif // TYPEBUILDER_H

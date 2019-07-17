@@ -41,7 +41,7 @@ void TypeBuilder::visit(TypeNode &node)
     }
 }
 
-const Type *TypeBuilder::type(Context &c, Node *node)
+Type *TypeBuilder::type(Context &c, Node *node)
 {
     TypeBuilder tb(c);
     node->accept(tb);
