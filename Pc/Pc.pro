@@ -56,6 +56,7 @@ SOURCES += \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
         transform/ExprTransformer.cpp \
+        transform/FuncTransformer.cpp \
         transform/Transformer.cpp \
         types/Type.cpp \
         types/TypeCache.cpp \
@@ -103,6 +104,7 @@ HEADERS += \
     syms/SymPrinter.h \
     syms/SymTree.h \
     transform/ExprTransformer.h \
+    transform/FuncTransformer.h \
     transform/Transformer.h \
     types/Type.h \
     types/TypeCache.h \

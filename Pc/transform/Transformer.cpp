@@ -5,10 +5,8 @@
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/FuncNode.h"
-#include "nodes/ScopeNode.h"
-#include "nodes/ExprNode.h"
 
-#include "transform/ExprTransformer.h"
+#include "transform/FuncTransformer.h"
 
 Transformer::Transformer(Context &c) : c(c)
 {
@@ -31,16 +29,7 @@ void Transformer::visit(FuncNode &node)
 {
     if(node.body)
     {
-        node.body->accept(*this);
+        FuncTransformer ft(c);
+        node.body->accept(ft);
     }
-}
-
-void Transformer::visit(ScopeNode &node)
-{
-    node.body->accept(*this);
-}
-
-void Transformer::visit(ExprNode &node)
-{
-    node.expr = ExprTransformer::transform(c, node.expr);
 }

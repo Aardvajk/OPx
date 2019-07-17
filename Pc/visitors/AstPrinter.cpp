@@ -32,6 +32,7 @@ AstPrinter::AstPrinter(std::ostream &os) : os(os), tc(0)
 
 void AstPrinter::visit(BlockNode &node)
 {
+    tab() << "block\n";
     tab() << "{\n";
 
     if(true)
@@ -91,6 +92,12 @@ void AstPrinter::visit(VarNode &node)
     }
 
     os << "\n";
+
+    if(node.value)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.value->accept(*this);
+    }
 }
 
 void AstPrinter::visit(FuncNode &node)

@@ -13,8 +13,6 @@ public:
     virtual void visit(BlockNode &node) override;
     virtual void visit(NamespaceNode &node) override;
     virtual void visit(FuncNode &node) override;
-    virtual void visit(ScopeNode &node) override;
-    virtual void visit(ExprNode &node) override;
 
 private:
     Context &c;

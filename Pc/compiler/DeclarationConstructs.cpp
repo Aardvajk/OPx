@@ -13,6 +13,7 @@
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/TypeConstructs.h"
+#include "compiler/ExprConstructs.h"
 
 namespace
 {
@@ -54,6 +55,11 @@ void varConstruct(Context &c, BlockNode *block, bool get)
     if(c.scanner.token().type() == Token::Type::Colon)
     {
         n->type = TypeConstructs::type(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Assign)
+    {
+        n->value = ExprConstructs::expr(c, true);
     }
 
     if(c.scanner.token().type() == Token::Type::Comma)
