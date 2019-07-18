@@ -8,10 +8,14 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 
+#include "visitors/TypeVisitor.h"
+#include "visitors/NameVisitors.h"
+
 #include "decorator/Decorator.h"
 #include "decorator/ExprDecorator.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 FuncDecorator::FuncDecorator(Context &c) : c(c)
 {
@@ -47,5 +51,12 @@ void FuncDecorator::visit(ExprNode &node)
 
 void FuncDecorator::visit(ReturnNode &node)
 {
-    ExprDecorator::decorate(c, c.tree.current()->container()->property<const Type*>("type")->returnType, *node.expr);
+    auto rt = c.tree.current()->container()->property<const Type*>("type")->returnType;
+
+    ExprDecorator::decorate(c, rt, *node.expr);
+
+    if(!TypeCompare::exact(TypeVisitor::type(c, node.expr.get()), rt))
+    {
+        throw Error(node.expr->location(), rt->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
+    }
 }

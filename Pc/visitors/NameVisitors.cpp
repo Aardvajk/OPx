@@ -1,5 +1,7 @@
 #include "NameVisitors.h"
 
+#include "scanner/Lexer.h"
+
 #include "nodes/IdNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/TypeNode.h"
@@ -68,9 +70,24 @@ void NameVisitors::PrettyName::visit(TypeNode &node)
     }
 }
 
+void NameVisitors::PrettyName::visit(NullLiteralNode &node)
+{
+    r += "null";
+}
+
 void NameVisitors::PrettyName::visit(IntLiteralNode &node)
 {
     r += pcx::str(node.value);
+}
+
+void NameVisitors::PrettyName::visit(CharLiteralNode &node)
+{
+    r += pcx::str("\'", Lexer::encodeString(std::string(1, node.value)), "\'");
+}
+
+void NameVisitors::PrettyName::visit(BoolLiteralNode &node)
+{
+    r += node.value ? "true" : "false";
 }
 
 std::string NameVisitors::prettyName(Node *node)

@@ -244,14 +244,14 @@ std::string Lexer::decodeString(const std::string &text)
 
     for(std::size_t i = 0; i < text.length(); ++i)
     {
-        auto ch = text[i];
+        Source::Char ch = static_cast<Source::Char>(text[i]);
 
         if(ch == '\\' && i < text.length() - 1)
         {
             ch = translateEscapeChar(text[++i]);
         }
 
-        s += ch;
+        s += static_cast<char>(ch);
     }
 
     return s;
