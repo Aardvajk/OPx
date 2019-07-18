@@ -1,4 +1,4 @@
-#include "CodeDecorator.h"
+#include "FuncDecorator.h"
 
 #include "application/Context.h"
 
@@ -13,11 +13,11 @@
 
 #include "types/Type.h"
 
-CodeDecorator::CodeDecorator(Context &c) : c(c)
+FuncDecorator::FuncDecorator(Context &c) : c(c)
 {
 }
 
-void CodeDecorator::visit(BlockNode &node)
+void FuncDecorator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
@@ -25,7 +25,7 @@ void CodeDecorator::visit(BlockNode &node)
     }
 }
 
-void CodeDecorator::visit(ScopeNode &node)
+void FuncDecorator::visit(ScopeNode &node)
 {
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), { }));
     node.setProperty("sym", sym);
@@ -34,18 +34,18 @@ void CodeDecorator::visit(ScopeNode &node)
     node.body->accept(*this);
 }
 
-void CodeDecorator::visit(VarNode &node)
+void FuncDecorator::visit(VarNode &node)
 {
     Decorator d(c);
     node.accept(d);
 }
 
-void CodeDecorator::visit(ExprNode &node)
+void FuncDecorator::visit(ExprNode &node)
 {
     ExprDecorator::decorate(c, nullptr, *node.expr);
 }
 
-void CodeDecorator::visit(ReturnNode &node)
+void FuncDecorator::visit(ReturnNode &node)
 {
     ExprDecorator::decorate(c, c.tree.current()->container()->property<const Type*>("type")->returnType, *node.expr);
 }

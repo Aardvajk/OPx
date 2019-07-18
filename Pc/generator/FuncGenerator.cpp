@@ -1,4 +1,4 @@
-#include "CodeGenerator.h"
+#include "FuncGenerator.h"
 
 #include "application/Context.h"
 
@@ -9,11 +9,11 @@
 
 #include "generator/ExprGenerator.h"
 
-CodeGenerator::CodeGenerator(Context &c, std::ostream &os) : c(c), os(os)
+FuncGenerator::FuncGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
 
-void CodeGenerator::visit(BlockNode &node)
+void FuncGenerator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
@@ -21,18 +21,18 @@ void CodeGenerator::visit(BlockNode &node)
     }
 }
 
-void CodeGenerator::visit(ScopeNode &node)
+void FuncGenerator::visit(ScopeNode &node)
 {
     node.body->accept(*this);
 }
 
-void CodeGenerator::visit(ExprNode &node)
+void FuncGenerator::visit(ExprNode &node)
 {
     auto sz = ExprGenerator::generate(c, os, *node.expr);
     os << "    pop " << sz << ";\n";
 }
 
-void CodeGenerator::visit(ReturnNode &node)
+void FuncGenerator::visit(ReturnNode &node)
 {
     auto sz = ExprGenerator::generate(c, os, *node.expr);
     os << "    push &\"@ret\";\n";

@@ -15,6 +15,6 @@ void BlockNode::push_back(Node *node)
 
 void BlockNode::insert(std::size_t index, Node *node)
 {
-    nodes.insert(nodes.begin() + index, node);
+    nodes.insert(nodes.begin() + static_cast<long long>(index), node);
     node->bn = this;
 }

@@ -18,7 +18,7 @@
 #include "types/TypeBuilder.h"
 #include "types/TypeCompare.h"
 
-#include "decorator/CodeDecorator.h"
+#include "decorator/FuncDecorator.h"
 
 namespace
 {
@@ -154,7 +154,7 @@ void Decorator::visit(FuncNode &node)
             a->accept(*this);
         }
 
-        CodeDecorator cd(c);
-        node.body->accept(cd);
+        FuncDecorator fd(c);
+        node.body->accept(fd);
     }
 }

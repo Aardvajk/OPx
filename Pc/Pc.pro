@@ -27,12 +27,12 @@ SOURCES += \
         compiler/DeclarationConstructs.cpp \
         compiler/ExprConstructs.cpp \
         compiler/TypeConstructs.cpp \
-        decorator/CodeDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/ExprDecorator.cpp \
+        decorator/FuncDecorator.cpp \
         generator/AddrGenerator.cpp \
-        generator/CodeGenerator.cpp \
         generator/ExprGenerator.cpp \
+        generator/FuncGenerator.cpp \
         generator/Generator.cpp \
         generator/LocalsGenerator.cpp \
         main.cpp \
@@ -76,12 +76,12 @@ HEADERS += \
     compiler/DeclarationConstructs.h \
     compiler/ExprConstructs.h \
     compiler/TypeConstructs.h \
-    decorator/CodeDecorator.h \
     decorator/Decorator.h \
     decorator/ExprDecorator.h \
+    decorator/FuncDecorator.h \
     generator/AddrGenerator.h \
-    generator/CodeGenerator.h \
     generator/ExprGenerator.h \
+    generator/FuncGenerator.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     nodes/AddrOfNode.h \

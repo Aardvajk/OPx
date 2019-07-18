@@ -1,14 +1,14 @@
-#ifndef CODEDECORATOR_H
-#define CODEDECORATOR_H
+#ifndef FUNCDECORATOR_H
+#define FUNCDECORATOR_H
 
 #include "visitors/Visitor.h"
 
 class Context;
 
-class CodeDecorator : public Visitor
+class FuncDecorator : public Visitor
 {
 public:
-    explicit CodeDecorator(Context &c);
+    explicit FuncDecorator(Context &c);
 
     virtual void visit(BlockNode &node) override;
     virtual void visit(ScopeNode &node) override;
@@ -20,4 +20,4 @@ private:
     Context &c;
 };
 
-#endif // CODEDECORATOR_H
+#endif // FUNCDECORATOR_H

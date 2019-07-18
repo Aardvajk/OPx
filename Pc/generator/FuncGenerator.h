@@ -1,5 +1,5 @@
-#ifndef CODEGENERATOR_H
-#define CODEGENERATOR_H
+#ifndef FUNCGENERATOR_H
+#define FUNCGENERATOR_H
 
 #include "visitors/Visitor.h"
 
@@ -7,10 +7,10 @@
 
 class Context;
 
-class CodeGenerator : public Visitor
+class FuncGenerator : public Visitor
 {
 public:
-    CodeGenerator(Context &c, std::ostream &os);
+    FuncGenerator(Context &c, std::ostream &os);
 
     virtual void visit(BlockNode &node) override;
     virtual void visit(ScopeNode &node) override;
@@ -22,4 +22,4 @@ private:
     std::ostream &os;
 };
 
-#endif // CODEGENERATOR_H
+#endif // FUNCGENERATOR_H
