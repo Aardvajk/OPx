@@ -40,7 +40,7 @@ void AstPrinter::visit(BlockNode &node)
         auto g = pcx::scoped_counter(tc);
         for(auto &n: node.nodes)
         {
-            n.accept(*this);
+            n->accept(*this);
         }
     }
 
@@ -109,7 +109,7 @@ void AstPrinter::visit(FuncNode &node)
     std::vector<std::string> av;
     for(auto &a: node.args)
     {
-        av.push_back(NameVisitors::prettyName(&a));
+        av.push_back(NameVisitors::prettyName(a.get()));
     }
 
     os << pcx::join_str(av, ", ") << ")";
@@ -148,7 +148,7 @@ void AstPrinter::visit(TypeNode &node)
         for(auto &a: node.args)
         {
             auto g = pcx::scoped_counter(tc);
-            a.accept(*this);
+            a->accept(*this);
         }
     }
     else
@@ -195,7 +195,7 @@ void AstPrinter::visit(CallNode &node)
         auto g = pcx::scoped_counter(tc);
         for(auto &p: node.params)
         {
-            p.accept(*this);
+            p->accept(*this);
         }
     }
 }

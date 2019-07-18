@@ -72,7 +72,7 @@ void Decorator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
-        n.accept(*this);
+        n->accept(*this);
     }
 }
 
@@ -115,7 +115,7 @@ void Decorator::visit(FuncNode &node)
     auto t = Type::makeFunction(0, node.type ? TypeBuilder::type(c, node.type.get()) : c.types.nullType());
     for(auto &a: node.args)
     {
-        t.args.push_back(TypeVisitor::type(c, &a));
+        t.args.push_back(TypeVisitor::type(c, a.get()));
     }
 
     auto type = c.types.insert(t);
@@ -151,7 +151,7 @@ void Decorator::visit(FuncNode &node)
 
         for(auto &a: node.args)
         {
-            a.accept(*this);
+            a->accept(*this);
         }
 
         CodeDecorator cd(c);

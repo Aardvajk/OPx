@@ -5,10 +5,10 @@
 
 #include "scanner/Location.h"
 
-#include <pcx/scoped_ptr.h>
-#include <pcx/ptr_vector.h>
+#include <pcx/shared_ptr.h>
 #include <pcx/any.h>
 
+#include <vector>
 #include <string>
 #include <unordered_map>
 
@@ -39,7 +39,7 @@ private:
     PropertyMap pm;
 };
 
-using NodePtr = pcx::scoped_ptr<Node>;
-using NodeList = pcx::ptr_vector<Node>;
+using NodePtr = pcx::shared_ptr<Node>;
+using NodeList = std::vector<pcx::shared_ptr<Node> >;
 
 #endif // NODE_H

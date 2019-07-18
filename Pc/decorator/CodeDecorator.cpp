@@ -21,7 +21,7 @@ void CodeDecorator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
-        n.accept(*this);
+        n->accept(*this);
     }
 }
 

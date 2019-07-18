@@ -20,8 +20,8 @@ void ExprTransformer::visit(AssignNode &node)
     auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
     rn = cn;
 
-    cn->params.push_back(new AddrOfNode(node.target->location(), node.target.release()));
-    cn->params.push_back(node.expr.release());
+    cn->params.push_back(new AddrOfNode(node.target->location(), node.target));
+    cn->params.push_back(node.expr);
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)

@@ -64,7 +64,7 @@ void ExprGenerator::visit(CallNode &node)
 
     for(auto &p: node.params)
     {
-        ExprGenerator::generate(c, os, p);
+        ExprGenerator::generate(c, os, *p.get());
     }
 
     ExprGenerator::generate(c, os, *node.target);

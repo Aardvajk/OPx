@@ -22,7 +22,7 @@ void TypeBuilder::visit(TypeNode &node)
         auto t = Type::makeFunction(node.ptr, node.returnType ? type(c, node.returnType.get()) : c.types.nullType());
         for(auto &a: node.args)
         {
-            t.args.push_back(type(c, &a));
+            t.args.push_back(type(c, a.get()));
         }
 
         r = c.types.insert(t);

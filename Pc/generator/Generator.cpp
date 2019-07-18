@@ -23,7 +23,7 @@ void Generator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
-        n.accept(*this);
+        n->accept(*this);
     }
 }
 
@@ -55,8 +55,8 @@ void Generator::visit(FuncNode &node)
 
         for(auto &a: node.args)
         {
-            auto sym = a.property<const Sym*>("sym");
-            os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a.location(), sym->property<const Type*>("type")) << ";\n";
+            auto sym = a->property<const Sym*>("sym");
+            os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a->location(), sym->property<const Type*>("type")) << ";\n";
         }
 
         LocalsGenerator lg(c, os);

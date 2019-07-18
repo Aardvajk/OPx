@@ -21,7 +21,7 @@ void FuncTransformer::visit(BlockNode &node)
     for(std::size_t i = 0; i < node.nodes.size(); ++i)
     {
         index = i;
-        node.nodes[i].accept(*this);
+        node.nodes[i]->accept(*this);
     }
 }
 
@@ -36,7 +36,7 @@ void FuncTransformer::visit(VarNode &node)
         en->expr = cn;
 
         cn->params.push_back(new AddrOfNode(node.location(), new IdNode(node.location(), NameVisitors::lastIdOfName(node.name.get()))));
-        cn->params.push_back(node.value.release());
+        cn->params.push_back(node.value);
     }
 }
 

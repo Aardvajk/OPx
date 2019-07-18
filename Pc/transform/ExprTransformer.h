@@ -12,7 +12,7 @@ class ExprTransformer : public Visitor
 public:
     explicit ExprTransformer(Context &c);
 
-    NodePtr result(){ return NodePtr(rn.release()); }
+    NodePtr result(){ return rn; }
 
     virtual void visit(AssignNode &node) override;
 

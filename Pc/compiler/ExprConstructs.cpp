@@ -50,7 +50,7 @@ NodePtr primary(Context &c, bool get)
 
 void params(Context &c, NodeList &container, bool get)
 {
-    container.push_back(expression(c, get).release());
+    container.push_back(expression(c, get));
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {

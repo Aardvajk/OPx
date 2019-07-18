@@ -101,13 +101,13 @@ void ExprDecorator::visit(CallNode &node)
 {
     for(auto &p: node.params)
     {
-        p.accept(*this);
+        p->accept(*this);
     }
 
     auto t = Type::makeFunction(0, c.types.nullType());
     for(auto &p: node.params)
     {
-        t.args.push_back(TypeVisitor::type(c, &p));
+        t.args.push_back(TypeVisitor::type(c, p.get()));
     }
 
     ExprDecorator ed(c, c.types.insert(t));

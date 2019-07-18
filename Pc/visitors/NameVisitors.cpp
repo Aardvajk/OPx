@@ -46,7 +46,7 @@ void NameVisitors::PrettyName::visit(TypeNode &node)
         for(auto &a: node.args)
         {
             PrettyName p;
-            a.accept(p);
+            a->accept(p);
 
             v.push_back(p.result());
         }
