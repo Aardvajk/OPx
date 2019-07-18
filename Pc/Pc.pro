@@ -26,6 +26,7 @@ SOURCES += \
         compiler/Compiler.cpp \
         compiler/DeclarationConstructs.cpp \
         compiler/ExprConstructs.cpp \
+        compiler/IncludeConstructs.cpp \
         compiler/TypeConstructs.cpp \
         decorator/Decorator.cpp \
         decorator/ExprDecorator.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
     compiler/Compiler.h \
     compiler/DeclarationConstructs.h \
     compiler/ExprConstructs.h \
+    compiler/IncludeConstructs.h \
     compiler/TypeConstructs.h \
     decorator/Decorator.h \
     decorator/ExprDecorator.h \
@@ -117,4 +119,5 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../workspace/script.pc
+    ../workspace/script.pc \
+    ../workspace/stdlib.ph

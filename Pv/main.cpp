@@ -28,6 +28,11 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<std::size_t>();
         std::cout << "size " << i << "\n";
     }
+    else if(code == 4)
+    {
+        auto i = sr.get<char>();
+        std::cout << "bool " << (i ? "true" : "false") << "\n";
+    }
     else if(code == 10)
     {
         auto i = sr.get<std::size_t>();
