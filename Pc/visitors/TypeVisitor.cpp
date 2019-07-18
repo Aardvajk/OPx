@@ -40,6 +40,11 @@ void TypeVisitor::visit(IntLiteralNode &node)
     r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("int")));
 }
 
+void TypeVisitor::visit(BoolLiteralNode &node)
+{
+    r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("bool")));
+}
+
 void TypeVisitor::visit(CallNode &node)
 {
     r = TypeVisitor::type(c, node.target.get())->returnType;

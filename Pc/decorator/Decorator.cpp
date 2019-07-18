@@ -19,6 +19,7 @@
 #include "types/TypeCompare.h"
 
 #include "decorator/FuncDecorator.h"
+#include "decorator/ExprDecorator.h"
 
 namespace
 {
@@ -97,7 +98,25 @@ void Decorator::visit(ClassNode &node)
 
 void Decorator::visit(VarNode &node)
 {
-    if(!node.type)
+    Type *type = nullptr;
+
+    if(node.type)
+    {
+        type = TypeBuilder::type(c, node.type.get());
+    }
+
+    if(node.value)
+    {
+        ExprDecorator ed(c, type);
+        node.value->accept(ed);
+
+        if(!type)
+        {
+            type = TypeVisitor::type(c, node.value.get());
+        }
+    }
+
+    if(!type)
     {
         throw Error(node.location(), "type missing - ", NameVisitors::prettyName(node.name.get()));
     }
@@ -105,7 +124,7 @@ void Decorator::visit(VarNode &node)
     auto name = c.assertSimpleNameUnique(node.name.get());
 
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.name->location(), name));
-    sym->setProperty("type", TypeBuilder::type(c, node.type.get()));
+    sym->setProperty("type", type);
 
     node.setProperty("sym", sym);
 }

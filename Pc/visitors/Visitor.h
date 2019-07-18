@@ -12,6 +12,7 @@ class TypeNode;
 class NullLiteralNode;
 class CharLiteralNode;
 class IntLiteralNode;
+class BoolLiteralNode;
 class ExprNode;
 class CallNode;
 class ReturnNode;
@@ -34,6 +35,7 @@ public:
     virtual void visit(NullLiteralNode &node);
     virtual void visit(CharLiteralNode &node);
     virtual void visit(IntLiteralNode &node);
+    virtual void visit(BoolLiteralNode &node);
     virtual void visit(ExprNode &node);
     virtual void visit(CallNode &node);
     virtual void visit(ReturnNode &node);

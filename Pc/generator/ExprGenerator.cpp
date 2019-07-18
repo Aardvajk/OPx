@@ -55,6 +55,12 @@ void ExprGenerator::visit(IntLiteralNode &node)
     sz = c.tree.root()->child("std")->child("int")->property<std::size_t>("size");
 }
 
+void ExprGenerator::visit(BoolLiteralNode &node)
+{
+    os << "    push char(" << (node.value ? 1 : 0) << ");\n";
+    sz = c.tree.root()->child("std")->child("bool")->property<std::size_t>("size");
+}
+
 void ExprGenerator::visit(CallNode &node)
 {
     auto t = TypeVisitor::type(c, node.target.get());

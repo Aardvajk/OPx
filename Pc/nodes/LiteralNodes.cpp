@@ -16,3 +16,8 @@ void IntLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+void BoolLiteralNode::accept(Visitor &v)
+{
+    v.visit(*this);
+}
