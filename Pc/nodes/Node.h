@@ -13,6 +13,7 @@
 #include <unordered_map>
 
 class Visitor;
+class BlockNode;
 
 class Node
 {
@@ -26,10 +27,15 @@ public:
     pcx::any getProperty(const std::string &name){ return pm[name]; }
 
     Location location() const { return n; }
+    BlockNode *block() const { return bn; }
+
     template<typename T> T property(const std::string &name) const { return pm.get<T>(name); }
 
 private:
+    friend class BlockNode;
+
     Location n;
+    BlockNode *bn;
     PropertyMap pm;
 };
 

@@ -6,3 +6,15 @@ void BlockNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+void BlockNode::push_back(Node *node)
+{
+    nodes.push_back(node);
+    node->bn = this;
+}
+
+void BlockNode::insert(std::size_t index, Node *node)
+{
+    nodes.insert(nodes.begin() + index, node);
+    node->bn = this;
+}

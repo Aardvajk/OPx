@@ -71,12 +71,12 @@ void ExprDecorator::visit(IdNode &node)
 
         if(rs.empty())
         {
-            throw Error(node.location(), "no function matched - ", NameVisitors::prettyName(&node));
+            throw Error(node.location(), "no function matched - ", NameVisitors::prettyName(&node), expectedType->text());
         }
 
         if(rs.size() > 1)
         {
-            throw Error(node.location(), "ambigous reference - ", NameVisitors::prettyName(&node));
+            throw Error(node.location(), "ambigous reference - ", NameVisitors::prettyName(&node), expectedType->text());
         }
 
         node.setProperty("sym", rs.front());

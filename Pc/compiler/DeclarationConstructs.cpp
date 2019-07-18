@@ -23,7 +23,7 @@ void namespaceConstruct(Context &c, BlockNode *block, bool get)
     auto nn = CommonConstructs::name(c, get);
 
     auto n = new NamespaceNode(nn->location(), nn);
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     n->body = CommonConstructs::scopeContents(c, n->location(), false);
 }
@@ -33,7 +33,7 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     auto nn = CommonConstructs::name(c, get);
 
     auto n = new ClassNode(nn->location(), nn);
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
@@ -50,7 +50,7 @@ void varConstruct(Context &c, BlockNode *block, bool get)
     auto nn = CommonConstructs::name(c, get);
 
     auto n = new VarNode(nn->location(), nn);
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     if(c.scanner.token().type() == Token::Type::Colon)
     {
@@ -100,7 +100,7 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
     auto nn = CommonConstructs::extendedName(c, get);
 
     auto n = new FuncNode(nn->location(), nn);
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     c.scanner.consume(Token::Type::LeftParen, false);
     if(c.scanner.token().type() != Token::Type::RightParen)

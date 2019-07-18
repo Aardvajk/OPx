@@ -3,6 +3,8 @@
 
 #include "visitors/Visitor.h"
 
+#include <cstdlib>
+
 class Context;
 
 class FuncTransformer : public Visitor
@@ -17,6 +19,7 @@ public:
 
 private:
     Context &c;
+    std::size_t index;
 };
 
 #endif // FUNCTRANSFORMER_H

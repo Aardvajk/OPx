@@ -19,7 +19,7 @@ void returnConstruct(Context &c, BlockNode *block, bool get)
     auto tok = c.scanner.match(Token::Type::RwReturn, get);
 
     auto n = new ReturnNode(tok.location());
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     c.scanner.next(true);
     if(c.scanner.token().type() != Token::Type::Semicolon)
@@ -39,7 +39,7 @@ void scopeConstruct(Context &c, BlockNode *block, bool get)
     auto tok = c.scanner.match(Token::Type::LeftBrace, get);
 
     auto n = new ScopeNode(tok.location());
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     n->body = CommonConstructs::scopeContents(c, tok.location(), false);
 }
@@ -49,7 +49,7 @@ void exprConstruct(Context &c, BlockNode *block, bool get)
     auto ex = ExprConstructs::expr(c, get);
 
     auto n = new ExprNode(ex->location(), ex);
-    block->nodes.push_back(n);
+    block->push_back(n);
 
     c.scanner.consume(Token::Type::Semicolon, false);
 }

@@ -10,6 +10,9 @@ public:
 
     virtual void accept(Visitor &v) override;
 
+    void push_back(Node *node);
+    void insert(std::size_t index, Node *node);
+
     NodeList nodes;
 };
 
