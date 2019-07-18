@@ -12,8 +12,11 @@
 
 #include "types/Type.h"
 
+#include "visitors/NameVisitors.h"
+
 #include "generator/LocalsGenerator.h"
 #include "generator/FuncGenerator.h"
+#include "generator/ByteListGenerator.h"
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -39,7 +42,22 @@ void Generator::visit(ClassNode &node)
 void Generator::visit(VarNode &node)
 {
     auto sym = node.property<const Sym*>("sym");
-    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), sym->property<const Type*>("type")) << ";\n";
+    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), sym->property<const Type*>("type"));
+
+    if(node.value)
+    {
+        os << " = ";
+
+        ByteListGenerator bg(c, os);
+        node.value->accept(bg);
+
+        if(!bg.result())
+        {
+            throw Error(node.value->location(), "invalid static initialiser - ", NameVisitors::prettyName(node.value.get()));
+        }
+    }
+
+    os << ";\n";
 }
 
 void Generator::visit(FuncNode &node)

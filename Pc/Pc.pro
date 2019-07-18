@@ -32,6 +32,7 @@ SOURCES += \
         decorator/ExprDecorator.cpp \
         decorator/FuncDecorator.cpp \
         generator/AddrGenerator.cpp \
+        generator/ByteListGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/FuncGenerator.cpp \
         generator/Generator.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     decorator/ExprDecorator.h \
     decorator/FuncDecorator.h \
     generator/AddrGenerator.h \
+    generator/ByteListGenerator.h \
     generator/ExprGenerator.h \
     generator/FuncGenerator.h \
     generator/Generator.h \
