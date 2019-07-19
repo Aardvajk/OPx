@@ -27,6 +27,8 @@ public:
     SourceList sources;
     Scanner scanner;
 
+    std::vector<Sym::Type> containers;
+
     SymTree tree;
     TypeCache types;
 };

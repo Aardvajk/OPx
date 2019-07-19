@@ -10,15 +10,7 @@
 #include "compiler/DeclarationConstructs.h"
 #include "compiler/CodeConstructs.h"
 
-namespace
-{
-
-void codeConstruct(Context &c, BlockNode *block, bool get)
-{
-    CodeConstructs::entity(c, block, get);
-}
-
-}
+#include <pcx/scoped_push.h>
 
 void Compiler::construct(Context &c, BlockNode *block, bool get)
 {
@@ -32,7 +24,7 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwVar:
         case Token::Type::RwFunc: DeclarationConstructs::entity(c, block, false); break;
 
-        default: codeConstruct(c, block, false);
+        default: CodeConstructs::entity(c, block, false);
     }
 }
 
@@ -40,6 +32,8 @@ NodePtr Compiler::compile(Context &c)
 {
     auto block = new BlockNode(Location());
     NodePtr n(block);
+
+    auto cg = pcx::scoped_push(c.containers, Sym::Type::Namespace);
 
     c.scanner.next(true);
     while(c.scanner.token().type() != Token::Type::Eof)

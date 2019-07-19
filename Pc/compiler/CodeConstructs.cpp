@@ -59,6 +59,11 @@ void exprConstruct(Context &c, BlockNode *block, bool get)
 void CodeConstructs::entity(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.next(get);
+    if(c.containers.back() != Sym::Type::Func)
+    {
+        throw Error(tok.location(), "declaration expected - ", tok.text());
+    }
+
     switch(tok.type())
     {
         case Token::Type::RwReturn: returnConstruct(c, block, false); break;

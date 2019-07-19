@@ -27,9 +27,9 @@ std::vector<Sym*> searchFunction(Location location, const std::vector<Sym*> &sv,
 
     for(auto s: sv)
     {
-        if(s->type() != Sym::Type::Func)
+        if(!s->property<const Type*>("type")->function())
         {
-            throw Error(location, "function expected - ", s->fullname());
+            throw Error(location, "callable expected - ", s->fullname());
         }
 
         if(TypeCompare::args(expectedType, s->property<const Type*>("type")))

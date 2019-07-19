@@ -11,9 +11,13 @@
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
 
+#include "visitors/NameVisitors.h"
+
 #include "compiler/CommonConstructs.h"
 #include "compiler/TypeConstructs.h"
 #include "compiler/ExprConstructs.h"
+
+#include <pcx/scoped_push.h>
 
 namespace
 {
@@ -22,9 +26,15 @@ void namespaceConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = CommonConstructs::name(c, get);
 
+    if(c.containers.back() != Sym::Type::Namespace)
+    {
+        throw Error(nn->location(), "invalid namespace - ", NameVisitors::prettyName(nn.get()));
+    }
+
     auto n = new NamespaceNode(nn->location(), nn);
     block->push_back(n);
 
+    auto cg = pcx::scoped_push(c.containers, Sym::Type::Namespace);
     n->body = CommonConstructs::scopeContents(c, n->location(), false);
 }
 
@@ -32,11 +42,17 @@ void classConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = CommonConstructs::name(c, get);
 
+    if(c.containers.back() == Sym::Type::Func)
+    {
+        throw Error(nn->location(), "invalid class - ", NameVisitors::prettyName(nn.get()));
+    }
+
     auto n = new ClassNode(nn->location(), nn);
     block->push_back(n);
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
+        auto cg = pcx::scoped_push(c.containers, Sym::Type::Class);
         n->body = CommonConstructs::scopeContents(c, n->location(), false);
     }
     else
@@ -99,6 +115,11 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = CommonConstructs::extendedName(c, get);
 
+    if(c.containers.back() == Sym::Type::Func)
+    {
+        throw Error(nn->location(), "invalid function - ", NameVisitors::prettyName(nn.get()));
+    }
+
     auto n = new FuncNode(nn->location(), nn);
     block->push_back(n);
 
@@ -117,6 +138,7 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
+        auto cg = pcx::scoped_push(c.containers, Sym::Type::Func);
         n->body = CommonConstructs::scopeContents(c, n->location(), false);
     }
     else
