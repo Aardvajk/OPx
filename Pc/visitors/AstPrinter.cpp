@@ -91,9 +91,10 @@ void AstPrinter::visit(VarNode &node)
         os << ":" << NameVisitors::prettyName(node.type.get());
     }
 
-    if(node.getProperty("sym"))
+    if(auto s = node.getProperty("sym"))
     {
-        os << " -> " << node.property<const Sym*>("sym")->fullname();
+        auto sym = s.to<const Sym*>();
+        os << " -> " << sym->fullname() << ":" << sym->property<const Type*>("type")->text();
     }
 
     os << "\n";

@@ -31,11 +31,11 @@ TypeNodePtr primary(Context &c, bool get)
 
     TypeNodePtr n(new TypeNode(tok.location()));
 
-    if(tok.type() == Token::Type::RwFunc)
+    if(tok.type() == Token::Type::LeftParen)
     {
         n->function = true;
 
-        c.scanner.consume(Token::Type::LeftParen, true);
+        c.scanner.next(true);
         if(c.scanner.token().type() != Token::Type::RightParen)
         {
             arg(c, n->args, false);
