@@ -1,5 +1,7 @@
 #include "FuncTransformer.h"
 
+#include "application/Context.h"
+
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/VarNode.h"
@@ -11,6 +13,8 @@
 #include "visitors/NameVisitors.h"
 
 #include "transform/ExprTransformer.h"
+
+#include "decorator/ExprDecorator.h"
 
 FuncTransformer::FuncTransformer(Context &c) : c(c), index(0)
 {
@@ -35,13 +39,16 @@ void FuncTransformer::visit(VarNode &node)
         auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
         en->expr = cn;
 
-        cn->params.push_back(new AddrOfNode(node.location(), new IdNode(node.location(), NameVisitors::lastIdOfName(node.name.get()))));
+        cn->params.push_back(new AddrOfNode(node.location(), node.name));
         cn->params.push_back(node.value);
+
+        ExprDecorator::decorate(c, nullptr, *cn);
     }
 }
 
 void FuncTransformer::visit(ScopeNode &node)
 {
+    auto g = c.tree.open(node.property<Sym*>("sym"));
     node.body->accept(*this);
 }
 

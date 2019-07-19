@@ -8,6 +8,8 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 
+#include "decorator/ExprDecorator.h"
+
 ExprTransformer::ExprTransformer(Context &c) : c(c)
 {
 }
@@ -22,6 +24,8 @@ void ExprTransformer::visit(AssignNode &node)
 
     cn->params.push_back(new AddrOfNode(node.target->location(), node.target));
     cn->params.push_back(node.expr);
+
+    ExprDecorator::decorate(c, nullptr, *cn);
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)

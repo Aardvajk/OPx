@@ -46,15 +46,14 @@ int main(int argc, char *argv[])
         std::cout << banner("nodes");
         visit<AstPrinter>(n, std::cout);
 
-        visit<Transformer>(n, c);
-
-        std::cout << banner("transformed nodes");
-        visit<AstPrinter>(n, std::cout);
-
-
         visit<Decorator>(n, c);
 
         std::cout << banner("decorated nodes");
+        visit<AstPrinter>(n, std::cout);
+
+        visit<Transformer>(n, c);
+
+        std::cout << banner("transformed nodes");
         visit<AstPrinter>(n, std::cout);
 
         std::cout << banner("symbols");

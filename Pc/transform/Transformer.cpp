@@ -22,6 +22,7 @@ void Transformer::visit(BlockNode &node)
 
 void Transformer::visit(NamespaceNode &node)
 {
+    auto g = c.tree.open(node.property<Sym*>("sym"));
     node.body->accept(*this);
 }
 
@@ -29,6 +30,8 @@ void Transformer::visit(FuncNode &node)
 {
     if(node.body)
     {
+        auto g = c.tree.open(node.property<Sym*>("sym"));
+
         FuncTransformer ft(c);
         node.body->accept(ft);
     }

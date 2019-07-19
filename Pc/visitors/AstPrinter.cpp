@@ -91,6 +91,11 @@ void AstPrinter::visit(VarNode &node)
         os << ":" << NameVisitors::prettyName(node.type.get());
     }
 
+    if(node.getProperty("sym"))
+    {
+        os << " -> " << node.property<const Sym*>("sym")->fullname();
+    }
+
     os << "\n";
 
     if(node.value)
@@ -117,6 +122,11 @@ void AstPrinter::visit(FuncNode &node)
     if(node.type)
     {
         os << ":" << NameVisitors::prettyName(node.type.get());
+    }
+
+    if(node.getProperty("sym"))
+    {
+        os << " -> " << node.property<const Sym*>("sym")->fullname();
     }
 
     os << "\n";
