@@ -7,6 +7,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -116,6 +117,12 @@ void ExprDecorator::visit(CallNode &node)
 
 void ExprDecorator::visit(AddrOfNode &node)
 {
+    node.expr->accept(*this);
+}
+
+void ExprDecorator::visit(AssignNode &node)
+{
+    node.target->accept(*this);
     node.expr->accept(*this);
 }
 

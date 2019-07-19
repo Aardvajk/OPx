@@ -10,6 +10,10 @@
 
 #include "decorator/ExprDecorator.h"
 
+#include "types/Type.h"
+
+#include "visitors/TypeVisitor.h"
+
 ExprTransformer::ExprTransformer(Context &c) : c(c)
 {
 }
@@ -19,13 +23,16 @@ void ExprTransformer::visit(AssignNode &node)
     node.target = ExprTransformer::transform(c, node.target);
     node.expr = ExprTransformer::transform(c, node.expr);
 
-    auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
-    rn = cn;
+    if(!TypeVisitor::type(c, node.target.get())->primitive())
+    {
+        auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
+        rn = cn;
 
-    cn->params.push_back(new AddrOfNode(node.target->location(), node.target));
-    cn->params.push_back(node.expr);
+        cn->params.push_back(new AddrOfNode(node.target->location(), node.target));
+        cn->params.push_back(node.expr);
 
-    ExprDecorator::decorate(c, nullptr, *cn);
+        ExprDecorator::decorate(c, nullptr, *cn);
+    }
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)
@@ -33,7 +40,5 @@ NodePtr ExprTransformer::transform(Context &c, NodePtr &node)
     ExprTransformer et(c);
     node->accept(et);
 
-    auto r = et.result();
-
-    return r ? r : node;
+    return et.result() ? et.result() : node;
 }

@@ -13,14 +13,29 @@
 
 #include <fstream>
 
+namespace
+{
+
+Sym *primitive(const std::string &name, std::size_t size)
+{
+    auto s = new Sym(Sym::Type::Class, {  }, name);
+
+    s->setProperty("size", size);
+    s->setProperty("primitive", true);
+
+    return s;
+}
+
+}
+
 Context::Context() : scanner(Lexer::Mode::Pc)
 {
     auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
-    ns->add(new Sym(Sym::Type::Class, { }, "null"))->setProperty("size", std::size_t(0));
-    ns->add(new Sym(Sym::Type::Class, { }, "char"))->setProperty("size", std::size_t(1));
-    ns->add(new Sym(Sym::Type::Class, { }, "int"))->setProperty("size", std::size_t(4));
-    ns->add(new Sym(Sym::Type::Class, { }, "bool"))->setProperty("size", std::size_t(1));
+    ns->add(primitive("null", 0));
+    ns->add(primitive("char", 1));
+    ns->add(primitive("int", 4));
+    ns->add(primitive("bool", 1));
 
     types.insert(Type::makePrimary(0, ns->child("null")));
 }

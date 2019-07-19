@@ -58,6 +58,16 @@ std::string Type::text() const
     return toString(this);
 }
 
+bool Type::function() const
+{
+    return returnType;
+}
+
+bool Type::primitive() const
+{
+    return returnType || ptr || (sym && sym->getProperty("primitive").value<bool>());
+}
+
 Type Type::makePrimary(unsigned ptr, Sym *sym)
 {
     Type t;

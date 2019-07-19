@@ -8,6 +8,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -91,6 +92,18 @@ void ExprGenerator::visit(AddrOfNode &node)
     }
 
     sz = sizeof(std::size_t);
+}
+
+void ExprGenerator::visit(AssignNode &node)
+{
+    auto s = ExprGenerator::generate(c, os, *node.expr);
+
+    AddrGenerator ag(c, os);
+    node.target->accept(ag);
+
+    os << "    store " << s << ";\n";
+
+    sz = s;
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

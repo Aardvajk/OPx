@@ -9,8 +9,12 @@
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/NameVisitors.h"
+#include "visitors/TypeVisitor.h"
+
+#include "types/Type.h"
 
 #include "transform/ExprTransformer.h"
 
@@ -33,16 +37,31 @@ void FuncTransformer::visit(VarNode &node)
 {
     if(node.value)
     {
-        auto en = new ExprNode(node.location(), { });
-        node.block()->insert(index + 1, en);
+        if(node.property<const Sym*>("sym")->property<const Type*>("type")->primitive())
+        {
+            auto en = new ExprNode(node.location(), { });
+            node.block()->insert(index + 1, en);
 
-        auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
-        en->expr = cn;
+            auto an = new AssignNode(node.location(), new IdNode(node.location(), NameVisitors::lastIdOfName(node.name.get())));
 
-        cn->params.push_back(new AddrOfNode(node.location(), node.name));
-        cn->params.push_back(node.value);
+            en->expr = an;
+            an->expr = node.value;
 
-        ExprDecorator::decorate(c, nullptr, *cn);
+            ExprDecorator::decorate(c, nullptr, *an);
+        }
+        else
+        {
+            auto en = new ExprNode(node.location(), { });
+            node.block()->insert(index + 1, en);
+
+            auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
+            en->expr = cn;
+
+            cn->params.push_back(new AddrOfNode(node.location(), node.name));
+            cn->params.push_back(node.value);
+
+            ExprDecorator::decorate(c, nullptr, *cn);
+        }
     }
 }
 

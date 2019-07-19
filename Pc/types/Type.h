@@ -14,7 +14,8 @@ public:
     pcx::optional<std::size_t> size() const;
 
     std::string text() const;
-    bool function() const { return returnType; }
+    bool function() const;
+    bool primitive() const;
 
     static Type makePrimary(unsigned ptr, Sym *sym);
     static Type makeFunction(unsigned ptr, Type *returnType);
