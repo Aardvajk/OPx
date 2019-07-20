@@ -122,4 +122,5 @@ HEADERS += \
 
 DISTFILES += \
     ../workspace/script.pc \
-    ../workspace/stdlib.ph
+    ../workspace/stdlib.ph \
+    ../workspace/store.pc

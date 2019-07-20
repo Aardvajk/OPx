@@ -15,6 +15,7 @@
 #include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 #include "transform/ExprTransformer.h"
 
@@ -37,8 +38,15 @@ void FuncTransformer::visit(VarNode &node)
 {
     if(node.value)
     {
-        if(node.property<const Sym*>("sym")->property<const Type*>("type")->primitive())
+        auto type = node.property<const Sym*>("sym")->property<const Type*>("type");
+
+        if(type->primitive())
         {
+            if(!TypeCompare::exact(type, TypeVisitor::type(c, node.value.get())))
+            {
+                throw Error(node.value->location(), type->text(), " expected - ", NameVisitors::prettyName(node.value.get()));
+            }
+
             auto en = new ExprNode(node.location(), { });
             node.block()->insert(index + 1, en);
 

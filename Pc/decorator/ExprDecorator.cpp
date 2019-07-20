@@ -124,6 +124,12 @@ void ExprDecorator::visit(AssignNode &node)
 {
     node.target->accept(*this);
     node.expr->accept(*this);
+
+    auto type = TypeVisitor::type(c, node.target.get());
+    if(!TypeCompare::exact(type, TypeVisitor::type(c, node.expr.get())))
+    {
+        throw Error(node.expr->location(), type->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
+    }
 }
 
 void ExprDecorator::decorate(Context &c, const Type *expectedType, Node &node)
