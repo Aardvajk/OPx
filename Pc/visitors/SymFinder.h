@@ -26,7 +26,7 @@ public:
 private:
     Type type;
 
-    std::vector<Sym*> curr;
+    Sym *curr;
     std::vector<Sym*> &r;
 };
 

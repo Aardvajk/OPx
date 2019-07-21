@@ -43,7 +43,7 @@ void search(SymFinder::Type type, Sym *scope, const std::string &name, std::vect
 
 }
 
-SymFinder::SymFinder(Type type, Sym *curr, std::vector<Sym*> &result) : type(type), curr({ curr }), r(result)
+SymFinder::SymFinder(Type type, Sym *curr, std::vector<Sym*> &result) : type(type), curr(curr), r(result)
 {
 }
 
@@ -52,16 +52,16 @@ void SymFinder::visit(IdNode &node)
     if(node.parent)
     {
         std::vector<Sym*> sc;
-        SymFinder::find(type, curr.back(), node.parent.get(), sc);
+        SymFinder::find(type, curr, node.parent.get(), sc);
 
         for(auto s: sc)
         {
-            search(type, s, node.name, r);
+            search(Type::Local, s, node.name, r);
         }
     }
     else
     {
-        search(type, curr.back(), node.name, r);
+        search(type, curr, node.name, r);
     }
 }
 
