@@ -4,6 +4,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
@@ -37,7 +38,7 @@ NodePtr primary(Context &c, bool get)
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::Id: return CommonConstructs::extendedName(c, false);
+        case Token::Type::Id: n = new IdNode(tok.location(), { }, tok.text()); c.scanner.next(true); return n;
 
         case Token::Type::CharLiteral: n = new CharLiteralNode(tok.location(), tok.text()[0]); c.scanner.next(true); return n;
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
@@ -59,6 +60,19 @@ void params(Context &c, NodeList &container, bool get)
     {
         params(c, container, true);
     }
+}
+
+NodePtr dot(Context &c, NodePtr parent, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Dot, get);
+
+    c.scanner.match(Token::Type::Id, true);
+
+    auto n = new IdNode(tok.location(), parent, c.scanner.token().text());
+    NodePtr nn(n);
+
+    c.scanner.next(true);
+    return nn;
 }
 
 NodePtr call(Context &c, NodePtr target, bool get)
@@ -86,6 +100,7 @@ NodePtr entity(Context &c, bool get)
     {
         switch(c.scanner.token().type())
         {
+            case Token::Type::Dot: n = dot(c, n, false); break;
             case Token::Type::LeftParen: n = call(c, n, false); break;
 
             default: return n;
