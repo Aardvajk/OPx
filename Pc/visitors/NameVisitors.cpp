@@ -125,14 +125,7 @@ NameVisitors::LastIdOfName::LastIdOfName()
 
 void NameVisitors::LastIdOfName::visit(IdNode &node)
 {
-    if(node.parent)
-    {
-        node.parent->accept(*this);
-    }
-    else
-    {
-        r = node.name;
-    }
+    r = node.name;
 }
 
 std::string NameVisitors::lastIdOfName(Node *node)

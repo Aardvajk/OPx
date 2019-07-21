@@ -50,7 +50,7 @@ void FuncTransformer::visit(VarNode &node)
             auto en = new ExprNode(node.location(), { });
             node.block()->insert(index + 1, en);
 
-            auto an = new AssignNode(node.location(), new IdNode(node.location(), { }, NameVisitors::lastIdOfName(node.name.get())));
+            auto an = new AssignNode(node.location(), node.name);
 
             en->expr = an;
             an->expr = node.value;
