@@ -54,6 +54,12 @@ void SymFinder::visit(IdNode &node)
         std::vector<Sym*> sc;
         SymFinder::find(type, curr, node.parent.get(), sc);
 
+        if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
+        {
+            node.parent->setProperty("sym", sc.front());
+            sc = { sc.front()->property<::Type*>("type")->sym };
+        }
+
         for(auto s: sc)
         {
             search(Type::Local, s, node.name, r);
@@ -62,6 +68,10 @@ void SymFinder::visit(IdNode &node)
     else
     {
         search(type, curr, node.name, r);
+        if(!r.empty() && r.front()->type() == Sym::Type::Var)
+        {
+            node.setProperty("sym", r.front());
+        }
     }
 }
 
