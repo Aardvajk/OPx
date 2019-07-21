@@ -35,6 +35,11 @@ void dump(int tab, const Sym *sym, std::ostream &os)
         os << " (" << s.to<std::size_t>() << ")";
     }
 
+    if(auto o = sym->getProperty("offset"))
+    {
+        os << " +[" << o.to<std::size_t>() << "]";
+    }
+
     os << "\n";
 
     if(hasScope(sym))

@@ -43,5 +43,8 @@ void ClassDecorator::visit(VarNode &node)
     node.setProperty("sym", sym);
 
     auto size = c.tree.current()->container()->getProperty("size");
+
+    sym->setProperty("offset", size.value<std::size_t>());
+
     c.tree.current()->container()->setProperty("size", size.value<std::size_t>() + c.assertSize(node.location(), type));
 }

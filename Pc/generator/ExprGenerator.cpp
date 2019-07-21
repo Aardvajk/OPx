@@ -32,14 +32,14 @@ void ExprGenerator::visit(IdNode &node)
     }
     else
     {
-        if(s->getProperty("member").value<bool>())
+        if(s->getProperty("member").value<bool>() && node.parent)
         {
-std::cout << "generate member - " << s->fullname() << "\n";
-for(auto m: node.property<std::vector<Sym*> >("matches"))
-{
-    std::cout << "    match " << m->fullname() << "\n";
-}
-throw 0;
+            AddrGenerator ag(c, os);
+            node.parent->accept(ag);
+
+            os << "    push size(" << s->property<std::size_t>("offset") << ");\n";
+            os << "    add size;\n";
+            os << "    load " << c.assertSize(node.location(), t) << ";\n";
         }
         else
         {
