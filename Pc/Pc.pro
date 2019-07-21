@@ -28,6 +28,7 @@ SOURCES += \
         compiler/ExprConstructs.cpp \
         compiler/IncludeConstructs.cpp \
         compiler/TypeConstructs.cpp \
+        decorator/ClassDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/ExprDecorator.cpp \
         decorator/FuncDecorator.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     compiler/ExprConstructs.h \
     compiler/IncludeConstructs.h \
     compiler/TypeConstructs.h \
+    decorator/ClassDecorator.h \
     decorator/Decorator.h \
     decorator/ExprDecorator.h \
     decorator/FuncDecorator.h \

@@ -57,12 +57,21 @@ void AstPrinter::visit(IdNode &node)
         os << " -> " << s->fullname() << ":" << s->property<const Type*>("type")->text() << " [" << s << "]";
     }
 
+    if(auto s = node.getProperty("matches"))
+    {
+        auto sv = s.to<std::vector<Sym*> >();
+        for(auto s: sv)
+        {
+            os << " {" << s->fullname() << "}";
+        }
+    }
+
     os << "\n";
 
-    if(node.child)
+    if(node.parent)
     {
         auto g = pcx::scoped_counter(tc);
-        node.child->accept(*this);
+        node.parent->accept(*this);
     }
 }
 
@@ -74,7 +83,14 @@ void AstPrinter::visit(NamespaceNode &node)
 
 void AstPrinter::visit(ClassNode &node)
 {
-    tab() << "class " << NameVisitors::prettyName(node.name.get()) << "\n";
+    tab() << "class " << NameVisitors::prettyName(node.name.get());
+
+    if(auto s = node.getProperty("sym"))
+    {
+        os << " -> " << s.to<const Sym*>()->fullname();
+    }
+
+    os << "\n";
 
     if(node.body)
     {

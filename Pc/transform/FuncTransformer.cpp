@@ -50,7 +50,7 @@ void FuncTransformer::visit(VarNode &node)
             auto en = new ExprNode(node.location(), { });
             node.block()->insert(index + 1, en);
 
-            auto an = new AssignNode(node.location(), new IdNode(node.location(), NameVisitors::lastIdOfName(node.name.get())));
+            auto an = new AssignNode(node.location(), new IdNode(node.location(), { }, NameVisitors::lastIdOfName(node.name.get())));
 
             en->expr = an;
             an->expr = node.value;
@@ -62,7 +62,7 @@ void FuncTransformer::visit(VarNode &node)
             auto en = new ExprNode(node.location(), { });
             node.block()->insert(index + 1, en);
 
-            auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
+            auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
             en->expr = cn;
 
             cn->params.push_back(new AddrOfNode(node.location(), node.name));

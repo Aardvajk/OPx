@@ -14,8 +14,10 @@
 namespace
 {
 
-NodePtr nameImpl(Context &c, bool allowOperator, bool get)
+NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
 {
+    std::string name;
+
     auto tok = c.scanner.next(get);
     if(tok.type() == Token::Type::RwOperator && allowOperator)
     {
@@ -30,31 +32,36 @@ NodePtr nameImpl(Context &c, bool allowOperator, bool get)
             throw Error(op.location(), "invalid operator - ", op.text());
         }
 
-        c.scanner.next(true);
-        return new IdNode(tok.location(), tok.text() + op.text());
+        name = tok.text() + op.text();
     }
-
-    c.scanner.match(Token::Type::Id, false);
-
-    auto dot = c.scanner.next(true);
-    if(dot.type() == Token::Type::Dot)
+    else
     {
-        return new IdNode(dot.location(), tok.text(), nameImpl(c, allowOperator, true));
+        tok = c.scanner.match(Token::Type::Id, false);
+        name = tok.text();
     }
 
-    return new IdNode(tok.location(), tok.text());
+    auto n = new IdNode(tok.location(), parent, name);
+    NodePtr nn(n);
+
+    c.scanner.next(true);
+    while(c.scanner.token().type() == Token::Type::Dot)
+    {
+        nn = nameImpl(c, allowOperator, nn, true);
+    }
+
+    return nn;
 }
 
 }
 
 NodePtr CommonConstructs::name(Context &c, bool get)
 {
-    return nameImpl(c, false, get);
+    return nameImpl(c, false, { }, get);
 }
 
 NodePtr CommonConstructs::extendedName(Context &c, bool get)
 {
-    return nameImpl(c, true, get);
+    return nameImpl(c, true, { }, get);
 }
 
 NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)

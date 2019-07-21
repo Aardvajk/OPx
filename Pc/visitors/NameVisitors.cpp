@@ -16,12 +16,13 @@ NameVisitors::PrettyName::PrettyName()
 
 void NameVisitors::PrettyName::visit(IdNode &node)
 {
-    r += node.name;
-    if(node.child)
+    if(node.parent)
     {
+        node.parent->accept(*this);
         r += ".";
-        node.child->accept(*this);
     }
+
+    r += node.name;
 }
 
 void NameVisitors::PrettyName::visit(VarNode &node)
@@ -104,7 +105,7 @@ NameVisitors::IsNameSimple::IsNameSimple() : r(false)
 
 void NameVisitors::IsNameSimple::visit(IdNode &node)
 {
-    if(!node.child)
+    if(!node.parent)
     {
         r = true;
     }
@@ -124,9 +125,9 @@ NameVisitors::LastIdOfName::LastIdOfName()
 
 void NameVisitors::LastIdOfName::visit(IdNode &node)
 {
-    if(node.child)
+    if(node.parent)
     {
-        node.child->accept(*this);
+        node.parent->accept(*this);
     }
     else
     {

@@ -20,6 +20,7 @@
 
 #include "decorator/FuncDecorator.h"
 #include "decorator/ExprDecorator.h"
+#include "decorator/ClassDecorator.h"
 
 namespace
 {
@@ -34,6 +35,24 @@ Sym *searchNamespace(Context &c, NamespaceNode &node)
         if(s->type() != Sym::Type::Namespace)
         {
             throw Error(node.location(), "namespace expected - ", s->fullname());
+        }
+
+        return s;
+    }
+
+    return nullptr;
+}
+
+Sym *searchClass(Context &c, ClassNode &node)
+{
+    std::vector<Sym*> sv;
+    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+
+    for(auto s: sv)
+    {
+        if(s->type() != Sym::Type::Class)
+        {
+            throw Error(node.location(), "class expected - ", s->fullname());
         }
 
         return s;
@@ -94,6 +113,29 @@ void Decorator::visit(NamespaceNode &node)
 
 void Decorator::visit(ClassNode &node)
 {
+    auto sym = searchClass(c, node);
+    if(!sym)
+    {
+        auto name = c.assertSimpleNameUnique(node.name.get());
+        sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), name));
+    }
+
+    node.setProperty("sym", sym);
+
+    if(node.body)
+    {
+        if(sym->getProperty("defined").value<bool>())
+        {
+            throw Error(node.location(), "already defined - ", sym->fullname());
+        }
+
+        sym->setProperty("defined", true);
+
+        auto g = c.tree.open(sym);
+
+        ClassDecorator cd(c);
+        node.body->accept(cd);
+    }
 }
 
 void Decorator::visit(VarNode &node)

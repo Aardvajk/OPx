@@ -25,7 +25,7 @@ void ExprTransformer::visit(AssignNode &node)
 
     if(!TypeVisitor::type(c, node.target.get())->primitive())
     {
-        auto cn = new CallNode(node.location(), new IdNode(node.location(), "operator="));
+        auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
         rn = cn;
 
         cn->params.push_back(new AddrOfNode(node.target->location(), node.target));

@@ -32,7 +32,19 @@ void ExprGenerator::visit(IdNode &node)
     }
     else
     {
-        os << "    push \"" << s->fullname() << "\";\n";
+        if(s->getProperty("member").value<bool>())
+        {
+std::cout << "generate member - " << s->fullname() << "\n";
+for(auto m: node.property<std::vector<Sym*> >("matches"))
+{
+    std::cout << "    match " << m->fullname() << "\n";
+}
+throw 0;
+        }
+        else
+        {
+            os << "    push \"" << s->fullname() << "\";\n";
+        }
     }
 
     sz = c.assertSize(node.location(), t);

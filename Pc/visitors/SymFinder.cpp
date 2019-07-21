@@ -4,6 +4,8 @@
 
 #include "syms/Sym.h"
 
+#include "types/Type.h"
+
 #include <pcx/scoped_push.h>
 
 namespace
@@ -47,23 +49,19 @@ SymFinder::SymFinder(Type type, Sym *curr, std::vector<Sym*> &result) : type(typ
 
 void SymFinder::visit(IdNode &node)
 {
-    if(node.child)
+    if(node.parent)
     {
-        std::vector<Sym*> scopes;
+        std::vector<Sym*> sc;
+        SymFinder::find(type, curr.back(), node.parent.get(), sc);
 
-        search(type, curr.back(), node.name, scopes);
-        type = Type::Local;
-
-        for(auto scope: scopes)
+        for(auto s: sc)
         {
-            auto g = pcx::scoped_push(curr, scope);
-            node.child->accept(*this);
+            search(type, s, node.name, r);
         }
     }
     else
     {
         search(type, curr.back(), node.name, r);
-        type = Type::Local;
     }
 }
 

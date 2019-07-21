@@ -6,12 +6,12 @@
 class IdNode : public Node
 {
 public:
-    IdNode(Location location, std::string name, NodePtr child = { }) : Node(location), name(std::move(name)), child(child) { }
+    IdNode(Location location, NodePtr parent, std::string name) : Node(location), parent(parent), name(std::move(name)) { }
 
     virtual void accept(Visitor &v) override;
 
+    NodePtr parent;
     std::string name;
-    NodePtr child;
 };
 
 #endif // IDNODE_H

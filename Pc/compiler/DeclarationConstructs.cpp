@@ -99,7 +99,7 @@ void args(Context &c, NodeList &container, bool get)
         c.scanner.next(true);
     }
 
-    auto n = new VarNode(tok.location(), new IdNode(tok.location(), name));
+    auto n = new VarNode(tok.location(), new IdNode(tok.location(), { }, name));
     container.push_back(n);
 
     c.scanner.match(Token::Type::Colon, false);
