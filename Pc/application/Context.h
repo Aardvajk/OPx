@@ -9,6 +9,7 @@
 #include "types/TypeCache.h"
 
 class Node;
+class FuncNode;
 
 class Context
 {
@@ -31,6 +32,9 @@ public:
 
     SymTree tree;
     TypeCache types;
+
+    unsigned classDepth;
+    std::vector<FuncNode*> deferredMethods;
 };
 
 #endif // CONTEXT_H

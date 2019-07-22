@@ -28,7 +28,7 @@ Sym *primitive(const std::string &name, std::size_t size)
 
 }
 
-Context::Context() : scanner(Lexer::Mode::Pc)
+Context::Context() : scanner(Lexer::Mode::Pc), classDepth(0)
 {
     auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 

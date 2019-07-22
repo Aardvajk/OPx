@@ -11,7 +11,9 @@ public:
     explicit ClassDecorator(Context &c);
 
     virtual void visit(BlockNode &node) override;
+    virtual void visit(ClassNode &node) override;
     virtual void visit(VarNode &node) override;
+    virtual void visit(FuncNode &node) override;
 
 private:
     Context &c;

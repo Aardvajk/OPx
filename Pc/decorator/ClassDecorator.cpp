@@ -5,13 +5,18 @@
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/FuncNode.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
 
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
+
+#include "decorator/Decorator.h"
+#include "decorator/CommonDecorator.h"
 
 ClassDecorator::ClassDecorator(Context &c) : c(c)
 {
@@ -23,6 +28,12 @@ void ClassDecorator::visit(BlockNode &node)
     {
         n->accept(*this);
     }
+}
+
+void ClassDecorator::visit(ClassNode &node)
+{
+    Decorator d(c);
+    node.accept(d);
 }
 
 void ClassDecorator::visit(VarNode &node)
@@ -47,4 +58,17 @@ void ClassDecorator::visit(VarNode &node)
     sym->setProperty("offset", size.value<std::size_t>());
 
     c.tree.current()->container()->setProperty("size", size.value<std::size_t>() + c.assertSize(node.location(), type));
+}
+
+void ClassDecorator::visit(FuncNode &node)
+{
+    auto sym = CommonDecorator::decorateFuncSignature(c, node);
+    sym->setProperty("method", true);
+
+    node.setProperty("sym", sym);
+
+    if(node.body)
+    {
+        c.deferredMethods.push_back(&node);
+    }
 }

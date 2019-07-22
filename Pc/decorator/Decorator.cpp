@@ -21,6 +21,9 @@
 #include "decorator/FuncDecorator.h"
 #include "decorator/ExprDecorator.h"
 #include "decorator/ClassDecorator.h"
+#include "decorator/CommonDecorator.h"
+
+#include <pcx/scoped_counter.h>
 
 namespace
 {
@@ -56,27 +59,6 @@ Sym *searchClass(Context &c, ClassNode &node)
         }
 
         return s;
-    }
-
-    return nullptr;
-}
-
-Sym *searchFunction(Context &c, FuncNode &node, const Type *type)
-{
-    std::vector<Sym*> sv;
-    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
-
-    for(auto s: sv)
-    {
-        if(s->type() != Sym::Type::Func)
-        {
-            throw Error(node.location(), "function expected - ", s->fullname());
-        }
-
-        if(TypeCompare::args(type, s->property<const Type*>("type")))
-        {
-            return s;
-        }
     }
 
     return nullptr;
@@ -124,6 +106,8 @@ void Decorator::visit(ClassNode &node)
 
     if(node.body)
     {
+        auto dg = pcx::scoped_counter(c.classDepth);
+
         if(sym->getProperty("defined").value<bool>())
         {
             throw Error(node.location(), "already defined - ", sym->fullname());
@@ -133,8 +117,28 @@ void Decorator::visit(ClassNode &node)
 
         auto g = c.tree.open(sym);
 
+        sym->setProperty("size", std::size_t(0));
+
         ClassDecorator cd(c);
         node.body->accept(cd);
+    }
+
+    if(!c.classDepth)
+    {
+        for(auto d: c.deferredMethods)
+        {
+            auto g = c.tree.open(d->property<Sym*>("sym"));
+
+            for(auto &a: d->args)
+            {
+                a->accept(*this);
+            }
+
+            FuncDecorator fd(c);
+            d->body->accept(fd);
+        }
+
+        c.deferredMethods.clear();
     }
 }
 
@@ -173,30 +177,7 @@ void Decorator::visit(VarNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
-    auto t = Type::makeFunction(0, node.type ? TypeBuilder::type(c, node.type.get()) : c.types.nullType());
-    for(auto &a: node.args)
-    {
-        t.args.push_back(TypeVisitor::type(c, a.get()));
-    }
-
-    auto type = c.types.insert(t);
-
-    Sym *sym = searchFunction(c, node, type);
-    if(sym)
-    {
-        if(!TypeCompare::exact(type->returnType, sym->property<const Type*>("type")->returnType))
-        {
-            throw Error(node.location(), "mismatched returns");
-        }
-    }
-    else
-    {
-        auto name = c.assertSimpleName(node.name.get());
-
-        sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.location(), name));
-        sym->setProperty("type", type);
-    }
-
+    auto sym = CommonDecorator::decorateFuncSignature(c, node);
     node.setProperty("sym", sym);
 
     if(node.body)

@@ -37,6 +37,10 @@ void Generator::visit(NamespaceNode &node)
 
 void Generator::visit(ClassNode &node)
 {
+    if(node.body)
+    {
+        node.body->accept(*this);
+    }
 }
 
 void Generator::visit(VarNode &node)

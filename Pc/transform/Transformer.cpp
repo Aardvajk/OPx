@@ -4,6 +4,7 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/FuncNode.h"
 
 #include "transform/FuncTransformer.h"
@@ -24,6 +25,15 @@ void Transformer::visit(NamespaceNode &node)
 {
     auto g = c.tree.open(node.property<Sym*>("sym"));
     node.body->accept(*this);
+}
+
+void Transformer::visit(ClassNode &node)
+{
+    if(node.body)
+    {
+        auto g = c.tree.open(node.property<Sym*>("sym"));
+        node.body->accept(*this);
+    }
 }
 
 void Transformer::visit(FuncNode &node)
