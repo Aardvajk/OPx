@@ -1,5 +1,7 @@
 #include "TypeVisitor.h"
 
+#include "framework/Error.h"
+
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
@@ -7,6 +9,10 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/DerefNode.h"
+
+#include "visitors/NameVisitors.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
@@ -53,8 +59,36 @@ void TypeVisitor::visit(CallNode &node)
 void TypeVisitor::visit(AddrOfNode &node)
 {
     auto t = *(TypeVisitor::type(c, node.expr.get()));
-    ++t.ptr;
 
+    ++t.ptr;
+    r = c.types.insert(t);
+}
+
+void TypeVisitor::visit(ThisNode &node)
+{
+    auto f = c.tree.current()->container();
+
+    auto p = f->parent();
+    if(p->type() == Sym::Type::Class)
+    {
+        r = c.types.insert(Type::makePrimary(1, p));
+    }
+    else
+    {
+        throw Error(node.location(), "this cannot be used in a static function");
+    }
+}
+
+void TypeVisitor::visit(DerefNode &node)
+{
+    auto t = *(TypeVisitor::type(c, node.expr.get()));
+
+    if(!t.ptr)
+    {
+        throw Error(node.expr->location(), "pointer expected - ", NameVisitors::prettyName(node.expr.get()));
+    }
+
+    --t.ptr;
     r = c.types.insert(t);
 }
 

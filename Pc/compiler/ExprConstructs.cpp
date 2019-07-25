@@ -9,6 +9,8 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/DerefNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -18,6 +20,17 @@ namespace
 {
 
 NodePtr expression(Context &c, bool get);
+NodePtr entity(Context &c, bool get);
+
+NodePtr parentheses(Context &c, bool get)
+{
+    c.scanner.match(Token::Type::LeftParen, get);
+
+    auto n = expression(c, true);
+
+    c.scanner.consume(Token::Type::RightParen, false);
+    return n;
+}
 
 NodePtr addrOf(Context &c, bool get)
 {
@@ -31,6 +44,17 @@ NodePtr addrOf(Context &c, bool get)
     return n;
 }
 
+NodePtr deref(Context &c, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Star, get);
+
+    auto n = new DerefNode(tok.location());
+    NodePtr nn = n;
+
+    n->expr = entity(c, true);
+    return nn;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     NodePtr n;
@@ -40,6 +64,8 @@ NodePtr primary(Context &c, bool get)
     {
         case Token::Type::Id: n = new IdNode(tok.location(), { }, tok.text()); c.scanner.next(true); return n;
 
+        case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
+
         case Token::Type::CharLiteral: n = new CharLiteralNode(tok.location(), tok.text()[0]); c.scanner.next(true); return n;
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
 
@@ -47,6 +73,9 @@ NodePtr primary(Context &c, bool get)
         case Token::Type::RwFalse: n = new BoolLiteralNode(tok.location(), false); c.scanner.next(true); return n;
 
         case Token::Type::Amp: return addrOf(c, false);
+        case Token::Type::Star: return deref(c, false);
+
+        case Token::Type::LeftParen: return parentheses(c, false);
 
         default: throw Error(tok.location(), "expression expected - ", tok.text());
     }

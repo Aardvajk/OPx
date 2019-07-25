@@ -25,6 +25,8 @@ public:
     virtual void visit(CallNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(AssignNode &node) override;
+    virtual void visit(ThisNode &node) override;
+    virtual void visit(DerefNode &node) override;
 
     static std::size_t generate(Context &c, std::ostream &os, Node &node);
 

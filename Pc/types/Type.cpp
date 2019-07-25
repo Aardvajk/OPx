@@ -30,6 +30,11 @@ std::string toString(const Type *type)
         s += ":" + toString(type->returnType);
     }
 
+    if(type->method)
+    {
+        s += "[method]";
+    }
+
     return s;
 }
 
@@ -88,6 +93,6 @@ Type Type::makeFunction(unsigned ptr, Type *returnType)
     return t;
 }
 
-Type::Type() : ptr(0), sym(nullptr), returnType(nullptr)
+Type::Type() : ptr(0), sym(nullptr), returnType(nullptr), method(false)
 {
 }

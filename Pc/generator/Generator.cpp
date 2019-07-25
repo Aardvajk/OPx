@@ -32,6 +32,7 @@ void Generator::visit(BlockNode &node)
 
 void Generator::visit(NamespaceNode &node)
 {
+    auto g = c.tree.open(node.property<Sym*>("sym"));
     node.body->accept(*this);
 }
 
@@ -39,6 +40,7 @@ void Generator::visit(ClassNode &node)
 {
     if(node.body)
     {
+        auto g = c.tree.open(node.property<Sym*>("sym"));
         node.body->accept(*this);
     }
 }
@@ -80,6 +82,8 @@ void Generator::visit(FuncNode &node)
             auto sym = a->property<const Sym*>("sym");
             os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a->location(), sym->property<const Type*>("type")) << ";\n";
         }
+
+        auto g = c.tree.open(node.property<Sym*>("sym"));
 
         LocalsGenerator lg(c, os);
         node.body->accept(lg);

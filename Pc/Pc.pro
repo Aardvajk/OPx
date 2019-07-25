@@ -45,6 +45,7 @@ SOURCES += \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
+        nodes/DerefNode.cpp \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
@@ -53,6 +54,7 @@ SOURCES += \
         nodes/Node.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
+        nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
         syms/Sym.cpp \
@@ -61,6 +63,7 @@ SOURCES += \
         syms/SymTree.cpp \
         transform/ExprTransformer.cpp \
         transform/FuncTransformer.cpp \
+        transform/ThisCallTransformer.cpp \
         transform/Transformer.cpp \
         types/Type.cpp \
         types/TypeCache.cpp \
@@ -69,6 +72,7 @@ SOURCES += \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         types/TypeBuilder.cpp \
+        visitors/SymScopeVisitor.cpp \
         visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
@@ -97,6 +101,7 @@ HEADERS += \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
+    nodes/DerefNode.h \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
@@ -105,6 +110,7 @@ HEADERS += \
     nodes/Node.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
+    nodes/ThisNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
     syms/Sym.h \
@@ -113,6 +119,7 @@ HEADERS += \
     syms/SymTree.h \
     transform/ExprTransformer.h \
     transform/FuncTransformer.h \
+    transform/ThisCallTransformer.h \
     transform/Transformer.h \
     types/Type.h \
     types/TypeCache.h \
@@ -121,6 +128,7 @@ HEADERS += \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
     types/TypeBuilder.h \
+    visitors/SymScopeVisitor.h \
     visitors/TypeVisitor.h \
     visitors/Visitor.h
 

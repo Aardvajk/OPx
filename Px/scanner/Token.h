@@ -13,8 +13,8 @@ public:
     {
         Id, IntLiteral, CharLiteral, StringLiteral,
         LeftBrace, RightBrace, LeftParen, RightParen, LeftSub, RightSub,
-        Dot, Comma, Semicolon, Colon, Assign, Amp,
-        RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwOperator, RwInclude,
+        Dot, Comma, Semicolon, Colon, Assign, Amp, Star,
+        RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwOperator, RwInclude, RwThis,
         RwTrue, RwFalse,
         RwReturn,
         RwChar, RwInt, RwSize, RwString,

@@ -26,6 +26,8 @@ public:
     std::vector<Type*> args;
     Type *returnType;
 
+    bool method;
+
 private:
     Type();
 };

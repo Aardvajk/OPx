@@ -16,6 +16,7 @@ public:
     bool result() const { return ok; }
 
     virtual void visit(IdNode &node) override;
+    virtual void visit(DerefNode &node) override;
 
 private:
     Context &c;

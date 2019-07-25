@@ -20,6 +20,9 @@ public:
     SymFinder(Type type, Sym *curr, std::vector<Sym*> &result);
 
     virtual void visit(IdNode &node) override;
+    virtual void visit(AddrOfNode &node) override;
+    virtual void visit(ThisNode &node) override;
+    virtual void visit(DerefNode &node) override;
 
     static void find(Type type, Sym *curr, Node *node, std::vector<Sym*> &result);
 

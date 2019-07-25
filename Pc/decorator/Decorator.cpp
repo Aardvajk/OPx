@@ -64,6 +64,27 @@ Sym *searchClass(Context &c, ClassNode &node)
     return nullptr;
 }
 
+void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
+{
+    if(sym->getProperty("defined").value<bool>())
+    {
+        throw Error(node.location(), "already defined - ", sym->fullname());
+    }
+
+    sym->setProperty("defined", true);
+
+    auto g = c.tree.open(sym);
+
+    for(auto &a: node.args)
+    {
+        Decorator d(c);
+        a->accept(d);
+    }
+
+    FuncDecorator fd(c);
+    node.body->accept(fd);
+}
+
 }
 
 Decorator::Decorator(Context &c) : c(c)
@@ -127,15 +148,7 @@ void Decorator::visit(ClassNode &node)
     {
         for(auto d: c.deferredMethods)
         {
-            auto g = c.tree.open(d->property<Sym*>("sym"));
-
-            for(auto &a: d->args)
-            {
-                a->accept(*this);
-            }
-
-            FuncDecorator fd(c);
-            d->body->accept(fd);
+            decorateFunctionBody(c, *d, d->property<Sym*>("sym"));
         }
 
         c.deferredMethods.clear();
@@ -182,21 +195,6 @@ void Decorator::visit(FuncNode &node)
 
     if(node.body)
     {
-        if(sym->getProperty("defined").value<bool>())
-        {
-            throw Error(node.location(), "already defined - ", sym->fullname());
-        }
-
-        sym->setProperty("defined", true);
-
-        auto g = c.tree.open(sym);
-
-        for(auto &a: node.args)
-        {
-            a->accept(*this);
-        }
-
-        FuncDecorator fd(c);
-        node.body->accept(fd);
+        decorateFunctionBody(c, node, sym);
     }
 }

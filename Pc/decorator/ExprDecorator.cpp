@@ -8,6 +8,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/DerefNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -108,7 +109,13 @@ void ExprDecorator::visit(CallNode &node)
     auto t = Type::makeFunction(0, c.types.nullType());
     for(auto &p: node.params)
     {
-        t.args.push_back(TypeVisitor::type(c, p.get()));
+        auto pt = TypeVisitor::type(c, p.get());
+        if(!pt)
+        {
+            throw Error(p->location(), "internal type lookup failed - ", NameVisitors::prettyName(p.get()));
+        }
+
+        t.args.push_back(pt);
     }
 
     ExprDecorator ed(c, c.types.insert(t));
@@ -130,6 +137,11 @@ void ExprDecorator::visit(AssignNode &node)
     {
         throw Error(node.expr->location(), type->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
     }
+}
+
+void ExprDecorator::visit(DerefNode &node)
+{
+    node.expr->accept(*this);
 }
 
 void ExprDecorator::decorate(Context &c, const Type *expectedType, Node &node)

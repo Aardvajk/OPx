@@ -24,6 +24,8 @@ public:
     virtual void visit(ReturnNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(AssignNode &node) override;
+    virtual void visit(ThisNode &node) override;
+    virtual void visit(DerefNode &node) override;
 
 private:
     std::ostream &tab() const;

@@ -91,6 +91,11 @@ void NameVisitors::PrettyName::visit(BoolLiteralNode &node)
     r += node.value ? "true" : "false";
 }
 
+void NameVisitors::PrettyName::visit(ThisNode &node)
+{
+    r += "this";
+}
+
 std::string NameVisitors::prettyName(Node *node)
 {
     PrettyName pn;

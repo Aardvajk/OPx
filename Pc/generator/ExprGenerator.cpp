@@ -9,6 +9,8 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/DerefNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -116,6 +118,16 @@ void ExprGenerator::visit(AssignNode &node)
     os << "    store " << s << ";\n";
 
     sz = s;
+}
+
+void ExprGenerator::visit(ThisNode &node)
+{
+    os << "    push \"" << c.tree.current()->container()->fullname() << ".this\";\n";
+    sz = sizeof(std::size_t);
+}
+
+void ExprGenerator::visit(DerefNode &node)
+{
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

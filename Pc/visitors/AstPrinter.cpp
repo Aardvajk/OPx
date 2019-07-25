@@ -14,6 +14,8 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/DerefNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -254,6 +256,27 @@ void AstPrinter::visit(AssignNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.target->accept(*this);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(ThisNode &node)
+{
+    tab() << "this";
+
+    if(auto sp = node.getProperty("sym"))
+    {
+        auto s = sp.to<const Sym*>();
+        os << " -> " << s->fullname() << ":" << s->property<const Type*>("type")->text() << " [" << s << "]";
+    }
+
+    os << "\n";
+}
+
+void AstPrinter::visit(DerefNode &node)
+{
+    tab() << "deref\n";
+
+    auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
 }
 

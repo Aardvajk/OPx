@@ -18,6 +18,8 @@ class CallNode;
 class ReturnNode;
 class AddrOfNode;
 class AssignNode;
+class ThisNode;
+class DerefNode;
 
 class Visitor
 {
@@ -41,6 +43,8 @@ public:
     virtual void visit(ReturnNode &node);
     virtual void visit(AddrOfNode &node);
     virtual void visit(AssignNode &node);
+    virtual void visit(ThisNode &node);
+    virtual void visit(DerefNode &node);
 };
 
 #endif // VISITOR_H

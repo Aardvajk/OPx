@@ -28,6 +28,7 @@ static const std::vector<Reserved> pcReserved =
     { "ptr", Token::Type::RwPtr },
     { "operator", Token::Type::RwOperator },
     { "include", Token::Type::RwInclude },
+    { "this", Token::Type::RwThis },
     { "true", Token::Type::RwTrue },
     { "false", Token::Type::RwFalse },
     { "return", Token::Type::RwReturn }
@@ -174,6 +175,7 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
     if(ch == '=') return Token(Token::Type::Assign, loc, ch);
     if(ch == '&') return Token(Token::Type::Amp, loc, ch);
+    if(ch == '*') return Token(Token::Type::Star, loc, ch);
 
     if(ch == '\'')
     {

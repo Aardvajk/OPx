@@ -1,8 +1,13 @@
 #include "SymFinder.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/AddrOfNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/DerefNode.h"
 
 #include "syms/Sym.h"
+
+#include "visitors/SymScopeVisitor.h"
 
 #include "types/Type.h"
 
@@ -51,13 +56,23 @@ void SymFinder::visit(IdNode &node)
 {
     if(node.parent)
     {
-        std::vector<Sym*> sc;
-        SymFinder::find(type, curr, node.parent.get(), sc);
+        SymScopeVisitor sv(curr);
+        node.parent->accept(sv);
 
-        if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
+        std::vector<Sym*> sc;
+        if(sv.result() == curr)
         {
-            node.parent->setProperty("sym", sc.front());
-            sc = { sc.front()->property<::Type*>("type")->sym };
+            SymFinder::find(type, curr, node.parent.get(), sc);
+
+            if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
+            {
+                node.parent->setProperty("sym", sc.front());
+                sc = { sc.front()->property<::Type*>("type")->sym };
+            }
+        }
+        else
+        {
+            sc = { sv.result() };
         }
 
         for(auto s: sc)
@@ -73,6 +88,20 @@ void SymFinder::visit(IdNode &node)
             node.setProperty("sym", r.front());
         }
     }
+}
+
+void SymFinder::visit(AddrOfNode &node)
+{
+    node.expr->accept(*this);
+}
+
+void SymFinder::visit(ThisNode &node)
+{
+}
+
+void SymFinder::visit(DerefNode &node)
+{
+    node.expr->accept(*this);
 }
 
 void SymFinder::find(Type type, Sym *curr, Node *node, std::vector<Sym*> &result)

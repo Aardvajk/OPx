@@ -3,8 +3,13 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/DerefNode.h"
+
+#include "visitors/NameVisitors.h"
 
 #include "types/Type.h"
+
+#include "generator/ExprGenerator.h"
 
 AddrGenerator::AddrGenerator(Context &c, std::ostream &os) : c(c), os(os), ok(false)
 {
@@ -12,23 +17,33 @@ AddrGenerator::AddrGenerator(Context &c, std::ostream &os) : c(c), os(os), ok(fa
 
 void AddrGenerator::visit(IdNode &node)
 {
+    if(!node.getProperty("sym"))
+    {
+        throw Error(node.location(), "addressable expected - ", NameVisitors::prettyName(&node));
+    }
+
+    auto sym = node.property<const Sym*>("sym");
+
     if(node.parent)
     {
         node.parent->accept(*this);
 
-        os << "    push size(" << node.property<const Sym*>("sym")->property<std::size_t>("offset") << ");\n";
+        os << "    push size(" << sym->property<std::size_t>("offset") << ");\n";
         os << "    add size;\n";
 
         ok = true;
     }
     else
     {
-        auto s = node.property<const Sym*>("sym");
-
-        if(s->type() == Sym::Type::Var)
+        if(sym->type() == Sym::Type::Var)
         {
-            os << "    push &\"" << s->fullname() << "\";\n";
+            os << "    push &\"" << sym->fullname() << "\";\n";
             ok = true;
         }
     }
+}
+
+void AddrGenerator::visit(DerefNode &node)
+{
+    ExprGenerator::generate(c, os, *(node.expr.get()));
 }
