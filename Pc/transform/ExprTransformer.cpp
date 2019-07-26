@@ -23,6 +23,27 @@ ExprTransformer::ExprTransformer(Context &c) : c(c)
 {
 }
 
+void ExprTransformer::visit(IdNode &node)
+{
+    if(node.parent)
+    {
+        node.parent = ExprTransformer::transform(c, node.parent);
+    }
+    else
+    {
+        if(auto s = node.getProperty("sym"))
+        {
+            if(s.to<Sym*>()->getProperty("member").value<bool>() || s.to<Sym*>()->getProperty("method").value<bool>())
+            {
+                auto n = new DerefNode(node.location());
+                n->expr = new ThisNode(node.location());
+
+                node.parent = n;
+            }
+        }
+    }
+}
+
 void ExprTransformer::visit(AssignNode &node)
 {
     node.target = ExprTransformer::transform(c, node.target);
