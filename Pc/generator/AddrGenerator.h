@@ -18,6 +18,8 @@ public:
     virtual void visit(IdNode &node) override;
     virtual void visit(DerefNode &node) override;
 
+    static void generate(Context &c, std::ostream &os, Node &node);
+
 private:
     Context &c;
     std::ostream &os;

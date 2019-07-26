@@ -36,8 +36,7 @@ void ExprGenerator::visit(IdNode &node)
     {
         if(s->getProperty("member").value<bool>() && node.parent)
         {
-            AddrGenerator ag(c, os);
-            node.parent->accept(ag);
+            AddrGenerator::generate(c, os, *node.parent);
 
             os << "    push size(" << s->property<std::size_t>("offset") << ");\n";
             os << "    add size;\n";
@@ -97,14 +96,7 @@ void ExprGenerator::visit(CallNode &node)
 
 void ExprGenerator::visit(AddrOfNode &node)
 {
-    AddrGenerator ag(c, os);
-    node.expr->accept(ag);
-
-    if(!ag.result())
-    {
-        throw Error(node.expr->location(), "addressable expected - ", NameVisitors::prettyName(node.expr.get()));
-    }
-
+    AddrGenerator::generate(c, os, *node.expr);
     sz = sizeof(std::size_t);
 }
 
@@ -112,8 +104,7 @@ void ExprGenerator::visit(AssignNode &node)
 {
     auto s = ExprGenerator::generate(c, os, *node.expr);
 
-    AddrGenerator ag(c, os);
-    node.target->accept(ag);
+    AddrGenerator::generate(c, os, *node.target);
 
     os << "    store " << s << ";\n";
 
@@ -128,6 +119,12 @@ void ExprGenerator::visit(ThisNode &node)
 
 void ExprGenerator::visit(DerefNode &node)
 {
+    auto s = c.assertSize(node.expr->location(), TypeVisitor::type(c, &node));
+
+    ExprGenerator::generate(c, os, *node.expr);
+
+    os << "    load " << s << ";\n";
+    sz = s;
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

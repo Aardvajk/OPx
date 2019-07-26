@@ -1,5 +1,7 @@
 #include "AddrGenerator.h"
 
+#include "framework/Error.h"
+
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
@@ -46,4 +48,15 @@ void AddrGenerator::visit(IdNode &node)
 void AddrGenerator::visit(DerefNode &node)
 {
     ExprGenerator::generate(c, os, *(node.expr.get()));
+}
+
+void AddrGenerator::generate(Context &c, std::ostream &os, Node &node)
+{
+    AddrGenerator ag(c, os);
+    node.accept(ag);
+
+    if(!ag.result())
+    {
+        throw Error(node.location(), "addressable expected - ", NameVisitors::prettyName(&node));
+    }
 }
