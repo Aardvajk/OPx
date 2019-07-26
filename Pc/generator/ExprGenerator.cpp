@@ -36,6 +36,11 @@ void ExprGenerator::visit(IdNode &node)
     {
         if(s->getProperty("member").value<bool>() && node.parent)
         {
+            if(TypeVisitor::type(c, node.parent.get())->ptr)
+            {
+                throw Error(node.parent->location(), "cannot access member via pointer - ", NameVisitors::prettyName(node.parent.get()));
+            }
+
             AddrGenerator::generate(c, os, *node.parent);
 
             os << "    push size(" << s->property<std::size_t>("offset") << ");\n";
