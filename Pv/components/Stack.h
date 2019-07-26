@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include <iostream>
+
 class Stack
 {
 public:

@@ -19,6 +19,11 @@ bool TypeCompare::exact(const Type *a, const Type *b)
         return false;
     }
 
+    if(a->method != b->method)
+    {
+        return false;
+    }
+
     if(!exact(a->returnType, b->returnType))
     {
         return false;

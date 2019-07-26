@@ -14,8 +14,6 @@ Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), sp(
     rg.sp() = mm.size();
 }
 
-#include <iostream>
-
 void Machine::execute()
 {
     ByteReader rm(mm(0), rg.pc());
