@@ -33,7 +33,9 @@ void ExprTransformer::visit(IdNode &node)
     {
         if(auto s = node.getProperty("sym"))
         {
-            if(s.to<Sym*>()->getProperty("member").value<bool>() || s.to<Sym*>()->getProperty("method").value<bool>())
+            auto sym = s.to<const Sym*>();
+
+            if(sym->getProperty("member").value<bool>() || sym->getProperty("method").value<bool>())
             {
                 auto n = new DerefNode(node.location());
                 n->expr = new ThisNode(node.location());
