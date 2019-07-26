@@ -48,6 +48,7 @@ void AddrGenerator::visit(IdNode &node)
 void AddrGenerator::visit(DerefNode &node)
 {
     ExprGenerator::generate(c, os, *(node.expr.get()));
+    ok = true;
 }
 
 void AddrGenerator::generate(Context &c, std::ostream &os, Node &node)
