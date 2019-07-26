@@ -1,4 +1,4 @@
-Toy compiler and VM project
+## Toy compiler and VM project
 
 Queries to aardvajk@live.co.uk. Can't be bothered to keep updating this.
 
