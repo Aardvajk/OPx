@@ -4,7 +4,7 @@ Queries to aardvajk@live.co.uk. Can't be bothered to keep updating this.
 
 Currently supported example (26th July 2019)
 
-'''
+```
 include "stdlib.ph";
 
 class Foo;
@@ -38,4 +38,4 @@ func main()
     a.m();
     b.m();
 }
-'''
+```
