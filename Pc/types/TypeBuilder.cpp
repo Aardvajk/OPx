@@ -10,6 +10,7 @@
 
 #include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
+#include "visitors/ArraySizeVisitor.h"
 
 TypeBuilder::TypeBuilder(Context &c) : c(c), r(nullptr)
 {
@@ -25,6 +26,12 @@ void TypeBuilder::visit(TypeNode &node)
             t.args.push_back(type(c, a.get()));
         }
 
+        if(node.sub)
+        {
+            t.sub = ArraySizeVisitor::value(*node.sub);
+            t.ptr = 1;
+        }
+
         r = c.types.insert(t);
     }
     else
@@ -37,7 +44,15 @@ void TypeBuilder::visit(TypeNode &node)
             throw Error(node.name->location(), "type expected - ", NameVisitors::prettyName(node.name.get()));
         }
 
-        r = c.types.insert(Type::makePrimary(node.ptr, sv.front()));
+        auto t = Type::makePrimary(node.ptr, sv.front());
+
+        if(node.sub)
+        {
+            t.sub = ArraySizeVisitor::value(*node.sub);
+            ++t.ptr;
+        }
+
+        r = c.types.insert(t);
     }
 }
 

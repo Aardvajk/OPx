@@ -10,6 +10,7 @@
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/SymFinder.h"
+#include "visitors/NameVisitors.h"
 
 namespace
 {
@@ -43,6 +44,11 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
     for(auto &a: node.args)
     {
         t.args.push_back(TypeVisitor::type(c, a.get()));
+
+        if(t.args.back()->sub)
+        {
+            throw Error(a->location(), "arrays cannot be arguments - ", NameVisitors::prettyName(a.get()));
+        }
     }
 
     auto type = c.types.insert(t);

@@ -49,7 +49,14 @@ void ExprGenerator::visit(IdNode &node)
         }
         else
         {
-            os << "    push \"" << s->fullname() << "\";\n";
+            if(t->sub)
+            {
+                os << "    push &\"" << s->fullname() << "\";\n";
+            }
+            else
+            {
+                os << "    push \"" << s->fullname() << "\";\n";
+            }
         }
     }
 

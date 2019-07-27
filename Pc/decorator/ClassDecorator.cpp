@@ -57,7 +57,7 @@ void ClassDecorator::visit(VarNode &node)
 
     sym->setProperty("offset", size.value<std::size_t>());
 
-    c.tree.current()->container()->setProperty("size", size.value<std::size_t>() + c.assertSize(node.location(), type));
+    c.tree.current()->container()->setProperty("size", size.value<std::size_t>() + c.assertInitSize(node.location(), type));
 }
 
 void ClassDecorator::visit(FuncNode &node)

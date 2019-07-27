@@ -24,6 +24,7 @@ public:
     std::string assertSimpleNameUnique(Node *node);
 
     std::size_t assertSize(Location location, const Type *type);
+    std::size_t assertInitSize(Location location, const Type *type);
 
     SourceList sources;
     Scanner scanner;

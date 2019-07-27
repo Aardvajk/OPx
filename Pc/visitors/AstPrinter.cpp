@@ -185,6 +185,12 @@ void AstPrinter::visit(TypeNode &node)
         auto g = pcx::scoped_counter(tc);
         node.name->accept(*this);
     }
+
+    if(node.sub)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.sub->accept(*this);
+    }
 }
 
 void AstPrinter::visit(NullLiteralNode &node)

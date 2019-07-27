@@ -30,9 +30,14 @@ std::string toString(const Type *type)
         s += ":" + toString(type->returnType);
     }
 
+    if(type->sub)
+    {
+        s += pcx::str("[", type->sub, "]");
+    }
+
     if(type->method)
     {
-        s += "[method]";
+        s += " <method>";
     }
 
     return s;
@@ -53,6 +58,16 @@ pcx::optional<std::size_t> Type::size() const
         {
             return p.to<std::size_t>();
         }
+    }
+
+    return { };
+}
+
+pcx::optional<std::size_t> Type::initSize() const
+{
+    if(auto s = size())
+    {
+        return (*s) * (sub ? sub : 1);
     }
 
     return { };
@@ -93,6 +108,6 @@ Type Type::makeFunction(unsigned ptr, Type *returnType)
     return t;
 }
 
-Type::Type() : ptr(0), sym(nullptr), returnType(nullptr), method(false)
+Type::Type() : ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
 {
 }

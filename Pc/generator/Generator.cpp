@@ -48,7 +48,7 @@ void Generator::visit(ClassNode &node)
 void Generator::visit(VarNode &node)
 {
     auto sym = node.property<const Sym*>("sym");
-    os << "var \"" << sym->fullname() << "\":" << c.assertSize(node.location(), sym->property<const Type*>("type"));
+    os << "var \"" << sym->fullname() << "\":" << c.assertInitSize(node.location(), sym->property<const Type*>("type"));
 
     if(node.value)
     {

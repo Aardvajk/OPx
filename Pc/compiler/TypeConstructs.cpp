@@ -7,6 +7,7 @@
 #include "nodes/TypeNode.h"
 
 #include "compiler/CommonConstructs.h"
+#include "compiler/ExprConstructs.h"
 
 namespace
 {
@@ -69,6 +70,12 @@ TypeNodePtr outer(Context &c, bool get)
 
     auto n = primary(c, false);
     n->ptr = ptr;
+
+    if(c.scanner.token().type() == Token::Type::LeftSub)
+    {
+        n->sub = ExprConstructs::expr(c, true);
+        c.scanner.consume(Token::Type::RightSub, false);
+    }
 
     return n;
 }

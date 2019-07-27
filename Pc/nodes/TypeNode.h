@@ -17,6 +17,8 @@ public:
 
     NodeList args;
     NodePtr returnType;
+
+    NodePtr sub;
 };
 
 #endif // TYPENODE_H

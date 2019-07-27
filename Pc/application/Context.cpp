@@ -90,3 +90,14 @@ std::size_t Context::assertSize(Location location, const Type *type)
 
     return *sz;
 }
+
+std::size_t Context::assertInitSize(Location location, const Type *type)
+{
+    auto sz = type->initSize();
+    if(!sz)
+    {
+        throw Error(location, "undefined type used - ", type->text());
+    }
+
+    return *sz;
+}

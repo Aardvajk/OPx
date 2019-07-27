@@ -69,6 +69,13 @@ void NameVisitors::PrettyName::visit(TypeNode &node)
             node.name->accept(*this);
         }
     }
+
+    if(node.sub)
+    {
+        r += "[";
+        node.sub->accept(*this);
+        r += "]";
+    }
 }
 
 void NameVisitors::PrettyName::visit(NullLiteralNode &node)

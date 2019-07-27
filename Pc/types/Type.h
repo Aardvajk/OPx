@@ -12,6 +12,7 @@ class Type
 {
 public:
     pcx::optional<std::size_t> size() const;
+    pcx::optional<std::size_t> initSize() const;
 
     std::string text() const;
     bool function() const;
@@ -25,6 +26,8 @@ public:
 
     std::vector<Type*> args;
     Type *returnType;
+
+    std::size_t sub;
 
     bool method;
 
