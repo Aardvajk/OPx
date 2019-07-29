@@ -19,6 +19,7 @@ public:
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(AssignNode &node) override;
     virtual void visit(DerefNode &node) override;
+    virtual void visit(BinaryNode &node) override;
 
     static void decorate(Context &c, const Type *expectedType, Node &node);
 

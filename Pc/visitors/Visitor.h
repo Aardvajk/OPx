@@ -13,6 +13,7 @@ class NullLiteralNode;
 class CharLiteralNode;
 class IntLiteralNode;
 class BoolLiteralNode;
+class SizeLiteralNode;
 class ExprNode;
 class CallNode;
 class ReturnNode;
@@ -20,6 +21,7 @@ class AddrOfNode;
 class AssignNode;
 class ThisNode;
 class DerefNode;
+class BinaryNode;
 
 class Visitor
 {
@@ -38,6 +40,7 @@ public:
     virtual void visit(CharLiteralNode &node);
     virtual void visit(IntLiteralNode &node);
     virtual void visit(BoolLiteralNode &node);
+    virtual void visit(SizeLiteralNode &node);
     virtual void visit(ExprNode &node);
     virtual void visit(CallNode &node);
     virtual void visit(ReturnNode &node);
@@ -45,6 +48,7 @@ public:
     virtual void visit(AssignNode &node);
     virtual void visit(ThisNode &node);
     virtual void visit(DerefNode &node);
+    virtual void visit(BinaryNode &node);
 };
 
 #endif // VISITOR_H

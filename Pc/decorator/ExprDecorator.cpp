@@ -9,6 +9,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -142,6 +143,12 @@ void ExprDecorator::visit(AssignNode &node)
 void ExprDecorator::visit(DerefNode &node)
 {
     node.expr->accept(*this);
+}
+
+void ExprDecorator::visit(BinaryNode &node)
+{
+    node.left->accept(*this);
+    node.right->accept(*this);
 }
 
 void ExprDecorator::decorate(Context &c, const Type *expectedType, Node &node)

@@ -9,6 +9,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -104,6 +105,12 @@ void ExprTransformer::visit(ThisNode &node)
 void ExprTransformer::visit(DerefNode &node)
 {
     node.expr = ExprTransformer::transform(c, node.expr);
+}
+
+void ExprTransformer::visit(BinaryNode &node)
+{
+    node.left = ExprTransformer::transform(c, node.left);
+    node.right = ExprTransformer::transform(c, node.right);
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)

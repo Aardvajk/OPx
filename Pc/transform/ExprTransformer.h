@@ -20,6 +20,7 @@ public:
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(ThisNode &node) override;
     virtual void visit(DerefNode &node) override;
+    virtual void visit(BinaryNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr &node);
     static void transform(Context &c, NodeList &nodes);

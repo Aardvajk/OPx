@@ -36,6 +36,7 @@ Context::Context() : scanner(Lexer::Mode::Pc), classDepth(0)
     ns->add(primitive("char", 1));
     ns->add(primitive("int", 4));
     ns->add(primitive("bool", 1));
+    ns->add(primitive("size", 8));
 
     types.insert(Type::makePrimary(0, ns->child("null")));
 }

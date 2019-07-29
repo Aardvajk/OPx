@@ -9,8 +9,10 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -51,6 +53,11 @@ void TypeVisitor::visit(BoolLiteralNode &node)
     r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("bool")));
 }
 
+void TypeVisitor::visit(SizeLiteralNode &node)
+{
+    r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("size")));
+}
+
 void TypeVisitor::visit(CallNode &node)
 {
     r = TypeVisitor::type(c, node.target.get())->returnType;
@@ -62,6 +69,11 @@ void TypeVisitor::visit(AddrOfNode &node)
 
     ++t.ptr;
     r = c.types.insert(t);
+}
+
+void TypeVisitor::visit(AssignNode &node)
+{
+    node.target->accept(*this);
 }
 
 void TypeVisitor::visit(ThisNode &node)
@@ -90,6 +102,11 @@ void TypeVisitor::visit(DerefNode &node)
 
     --t.ptr;
     r = c.types.insert(t);
+}
+
+void TypeVisitor::visit(BinaryNode &node)
+{
+    node.left->accept(*this);
 }
 
 Type *TypeVisitor::type(Context &c, Node *node)

@@ -11,11 +11,14 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
 
 #include "generator/AddrGenerator.h"
+
+#include "operators/AddOperators.h"
 
 #include "types/Type.h"
 
@@ -87,6 +90,12 @@ void ExprGenerator::visit(BoolLiteralNode &node)
     sz = c.tree.root()->child("std")->child("bool")->property<std::size_t>("size");
 }
 
+void ExprGenerator::visit(SizeLiteralNode &node)
+{
+    os << "    push size(" << node.value << ");\n";
+    sz = c.tree.root()->child("std")->child("size")->property<std::size_t>("size");
+}
+
 void ExprGenerator::visit(CallNode &node)
 {
     auto t = TypeVisitor::type(c, node.target.get());
@@ -137,6 +146,16 @@ void ExprGenerator::visit(DerefNode &node)
 
     os << "    load " << s << ";\n";
     sz = s;
+}
+
+void ExprGenerator::visit(BinaryNode &node)
+{
+    switch(node.op)
+    {
+        case Operators::Type::Add: AddOperators::generate(c, os, node); break;
+
+        default: break;
+    }
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

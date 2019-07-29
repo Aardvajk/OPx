@@ -42,6 +42,7 @@ SOURCES += \
         main.cpp \
         nodes/AddrOfNode.cpp \
         nodes/AssignNode.cpp \
+        nodes/BinaryNode.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
@@ -57,6 +58,8 @@ SOURCES += \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
+        operators/AddOperators.cpp \
+        operators/Operators.cpp \
         syms/Sym.cpp \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
@@ -99,6 +102,7 @@ HEADERS += \
     generator/LocalsGenerator.h \
     nodes/AddrOfNode.h \
     nodes/AssignNode.h \
+    nodes/BinaryNode.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
@@ -114,6 +118,8 @@ HEADERS += \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
+    operators/AddOperators.h \
+    operators/Operators.h \
     syms/Sym.h \
     syms/SymGuard.h \
     syms/SymPrinter.h \

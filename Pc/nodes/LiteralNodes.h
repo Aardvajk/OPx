@@ -41,4 +41,14 @@ public:
     bool value;
 };
 
+class SizeLiteralNode : public Node
+{
+public:
+    SizeLiteralNode(Location location, std::size_t value) : Node(location), value(value) { }
+
+    virtual void accept(Visitor &v) override;
+
+    std::size_t value;
+};
+
 #endif // LITERALNODES_H

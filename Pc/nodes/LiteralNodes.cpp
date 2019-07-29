@@ -21,3 +21,8 @@ void BoolLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+void SizeLiteralNode::accept(Visitor &v)
+{
+    v.visit(*this);
+}

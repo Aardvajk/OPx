@@ -19,6 +19,7 @@ public:
     virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(BoolLiteralNode &node) override;
+    virtual void visit(SizeLiteralNode &node) override;
     virtual void visit(ExprNode &node) override;
     virtual void visit(CallNode &node) override;
     virtual void visit(ReturnNode &node) override;
@@ -26,6 +27,7 @@ public:
     virtual void visit(AssignNode &node) override;
     virtual void visit(ThisNode &node) override;
     virtual void visit(DerefNode &node) override;
+    virtual void visit(BinaryNode &node) override;
 
 private:
     std::ostream &tab() const;

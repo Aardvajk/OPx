@@ -11,6 +11,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -137,9 +138,25 @@ NodePtr entity(Context &c, bool get)
     }
 }
 
-NodePtr assign(Context &c, bool get)
+NodePtr sums(Context &c, bool get)
 {
     auto n = entity(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+        switch(c.scanner.token().type())
+        {
+            case Token::Type::Add: n = new BinaryNode(loc, Operators::Type::Add, n, expression(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
+NodePtr assign(Context &c, bool get)
+{
+    auto n = sums(c, get);
 
     while(c.scanner.token().type() == Token::Type::Assign)
     {

@@ -98,6 +98,11 @@ void NameVisitors::PrettyName::visit(BoolLiteralNode &node)
     r += node.value ? "true" : "false";
 }
 
+void NameVisitors::PrettyName::visit(SizeLiteralNode &node)
+{
+    r += pcx::str(node.value);
+}
+
 void NameVisitors::PrettyName::visit(ThisNode &node)
 {
     r += "this";

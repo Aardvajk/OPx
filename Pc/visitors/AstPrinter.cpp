@@ -16,6 +16,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -213,6 +214,11 @@ void AstPrinter::visit(BoolLiteralNode &node)
     tab() << "bool literal " << (node.value ? "true" : "false") << "\n";
 }
 
+void AstPrinter::visit(SizeLiteralNode &node)
+{
+    tab() << "size literal " << node.value << "\n";
+}
+
 void AstPrinter::visit(ExprNode &node)
 {
     tab() << "expr\n";
@@ -284,6 +290,15 @@ void AstPrinter::visit(DerefNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
+}
+
+void AstPrinter::visit(BinaryNode &node)
+{
+    tab() << "binary " << Operators::toString(node.op) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.left->accept(*this);
+    node.right->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

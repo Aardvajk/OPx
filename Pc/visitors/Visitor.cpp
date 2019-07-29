@@ -52,6 +52,10 @@ void Visitor::visit(BoolLiteralNode &node)
 {
 }
 
+void Visitor::visit(SizeLiteralNode &node)
+{
+}
+
 void Visitor::visit(ExprNode &node)
 {
 }
@@ -77,5 +81,9 @@ void Visitor::visit(ThisNode &node)
 }
 
 void Visitor::visit(DerefNode &node)
+{
+}
+
+void Visitor::visit(BinaryNode &node)
 {
 }
