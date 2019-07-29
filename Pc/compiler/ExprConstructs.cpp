@@ -12,6 +12,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -122,6 +123,19 @@ NodePtr call(Context &c, NodePtr target, bool get)
     return n;
 }
 
+NodePtr subscript(Context &c, NodePtr target, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::LeftSub, get);
+
+    auto sn = new SubscriptNode(tok.location(), target);
+    NodePtr n(sn);
+
+    sn->expr = expression(c, true);
+
+    c.scanner.consume(Token::Type::RightSub, false);
+    return n;
+}
+
 NodePtr entity(Context &c, bool get)
 {
     auto n = primary(c, get);
@@ -132,6 +146,7 @@ NodePtr entity(Context &c, bool get)
         {
             case Token::Type::Dot: n = dot(c, n, false); break;
             case Token::Type::LeftParen: n = call(c, n, false); break;
+            case Token::Type::LeftSub: n = subscript(c, n, false); break;
 
             default: return n;
         }

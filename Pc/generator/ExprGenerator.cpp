@@ -152,7 +152,7 @@ void ExprGenerator::visit(BinaryNode &node)
 {
     switch(node.op)
     {
-        case Operators::Type::Add: AddOperators::generate(c, os, node); break;
+        case Operators::Type::Add: sz = AddOperators::generate(c, os, node); break;
 
         default: break;
     }

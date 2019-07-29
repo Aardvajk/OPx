@@ -4,6 +4,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "syms/Sym.h"
 
@@ -102,6 +103,11 @@ void SymFinder::visit(ThisNode &node)
 void SymFinder::visit(DerefNode &node)
 {
     node.expr->accept(*this);
+}
+
+void SymFinder::visit(SubscriptNode &node)
+{
+    node.target->accept(*this);
 }
 
 void SymFinder::find(Type type, Sym *curr, Node *node, std::vector<Sym*> &result)

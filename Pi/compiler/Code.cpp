@@ -134,6 +134,40 @@ void addConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void mulConstruct(Context &c, bool get)
+{
+    auto id = c.scanner.next(get);
+    c.pd("-mul ", id.text());
+
+    switch(id.type())
+    {
+        case Token::Type::RwSize: c.func().bytes << OpCode::Op::MulS; break;
+
+        default: throw Error(id.location(), "invalid mul type - ", id.text());
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
+void convertConstruct(Context &c, bool get)
+{
+    auto s = c.scanner.next(get);
+    auto d = c.scanner.next(get);
+
+    c.pd("-convert ", s.text(), " ", d.text());
+
+    if(s.type() == Token::Type::RwInt && d.type() == Token::Type::RwSize)
+    {
+        c.func().bytes << OpCode::Op::IToS;
+    }
+    else
+    {
+        throw Error(s.location(), "invalid conversion - ", s.text(), " to ", d.text());
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void svcConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
@@ -177,6 +211,9 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::Store: storeConstruct(c, true); break;
 
         case Instruction::Type::Add: addConstruct(c, true); break;
+        case Instruction::Type::Mul: mulConstruct(c, true); break;
+
+        case Instruction::Type::Convert: convertConstruct(c, true); break;
 
         case Instruction::Type::Svc: svcConstruct(c, true); break;
 

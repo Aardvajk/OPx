@@ -19,6 +19,9 @@ enum class Type
     Store,
 
     Add,
+    Mul,
+
+    Convert,
 
     Svc,
     Invalid

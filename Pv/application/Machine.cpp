@@ -48,6 +48,10 @@ void Machine::execute()
             case Op::AddS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 + v.s1); break;
             case Op::AddI: s.pop(v.i0); s.pop(v.i1); s.push(v.i0 + v.i1); break;
 
+            case Op::MulS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 * v.s1); break;
+
+            case Op::IToS: s.pop(v.i0); s.push(static_cast<std::size_t>(v.i0)); break;
+
             case Op::Service: rm(v.i0); sp(v.i0, mm, rg); break;
 
             case Op::End: return;

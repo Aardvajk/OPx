@@ -40,6 +40,10 @@ enum class Op : unsigned char
     AddS,
     AddI,
 
+    MulS,
+
+    IToS,
+
     Service,
 
     Invalid

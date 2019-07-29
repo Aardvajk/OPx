@@ -33,6 +33,13 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<char>();
         std::cout << "bool " << (i ? "true" : "false") << "\n";
     }
+    else if(code == 5)
+    {
+        auto i = sr.get<std::size_t>();
+        auto p = mm(i);
+
+        std::cout << p;
+    }
     else if(code == 10)
     {
         auto i = sr.get<std::size_t>();

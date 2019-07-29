@@ -87,3 +87,7 @@ void Visitor::visit(DerefNode &node)
 void Visitor::visit(BinaryNode &node)
 {
 }
+
+void Visitor::visit(SubscriptNode &node)
+{
+}

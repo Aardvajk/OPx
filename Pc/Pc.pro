@@ -55,6 +55,7 @@ SOURCES += \
         nodes/Node.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
+        nodes/SubscriptNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
@@ -115,6 +116,7 @@ HEADERS += \
     nodes/Node.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
+    nodes/SubscriptNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \

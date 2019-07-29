@@ -16,6 +16,9 @@ const char *s[] =
     "store",
 
     "add",
+    "mul",
+
+    "convert",
 
     "svc",
     ""

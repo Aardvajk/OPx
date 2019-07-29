@@ -40,6 +40,10 @@ const char *OpCode::toString(Op v)
         "adds",
         "addi",
 
+        "muls",
+
+        "itos",
+
         "service",
 
         "(invalid)"

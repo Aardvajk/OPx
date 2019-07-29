@@ -17,6 +17,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -299,6 +300,15 @@ void AstPrinter::visit(BinaryNode &node)
     auto g = pcx::scoped_counter(tc);
     node.left->accept(*this);
     node.right->accept(*this);
+}
+
+void AstPrinter::visit(SubscriptNode &node)
+{
+    tab() << "subscript\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.target->accept(*this);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

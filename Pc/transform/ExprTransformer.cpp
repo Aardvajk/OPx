@@ -10,6 +10,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -111,6 +112,17 @@ void ExprTransformer::visit(BinaryNode &node)
 {
     node.left = ExprTransformer::transform(c, node.left);
     node.right = ExprTransformer::transform(c, node.right);
+}
+
+void ExprTransformer::visit(SubscriptNode &node)
+{
+    node.target = ExprTransformer::transform(c, node.target);
+    node.expr = ExprTransformer::transform(c, node.expr);
+
+    auto dn = new DerefNode(node.location());
+    rn = dn;
+
+    dn->expr = new BinaryNode(node.location(), Operators::Type::Add, node.target, node.expr);
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)

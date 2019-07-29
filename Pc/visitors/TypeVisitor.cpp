@@ -13,6 +13,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -107,6 +108,19 @@ void TypeVisitor::visit(DerefNode &node)
 void TypeVisitor::visit(BinaryNode &node)
 {
     node.left->accept(*this);
+}
+
+void TypeVisitor::visit(SubscriptNode &node)
+{
+    auto t = *(TypeVisitor::type(c, node.target.get()));
+
+    if(!t.ptr)
+    {
+        throw Error(node.expr->location(), "pointer expected - ", NameVisitors::prettyName(node.target.get()));
+    }
+
+    --t.ptr;
+    r = c.types.insert(t);
 }
 
 Type *TypeVisitor::type(Context &c, Node *node)
