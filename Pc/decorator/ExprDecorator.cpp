@@ -24,20 +24,27 @@
 namespace
 {
 
-std::vector<Sym*> searchFunction(Location location, const std::vector<Sym*> &sv, const Type *expectedType)
+std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv, const Type *expectedType)
 {
     std::vector<Sym*> rs;
 
     for(auto s: sv)
     {
-        if(!s->property<const Type*>("type")->function())
+        if(s->type() == Sym::Type::Class)
         {
-            throw Error(location, "callable expected - ", s->fullname());
+            throw Error("internal error, calling types not supported");
         }
-
-        if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
+        else
         {
-            rs.push_back(s);
+            if(!s->property<const Type*>("type")->function())
+            {
+                throw Error(location, "callable expected - ", s->fullname());
+            }
+
+            if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
+            {
+                rs.push_back(s);
+            }
         }
     }
 
@@ -71,7 +78,7 @@ void ExprDecorator::visit(IdNode &node)
             SymFinder::find(SymFinder::Type::Local, s, &node, sv);
         }
 
-        auto rs = searchFunction(node.location(), sv, expectedType);
+        auto rs = searchCallable(node.location(), sv, expectedType);
 
         if(rs.empty())
         {

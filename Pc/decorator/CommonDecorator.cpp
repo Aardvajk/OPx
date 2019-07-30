@@ -15,7 +15,7 @@
 namespace
 {
 
-Sym *searchFunction(Context &c, FuncNode &node, const Type *type)
+Sym *searchCallable(Context &c, FuncNode &node, const Type *type)
 {
     std::vector<Sym*> sv;
     SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
@@ -53,7 +53,7 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
 
     auto type = c.types.insert(t);
 
-    Sym *sym = searchFunction(c, node, type);
+    Sym *sym = searchCallable(c, node, type);
     if(sym)
     {
         if(!TypeCompare::exact(type->returnType, sym->property<const Type*>("type")->returnType))
