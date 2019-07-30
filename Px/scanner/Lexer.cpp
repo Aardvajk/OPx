@@ -29,6 +29,7 @@ static const std::vector<Reserved> pcReserved =
     { "operator", Token::Type::RwOperator },
     { "include", Token::Type::RwInclude },
     { "this", Token::Type::RwThis },
+    { "sizeof", Token::Type::RwSizeof },
     { "true", Token::Type::RwTrue },
     { "false", Token::Type::RwFalse },
     { "return", Token::Type::RwReturn }
@@ -209,6 +210,11 @@ Token Lexer::next(Mode mode, Source &source)
         {
             s += char(ch);
             ch = source.get();
+        }
+
+        if(ch == 's')
+        {
+            return Token(Token::Type::SizeLiteral, loc, s);
         }
 
         source.unget(ch);

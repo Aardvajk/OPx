@@ -35,7 +35,7 @@ void ExprTransformer::visit(IdNode &node)
     {
         if(auto s = node.getProperty("sym"))
         {
-            auto sym = s.to<const Sym*>();
+            auto sym = s.to<Sym*>();
 
             if(sym->getProperty("member").value<bool>() || sym->getProperty("method").value<bool>())
             {

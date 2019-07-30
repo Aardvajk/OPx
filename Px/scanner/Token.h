@@ -11,10 +11,10 @@ class Token
 public:
     enum class Type
     {
-        Id, IntLiteral, CharLiteral, StringLiteral,
+        Id, IntLiteral, CharLiteral, StringLiteral, SizeLiteral,
         LeftBrace, RightBrace, LeftParen, RightParen, LeftSub, RightSub,
         Dot, Comma, Semicolon, Colon, Assign, Amp, Star, Add,
-        RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwOperator, RwInclude, RwThis,
+        RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwOperator, RwInclude, RwThis, RwSizeof,
         RwTrue, RwFalse,
         RwReturn,
         RwChar, RwInt, RwSize, RwString,

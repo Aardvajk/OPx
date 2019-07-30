@@ -123,6 +123,8 @@ void Decorator::visit(ClassNode &node)
         sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), name));
     }
 
+    sym->setProperty("type", c.types.insert(Type::makePrimary(0, sym)));
+
     node.setProperty("sym", sym);
 
     if(node.body)

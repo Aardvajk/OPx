@@ -26,19 +26,25 @@ Sym *primitive(const std::string &name, std::size_t size)
     return s;
 }
 
+void addPrimitive(Context &c, const std::string &name, std::size_t size)
+{
+    auto s = c.tree.root()->child("std")->add(primitive(name, size));
+    auto t = c.types.insert(Type::makePrimary(0, s));
+
+    s->setProperty("type", t);
+}
+
 }
 
 Context::Context() : scanner(Lexer::Mode::Pc), classDepth(0)
 {
-    auto ns = tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
+    tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
-    ns->add(primitive("null", 0));
-    ns->add(primitive("char", 1));
-    ns->add(primitive("int", 4));
-    ns->add(primitive("bool", 1));
-    ns->add(primitive("size", 8));
-
-    types.insert(Type::makePrimary(0, ns->child("null")));
+    addPrimitive(*this, "null", 0);
+    addPrimitive(*this, "char", 1);
+    addPrimitive(*this, "int", 4);
+    addPrimitive(*this, "bool", 1);
+    addPrimitive(*this, "size", 8);
 }
 
 void Context::open(const std::string &path)

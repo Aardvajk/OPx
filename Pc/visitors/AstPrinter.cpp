@@ -58,7 +58,12 @@ void AstPrinter::visit(IdNode &node)
     if(auto sp = node.getProperty("sym"))
     {
         auto s = sp.to<const Sym*>();
-        os << " -> " << s->fullname() << ":" << s->property<const Type*>("type")->text() << " [" << s << "]";
+        os << " -> " << s->fullname();
+
+        if(auto tp = s->getProperty("type"))
+        {
+            os << ":" << tp.to<const Type*>()->text() << " [" << s << "]";
+        }
     }
 
     if(auto s = node.getProperty("matches"))
