@@ -29,7 +29,6 @@ static const std::vector<Reserved> pcReserved =
     { "operator", Token::Type::RwOperator },
     { "include", Token::Type::RwInclude },
     { "this", Token::Type::RwThis },
-    { "sizeof", Token::Type::RwSizeof },
     { "true", Token::Type::RwTrue },
     { "false", Token::Type::RwFalse },
     { "return", Token::Type::RwReturn }
