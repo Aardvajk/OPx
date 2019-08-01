@@ -23,6 +23,9 @@ enum class Type
 
     Convert,
 
+    Alloc,
+    Free,
+
     Svc,
     Invalid
 };

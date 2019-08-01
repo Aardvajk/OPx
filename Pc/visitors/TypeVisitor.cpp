@@ -59,6 +59,14 @@ void TypeVisitor::visit(SizeLiteralNode &node)
     r = c.types.insert(Type::makePrimary(0, c.tree.root()->child("std")->child("size")));
 }
 
+void TypeVisitor::visit(StringLiteralNode &node)
+{
+    auto t = Type::makePrimary(1, c.tree.root()->child("std")->child("char"));
+    t.sub = node.value.size() + 1;
+
+    r = c.types.insert(t);
+}
+
 void TypeVisitor::visit(CallNode &node)
 {
     r = TypeVisitor::type(c, node.target.get())->returnType;

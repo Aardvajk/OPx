@@ -168,6 +168,24 @@ void convertConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void allocConstruct(Context &c, bool get)
+{
+    c.pd("-alloc");
+
+    c.func().bytes << OpCode::Op::Alloc;
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
+void freeConstruct(Context &c, bool get)
+{
+    c.pd("-free");
+
+    c.func().bytes << OpCode::Op::Free;
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void svcConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
@@ -212,6 +230,9 @@ void Code::construct(Context &c, bool get)
 
         case Instruction::Type::Add: addConstruct(c, true); break;
         case Instruction::Type::Mul: mulConstruct(c, true); break;
+
+        case Instruction::Type::Alloc: allocConstruct(c, true); break;
+        case Instruction::Type::Free: freeConstruct(c, true); break;
 
         case Instruction::Type::Convert: convertConstruct(c, true); break;
 

@@ -44,6 +44,9 @@ const char *OpCode::toString(Op v)
 
         "itos",
 
+        "alloc",
+        "free",
+
         "service",
 
         "(invalid)"

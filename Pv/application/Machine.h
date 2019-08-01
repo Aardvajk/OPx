@@ -3,6 +3,7 @@
 
 #include "components/Memory.h"
 #include "components/Registers.h"
+#include "components/FreeStore.h"
 
 #include <vector>
 
@@ -19,6 +20,7 @@ public:
 private:
     Memory mm;
     Registers rg;
+    FreeStore fs;
     ServiceProc sp;
 };
 

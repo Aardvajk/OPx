@@ -23,6 +23,7 @@ public:
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(BoolLiteralNode &node) override;
     virtual void visit(SizeLiteralNode &node) override;
+    virtual void visit(StringLiteralNode &node) override;
     virtual void visit(CallNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(AssignNode &node) override;

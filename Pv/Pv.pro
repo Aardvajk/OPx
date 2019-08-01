@@ -21,11 +21,13 @@ PRE_TARGETDEPS += "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Machine.cpp \
+        components/FreeStore.cpp \
         components/Memory.cpp \
         main.cpp
 
 HEADERS += \
     application/Machine.h \
+    components/FreeStore.h \
     components/Memory.h \
     components/Registers.h \
     components/Stack.h \

@@ -20,6 +20,7 @@ public:
 
     static Type makePrimary(unsigned ptr, Sym *sym);
     static Type makeFunction(unsigned ptr, Type *returnType);
+    static Type removeSub(const Type &type);
 
     unsigned ptr;
     Sym *sym;

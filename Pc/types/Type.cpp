@@ -65,6 +65,19 @@ pcx::optional<std::size_t> Type::size() const
 
 pcx::optional<std::size_t> Type::initSize() const
 {
+    if(sub)
+    {
+        auto dt = *this;
+        --dt.ptr;
+
+        if(auto s = dt.size())
+        {
+            return (*s) * sub;
+        }
+
+        return { };
+    }
+
     if(auto s = size())
     {
         return (*s) * (sub ? sub : 1);
@@ -106,6 +119,14 @@ Type Type::makeFunction(unsigned ptr, Type *returnType)
     t.returnType = returnType;
 
     return t;
+}
+
+Type Type::removeSub(const Type &type)
+{
+    auto r = type;
+    r.sub = 0;
+
+    return r;
 }
 
 Type::Type() : ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)

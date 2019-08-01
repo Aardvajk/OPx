@@ -7,6 +7,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
@@ -80,6 +81,11 @@ void FuncTransformer::visit(ScopeNode &node)
 }
 
 void FuncTransformer::visit(ExprNode &node)
+{
+    node.expr = ExprTransformer::transform(c, node.expr);
+}
+
+void FuncTransformer::visit(ReturnNode &node)
 {
     node.expr = ExprTransformer::transform(c, node.expr);
 }

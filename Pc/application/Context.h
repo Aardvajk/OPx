@@ -36,6 +36,8 @@ public:
 
     unsigned classDepth;
     std::vector<FuncNode*> deferredMethods;
+
+    std::unordered_map<std::string, Node*> globals;
 };
 
 #endif // CONTEXT_H

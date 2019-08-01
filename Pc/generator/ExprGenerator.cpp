@@ -96,6 +96,12 @@ void ExprGenerator::visit(SizeLiteralNode &node)
     sz = c.tree.root()->child("std")->child("size")->property<std::size_t>("size");
 }
 
+void ExprGenerator::visit(StringLiteralNode &node)
+{
+    os << "    push &\"" << node.property<std::string>("global") << "\";\n";
+    sz = sizeof(std::size_t);
+}
+
 void ExprGenerator::visit(CallNode &node)
 {
     auto t = TypeVisitor::type(c, node.target.get());

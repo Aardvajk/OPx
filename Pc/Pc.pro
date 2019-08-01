@@ -38,6 +38,7 @@ SOURCES += \
         generator/ExprGenerator.cpp \
         generator/FuncGenerator.cpp \
         generator/Generator.cpp \
+        generator/GlobalsGenerator.cpp \
         generator/LocalsGenerator.cpp \
         main.cpp \
         nodes/AddrOfNode.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
     generator/ExprGenerator.h \
     generator/FuncGenerator.h \
     generator/Generator.h \
+    generator/GlobalsGenerator.h \
     generator/LocalsGenerator.h \
     nodes/AddrOfNode.h \
     nodes/AssignNode.h \

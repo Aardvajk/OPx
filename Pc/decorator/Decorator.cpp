@@ -174,6 +174,10 @@ void Decorator::visit(VarNode &node)
         if(!type)
         {
             type = TypeVisitor::type(c, node.value.get());
+            if(type->sub && c.tree.current()->container()->type() == Sym::Type::Func)
+            {
+                type = c.types.insert(Type::removeSub(*type));
+            }
         }
     }
 

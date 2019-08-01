@@ -48,6 +48,14 @@ void ExprTransformer::visit(IdNode &node)
     }
 }
 
+void ExprTransformer::visit(StringLiteralNode &node)
+{
+    auto name = pcx::str("#global", c.globals.size());
+
+    c.globals[name] = &node;
+    node.setProperty("global", name);
+}
+
 void ExprTransformer::visit(AssignNode &node)
 {
     node.target = ExprTransformer::transform(c, node.target);

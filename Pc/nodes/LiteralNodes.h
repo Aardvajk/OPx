@@ -51,4 +51,14 @@ public:
     std::size_t value;
 };
 
+class StringLiteralNode : public Node
+{
+public:
+    StringLiteralNode(Location location, std::string value) : Node(location), value(std::move(value)) { }
+
+    virtual void accept(Visitor &v) override;
+
+    std::string value;
+};
+
 #endif // LITERALNODES_H

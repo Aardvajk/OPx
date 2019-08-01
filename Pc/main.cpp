@@ -6,12 +6,14 @@
 #include "compiler/Compiler.h"
 
 #include "visitors/AstPrinter.h"
+#include "visitors/TypeVisitor.h"
 
 #include "transform/Transformer.h"
 
 #include "decorator/Decorator.h"
 
 #include "generator/Generator.h"
+#include "generator/GlobalsGenerator.h"
 
 #include "syms/SymPrinter.h"
 
@@ -21,6 +23,12 @@ template<typename T, typename... Args> void visit(NodePtr &node, Args&&... args)
 {
     T v(std::forward<Args>(args)...);
     node->accept(v);
+}
+
+void generate(Context &c, std::ostream &os, NodePtr &n)
+{
+    GlobalsGenerator::generate(c, os);
+    visit<Generator>(n, c, os);
 }
 
 int main(int argc, char *argv[])
@@ -60,7 +68,7 @@ int main(int argc, char *argv[])
         SymPrinter::print(c.tree.root(), std::cout);
 
         std::cout << banner("generate");
-        visit<Generator>(n, c, std::cout);
+        generate(c, std::cout, n);
 
         if(true)
         {
@@ -70,7 +78,7 @@ int main(int argc, char *argv[])
                 throw Error("unable to create - ", argv[2]);
             }
 
-            visit<Generator>(n, c, os);
+            generate(c, os, n);
         }
 
         std::cout << banner();

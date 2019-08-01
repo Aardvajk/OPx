@@ -56,6 +56,10 @@ void Visitor::visit(SizeLiteralNode &node)
 {
 }
 
+void Visitor::visit(StringLiteralNode &node)
+{
+}
+
 void Visitor::visit(ExprNode &node)
 {
 }

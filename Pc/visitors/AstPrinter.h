@@ -20,6 +20,7 @@ public:
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(BoolLiteralNode &node) override;
     virtual void visit(SizeLiteralNode &node) override;
+    virtual void visit(StringLiteralNode &node) override;
     virtual void visit(ExprNode &node) override;
     virtual void visit(CallNode &node) override;
     virtual void visit(ReturnNode &node) override;

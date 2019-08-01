@@ -26,3 +26,8 @@ void SizeLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+void StringLiteralNode::accept(Visitor &v)
+{
+    v.visit(*this);
+}

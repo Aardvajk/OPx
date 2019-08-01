@@ -20,6 +20,9 @@ const char *s[] =
 
     "convert",
 
+    "alloc",
+    "free",
+
     "svc",
     ""
 };

@@ -6,7 +6,7 @@
 #include "components/Stack.h"
 #include "components/Vars.h"
 
-Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), sp(sp)
+Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), fs(mm, v.size()), sp(sp)
 {
     std::memcpy(mm(0), v.data(), v.size());
 
@@ -51,6 +51,9 @@ void Machine::execute()
             case Op::MulS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 * v.s1); break;
 
             case Op::IToS: s.pop(v.i0); s.push(static_cast<std::size_t>(v.i0)); break;
+
+            case Op::Alloc: s.pop(v.s0); s.push(fs.allocate(v.s0)); break;
+            case Op::Free: s.pop(v.s0); fs.release(v.s0); break;
 
             case Op::Service: rm(v.i0); sp(v.i0, mm, rg); break;
 

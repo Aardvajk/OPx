@@ -44,6 +44,9 @@ enum class Op : unsigned char
 
     IToS,
 
+    Alloc,
+    Free,
+
     Service,
 
     Invalid

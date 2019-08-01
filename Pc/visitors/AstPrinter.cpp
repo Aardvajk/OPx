@@ -225,6 +225,11 @@ void AstPrinter::visit(SizeLiteralNode &node)
     tab() << "size literal " << node.value << "\n";
 }
 
+void AstPrinter::visit(StringLiteralNode &node)
+{
+    tab() << "string literal \"" << node.value << "\"\n";
+}
+
 void AstPrinter::visit(ExprNode &node)
 {
     tab() << "expr\n";
