@@ -15,6 +15,11 @@ void ArraySizeVisitor::visit(IntLiteralNode &node)
     r = static_cast<std::size_t>(node.value);
 }
 
+void ArraySizeVisitor::visit(SizeLiteralNode &node)
+{
+    r = node.value;
+}
+
 std::size_t ArraySizeVisitor::value(Node &node)
 {
     ArraySizeVisitor av;

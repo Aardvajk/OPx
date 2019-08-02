@@ -8,8 +8,6 @@ FreeStore::FreeStore(Memory &mm, std::size_t start) : mm(mm), sp(start)
 
 std::size_t FreeStore::allocate(std::size_t size)
 {
-std::cout << "allocate " << size << " -> " << sp << "\n";
-
     auto r = sp;
     sp += size;
 
@@ -18,5 +16,4 @@ std::cout << "allocate " << size << " -> " << sp << "\n";
 
 void FreeStore::release(std::size_t pointer)
 {
-std::cout << "release " << pointer << "\n";
 }

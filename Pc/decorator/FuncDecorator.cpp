@@ -7,6 +7,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/WhileNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -59,4 +60,10 @@ void FuncDecorator::visit(ReturnNode &node)
     {
         throw Error(node.expr->location(), rt->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
     }
+}
+
+void FuncDecorator::visit(WhileNode &node)
+{
+    ExprDecorator::decorate(c, nullptr, *node.expr);
+    node.body->accept(*this);
 }

@@ -6,6 +6,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/WhileNode.h"
 
 #include "generator/ExprGenerator.h"
 
@@ -39,4 +40,8 @@ void FuncGenerator::visit(ReturnNode &node)
     os << "    store " << sz << ";\n";
     os << "    pop " << sz << ";\n";
     os << "    jmp \"#end_function\";\n";
+}
+
+void FuncGenerator::visit(WhileNode &node)
+{
 }

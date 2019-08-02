@@ -95,3 +95,7 @@ void Visitor::visit(BinaryNode &node)
 void Visitor::visit(SubscriptNode &node)
 {
 }
+
+void Visitor::visit(WhileNode &node)
+{
+}

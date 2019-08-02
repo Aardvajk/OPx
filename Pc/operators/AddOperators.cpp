@@ -7,10 +7,12 @@
 #include "nodes/BinaryNode.h"
 
 #include "visitors/TypeVisitor.h"
+#include "visitors/NameVisitors.h"
 
 #include "generator/ExprGenerator.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 std::size_t AddOperators::generate(Context &c, std::ostream &os, BinaryNode &node)
 {
@@ -26,16 +28,22 @@ std::size_t AddOperators::generate(Context &c, std::ostream &os, BinaryNode &nod
         std::swap(lt, rt);
     }
 
+    ExprGenerator::generate(c, os, *ln);
+    ExprGenerator::generate(c, os, *rn);
+
     if(lt->ptr)
     {
         auto dt = *lt;
         --dt.ptr;
 
-        ExprGenerator::generate(c, os, *ln);
-        ExprGenerator::generate(c, os, *rn);
-
-        //TODO assuming a std.int for now
-        os << "    convert int size;\n";
+        if(TypeCompare::exact(rt, c.types.intType()))
+        {
+            os << "    convert int size;\n";
+        }
+        else if(!TypeCompare::exact(rt, c.types.sizeType()))
+        {
+            throw Error(node.location(), "invalid pointer addition - ", NameVisitors::prettyName(rn));
+        }
 
         os << "    push size(" << c.assertSize(node.location(), &dt) << ");\n";
         os << "    mul size;\n";
@@ -43,6 +51,13 @@ std::size_t AddOperators::generate(Context &c, std::ostream &os, BinaryNode &nod
         os << "    add size;\n";
 
         return sizeof(std::size_t);
+    }
+
+    if(TypeCompare::exact(lt, c.types.intType()) && TypeCompare::exact(rt, c.types.intType()))
+    {
+        os << "    add int;\n";
+
+        return c.types.intType()->size();
     }
 
     throw Error("add not implemented");

@@ -36,6 +36,7 @@ const char *OpCode::toString(Op v)
 
         "call",
         "ret",
+        "jmpz",
 
         "adds",
         "addi",

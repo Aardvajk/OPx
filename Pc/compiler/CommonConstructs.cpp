@@ -6,6 +6,7 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
+#include "nodes/ScopeNode.h"
 
 #include "compiler/Compiler.h"
 
@@ -64,7 +65,7 @@ NodePtr CommonConstructs::extendedName(Context &c, bool get)
     return nameImpl(c, true, { }, get);
 }
 
-NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)
+NodePtr CommonConstructs::blockContents(Context &c, Location location, bool get)
 {
     auto block = new BlockNode(location);
     NodePtr nn(block);
@@ -82,4 +83,30 @@ NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)
     return nn;
 }
 
+NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)
+{
+    auto scope = new ScopeNode(location);
+    NodePtr nn(scope);
 
+    auto block = new BlockNode(location);
+    scope->body = block;
+
+    auto tok = c.scanner.next(true);
+
+    if(tok.type() == Token::Type::LeftBrace)
+    {
+        c.scanner.next(true);
+        while(c.scanner.token().type() != Token::Type::RightBrace)
+        {
+            Compiler::construct(c, block, false);
+        }
+
+        c.scanner.next(true);
+    }
+    else
+    {
+        Compiler::construct(c, block, false);
+    }
+
+    return nn;
+}

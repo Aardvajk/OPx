@@ -36,6 +36,7 @@ enum class Op : unsigned char
 
     Call,
     Ret,
+    JmpZ,
 
     AddS,
     AddI,

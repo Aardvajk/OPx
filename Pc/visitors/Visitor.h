@@ -24,6 +24,7 @@ class ThisNode;
 class DerefNode;
 class BinaryNode;
 class SubscriptNode;
+class WhileNode;
 
 class Visitor
 {
@@ -53,6 +54,7 @@ public:
     virtual void visit(DerefNode &node);
     virtual void visit(BinaryNode &node);
     virtual void visit(SubscriptNode &node);
+    virtual void visit(WhileNode &node);
 };
 
 #endif // VISITOR_H

@@ -60,6 +60,7 @@ SOURCES += \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
+        nodes/WhileNode.cpp \
         operators/AddOperators.cpp \
         operators/Operators.cpp \
         syms/Sym.cpp \
@@ -122,6 +123,7 @@ HEADERS += \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
+    nodes/WhileNode.h \
     operators/AddOperators.h \
     operators/Operators.h \
     syms/Sym.h \

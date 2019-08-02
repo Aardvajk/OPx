@@ -19,8 +19,23 @@ namespace
 
 void jmpConstruct(Context &c, bool get)
 {
-    auto id = c.matchId(get);
-    c.pd("-jmp ", id.text());
+    bool ifz = false;
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::Id && tok.text() == "ifz")
+    {
+        ifz = true;
+        c.scanner.next(true);
+    }
+
+    auto id = c.matchId(false);
+    c.pd("-jmp ", (ifz ? "ifz " : ""), id.text());
+
+    if(ifz)
+    {
+        c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
+        c.func().bytes << OpCode::Op::JmpZ << OpCode::Reg::Dx << std::size_t(10);
+    }
 
     if(auto s = c.syms.findLocal(id.text()))
     {

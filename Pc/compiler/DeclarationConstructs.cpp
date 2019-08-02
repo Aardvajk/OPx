@@ -35,7 +35,7 @@ void namespaceConstruct(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     auto cg = pcx::scoped_push(c.containers, Sym::Type::Namespace);
-    n->body = CommonConstructs::scopeContents(c, n->location(), false);
+    n->body = CommonConstructs::blockContents(c, n->location(), false);
 }
 
 void classConstruct(Context &c, BlockNode *block, bool get)
@@ -53,7 +53,7 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         auto cg = pcx::scoped_push(c.containers, Sym::Type::Class);
-        n->body = CommonConstructs::scopeContents(c, n->location(), false);
+        n->body = CommonConstructs::blockContents(c, n->location(), false);
     }
     else
     {
@@ -139,7 +139,7 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         auto cg = pcx::scoped_push(c.containers, Sym::Type::Func);
-        n->body = CommonConstructs::scopeContents(c, n->location(), false);
+        n->body = CommonConstructs::blockContents(c, n->location(), false);
     }
     else
     {

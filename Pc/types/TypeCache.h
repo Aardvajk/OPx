@@ -14,6 +14,8 @@ public:
     Type *insert(const Type &type);
 
     Type *nullType();
+    Type *intType();
+    Type *sizeType();
 
 private:
     pcx::ptr_vector<Type> v;

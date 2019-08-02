@@ -15,6 +15,7 @@ public:
     pcx::optional<std::size_t> result() const { return r; }
 
     virtual void visit(IntLiteralNode &node) override;
+    virtual void visit(SizeLiteralNode &node) override;
 
     static std::size_t value(Node &node);
 
