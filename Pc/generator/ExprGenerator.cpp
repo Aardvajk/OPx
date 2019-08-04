@@ -19,6 +19,7 @@
 #include "generator/AddrGenerator.h"
 
 #include "operators/AddOperators.h"
+#include "operators/CompareOperators.h"
 
 #include "types/Type.h"
 
@@ -158,7 +159,10 @@ void ExprGenerator::visit(BinaryNode &node)
 {
     switch(node.op)
     {
-        case Operators::Type::Add: sz = AddOperators::generate(c, os, node); break;
+        case Operators::Type::Add: sz = AddOperators::generateAdd(c, os, node); break;
+
+        case Operators::Type::Eq:
+        case Operators::Type::Neq: sz = CompareOperators::generate(c, os, node); break;
 
         default: break;
     }

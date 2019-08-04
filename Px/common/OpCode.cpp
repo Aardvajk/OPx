@@ -41,9 +41,14 @@ const char *OpCode::toString(Op v)
         "adds",
         "addi",
 
+        "subi",
+
         "muls",
 
+        "nots",
+
         "itos",
+        "stoc",
 
         "alloc",
         "free",

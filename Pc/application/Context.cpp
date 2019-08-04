@@ -36,7 +36,7 @@ void addPrimitive(Context &c, const std::string &name, std::size_t size)
 
 }
 
-Context::Context() : scanner(Lexer::Mode::Pc), classDepth(0)
+Context::Context() : scanner(Lexer::Mode::Pc), classDepth(0), labels(0)
 {
     tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
@@ -107,4 +107,9 @@ std::size_t Context::assertInitSize(Location location, const Type *type)
     }
 
     return *sz;
+}
+
+std::string Context::nextLabel()
+{
+    return pcx::str("#label_", labels++);
 }

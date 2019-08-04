@@ -44,14 +44,19 @@ void Machine::execute()
 
             case Op::Call: rm(v.r0); s.push(rg.pc()); rg.pc() = rg[v.r0]; break;
             case Op::Ret: rm(v.s0); s.pop(rg.pc()); rg.sp() += v.s0; break;
-            case Op::JmpZ: rm(v.r0, v.s0); if(rg[v.r0]) rg.pc() += v.s0; break;
+            case Op::JmpZ: rm(v.s0); s.pop(v.c0); if(v.c0) rg.pc() += v.s0; break;
 
             case Op::AddS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 + v.s1); break;
             case Op::AddI: s.pop(v.i0); s.pop(v.i1); s.push(v.i0 + v.i1); break;
 
+            case Op::SubI: s.pop(v.i0); s.pop(v.i1); s.push(v.i0 - v.i1); break;
+
             case Op::MulS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 * v.s1); break;
 
+            case Op::NotS: s.pop(v.s0); s.push(!v.s0); break;
+
             case Op::IToS: s.pop(v.i0); s.push(static_cast<std::size_t>(v.i0)); break;
+            case Op::SToC: s.pop(v.s0); s.push(static_cast<unsigned char>(v.s0)); break;
 
             case Op::Alloc: s.pop(v.s0); s.push(fs.allocate(v.s0)); break;
             case Op::Free: s.pop(v.s0); fs.release(v.s0); break;

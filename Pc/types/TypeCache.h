@@ -15,6 +15,7 @@ public:
 
     Type *nullType();
     Type *intType();
+    Type *boolType();
     Type *sizeType();
 
 private:

@@ -33,8 +33,7 @@ void jmpConstruct(Context &c, bool get)
 
     if(ifz)
     {
-        c.func().bytes << OpCode::Op::PopR << OpCode::Reg::Dx;
-        c.func().bytes << OpCode::Op::JmpZ << OpCode::Reg::Dx << std::size_t(10);
+        c.func().bytes << OpCode::Op::JmpZ << std::size_t(10);
     }
 
     if(auto s = c.syms.findLocal(id.text()))
@@ -149,6 +148,21 @@ void addConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void subConstruct(Context &c, bool get)
+{
+    auto id = c.scanner.next(get);
+    c.pd("-sub ", id.text());
+
+    switch(id.type())
+    {
+        case Token::Type::RwInt: c.func().bytes << OpCode::Op::SubI; break;
+
+        default: throw Error(id.location(), "invalid sub type - ", id.text());
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void mulConstruct(Context &c, bool get)
 {
     auto id = c.scanner.next(get);
@@ -164,6 +178,21 @@ void mulConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void notConstruct(Context &c, bool get)
+{
+    auto id = c.scanner.next(get);
+    c.pd("-not ", id.text());
+
+    switch(id.type())
+    {
+        case Token::Type::RwSize: c.func().bytes << OpCode::Op::NotS; break;
+
+        default: throw Error(id.location(), "invalid not type - ", id.text());
+    }
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void convertConstruct(Context &c, bool get)
 {
     auto s = c.scanner.next(get);
@@ -174,6 +203,10 @@ void convertConstruct(Context &c, bool get)
     if(s.type() == Token::Type::RwInt && d.type() == Token::Type::RwSize)
     {
         c.func().bytes << OpCode::Op::IToS;
+    }
+    else if(s.type() == Token::Type::RwSize && d.type() == Token::Type::RwChar)
+    {
+        c.func().bytes << OpCode::Op::SToC;
     }
     else
     {
@@ -244,7 +277,9 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::Store: storeConstruct(c, true); break;
 
         case Instruction::Type::Add: addConstruct(c, true); break;
+        case Instruction::Type::Sub: subConstruct(c, true); break;
         case Instruction::Type::Mul: mulConstruct(c, true); break;
+        case Instruction::Type::Not: notConstruct(c, true); break;
 
         case Instruction::Type::Alloc: allocConstruct(c, true); break;
         case Instruction::Type::Free: freeConstruct(c, true); break;

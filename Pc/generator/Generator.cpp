@@ -89,6 +89,8 @@ void Generator::visit(FuncNode &node)
 
         auto g = c.tree.open(node.property<Sym*>("sym"));
 
+        c.labels = 0;
+
         LocalsGenerator lg(c, os);
         node.body->accept(lg);
 

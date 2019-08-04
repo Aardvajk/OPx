@@ -154,6 +154,22 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
     }
 }
 
+typedef std::pair<Source::Char, Token::Type> char_type_pair;
+Token speculate(Source &source, Location location, char_type_pair in, const std::vector<char_type_pair> &c)
+{
+    auto ch = source.get();
+    for(auto &n: c)
+    {
+        if(n.first == ch)
+        {
+            return Token(n.second, location, pcx::str(char(in.first), char(ch)));
+        }
+    }
+
+    source.unget(ch);
+    return Token(in.second, location, char(in.first));
+}
+
 }
 
 Token Lexer::next(Mode mode, Source &source)
@@ -174,10 +190,12 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == ':') return Token(Token::Type::Colon, loc, ch);
     if(ch == ',') return Token(Token::Type::Comma, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
-    if(ch == '=') return Token(Token::Type::Assign, loc, ch);
     if(ch == '&') return Token(Token::Type::Amp, loc, ch);
     if(ch == '*') return Token(Token::Type::Star, loc, ch);
     if(ch == '+') return Token(Token::Type::Add, loc, ch);
+
+    if(ch == '=') return speculate(source, loc, { '=', Token::Type::Assign }, { { '=', Token::Type::Eq } });
+    if(ch == '!') return speculate(source, loc, { '!', Token::Type::Exclaim }, { { '=', Token::Type::Neq } });
 
     if(ch == '\'')
     {

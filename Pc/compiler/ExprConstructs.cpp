@@ -186,9 +186,26 @@ NodePtr assign(Context &c, bool get)
     return n;
 }
 
+NodePtr comparisons(Context &c, bool get)
+{
+    auto n = assign(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+        switch(c.scanner.token().type())
+        {
+            case Token::Type::Eq: n = new BinaryNode(loc, Operators::Type::Eq, n, expression(c, true)); break;
+            case Token::Type::Neq: n = new BinaryNode(loc, Operators::Type::Neq, n, expression(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return assign(c, get);
+    return comparisons(c, get);
 }
 
 }

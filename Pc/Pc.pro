@@ -62,6 +62,7 @@ SOURCES += \
         nodes/VarNode.cpp \
         nodes/WhileNode.cpp \
         operators/AddOperators.cpp \
+        operators/CompareOperators.cpp \
         operators/Operators.cpp \
         syms/Sym.cpp \
         syms/SymGuard.cpp \
@@ -125,6 +126,7 @@ HEADERS += \
     nodes/VarNode.h \
     nodes/WhileNode.h \
     operators/AddOperators.h \
+    operators/CompareOperators.h \
     operators/Operators.h \
     syms/Sym.h \
     syms/SymGuard.h \

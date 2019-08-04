@@ -41,9 +41,14 @@ enum class Op : unsigned char
     AddS,
     AddI,
 
+    SubI,
+
     MulS,
 
+    NotS,
+
     IToS,
+    SToC,
 
     Alloc,
     Free,

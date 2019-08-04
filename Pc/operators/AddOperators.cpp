@@ -14,7 +14,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
-std::size_t AddOperators::generate(Context &c, std::ostream &os, BinaryNode &node)
+std::size_t AddOperators::generateAdd(Context &c, std::ostream &os, BinaryNode &node)
 {
     auto ln = node.left.get();
     auto rn = node.right.get();
@@ -53,12 +53,5 @@ std::size_t AddOperators::generate(Context &c, std::ostream &os, BinaryNode &nod
         return sizeof(std::size_t);
     }
 
-    if(TypeCompare::exact(lt, c.types.intType()) && TypeCompare::exact(rt, c.types.intType()))
-    {
-        os << "    add int;\n";
-
-        return c.types.intType()->size();
-    }
-
-    throw Error("add not implemented");
+    throw Error("internal error - add not supported");
 }

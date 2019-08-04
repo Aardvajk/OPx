@@ -9,7 +9,7 @@ class BinaryNode;
 namespace AddOperators
 {
 
-std::size_t generate(Context &c, std::ostream &os, BinaryNode &node);
+std::size_t generateAdd(Context &c, std::ostream &os, BinaryNode &node);
 
 }
 

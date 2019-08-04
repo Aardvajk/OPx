@@ -24,7 +24,10 @@ NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
     {
         static const std::vector<Token::Type> operators =
         {
-            Token::Type::Assign
+            Token::Type::Assign,
+            Token::Type::Add,
+            Token::Type::Eq,
+            Token::Type::Neq
         };
 
         auto op = c.scanner.next(true);

@@ -19,6 +19,7 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a"
 SOURCES += \
     common/DebugMap.cpp \
     common/Object.cpp \
+    common/Primitive.cpp \
     framework/ByteStream.cpp \
     framework/ByteStreamPatch.cpp \
     common/OpCode.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 HEADERS += \
     common/DebugMap.h \
     common/Object.h \
+    common/Primitive.h \
     framework/ByteReader.h \
     framework/Console.h \
     framework/Error.h \

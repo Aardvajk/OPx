@@ -61,7 +61,7 @@ void ExprTransformer::visit(AssignNode &node)
     node.target = ExprTransformer::transform(c, node.target);
     node.expr = ExprTransformer::transform(c, node.expr);
 
-    if(!TypeVisitor::type(c, node.target.get())->primitive())
+    if(!TypeVisitor::type(c, node.target.get())->ptr)
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
         rn = cn;
@@ -120,6 +120,17 @@ void ExprTransformer::visit(BinaryNode &node)
 {
     node.left = ExprTransformer::transform(c, node.left);
     node.right = ExprTransformer::transform(c, node.right);
+
+    if(!TypeVisitor::type(c, node.left.get())->ptr && !TypeVisitor::type(c, node.right.get())->ptr)
+    {
+        auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
+        rn = cn;
+
+        cn->params.push_back(node.left);
+        cn->params.push_back(node.right);
+
+        ExprDecorator::decorate(c, nullptr, *cn);
+    }
 }
 
 void ExprTransformer::visit(SubscriptNode &node)

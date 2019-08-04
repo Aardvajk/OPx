@@ -26,6 +26,8 @@ public:
     std::size_t assertSize(Location location, const Type *type);
     std::size_t assertInitSize(Location location, const Type *type);
 
+    std::string nextLabel();
+
     SourceList sources;
     Scanner scanner;
 
@@ -38,6 +40,7 @@ public:
     std::vector<FuncNode*> deferredMethods;
 
     std::unordered_map<std::string, Node*> globals;
+    std::size_t labels;
 };
 
 #endif // CONTEXT_H

@@ -7,7 +7,9 @@ namespace Operators
 enum class Type
 {
     Assign,
-    Add
+    Add,
+    Eq,
+    Neq
 };
 
 const char *toString(Type v);

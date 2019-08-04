@@ -37,6 +37,11 @@ Type *TypeCache::intType()
     return v.ptr(2);
 }
 
+Type *TypeCache::boolType()
+{
+    return v.ptr(3);
+}
+
 Type *TypeCache::sizeType()
 {
     return v.ptr(4);

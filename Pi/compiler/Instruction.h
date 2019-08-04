@@ -19,7 +19,9 @@ enum class Type
     Store,
 
     Add,
+    Sub,
     Mul,
+    Not,
 
     Convert,
 

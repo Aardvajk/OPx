@@ -8,6 +8,7 @@
 #include "nodes/DerefNode.h"
 
 #include "visitors/NameVisitors.h"
+#include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
 
@@ -28,6 +29,11 @@ void AddrGenerator::visit(IdNode &node)
 
     if(node.parent)
     {
+        if(TypeVisitor::type(c, node.parent.get())->ptr)
+        {
+            throw Error(node.location(), "cannot access member via pointer - ", NameVisitors::prettyName(&node));
+        }
+
         node.parent->accept(*this);
 
         os << "    push size(" << sym->property<std::size_t>("offset") << ");\n";

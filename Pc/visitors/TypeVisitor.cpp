@@ -115,7 +115,16 @@ void TypeVisitor::visit(DerefNode &node)
 
 void TypeVisitor::visit(BinaryNode &node)
 {
-    node.left->accept(*this);
+    switch(node.op)
+    {
+        case Operators::Type::Add: node.left->accept(*this); break;
+
+        case Operators::Type::Eq:
+        case Operators::Type::Neq: r = c.types.boolType(); break;
+
+        default: throw Error("internal error - operator not supported");
+    }
+
 }
 
 void TypeVisitor::visit(SubscriptNode &node)
