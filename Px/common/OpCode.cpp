@@ -38,17 +38,13 @@ const char *OpCode::toString(Op v)
         "ret",
         "jmpz",
 
-        "adds",
-        "addi",
+        "add",
+        "sub",
+        "mul",
 
-        "subi",
+        "not",
 
-        "muls",
-
-        "nots",
-
-        "itos",
-        "stoc",
+        "conv",
 
         "alloc",
         "free",

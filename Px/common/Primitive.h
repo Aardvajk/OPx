@@ -10,7 +10,9 @@ enum class Type : std::uint8_t
 {
     Char,
     Int,
-    Size
+    Size,
+
+    Invalid
 };
 
 const char *toString(Type v);

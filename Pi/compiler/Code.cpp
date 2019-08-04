@@ -1,6 +1,7 @@
 #include "Code.h"
 
 #include "common/OpCode.h"
+#include "common/Primitive.h"
 
 #include "framework/Error.h"
 
@@ -16,6 +17,29 @@
 
 namespace
 {
+
+Primitive::Type primitive(Token::Type type)
+{
+    switch(type)
+    {
+        case Token::Type::RwChar: return Primitive::Type::Char;
+        case Token::Type::RwInt: return Primitive::Type::Int;
+        case Token::Type::RwSize: return Primitive::Type::Size;
+
+        default: return Primitive::Type::Invalid;
+    }
+}
+
+Primitive::Type primitiveFromToken(const Token &token)
+{
+    auto r = primitive(token.type());
+    if(r == Primitive::Type::Invalid)
+    {
+        throw Error(token.location(), "primitive expected - ", token.text());
+    }
+
+    return r;
+}
 
 void jmpConstruct(Context &c, bool get)
 {
@@ -137,13 +161,7 @@ void addConstruct(Context &c, bool get)
     auto id = c.scanner.next(get);
     c.pd("-add ", id.text());
 
-    switch(id.type())
-    {
-        case Token::Type::RwInt: c.func().bytes << OpCode::Op::AddI; break;
-        case Token::Type::RwSize: c.func().bytes << OpCode::Op::AddS; break;
-
-        default: throw Error(id.location(), "invalid add type - ", id.text());
-    }
+    c.func().bytes << OpCode::Op::Add << primitiveFromToken(id);
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -153,12 +171,7 @@ void subConstruct(Context &c, bool get)
     auto id = c.scanner.next(get);
     c.pd("-sub ", id.text());
 
-    switch(id.type())
-    {
-        case Token::Type::RwInt: c.func().bytes << OpCode::Op::SubI; break;
-
-        default: throw Error(id.location(), "invalid sub type - ", id.text());
-    }
+    c.func().bytes << OpCode::Op::Sub << primitiveFromToken(id);
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -168,12 +181,7 @@ void mulConstruct(Context &c, bool get)
     auto id = c.scanner.next(get);
     c.pd("-mul ", id.text());
 
-    switch(id.type())
-    {
-        case Token::Type::RwSize: c.func().bytes << OpCode::Op::MulS; break;
-
-        default: throw Error(id.location(), "invalid mul type - ", id.text());
-    }
+    c.func().bytes << OpCode::Op::Mul << primitiveFromToken(id);
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -183,12 +191,7 @@ void notConstruct(Context &c, bool get)
     auto id = c.scanner.next(get);
     c.pd("-not ", id.text());
 
-    switch(id.type())
-    {
-        case Token::Type::RwSize: c.func().bytes << OpCode::Op::NotS; break;
-
-        default: throw Error(id.location(), "invalid not type - ", id.text());
-    }
+    c.func().bytes << OpCode::Op::Not << primitiveFromToken(id);
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -200,18 +203,7 @@ void convertConstruct(Context &c, bool get)
 
     c.pd("-convert ", s.text(), " ", d.text());
 
-    if(s.type() == Token::Type::RwInt && d.type() == Token::Type::RwSize)
-    {
-        c.func().bytes << OpCode::Op::IToS;
-    }
-    else if(s.type() == Token::Type::RwSize && d.type() == Token::Type::RwChar)
-    {
-        c.func().bytes << OpCode::Op::SToC;
-    }
-    else
-    {
-        throw Error(s.location(), "invalid conversion - ", s.text(), " to ", d.text());
-    }
+    c.func().bytes << OpCode::Op::Conv << primitiveFromToken(s) << primitiveFromToken(d);
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }

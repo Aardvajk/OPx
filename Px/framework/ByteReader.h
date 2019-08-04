@@ -2,6 +2,7 @@
 #define BYTEREADER_H
 
 #include <cstring>
+#include <utility>
 
 namespace bytereader_detail
 {

@@ -6,6 +6,10 @@
 #include "components/Stack.h"
 #include "components/Vars.h"
 
+#include "operations/MathOps.h"
+#include "operations/UnaryOps.h"
+#include "operations/ConvertOps.h"
+
 Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), fs(mm, v.size()), sp(sp)
 {
     std::memcpy(mm(0), v.data(), v.size());
@@ -46,17 +50,13 @@ void Machine::execute()
             case Op::Ret: rm(v.s0); s.pop(rg.pc()); rg.sp() += v.s0; break;
             case Op::JmpZ: rm(v.s0); s.pop(v.c0); if(v.c0) rg.pc() += v.s0; break;
 
-            case Op::AddS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 + v.s1); break;
-            case Op::AddI: s.pop(v.i0); s.pop(v.i1); s.push(v.i0 + v.i1); break;
+            case Op::Add: MathOps::mathOp<MathOps::Add>(rm, s); break;
+            case Op::Sub: MathOps::mathOp<MathOps::Sub>(rm, s); break;
+            case Op::Mul: MathOps::mathOp<MathOps::Mul>(rm, s); break;
 
-            case Op::SubI: s.pop(v.i0); s.pop(v.i1); s.push(v.i0 - v.i1); break;
+            case Op::Not: UnaryOps::unaryOp<UnaryOps::Not>(rm, s); break;
 
-            case Op::MulS: s.pop(v.s0); s.pop(v.s1); s.push(v.s0 * v.s1); break;
-
-            case Op::NotS: s.pop(v.s0); s.push(!v.s0); break;
-
-            case Op::IToS: s.pop(v.i0); s.push(static_cast<std::size_t>(v.i0)); break;
-            case Op::SToC: s.pop(v.s0); s.push(static_cast<unsigned char>(v.s0)); break;
+            case Op::Conv: ConvertOps::convert(rm, s); break;
 
             case Op::Alloc: s.pop(v.s0); s.push(fs.allocate(v.s0)); break;
             case Op::Free: s.pop(v.s0); fs.release(v.s0); break;

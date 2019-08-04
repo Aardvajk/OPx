@@ -1,6 +1,7 @@
 #include "Disassembler.h"
 
 #include "common/OpCode.h"
+#include "common/Primitive.h"
 
 #include "framework/Error.h"
 #include "framework/ByteReader.h"
@@ -62,6 +63,7 @@ void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, s
         Reg r0, r1;
         std::size_t s0;
         int i0;
+        Primitive::Type p0, p1;
 
         map(c, pc);
 
@@ -90,17 +92,12 @@ void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, s
             case Op::Ret: rm(s0); os << s0; break;
             case Op::JmpZ: rm(s0); os << " " << s0; break;
 
-            case Op::AddS: break;
-            case Op::AddI: break;
+            case Op::Add:
+            case Op::Sub:
+            case Op::Mul:
+            case Op::Not: rm(p0); os << Primitive::toString(p0); break;
 
-            case Op::SubI: break;
-
-            case Op::MulS: break;
-
-            case Op::NotS: break;
-
-            case Op::IToS: break;
-            case Op::SToC: break;
+            case Op::Conv: rm(p0, p1); os << Primitive::toString(p0) << " " << Primitive::toString(p1); break;
 
             case Op::Alloc: break;
             case Op::Free: break;

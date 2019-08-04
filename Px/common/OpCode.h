@@ -38,17 +38,13 @@ enum class Op : unsigned char
     Ret,
     JmpZ,
 
-    AddS,
-    AddI,
+    Add,
+    Sub,
+    Mul,
 
-    SubI,
+    Not,
 
-    MulS,
-
-    NotS,
-
-    IToS,
-    SToC,
+    Conv,
 
     Alloc,
     Free,

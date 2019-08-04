@@ -23,7 +23,8 @@ SOURCES += \
         application/Machine.cpp \
         components/FreeStore.cpp \
         components/Memory.cpp \
-        main.cpp
+        main.cpp \
+        operations/ConvertOps.cpp
 
 HEADERS += \
     application/Machine.h \
@@ -31,4 +32,7 @@ HEADERS += \
     components/Memory.h \
     components/Registers.h \
     components/Stack.h \
-    components/Vars.h
+    components/Vars.h \
+    operations/ConvertOps.h \
+    operations/MathOps.h \
+    operations/UnaryOps.h
