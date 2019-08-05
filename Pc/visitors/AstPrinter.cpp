@@ -19,6 +19,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/InternalCastNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -329,6 +330,14 @@ void AstPrinter::visit(WhileNode &node)
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
     node.body->accept(*this);
+}
+
+void AstPrinter::visit(InternalCastNode &node)
+{
+    tab() << "internal cast to " << node.type->text() << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

@@ -25,6 +25,7 @@ class DerefNode;
 class BinaryNode;
 class SubscriptNode;
 class WhileNode;
+class InternalCastNode;
 
 class Visitor
 {
@@ -55,6 +56,7 @@ public:
     virtual void visit(BinaryNode &node);
     virtual void visit(SubscriptNode &node);
     virtual void visit(WhileNode &node);
+    virtual void visit(InternalCastNode &node);
 };
 
 #endif // VISITOR_H

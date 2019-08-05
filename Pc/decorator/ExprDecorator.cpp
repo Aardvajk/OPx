@@ -11,6 +11,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/InternalCastNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -162,6 +163,11 @@ void ExprDecorator::visit(BinaryNode &node)
 void ExprDecorator::visit(SubscriptNode &node)
 {
     node.target->accept(*this);
+    node.expr->accept(*this);
+}
+
+void ExprDecorator::visit(InternalCastNode &node)
+{
     node.expr->accept(*this);
 }
 

@@ -14,6 +14,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/InternalCastNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -138,6 +139,11 @@ void TypeVisitor::visit(SubscriptNode &node)
 
     --t.ptr;
     r = c.types.insert(t);
+}
+
+void TypeVisitor::visit(InternalCastNode &node)
+{
+    r = node.type;
 }
 
 Type *TypeVisitor::type(Context &c, Node *node)

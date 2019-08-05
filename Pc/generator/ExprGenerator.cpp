@@ -12,6 +12,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/InternalCastNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -166,6 +167,10 @@ void ExprGenerator::visit(BinaryNode &node)
 
         default: break;
     }
+}
+
+void ExprGenerator::visit(InternalCastNode &node)
+{
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

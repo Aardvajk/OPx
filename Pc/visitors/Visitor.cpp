@@ -99,3 +99,7 @@ void Visitor::visit(SubscriptNode &node)
 void Visitor::visit(WhileNode &node)
 {
 }
+
+void Visitor::visit(InternalCastNode &node)
+{
+}
