@@ -41,8 +41,11 @@ enum class Op : unsigned char
     Add,
     Sub,
     Mul,
+    Div,
+    Mod,
 
     Not,
+    Neg,
 
     Conv,
 

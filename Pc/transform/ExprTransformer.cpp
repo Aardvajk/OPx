@@ -61,7 +61,7 @@ void ExprTransformer::visit(AssignNode &node)
     node.target = ExprTransformer::transform(c, node.target);
     node.expr = ExprTransformer::transform(c, node.expr);
 
-    if(!TypeVisitor::type(c, node.target.get())->ptr)
+    if(!TypeVisitor::type(c, node.target.get())->primitive())
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
         rn = cn;
@@ -121,7 +121,7 @@ void ExprTransformer::visit(BinaryNode &node)
     node.left = ExprTransformer::transform(c, node.left);
     node.right = ExprTransformer::transform(c, node.right);
 
-    if(!TypeVisitor::type(c, node.left.get())->ptr && !TypeVisitor::type(c, node.right.get())->ptr)
+    if(!TypeVisitor::type(c, node.left.get())->primitive() && !TypeVisitor::type(c, node.right.get())->primitive())
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
         rn = cn;

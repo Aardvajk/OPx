@@ -13,6 +13,8 @@ namespace MathOps
 struct Add { template<typename T> static T op(T a, T b){ return a + b; } };
 struct Sub { template<typename T> static T op(T a, T b){ return a - b; } };
 struct Mul { template<typename T> static T op(T a, T b){ return a * b; } };
+struct Div { template<typename T> static T op(T a, T b){ return a / b; } };
+struct Mod { template<typename T> static T op(T a, T b){ return a % b; } };
 
 namespace Detail
 {

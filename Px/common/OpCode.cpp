@@ -41,8 +41,11 @@ const char *OpCode::toString(Op v)
         "add",
         "sub",
         "mul",
+        "div",
+        "mod",
 
         "not",
+        "neg",
 
         "conv",
 

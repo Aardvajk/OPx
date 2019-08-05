@@ -53,8 +53,11 @@ void Machine::execute()
             case Op::Add: MathOps::mathOp<MathOps::Add>(rm, s); break;
             case Op::Sub: MathOps::mathOp<MathOps::Sub>(rm, s); break;
             case Op::Mul: MathOps::mathOp<MathOps::Mul>(rm, s); break;
+            case Op::Div: MathOps::mathOp<MathOps::Div>(rm, s); break;
+            case Op::Mod: MathOps::mathOp<MathOps::Mod>(rm, s); break;
 
             case Op::Not: UnaryOps::unaryOp<UnaryOps::Not>(rm, s); break;
+            case Op::Neg: UnaryOps::unaryOp<UnaryOps::Neg>(rm, s); break;
 
             case Op::Conv: ConvertOps::convert(rm, s); break;
 

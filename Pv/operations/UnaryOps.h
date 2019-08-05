@@ -11,6 +11,7 @@ namespace UnaryOps
 {
 
 struct Not { template<typename T> static T op(T v){ return !v; } };
+struct Neg { template<typename T> static T op(T v){ return -v; } };
 
 namespace Detail
 {
