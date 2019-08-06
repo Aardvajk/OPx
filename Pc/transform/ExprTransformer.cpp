@@ -123,7 +123,7 @@ void ExprTransformer::visit(CallNode &node)
         }
         else
         {
-            throw Error("internal error, not primitive constructors not supported");
+            throw Error("internal error, non-primitive constructors not supported");
         }
     }
 }
