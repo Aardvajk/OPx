@@ -18,7 +18,11 @@ const char *s[] =
     "add",
     "sub",
     "mul",
+    "div",
+    "mod",
+
     "not",
+    "neg",
 
     "convert",
 

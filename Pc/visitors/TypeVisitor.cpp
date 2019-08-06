@@ -17,6 +17,8 @@
 
 #include "visitors/NameVisitors.h"
 
+#include "decorator/CommonDecorator.h"
+
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
 
@@ -115,16 +117,30 @@ void TypeVisitor::visit(DerefNode &node)
 
 void TypeVisitor::visit(BinaryNode &node)
 {
-    switch(node.op)
+    if(!TypeVisitor::type(c, node.left.get())->primitive() || !TypeVisitor::type(c, node.right.get())->primitive())
     {
-        case Operators::Type::Add: node.left->accept(*this); break;
+        NodePtr nn(new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
 
-        case Operators::Type::Eq:
-        case Operators::Type::Neq: r = c.types.boolType(); break;
+        auto t = Type::makeFunction(0, c.types.nullType());
 
-        default: throw Error("internal error - operator not supported");
+        t.args.push_back(TypeVisitor::type(c, node.left.get()));
+        t.args.push_back(TypeVisitor::type(c, node.right.get()));
+
+        r = CommonDecorator::searchCallableByType(c, *nn, &t)->property<const Type*>("type")->returnType;
     }
+    else
+    {
+        switch(node.op)
+        {
+            case Operators::Type::Add:
+            case Operators::Type::Sub: node.left->accept(*this); break;
 
+            case Operators::Type::Eq:
+            case Operators::Type::Neq: r = c.types.boolType(); break;
+
+            default: throw Error("internal error - operator not supported");
+        }
+    }
 }
 
 void TypeVisitor::visit(SubscriptNode &node)

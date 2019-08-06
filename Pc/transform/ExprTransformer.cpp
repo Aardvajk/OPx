@@ -125,7 +125,7 @@ void ExprTransformer::visit(BinaryNode &node)
     auto lt = TypeVisitor::type(c, node.left.get());
     auto rt = TypeVisitor::type(c, node.right.get());
 
-    if(!lt->primitive() && !rt->primitive())
+    if(!lt->primitive() || !rt->primitive())
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
         rn = cn;

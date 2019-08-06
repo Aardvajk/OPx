@@ -1,4 +1,4 @@
-#include "AddOperators.h"
+#include "MathOperators.h"
 
 #include "framework/Error.h"
 
@@ -14,7 +14,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
-std::size_t AddOperators::generateAdd(Context &c, std::ostream &os, BinaryNode &node)
+std::size_t MathOperators::generateAdd(Context &c, std::ostream &os, BinaryNode &node)
 {
     auto ln = node.left.get();
     auto rn = node.right.get();
@@ -54,5 +54,25 @@ std::size_t AddOperators::generateAdd(Context &c, std::ostream &os, BinaryNode &
     }
 
     os << "    add " << Primitive::toString(lt->primitiveType()) << ";\n";
+    return c.assertSize(node.location(), lt);
+}
+
+std::size_t MathOperators::generateSub(Context &c, std::ostream &os, BinaryNode &node)
+{
+    auto ln = node.left.get();
+    auto rn = node.right.get();
+
+    auto lt = TypeVisitor::type(c, ln);
+    auto rt = TypeVisitor::type(c, rn);
+
+    ExprGenerator::generate(c, os, *ln);
+    ExprGenerator::generate(c, os, *rn);
+
+    if(lt->ptr)
+    {
+        throw Error("internal error - pointer subtraction not supported");
+    }
+
+    os << "    sub " << Primitive::toString(lt->primitiveType()) << ";\n";
     return c.assertSize(node.location(), lt);
 }

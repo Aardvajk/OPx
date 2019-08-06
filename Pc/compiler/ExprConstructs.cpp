@@ -165,6 +165,7 @@ NodePtr sums(Context &c, bool get)
         switch(c.scanner.token().type())
         {
             case Token::Type::Add: n = new BinaryNode(loc, Operators::Type::Add, n, entity(c, true)); break;
+            case Token::Type::Sub: n = new BinaryNode(loc, Operators::Type::Sub, n, entity(c, true)); break;
 
             default: return n;
         }

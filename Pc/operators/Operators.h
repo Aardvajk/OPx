@@ -8,6 +8,7 @@ enum class Type
 {
     Assign,
     Add,
+    Sub,
     Eq,
     Neq
 };

@@ -26,6 +26,7 @@ NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
         {
             Token::Type::Assign,
             Token::Type::Add,
+            Token::Type::Sub,
             Token::Type::Eq,
             Token::Type::Neq
         };

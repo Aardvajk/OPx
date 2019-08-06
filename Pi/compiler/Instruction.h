@@ -21,7 +21,11 @@ enum class Type
     Add,
     Sub,
     Mul,
+    Div,
+    Mod,
+
     Not,
+    Neg,
 
     Convert,
 

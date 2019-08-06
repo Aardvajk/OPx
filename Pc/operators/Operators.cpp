@@ -6,6 +6,7 @@ const char *Operators::toString(Type v)
     {
         "=",
         "+",
+        "-",
         "==",
         "!="
     };

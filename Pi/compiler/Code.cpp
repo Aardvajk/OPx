@@ -156,42 +156,12 @@ void storeConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
-void addConstruct(Context &c, bool get)
+void mathConstruct(Context &c, std::string name, OpCode::Op op, bool get)
 {
     auto id = c.scanner.next(get);
-    c.pd("-add ", id.text());
+    c.pd("-", name, " ", id.text());
 
-    c.func().bytes << OpCode::Op::Add << primitiveFromToken(id);
-
-    c.scanner.consume(Token::Type::Semicolon, true);
-}
-
-void subConstruct(Context &c, bool get)
-{
-    auto id = c.scanner.next(get);
-    c.pd("-sub ", id.text());
-
-    c.func().bytes << OpCode::Op::Sub << primitiveFromToken(id);
-
-    c.scanner.consume(Token::Type::Semicolon, true);
-}
-
-void mulConstruct(Context &c, bool get)
-{
-    auto id = c.scanner.next(get);
-    c.pd("-mul ", id.text());
-
-    c.func().bytes << OpCode::Op::Mul << primitiveFromToken(id);
-
-    c.scanner.consume(Token::Type::Semicolon, true);
-}
-
-void notConstruct(Context &c, bool get)
-{
-    auto id = c.scanner.next(get);
-    c.pd("-not ", id.text());
-
-    c.func().bytes << OpCode::Op::Not << primitiveFromToken(id);
+    c.func().bytes << op << primitiveFromToken(id);
 
     c.scanner.consume(Token::Type::Semicolon, true);
 }
@@ -268,10 +238,14 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::Load: loadConstruct(c, true); break;
         case Instruction::Type::Store: storeConstruct(c, true); break;
 
-        case Instruction::Type::Add: addConstruct(c, true); break;
-        case Instruction::Type::Sub: subConstruct(c, true); break;
-        case Instruction::Type::Mul: mulConstruct(c, true); break;
-        case Instruction::Type::Not: notConstruct(c, true); break;
+        case Instruction::Type::Add: mathConstruct(c, "add", OpCode::Op::Add, true); break;
+        case Instruction::Type::Sub: mathConstruct(c, "sub", OpCode::Op::Sub, true); break;
+        case Instruction::Type::Mul: mathConstruct(c, "mul", OpCode::Op::Mul, true); break;
+        case Instruction::Type::Div: mathConstruct(c, "div", OpCode::Op::Div, true); break;
+        case Instruction::Type::Mod: mathConstruct(c, "mod", OpCode::Op::Mod, true); break;
+
+        case Instruction::Type::Not: mathConstruct(c, "not", OpCode::Op::Not, true); break;
+        case Instruction::Type::Neg: mathConstruct(c, "neg", OpCode::Op::Neg, true); break;
 
         case Instruction::Type::Alloc: allocConstruct(c, true); break;
         case Instruction::Type::Free: freeConstruct(c, true); break;

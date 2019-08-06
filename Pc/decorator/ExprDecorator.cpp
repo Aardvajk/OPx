@@ -19,39 +19,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
-#include <unordered_set>
-
-namespace
-{
-
-std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv, const Type *expectedType)
-{
-    std::vector<Sym*> rs;
-
-    for(auto s: sv)
-    {
-        if(s->type() == Sym::Type::Class)
-        {
-            throw Error("internal error, calling types not supported");
-        }
-        else
-        {
-            if(!s->property<const Type*>("type")->function())
-            {
-                throw Error(location, "callable expected - ", s->fullname());
-            }
-
-            if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
-            {
-                rs.push_back(s);
-            }
-        }
-    }
-
-    return rs;
-}
-
-}
+#include "decorator/CommonDecorator.h"
 
 ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expectedType(expectedType)
 {
@@ -59,41 +27,15 @@ ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expec
 
 void ExprDecorator::visit(IdNode &node)
 {
-    std::vector<Sym*> sv;
-    SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node, sv);
-
     if(expectedType && expectedType->function())
     {
-        std::unordered_set<Sym*> search;
-        for(auto &a: expectedType->args)
-        {
-            if(a->sym && a->sym->parent() != c.tree.root())
-            {
-                search.insert(a->sym->parent());
-            }
-        }
-
-        for(auto s: search)
-        {
-            SymFinder::find(SymFinder::Type::Local, s, &node, sv);
-        }
-
-        auto rs = searchCallable(node.location(), sv, expectedType);
-
-        if(rs.empty())
-        {
-            throw Error(node.location(), "no function matched - ", NameVisitors::prettyName(&node), expectedType->text());
-        }
-
-        if(rs.size() > 1)
-        {
-            throw Error(node.location(), "ambigous reference - ", NameVisitors::prettyName(&node), expectedType->text());
-        }
-
-        node.setProperty("sym", rs.front());
+        node.setProperty("sym", CommonDecorator::searchCallableByType(c, node, expectedType));
     }
     else
     {
+        std::vector<Sym*> sv;
+        SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node, sv);
+
         if(sv.empty())
         {
             throw Error(node.location(), "not found - ", NameVisitors::prettyName(&node));
