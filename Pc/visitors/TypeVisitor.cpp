@@ -14,6 +14,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/PrimitiveCastNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -71,7 +72,16 @@ void TypeVisitor::visit(StringLiteralNode &node)
 
 void TypeVisitor::visit(CallNode &node)
 {
-    r = TypeVisitor::type(c, node.target.get())->returnType;
+    auto t = TypeVisitor::type(c, node.target.get());
+
+    if(t->function())
+    {
+        r = t->returnType;
+    }
+    else
+    {
+        r = t;
+    }
 }
 
 void TypeVisitor::visit(AddrOfNode &node)
@@ -154,6 +164,11 @@ void TypeVisitor::visit(SubscriptNode &node)
 
     --t.ptr;
     r = c.types.insert(t);
+}
+
+void TypeVisitor::visit(PrimitiveCastNode &node)
+{
+    r = node.type;
 }
 
 Type *TypeVisitor::type(Context &c, Node *node)

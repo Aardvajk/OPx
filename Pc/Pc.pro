@@ -55,6 +55,7 @@ SOURCES += \
         nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/PrimitiveCastNode.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
         nodes/SubscriptNode.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/PrimitiveCastNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
     nodes/SubscriptNode.h \

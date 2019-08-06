@@ -11,6 +11,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/PrimitiveCastNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -79,7 +80,9 @@ void ExprTransformer::visit(CallNode &node)
     node.target = ExprTransformer::transform(c, node.target);
     ExprTransformer::transform(c, node.params);
 
-    if(TypeVisitor::type(c, node.target.get())->method)
+    auto t = TypeVisitor::type(c, node.target.get());
+
+    if(t->method)
     {
         ThisCallTransformer tt(c);
         node.target->accept(tt);
@@ -90,6 +93,38 @@ void ExprTransformer::visit(CallNode &node)
         }
 
         node.params.insert(node.params.begin(), tt.result());
+    }
+    else if(!t->function())
+    {
+        if(t->primitive())
+        {
+            if(node.params.size() > 1)
+            {
+                throw Error(node.location(), "invalid cast syntax - ", NameVisitors::prettyName(node.target.get()));
+            }
+
+            if(node.params.empty())
+            {
+                rn = new PrimitiveCastNode(node.location(), t);
+            }
+            else
+            {
+                auto p = node.params.front();
+
+                if(TypeVisitor::type(c, p.get())->primitive())
+                {
+                    rn = new PrimitiveCastNode(node.location(), t, p);
+                }
+                else
+                {
+                    throw Error("internal error - cast from non-primitive to primitive not supported");
+                }
+            }
+        }
+        else
+        {
+            throw Error("internal error, not primitive constructors not supported");
+        }
     }
 }
 

@@ -14,6 +14,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/PrimitiveCastNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -169,6 +170,24 @@ void ExprGenerator::visit(BinaryNode &node)
 
         default: break;
     }
+}
+
+void ExprGenerator::visit(PrimitiveCastNode &node)
+{
+    std::string pt = Primitive::toString(node.type->primitiveType());
+
+    if(node.expr)
+    {
+        ExprGenerator::generate(c, os, *node.expr);
+
+        os << "    convert " << pt << ";\n";
+    }
+    else
+    {
+        os << "    push " << pt << "(0);\n";
+    }
+
+    sz = c.assertSize(node.location(), node.type);
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

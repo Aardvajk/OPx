@@ -46,7 +46,7 @@ std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv,
     {
         if(s->type() == Sym::Type::Class)
         {
-            throw Error("internal error, calling types not supported");
+            rs.push_back(s);
         }
         else
         {
