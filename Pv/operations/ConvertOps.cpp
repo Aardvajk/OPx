@@ -2,6 +2,7 @@
 
 #include "common/Primitive.h"
 
+#include "framework/Error.h"
 #include "framework/ByteReader.h"
 
 #include "components/Stack.h"
@@ -17,6 +18,11 @@ template<typename S, typename D> void process(Stack &s)
     s.push(static_cast<D>(v));
 }
 
+Error internalError()
+{
+    return Error("internal error, primitive conversion failed");
+}
+
 }
 
 void ConvertOps::convert(ByteReader &rm, Stack &s)
@@ -30,10 +36,10 @@ void ConvertOps::convert(ByteReader &rm, Stack &s)
         {
             switch(dv)
             {
-                case Primitive::Type::Int: process<char, int>(s); break;
-                case Primitive::Type::Size: process<char, std::size_t>(s); break;
+                case Primitive::Type::Int: process<char, int>(s); return;
+                case Primitive::Type::Size: process<char, std::size_t>(s); return;
 
-                default: break;
+                default: return;
             }
         }
 
@@ -41,10 +47,10 @@ void ConvertOps::convert(ByteReader &rm, Stack &s)
         {
             switch(dv)
             {
-                case Primitive::Type::Char: process<int, char>(s); break;
-                case Primitive::Type::Size: process<int, std::size_t>(s); break;
+                case Primitive::Type::Char: process<int, char>(s); return;
+                case Primitive::Type::Size: process<int, std::size_t>(s); return;
 
-                default: break;
+                default: return;
             }
         }
 
@@ -52,13 +58,13 @@ void ConvertOps::convert(ByteReader &rm, Stack &s)
         {
             switch(dv)
             {
-                case Primitive::Type::Char: process<std::size_t, char>(s); break;
-                case Primitive::Type::Int: process<std::size_t, int>(s); break;
+                case Primitive::Type::Char: process<std::size_t, char>(s); return;
+                case Primitive::Type::Int: process<std::size_t, int>(s); return;
 
-                default: break;
+                default: return;
             }
         }
 
-        default: break;
+        default: throw internalError();
     }
 }
