@@ -53,5 +53,6 @@ std::size_t AddOperators::generateAdd(Context &c, std::ostream &os, BinaryNode &
         return sizeof(std::size_t);
     }
 
-    throw Error("internal error - add not supported");
+    os << "    add " << Primitive::toString(lt->primitiveType()) << ";\n";
+    return c.assertSize(node.location(), lt);
 }

@@ -2,6 +2,8 @@
 
 #include "framework/Error.h"
 
+#include "common/Primitive.h"
+
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
@@ -11,6 +13,7 @@
 #include "nodes/WhileNode.h"
 
 #include "generator/ExprGenerator.h"
+#include "generator/CommonGenerator.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -51,16 +54,12 @@ void FuncGenerator::visit(ReturnNode &node)
 
 void FuncGenerator::visit(WhileNode &node)
 {
-    if(!TypeCompare::exact(TypeVisitor::type(c, node.expr.get()), c.types.boolType()))
-    {
-        throw Error("internal error - non-bool conditions not supported");
-    }
-
     auto l0 = c.nextLabel();
     auto l1 = c.nextLabel();
 
     os << "\"" << l0 << "\":\n";
-    ExprGenerator::generate(c, os, *node.expr);
+
+    CommonGenerator::generateBooleanExpression(c, os, *node.expr);
     os << "    jmp ifz \"" << l1 << "\";\n";
 
     node.body->accept(*this);

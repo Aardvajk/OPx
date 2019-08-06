@@ -1,5 +1,7 @@
 #include "CompareOperators.h"
 
+#include "common/Primitive.h"
+
 #include "framework/Error.h"
 
 #include "application/Context.h"
@@ -18,22 +20,24 @@ std::size_t CompareOperators::generate(Context &c, std::ostream &os, BinaryNode 
     auto lt = TypeVisitor::type(c, node.left.get());
     auto rt = TypeVisitor::type(c, node.right.get());
 
+    if(!TypeCompare::exact(lt, rt))
+    {
+        throw Error(node.location(), "invalid comparison - ", lt->text(), " and ", rt->text());
+    }
+
     ExprGenerator::generate(c, os, *node.left);
     ExprGenerator::generate(c, os, *node.right);
 
-    if(lt->ptr && rt->ptr)
+    std::string pt = Primitive::toString(lt->primitiveType());
+
+    os << "    sub " << pt << ";\n";
+
+    if(node.op == Operators::Type::Eq)
     {
-        os << "    sub size;\n";
-
-        if(node.op == Operators::Type::Eq)
-        {
-            os << "    not size;\n";
-        }
-
-        os << "    convert size char;\n";
-
-        return c.types.boolType()->size();
+        os << "    not " << pt << ";\n";
     }
 
-    throw Error("internal error - comparison not supported");
+    os << "    convert " << pt << " char;\n";
+
+    return c.types.boolType()->size();
 }

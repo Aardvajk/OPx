@@ -11,7 +11,6 @@
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
-#include "nodes/InternalCastNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -143,9 +142,13 @@ void ExprDecorator::visit(AssignNode &node)
     node.expr->accept(*this);
 
     auto type = TypeVisitor::type(c, node.target.get());
-    if(!TypeCompare::exact(type, TypeVisitor::type(c, node.expr.get())))
+
+    if(type->primitive())
     {
-        throw Error(node.expr->location(), type->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
+        if(!TypeCompare::exact(type, TypeVisitor::type(c, node.expr.get())))
+        {
+            throw Error(node.expr->location(), type->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
+        }
     }
 }
 
@@ -163,11 +166,6 @@ void ExprDecorator::visit(BinaryNode &node)
 void ExprDecorator::visit(SubscriptNode &node)
 {
     node.target->accept(*this);
-    node.expr->accept(*this);
-}
-
-void ExprDecorator::visit(InternalCastNode &node)
-{
     node.expr->accept(*this);
 }
 

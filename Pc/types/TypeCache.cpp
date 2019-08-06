@@ -32,6 +32,11 @@ Type *TypeCache::nullType()
     return v.ptr(0);
 }
 
+Type *TypeCache::charType()
+{
+    return v.ptr(1);
+}
+
 Type *TypeCache::intType()
 {
     return v.ptr(2);

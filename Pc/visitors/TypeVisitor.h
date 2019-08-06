@@ -29,7 +29,6 @@ public:
     virtual void visit(DerefNode &node) override;
     virtual void visit(BinaryNode &node) override;
     virtual void visit(SubscriptNode &node) override;
-    virtual void visit(InternalCastNode &node) override;
 
     static Type *type(Context &c, Node *node);
 

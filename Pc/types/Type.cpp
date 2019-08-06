@@ -101,6 +101,21 @@ bool Type::primitive() const
     return returnType || ptr || (sym && sym->getProperty("primitive").value<bool>());
 }
 
+Primitive::Type Type::primitiveType() const
+{
+    if(ptr || returnType)
+    {
+        return Primitive::Type::Size;
+    }
+
+    if(primitive())
+    {
+        return sym->property<Primitive::Type>("primitiveType");
+    }
+
+    return Primitive::Type::Invalid;
+}
+
 Type Type::makePrimary(unsigned ptr, Sym *sym)
 {
     Type t;

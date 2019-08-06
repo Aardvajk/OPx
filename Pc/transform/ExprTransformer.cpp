@@ -11,11 +11,11 @@
 #include "nodes/DerefNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
-#include "nodes/InternalCastNode.h"
 
 #include "decorator/ExprDecorator.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -123,8 +123,9 @@ void ExprTransformer::visit(BinaryNode &node)
     node.right = ExprTransformer::transform(c, node.right);
 
     auto lt = TypeVisitor::type(c, node.left.get());
+    auto rt = TypeVisitor::type(c, node.right.get());
 
-    if(!lt->primitive() && !TypeVisitor::type(c, node.right.get())->primitive())
+    if(!lt->primitive() && !rt->primitive())
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
         rn = cn;
@@ -145,11 +146,6 @@ void ExprTransformer::visit(SubscriptNode &node)
     rn = dn;
 
     dn->expr = new BinaryNode(node.location(), Operators::Type::Add, node.target, node.expr);
-}
-
-void ExprTransformer::visit(InternalCastNode &node)
-{
-    node.expr = ExprTransformer::transform(c, node.expr);
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)

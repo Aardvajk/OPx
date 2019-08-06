@@ -2,6 +2,8 @@
 
 #include "framework/Error.h"
 
+#include "common/Primitive.h"
+
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
@@ -16,19 +18,20 @@
 namespace
 {
 
-Sym *primitive(const std::string &name, std::size_t size)
+Sym *primitive(const std::string &name, Primitive::Type type, std::size_t size)
 {
     auto s = new Sym(Sym::Type::Class, {  }, name);
 
     s->setProperty("size", size);
     s->setProperty("primitive", true);
+    s->setProperty("primitiveType", type);
 
     return s;
 }
 
-void addPrimitive(Context &c, const std::string &name, std::size_t size)
+void addPrimitive(Context &c, const std::string &name, Primitive::Type type, std::size_t size)
 {
-    auto s = c.tree.root()->child("std")->add(primitive(name, size));
+    auto s = c.tree.root()->child("std")->add(primitive(name, type, size));
     auto t = c.types.insert(Type::makePrimary(0, s));
 
     s->setProperty("type", t);
@@ -40,11 +43,11 @@ Context::Context() : scanner(Lexer::Mode::Pc), classDepth(0), labels(0)
 {
     tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
-    addPrimitive(*this, "null", 0);
-    addPrimitive(*this, "char", 1);
-    addPrimitive(*this, "int", 4);
-    addPrimitive(*this, "bool", 1);
-    addPrimitive(*this, "size", 8);
+    addPrimitive(*this, "null", Primitive::Type::Null, 0);
+    addPrimitive(*this, "char", Primitive::Type::Char, 1);
+    addPrimitive(*this, "int", Primitive::Type::Int, 4);
+    addPrimitive(*this, "bool", Primitive::Type::Char, 1);
+    addPrimitive(*this, "size", Primitive::Type::Size, 8);
 }
 
 void Context::open(const std::string &path)

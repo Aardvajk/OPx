@@ -14,6 +14,7 @@ public:
     Type *insert(const Type &type);
 
     Type *nullType();
+    Type *charType();
     Type *intType();
     Type *boolType();
     Type *sizeType();

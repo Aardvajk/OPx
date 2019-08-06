@@ -15,6 +15,7 @@ public:
     virtual void visit(BlockNode &node) override;
     virtual void visit(ScopeNode &node) override;
     virtual void visit(VarNode &node) override;
+    virtual void visit(WhileNode &node) override;
 
 private:
     Context &c;

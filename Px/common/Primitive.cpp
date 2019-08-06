@@ -4,9 +4,11 @@ const char *Primitive::toString(Type v)
 {
     static const char *s[] =
     {
+        "null",
         "char",
         "int",
         "size",
+
         "invalid"
     };
 

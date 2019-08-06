@@ -1,6 +1,8 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+#include "common/Primitive.h"
+
 #include <pcx/optional.h>
 
 #include <vector>
@@ -17,6 +19,7 @@ public:
     std::string text() const;
     bool function() const;
     bool primitive() const;
+    Primitive::Type primitiveType() const;
 
     static Type makePrimary(unsigned ptr, Sym *sym);
     static Type makeFunction(unsigned ptr, Type *returnType);

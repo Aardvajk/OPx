@@ -41,7 +41,7 @@ NodePtr addrOf(Context &c, bool get)
     auto an = new AddrOfNode(tok.location());
     NodePtr n(an);
 
-    an->expr = expression(c, true);
+    an->expr = entity(c, true);
 
     return n;
 }
@@ -164,7 +164,7 @@ NodePtr sums(Context &c, bool get)
         auto loc = c.scanner.token().location();
         switch(c.scanner.token().type())
         {
-            case Token::Type::Add: n = new BinaryNode(loc, Operators::Type::Add, n, expression(c, true)); break;
+            case Token::Type::Add: n = new BinaryNode(loc, Operators::Type::Add, n, entity(c, true)); break;
 
             default: return n;
         }
@@ -180,7 +180,7 @@ NodePtr assign(Context &c, bool get)
         auto an = new AssignNode(c.scanner.token().location(), n);
         n = an;
 
-        an->expr = expression(c, true);
+        an->expr = sums(c, true);
     }
 
     return n;
@@ -195,8 +195,8 @@ NodePtr comparisons(Context &c, bool get)
         auto loc = c.scanner.token().location();
         switch(c.scanner.token().type())
         {
-            case Token::Type::Eq: n = new BinaryNode(loc, Operators::Type::Eq, n, expression(c, true)); break;
-            case Token::Type::Neq: n = new BinaryNode(loc, Operators::Type::Neq, n, expression(c, true)); break;
+            case Token::Type::Eq: n = new BinaryNode(loc, Operators::Type::Eq, n, assign(c, true)); break;
+            case Token::Type::Neq: n = new BinaryNode(loc, Operators::Type::Neq, n, assign(c, true)); break;
 
             default: return n;
         }

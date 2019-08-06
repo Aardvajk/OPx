@@ -35,6 +35,7 @@ SOURCES += \
         decorator/FuncDecorator.cpp \
         generator/AddrGenerator.cpp \
         generator/ByteListGenerator.cpp \
+        generator/CommonGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/FuncGenerator.cpp \
         generator/Generator.cpp \
@@ -51,7 +52,6 @@ SOURCES += \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
-        nodes/InternalCastNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
@@ -101,6 +101,7 @@ HEADERS += \
     decorator/FuncDecorator.h \
     generator/AddrGenerator.h \
     generator/ByteListGenerator.h \
+    generator/CommonGenerator.h \
     generator/ExprGenerator.h \
     generator/FuncGenerator.h \
     generator/Generator.h \
@@ -116,7 +117,6 @@ HEADERS += \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
-    nodes/InternalCastNode.h \
     nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
