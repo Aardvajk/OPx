@@ -180,7 +180,7 @@ void ExprGenerator::visit(PrimitiveCastNode &node)
     {
         ExprGenerator::generate(c, os, *node.expr);
 
-        os << "    convert " << pt << ";\n";
+        os << "    convert " << Primitive::toString(TypeVisitor::type(c, node.expr.get())->primitiveType()) << " " << pt << ";\n";
     }
     else
     {
