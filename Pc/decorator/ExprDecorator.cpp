@@ -9,6 +9,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 
@@ -82,19 +83,14 @@ void ExprDecorator::visit(AssignNode &node)
 {
     node.target->accept(*this);
     node.expr->accept(*this);
-
-    auto type = TypeVisitor::type(c, node.target.get());
-
-    if(type->primitive())
-    {
-        if(!TypeCompare::exact(type, TypeVisitor::type(c, node.expr.get())))
-        {
-            throw Error(node.expr->location(), type->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
-        }
-    }
 }
 
 void ExprDecorator::visit(DerefNode &node)
+{
+    node.expr->accept(*this);
+}
+
+void ExprDecorator::visit(UnaryNode &node)
 {
     node.expr->accept(*this);
 }

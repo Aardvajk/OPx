@@ -12,6 +12,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/PrimitiveCastNode.h"
@@ -125,6 +126,30 @@ void TypeVisitor::visit(DerefNode &node)
     r = c.types.insert(t);
 }
 
+void TypeVisitor::visit(UnaryNode &node)
+{
+    if(!TypeVisitor::type(c, node.expr.get())->primitive())
+    {
+        NodePtr nn(new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
+
+        auto t = Type::makeFunction(0, c.types.nullType());
+
+        t.args.push_back(TypeVisitor::type(c, node.expr.get()));
+
+        r = CommonDecorator::searchCallableByType(c, *nn, &t)->property<const Type*>("type")->returnType;
+    }
+    else
+    {
+        switch(node.op)
+        {
+            case Operators::Type::Not:
+            case Operators::Type::Neg: node.expr->accept(*this); break;
+
+            default: throw Error("internal error - operator not supported");
+        }
+    }
+}
+
 void TypeVisitor::visit(BinaryNode &node)
 {
     if(!TypeVisitor::type(c, node.left.get())->primitive() || !TypeVisitor::type(c, node.right.get())->primitive())
@@ -143,7 +168,10 @@ void TypeVisitor::visit(BinaryNode &node)
         switch(node.op)
         {
             case Operators::Type::Add:
-            case Operators::Type::Sub: node.left->accept(*this); break;
+            case Operators::Type::Sub:
+            case Operators::Type::Mul:
+            case Operators::Type::Div:
+            case Operators::Type::Mod: node.left->accept(*this); break;
 
             case Operators::Type::Eq:
             case Operators::Type::Neq: r = c.types.boolType(); break;

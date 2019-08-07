@@ -4,6 +4,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 
 #include "visitors/TypeVisitor.h"
@@ -63,7 +64,6 @@ std::size_t MathOperators::generateSub(Context &c, std::ostream &os, BinaryNode 
     auto rn = node.right.get();
 
     auto lt = TypeVisitor::type(c, ln);
-    auto rt = TypeVisitor::type(c, rn);
 
     ExprGenerator::generate(c, os, *ln);
     ExprGenerator::generate(c, os, *rn);
@@ -75,4 +75,57 @@ std::size_t MathOperators::generateSub(Context &c, std::ostream &os, BinaryNode 
 
     os << "    sub " << Primitive::toString(lt->primitiveType()) << ";\n";
     return c.assertSize(node.location(), lt);
+}
+
+std::size_t MathOperators::generateMulDivMod(Context &c, std::ostream &os, BinaryNode &node)
+{
+    auto ln = node.left.get();
+    auto rn = node.right.get();
+
+    auto lt = TypeVisitor::type(c, ln);
+
+    ExprGenerator::generate(c, os, *ln);
+    ExprGenerator::generate(c, os, *rn);
+
+    if(lt->ptr)
+    {
+        throw Error(node.location(), "invalid operator - ", lt->text(), " and ", TypeVisitor::type(c, rn)->text());
+    }
+
+    std::string op;
+    switch(node.op)
+    {
+        case Operators::Type::Mul: op = "mul"; break;
+        case Operators::Type::Div: op = "div"; break;
+        case Operators::Type::Mod: op = "mod"; break;
+
+        default: break;
+    }
+
+    os << "    " << op << " " << Primitive::toString(lt->primitiveType()) << ";\n";
+    return c.assertSize(node.location(), lt);
+}
+
+std::size_t MathOperators::generateNotNeg(Context &c, std::ostream &os, UnaryNode &node)
+{
+    auto t = TypeVisitor::type(c, node.expr.get());
+
+    ExprGenerator::generate(c, os, *node.expr);
+
+    if(t->ptr)
+    {
+        throw Error(node.location(), "invalid operator - ", t->text());
+    }
+
+    std::string op;
+    switch(node.op)
+    {
+        case Operators::Type::Not: op = "not"; break;
+        case Operators::Type::Neg: op = "neg"; break;
+
+        default: break;
+    }
+
+    os << "    " << op << " " << Primitive::toString(t->primitiveType()) << ";\n";
+    return c.assertSize(node.location(), t);
 }

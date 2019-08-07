@@ -9,6 +9,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/PrimitiveCastNode.h"
@@ -63,7 +64,9 @@ void ExprTransformer::visit(AssignNode &node)
     node.target = ExprTransformer::transform(c, node.target);
     node.expr = ExprTransformer::transform(c, node.expr);
 
-    if(!TypeVisitor::type(c, node.target.get())->primitive())
+    auto tt = TypeVisitor::type(c, node.target.get());
+
+    if(!tt->primitive())
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
         rn = cn;
@@ -72,6 +75,14 @@ void ExprTransformer::visit(AssignNode &node)
         cn->params.push_back(node.expr);
 
         ExprDecorator::decorate(c, nullptr, *cn);
+    }
+    else
+    {
+        auto et = TypeVisitor::type(c, node.expr.get());
+        if(!TypeCompare::exact(tt, et))
+        {
+            throw Error(node.location(), "different primitive types to operator= - ", tt->text(), " and ", et->text());
+        }
     }
 }
 
@@ -152,6 +163,23 @@ void ExprTransformer::visit(DerefNode &node)
     node.expr = ExprTransformer::transform(c, node.expr);
 }
 
+void ExprTransformer::visit(UnaryNode &node)
+{
+    node.expr = ExprTransformer::transform(c, node.expr);
+
+    auto t = TypeVisitor::type(c, node.expr.get());
+
+    if(!t->primitive())
+    {
+        auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
+        rn = cn;
+
+        cn->params.push_back(node.expr);
+
+        ExprDecorator::decorate(c, nullptr, *cn);
+    }
+}
+
 void ExprTransformer::visit(BinaryNode &node)
 {
     node.left = ExprTransformer::transform(c, node.left);
@@ -169,6 +197,13 @@ void ExprTransformer::visit(BinaryNode &node)
         cn->params.push_back(node.right);
 
         ExprDecorator::decorate(c, nullptr, *cn);
+    }
+    else
+    {
+        if(!TypeCompare::exact(lt, rt))
+        {
+            throw Error(node.location(), "different primitive types to operator", Operators::toString(node.op), " - ", lt->text(), " and ", rt->text());
+        }
     }
 }
 

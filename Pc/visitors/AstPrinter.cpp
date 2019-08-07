@@ -16,6 +16,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/WhileNode.h"
@@ -300,6 +301,14 @@ void AstPrinter::visit(ThisNode &node)
 void AstPrinter::visit(DerefNode &node)
 {
     tab() << "deref\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(UnaryNode &node)
+{
+    tab() << "unary " << Operators::toString(node.op) << "\n";
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);

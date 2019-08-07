@@ -13,6 +13,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/PrimitiveCastNode.h"
 
@@ -158,12 +159,27 @@ void ExprGenerator::visit(DerefNode &node)
     sz = s;
 }
 
+void ExprGenerator::visit(UnaryNode &node)
+{
+    switch(node.op)
+    {
+        case Operators::Type::Not:
+        case Operators::Type::Neg: sz = MathOperators::generateNotNeg(c, os, node); break;
+
+        default: break;
+    }
+}
+
 void ExprGenerator::visit(BinaryNode &node)
 {
     switch(node.op)
     {
         case Operators::Type::Add: sz = MathOperators::generateAdd(c, os, node); break;
         case Operators::Type::Sub: sz = MathOperators::generateSub(c, os, node); break;
+
+        case Operators::Type::Mul:
+        case Operators::Type::Div:
+        case Operators::Type::Mod: sz = MathOperators::generateMulDivMod(c, os, node); break;
 
         case Operators::Type::Eq:
         case Operators::Type::Neq: sz = CompareOperators::generate(c, os, node); break;

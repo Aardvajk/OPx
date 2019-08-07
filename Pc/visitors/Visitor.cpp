@@ -88,6 +88,10 @@ void Visitor::visit(DerefNode &node)
 {
 }
 
+void Visitor::visit(UnaryNode &node)
+{
+}
+
 void Visitor::visit(BinaryNode &node)
 {
 }

@@ -22,6 +22,7 @@ class AddrOfNode;
 class AssignNode;
 class ThisNode;
 class DerefNode;
+class UnaryNode;
 class BinaryNode;
 class SubscriptNode;
 class WhileNode;
@@ -53,6 +54,7 @@ public:
     virtual void visit(AssignNode &node);
     virtual void visit(ThisNode &node);
     virtual void visit(DerefNode &node);
+    virtual void visit(UnaryNode &node);
     virtual void visit(BinaryNode &node);
     virtual void visit(SubscriptNode &node);
     virtual void visit(WhileNode &node);

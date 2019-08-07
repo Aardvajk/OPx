@@ -194,6 +194,8 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == '*') return Token(Token::Type::Star, loc, ch);
     if(ch == '+') return Token(Token::Type::Add, loc, ch);
     if(ch == '-') return Token(Token::Type::Sub, loc, ch);
+    if(ch == '/') return Token(Token::Type::Div, loc, ch);
+    if(ch == '%') return Token(Token::Type::Mod, loc, ch);
 
     if(ch == '=') return speculate(source, loc, { '=', Token::Type::Assign }, { { '=', Token::Type::Eq } });
     if(ch == '!') return speculate(source, loc, { '!', Token::Type::Exclaim }, { { '=', Token::Type::Neq } });

@@ -61,6 +61,7 @@ SOURCES += \
         nodes/SubscriptNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
+        nodes/UnaryNode.cpp \
         nodes/VarNode.cpp \
         nodes/WhileNode.cpp \
         operators/CompareOperators.cpp \
@@ -127,6 +128,7 @@ HEADERS += \
     nodes/SubscriptNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
+    nodes/UnaryNode.h \
     nodes/VarNode.h \
     nodes/WhileNode.h \
     operators/CompareOperators.h \

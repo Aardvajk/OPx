@@ -5,8 +5,16 @@ const char *Operators::toString(Type v)
     static const char *s[] =
     {
         "=",
+
         "+",
         "-",
+        "*",
+        "/",
+        "%",
+
+        "!",
+        "-",
+
         "==",
         "!="
     };

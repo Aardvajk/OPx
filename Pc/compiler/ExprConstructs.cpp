@@ -11,6 +11,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 
@@ -57,6 +58,17 @@ NodePtr deref(Context &c, bool get)
     return nn;
 }
 
+NodePtr unary(Context &c, Operators::Type op, bool get)
+{
+    auto tok = c.scanner.next(get);
+
+    auto n = new UnaryNode(tok.location(), op);
+    NodePtr nn(n);
+
+    n->expr = entity(c, true);
+    return nn;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     NodePtr n;
@@ -80,6 +92,9 @@ NodePtr primary(Context &c, bool get)
         case Token::Type::Star: return deref(c, false);
 
         case Token::Type::LeftParen: return parentheses(c, false);
+
+        case Token::Type::Exclaim: return unary(c, Operators::Type::Not, false);
+        case Token::Type::Sub: return unary(c, Operators::Type::Neg, false);
 
         default: throw Error(tok.location(), "expression expected - ", tok.text());
     }
@@ -155,7 +170,7 @@ NodePtr entity(Context &c, bool get)
     }
 }
 
-NodePtr sums(Context &c, bool get)
+NodePtr terms(Context &c, bool get)
 {
     auto n = entity(c, get);
 
@@ -164,8 +179,26 @@ NodePtr sums(Context &c, bool get)
         auto loc = c.scanner.token().location();
         switch(c.scanner.token().type())
         {
-            case Token::Type::Add: n = new BinaryNode(loc, Operators::Type::Add, n, entity(c, true)); break;
-            case Token::Type::Sub: n = new BinaryNode(loc, Operators::Type::Sub, n, entity(c, true)); break;
+            case Token::Type::Star: n = new BinaryNode(loc, Operators::Type::Mul, n, entity(c, true)); break;
+            case Token::Type::Div: n = new BinaryNode(loc, Operators::Type::Div, n, entity(c, true)); break;
+            case Token::Type::Mod: n = new BinaryNode(loc, Operators::Type::Mod, n, entity(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
+NodePtr sums(Context &c, bool get)
+{
+    auto n = terms(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+        switch(c.scanner.token().type())
+        {
+            case Token::Type::Add: n = new BinaryNode(loc, Operators::Type::Add, n, terms(c, true)); break;
+            case Token::Type::Sub: n = new BinaryNode(loc, Operators::Type::Sub, n, terms(c, true)); break;
 
             default: return n;
         }
