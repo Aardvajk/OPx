@@ -32,7 +32,11 @@ NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
             Token::Type::Mod,
             Token::Type::Exclaim,
             Token::Type::Eq,
-            Token::Type::Neq
+            Token::Type::Neq,
+            Token::Type::Lt,
+            Token::Type::LtEq,
+            Token::Type::Gt,
+            Token::Type::GtEq,
         };
 
         auto op = c.scanner.next(true);

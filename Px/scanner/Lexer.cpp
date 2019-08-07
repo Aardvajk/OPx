@@ -190,7 +190,6 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == ':') return Token(Token::Type::Colon, loc, ch);
     if(ch == ',') return Token(Token::Type::Comma, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
-    if(ch == '&') return Token(Token::Type::Amp, loc, ch);
     if(ch == '*') return Token(Token::Type::Star, loc, ch);
     if(ch == '+') return Token(Token::Type::Add, loc, ch);
     if(ch == '-') return Token(Token::Type::Sub, loc, ch);
@@ -202,6 +201,9 @@ Token Lexer::next(Mode mode, Source &source)
 
     if(ch == '<') return speculate(source, loc, { '<', Token::Type::Lt }, { { '=', Token::Type::LtEq } });
     if(ch == '>') return speculate(source, loc, { '>', Token::Type::Gt }, { { '=', Token::Type::GtEq } });
+
+    if(ch == '&') return speculate(source, loc, { '&', Token::Type::Amp }, { { '&', Token::Type::And } });
+    if(ch == '|') return speculate(source, loc, { '|', Token::Type::Invalid }, { { '|', Token::Type::Or } });
 
     if(ch == '\'')
     {
