@@ -1,11 +1,12 @@
 #ifndef OPCODE_H
 #define OPCODE_H
 
+#include <cstdint>
 
 namespace OpCode
 {
 
-enum class Reg : unsigned char
+enum class Reg : std::uint8_t
 {
     Pc,
     Bp,
@@ -16,7 +17,7 @@ enum class Reg : unsigned char
 
 const char *toString(Reg v);
 
-enum class Op : unsigned char
+enum class Op : std::uint8_t
 {
     End,
 
@@ -46,6 +47,9 @@ enum class Op : unsigned char
 
     Not,
     Neg,
+
+    Lt,
+    LtEq,
 
     Conv,
 

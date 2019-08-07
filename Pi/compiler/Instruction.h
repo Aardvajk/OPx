@@ -27,6 +27,9 @@ enum class Type
     Not,
     Neg,
 
+    Lt,
+    LtEq,
+
     Convert,
 
     Alloc,

@@ -33,6 +33,7 @@ HEADERS += \
     components/Registers.h \
     components/Stack.h \
     components/Vars.h \
+    operations/CompareOps.h \
     operations/ConvertOps.h \
     operations/MathOps.h \
     operations/UnaryOps.h

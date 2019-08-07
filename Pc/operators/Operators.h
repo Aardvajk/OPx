@@ -18,7 +18,12 @@ enum class Type
     Neg,
 
     Eq,
-    Neq
+    Neq,
+
+    Lt,
+    LtEq,
+    Gt,
+    GtEq
 };
 
 const char *toString(Type v);

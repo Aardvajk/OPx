@@ -8,6 +8,7 @@
 
 #include "operations/MathOps.h"
 #include "operations/UnaryOps.h"
+#include "operations/CompareOps.h"
 #include "operations/ConvertOps.h"
 
 Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), fs(mm, v.size()), sp(sp)
@@ -58,6 +59,9 @@ void Machine::execute()
 
             case Op::Not: UnaryOps::unaryOp<UnaryOps::Not>(rm, s); break;
             case Op::Neg: UnaryOps::unaryOp<UnaryOps::Neg>(rm, s); break;
+
+            case Op::Lt: CompareOps::compareOp<CompareOps::Lt>(rm, s); break;
+            case Op::LtEq: CompareOps::compareOp<CompareOps::LtEq>(rm, s); break;
 
             case Op::Conv: ConvertOps::convert(rm, s); break;
 

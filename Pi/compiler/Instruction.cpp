@@ -24,6 +24,9 @@ const char *s[] =
     "not",
     "neg",
 
+    "lt",
+    "lteq",
+
     "convert",
 
     "alloc",

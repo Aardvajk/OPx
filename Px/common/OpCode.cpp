@@ -47,6 +47,9 @@ const char *OpCode::toString(Op v)
         "not",
         "neg",
 
+        "lt",
+        "lteq",
+
         "conv",
 
         "alloc",

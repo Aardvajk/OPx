@@ -174,7 +174,11 @@ void TypeVisitor::visit(BinaryNode &node)
             case Operators::Type::Mod: node.left->accept(*this); break;
 
             case Operators::Type::Eq:
-            case Operators::Type::Neq: r = c.types.boolType(); break;
+            case Operators::Type::Neq:
+            case Operators::Type::Lt:
+            case Operators::Type::LtEq:
+            case Operators::Type::Gt:
+            case Operators::Type::GtEq: r = c.types.boolType(); break;
 
             default: throw Error("internal error - operator not supported");
         }

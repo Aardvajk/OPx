@@ -16,7 +16,12 @@ const char *Operators::toString(Type v)
         "-",
 
         "==",
-        "!="
+        "!=",
+
+        "<",
+        "<=",
+        ">",
+        ">="
     };
 
     return s[static_cast<int>(v)];

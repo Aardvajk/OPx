@@ -156,7 +156,7 @@ void storeConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
-void mathConstruct(Context &c, std::string name, OpCode::Op op, bool get)
+void opConstruct(Context &c, std::string name, OpCode::Op op, bool get)
 {
     auto id = c.scanner.next(get);
     c.pd("-", name, " ", id.text());
@@ -238,14 +238,17 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::Load: loadConstruct(c, true); break;
         case Instruction::Type::Store: storeConstruct(c, true); break;
 
-        case Instruction::Type::Add: mathConstruct(c, "add", OpCode::Op::Add, true); break;
-        case Instruction::Type::Sub: mathConstruct(c, "sub", OpCode::Op::Sub, true); break;
-        case Instruction::Type::Mul: mathConstruct(c, "mul", OpCode::Op::Mul, true); break;
-        case Instruction::Type::Div: mathConstruct(c, "div", OpCode::Op::Div, true); break;
-        case Instruction::Type::Mod: mathConstruct(c, "mod", OpCode::Op::Mod, true); break;
+        case Instruction::Type::Add: opConstruct(c, "add", OpCode::Op::Add, true); break;
+        case Instruction::Type::Sub: opConstruct(c, "sub", OpCode::Op::Sub, true); break;
+        case Instruction::Type::Mul: opConstruct(c, "mul", OpCode::Op::Mul, true); break;
+        case Instruction::Type::Div: opConstruct(c, "div", OpCode::Op::Div, true); break;
+        case Instruction::Type::Mod: opConstruct(c, "mod", OpCode::Op::Mod, true); break;
 
-        case Instruction::Type::Not: mathConstruct(c, "not", OpCode::Op::Not, true); break;
-        case Instruction::Type::Neg: mathConstruct(c, "neg", OpCode::Op::Neg, true); break;
+        case Instruction::Type::Not: opConstruct(c, "not", OpCode::Op::Not, true); break;
+        case Instruction::Type::Neg: opConstruct(c, "neg", OpCode::Op::Neg, true); break;
+
+        case Instruction::Type::Lt: opConstruct(c, "lt", OpCode::Op::Lt, true); break;
+        case Instruction::Type::LtEq: opConstruct(c, "lteq", OpCode::Op::LtEq, true); break;
 
         case Instruction::Type::Alloc: allocConstruct(c, true); break;
         case Instruction::Type::Free: freeConstruct(c, true); break;

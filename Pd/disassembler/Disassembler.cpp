@@ -98,7 +98,9 @@ void Disassembler::disassemble(Context &c, std::ostream &os, const char *data, s
             case Op::Div:
             case Op::Mod:
             case Op::Not:
-            case Op::Neg: rm(p0); os << Primitive::toString(p0); break;
+            case Op::Neg:
+            case Op::Lt:
+            case Op::LtEq: rm(p0); os << Primitive::toString(p0); break;
 
             case Op::Conv: rm(p0, p1); os << Primitive::toString(p0) << " " << Primitive::toString(p1); break;
 

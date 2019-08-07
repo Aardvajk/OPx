@@ -232,6 +232,11 @@ NodePtr comparisons(Context &c, bool get)
             case Token::Type::Eq: n = new BinaryNode(loc, Operators::Type::Eq, n, assign(c, true)); break;
             case Token::Type::Neq: n = new BinaryNode(loc, Operators::Type::Neq, n, assign(c, true)); break;
 
+            case Token::Type::Lt: n = new BinaryNode(loc, Operators::Type::Lt, n, assign(c, true)); break;
+            case Token::Type::LtEq: n = new BinaryNode(loc, Operators::Type::LtEq, n, assign(c, true)); break;
+            case Token::Type::Gt: n = new BinaryNode(loc, Operators::Type::Gt, n, assign(c, true)); break;
+            case Token::Type::GtEq: n = new BinaryNode(loc, Operators::Type::GtEq, n, assign(c, true)); break;
+
             default: return n;
         }
     }
