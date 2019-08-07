@@ -27,6 +27,7 @@ class BinaryNode;
 class SubscriptNode;
 class WhileNode;
 class PrimitiveCastNode;
+class LogicalNode;
 
 class Visitor
 {
@@ -59,6 +60,7 @@ public:
     virtual void visit(SubscriptNode &node);
     virtual void visit(WhileNode &node);
     virtual void visit(PrimitiveCastNode &node);
+    virtual void visit(LogicalNode &node);
 };
 
 #endif // VISITOR_H

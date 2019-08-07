@@ -33,6 +33,7 @@ public:
     virtual void visit(SubscriptNode &node) override;
     virtual void visit(WhileNode &node) override;
     virtual void visit(PrimitiveCastNode &node) override;
+    virtual void visit(LogicalNode &node) override;
 
 private:
     std::ostream &tab() const;

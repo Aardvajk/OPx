@@ -107,3 +107,7 @@ void Visitor::visit(WhileNode &node)
 void Visitor::visit(PrimitiveCastNode &node)
 {
 }
+
+void Visitor::visit(LogicalNode &node)
+{
+}

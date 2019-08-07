@@ -14,6 +14,7 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -242,9 +243,26 @@ NodePtr comparisons(Context &c, bool get)
     }
 }
 
+NodePtr logical(Context &c, bool get)
+{
+    auto n = comparisons(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+        switch(c.scanner.token().type())
+        {
+            case Token::Type::And: n = new LogicalNode(loc, Operators::Type::And, n, comparisons(c, true)); break;
+            case Token::Type::Or: n = new LogicalNode(loc, Operators::Type::Or, n, comparisons(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return comparisons(c, get);
+    return logical(c, get);
 }
 
 }

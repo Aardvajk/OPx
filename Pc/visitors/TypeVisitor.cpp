@@ -203,6 +203,11 @@ void TypeVisitor::visit(PrimitiveCastNode &node)
     r = node.type;
 }
 
+void TypeVisitor::visit(LogicalNode &node)
+{
+    r = c.types.boolType();
+}
+
 Type *TypeVisitor::type(Context &c, Node *node)
 {
     TypeVisitor tv(c);

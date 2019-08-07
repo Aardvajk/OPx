@@ -31,6 +31,7 @@ public:
     virtual void visit(BinaryNode &node) override;
     virtual void visit(SubscriptNode &node) override;
     virtual void visit(PrimitiveCastNode &node) override;
+    virtual void visit(LogicalNode &node) override;
 
     static Type *type(Context &c, Node *node);
 

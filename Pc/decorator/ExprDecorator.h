@@ -22,6 +22,7 @@ public:
     virtual void visit(UnaryNode &node) override;
     virtual void visit(BinaryNode &node) override;
     virtual void visit(SubscriptNode &node) override;
+    virtual void visit(LogicalNode &node) override;
 
     static void decorate(Context &c, const Type *expectedType, Node &node);
 

@@ -16,10 +16,12 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/PrimitiveCastNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
 
+#include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
 
 #include "operators/MathOperators.h"
@@ -208,6 +210,52 @@ void ExprGenerator::visit(PrimitiveCastNode &node)
     }
 
     sz = c.assertSize(node.location(), node.type);
+}
+
+void ExprGenerator::visit(LogicalNode &node)
+{
+    if(node.op == Operators::Type::And)
+    {
+        auto l0 = c.nextLabel();
+        auto l1 = c.nextLabel();
+
+        CommonGenerator::generateBooleanExpression(c, os, *node.left);
+        os << "    jmp ifz \"" << l0 << "\";\n";
+
+        CommonGenerator::generateBooleanExpression(c, os, *node.right);
+        os << "    jmp ifz \"" << l0 << "\";\n";
+
+        os << "    push char(1);\n";
+        os << "    jmp \"" << l1 << "\";\n";
+
+        os << "\"" << l0 << "\":\n";
+        os << "    push char(0);\n";
+        os << "\"" << l1 << "\":\n";
+    }
+    else
+    {
+        auto l0 = c.nextLabel();
+        auto l1 = c.nextLabel();
+        auto l2 = c.nextLabel();
+
+        CommonGenerator::generateBooleanExpression(c, os, *node.left);
+        os << "    not char;\n";
+        os << "    jmp ifz \"" << l0 << "\";\n";
+
+        CommonGenerator::generateBooleanExpression(c, os, *node.right);
+        os << "    jmp ifz \"" << l1 << "\";\n";
+
+        os << "\"" << l0 << "\":\n";
+        os << "    push char(1);\n";
+        os << "    jmp \"" << l2 << "\";\n";
+
+        os << "\"" << l1 << "\":\n";
+        os << "    push char(0);\n";
+
+        os << "\"" << l2 << "\":\n";
+    }
+
+    sz = c.types.boolType()->size();
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)

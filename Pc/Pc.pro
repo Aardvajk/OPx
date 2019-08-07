@@ -53,6 +53,7 @@ SOURCES += \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
         nodes/LiteralNodes.cpp \
+        nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
         nodes/PrimitiveCastNode.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
     nodes/FuncNode.h \
     nodes/IdNode.h \
     nodes/LiteralNodes.h \
+    nodes/LogicalNode.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
     nodes/PrimitiveCastNode.h \

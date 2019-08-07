@@ -23,7 +23,10 @@ enum class Type
     Lt,
     LtEq,
     Gt,
-    GtEq
+    GtEq,
+
+    And,
+    Or
 };
 
 const char *toString(Type v);

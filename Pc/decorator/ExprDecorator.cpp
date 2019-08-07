@@ -12,6 +12,7 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -105,6 +106,12 @@ void ExprDecorator::visit(SubscriptNode &node)
 {
     node.target->accept(*this);
     node.expr->accept(*this);
+}
+
+void ExprDecorator::visit(LogicalNode &node)
+{
+    node.left->accept(*this);
+    node.right->accept(*this);
 }
 
 void ExprDecorator::decorate(Context &c, const Type *expectedType, Node &node)

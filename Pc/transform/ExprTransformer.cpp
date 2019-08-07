@@ -13,6 +13,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/PrimitiveCastNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -216,6 +217,12 @@ void ExprTransformer::visit(SubscriptNode &node)
     rn = dn;
 
     dn->expr = new BinaryNode(node.location(), Operators::Type::Add, node.target, node.expr);
+}
+
+void ExprTransformer::visit(LogicalNode &node)
+{
+    node.left = ExprTransformer::transform(c, node.left);
+    node.right = ExprTransformer::transform(c, node.right);
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node)
