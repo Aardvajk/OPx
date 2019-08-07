@@ -36,9 +36,12 @@ void Context::open(const std::string &path)
 
 void Context::assertUnique(Location location, const std::string &text)
 {
-    if(syms.findLocal(text))
+    if(text.empty() || text[text.length() - 1] != '.')
     {
-        throw Error(location, "already defined - ", text);
+        if(syms.findLocal(text))
+        {
+            throw Error(location, "already defined - ", text);
+        }
     }
 }
 

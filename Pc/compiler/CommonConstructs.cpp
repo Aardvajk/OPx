@@ -27,6 +27,10 @@ NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
             Token::Type::Assign,
             Token::Type::Add,
             Token::Type::Sub,
+            Token::Type::Star,
+            Token::Type::Div,
+            Token::Type::Mod,
+            Token::Type::Exclaim,
             Token::Type::Eq,
             Token::Type::Neq
         };

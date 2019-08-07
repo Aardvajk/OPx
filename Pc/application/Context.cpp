@@ -63,11 +63,14 @@ void Context::open(const std::string &path)
 
 void Context::assertUnique(Location location, const std::string &name)
 {
-    for(auto s: tree.current()->children())
+    if(!name.empty())
     {
-        if(s->name() == name)
+        for(auto s: tree.current()->children())
         {
-            throw Error(location, "already defined - ", name);
+            if(s->name() == name)
+            {
+                throw Error(location, "already defined - ", name);
+            }
         }
     }
 }
