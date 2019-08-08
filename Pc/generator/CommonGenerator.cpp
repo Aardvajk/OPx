@@ -1,5 +1,7 @@
 #include "CommonGenerator.h"
 
+#include "framework/Error.h"
+
 #include "common/Primitive.h"
 
 #include "application/Context.h"
@@ -22,6 +24,10 @@ void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, No
         if(et->primitive())
         {
             os << "    convert " << Primitive::toString(et->primitiveType()) << " char;\n";
+        }
+        else
+        {
+            throw Error("internal error - boolean cast of non-primitive not supported");
         }
     }
 }
