@@ -132,5 +132,13 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
         sym->setProperty("type", type);
     }
 
+    if(NameVisitors::isNameSpecial(node.name.get()) != Token::Type::Invalid)
+    {
+        if(!sym->parent() || sym->parent()->type() != Sym::Type::Class)
+        {
+            throw Error(node.location(), "cannot declare outside class - ", NameVisitors::prettyName(node.name.get()));
+        }
+    }
+
     return sym;
 }

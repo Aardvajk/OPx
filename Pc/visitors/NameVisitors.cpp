@@ -153,3 +153,19 @@ std::string NameVisitors::lastIdOfName(Node *node)
     return in.result();
 }
 
+NameVisitors::IsNameSpecial::IsNameSpecial() : r(Token::Type::Invalid)
+{
+}
+
+void NameVisitors::IsNameSpecial::visit(IdNode &node)
+{
+    r = node.special;
+}
+
+Token::Type NameVisitors::isNameSpecial(Node *node)
+{
+    IsNameSpecial iv;
+    node->accept(iv);
+
+    return iv.result();
+}

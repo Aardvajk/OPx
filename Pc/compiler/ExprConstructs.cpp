@@ -18,6 +18,8 @@
 
 #include "compiler/CommonConstructs.h"
 
+#include "operators/Operators.h"
+
 #include <pcx/lexical_cast.h>
 
 namespace
@@ -70,6 +72,37 @@ NodePtr unary(Context &c, Operators::Type op, bool get)
     return nn;
 }
 
+std::string convertId(Context &c, const Token &tok)
+{
+    if(tok.type() == Token::Type::RwOperator)
+    {
+        auto op = c.scanner.next(true);
+        if(!Operators::allowed(op.type()))
+        {
+            throw Error(op.location(), "invalid operator - ", op.text());
+        }
+
+        return tok.text() + op.text();
+    }
+    else if(tok.type() != Token::Type::Id && tok.type() != Token::Type::RwNew && tok.type() != Token::Type::RwDelete)
+    {
+        throw Error(tok.location(), "identifier expected - ", tok.text());
+    }
+
+    return tok.text();
+}
+
+NodePtr id(Context &c, bool get)
+{
+    auto tok = c.scanner.next(get);
+    auto value = convertId(c, tok);
+
+    NodePtr n = new IdNode(tok.location(), { }, value);
+
+    c.scanner.next(true);
+    return n;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     NodePtr n;
@@ -77,7 +110,8 @@ NodePtr primary(Context &c, bool get)
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
-        case Token::Type::Id: n = new IdNode(tok.location(), { }, tok.text()); c.scanner.next(true); return n;
+        case Token::Type::Id:
+        case Token::Type::RwOperator: return id(c, false);
 
         case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
 
@@ -115,9 +149,10 @@ NodePtr dot(Context &c, NodePtr parent, bool get)
 {
     auto tok = c.scanner.match(Token::Type::Dot, get);
 
-    c.scanner.match(Token::Type::Id, true);
+    auto name = c.scanner.next(true);
+    auto value = convertId(c, name);
 
-    auto n = new IdNode(tok.location(), parent, c.scanner.token().text());
+    auto n = new IdNode(tok.location(), parent, value);
     NodePtr nn(n);
 
     c.scanner.next(true);

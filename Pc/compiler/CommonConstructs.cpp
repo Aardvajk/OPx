@@ -10,42 +10,35 @@
 
 #include "compiler/Compiler.h"
 
+#include "operators/Operators.h"
+
 #include <algorithm>
+
+#include "visitors/NameVisitors.h"
 
 namespace
 {
 
-NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
+NodePtr nameImpl(Context &c, bool allowExtensions, NodePtr parent, bool get)
 {
     std::string name;
+    Token::Type spec = Token::Type::Invalid;
 
     auto tok = c.scanner.next(get);
-    if(tok.type() == Token::Type::RwOperator && allowOperator)
+    if(tok.type() == Token::Type::RwOperator && allowExtensions)
     {
-        static const std::vector<Token::Type> operators =
-        {
-            Token::Type::Assign,
-            Token::Type::Add,
-            Token::Type::Sub,
-            Token::Type::Star,
-            Token::Type::Div,
-            Token::Type::Mod,
-            Token::Type::Exclaim,
-            Token::Type::Eq,
-            Token::Type::Neq,
-            Token::Type::Lt,
-            Token::Type::LtEq,
-            Token::Type::Gt,
-            Token::Type::GtEq,
-        };
-
         auto op = c.scanner.next(true);
-        if(std::find(operators.begin(), operators.end(), op.type()) == operators.end())
+        if(!Operators::allowed(op.type()))
         {
             throw Error(op.location(), "invalid operator - ", op.text());
         }
 
         name = tok.text() + op.text();
+    }
+    else if((tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete) && allowExtensions)
+    {
+        name = tok.text();
+        spec = tok.type();
     }
     else
     {
@@ -54,12 +47,20 @@ NodePtr nameImpl(Context &c, bool allowOperator, NodePtr parent, bool get)
     }
 
     auto n = new IdNode(tok.location(), parent, name);
+    n->special = spec;
+
     NodePtr nn(n);
 
     c.scanner.next(true);
+
     while(c.scanner.token().type() == Token::Type::Dot)
     {
-        nn = nameImpl(c, allowOperator, nn, true);
+        if(spec != Token::Type::Invalid)
+        {
+            throw Error(c.scanner.token().location(), "invalid syntax");
+        }
+
+        nn = nameImpl(c, allowExtensions, nn, true);
     }
 
     return nn;

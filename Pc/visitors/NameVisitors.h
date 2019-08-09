@@ -1,6 +1,8 @@
 #ifndef NAMEVISITORS_H
 #define NAMEVISITORS_H
 
+#include "scanner/Token.h"
+
 #include "visitors/Visitor.h"
 
 #include <string>
@@ -62,6 +64,21 @@ private:
 };
 
 std::string lastIdOfName(Node *node);
+
+class IsNameSpecial : public Visitor
+{
+public:
+    IsNameSpecial();
+
+    Token::Type result() const { return r; }
+
+    virtual void visit(IdNode &node) override;
+
+private:
+    Token::Type r;
+};
+
+Token::Type isNameSpecial(Node *node);
 
 }
 

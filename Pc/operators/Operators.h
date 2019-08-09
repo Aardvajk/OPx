@@ -1,6 +1,8 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
 
+#include "scanner/Token.h"
+
 namespace Operators
 {
 
@@ -30,6 +32,7 @@ enum class Type
 };
 
 const char *toString(Type v);
+bool allowed(Token::Type v);
 
 }
 

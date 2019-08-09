@@ -16,6 +16,7 @@ public:
         Dot, Comma, Semicolon, Colon, Assign, Amp, Star, Add, Sub, Div, Mod, Eq, Neq, Lt, LtEq, Gt, GtEq, Exclaim, And, Or,
         RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwOperator, RwInclude, RwThis,
         RwWhile, RwIf, RwElse,
+        RwNew, RwDelete,
         RwTrue, RwFalse,
         RwReturn,
         RwChar, RwInt, RwSize, RwString,

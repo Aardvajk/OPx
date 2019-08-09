@@ -56,12 +56,17 @@ void Transformer::visit(FuncNode &node)
 
         n->setProperty("sym", s);
 
-        auto type = *(sym->property<const Type*>("type"));
+        if(!sym->getProperty("thistransformed").value<bool>())
+        {
+            auto type = *(sym->property<const Type*>("type"));
 
-        type.method = true;
-        type.args.insert(type.args.begin(), tt);
+            type.method = true;
+            type.args.insert(type.args.begin(), tt);
 
-        sym->setProperty("type", c.types.insert(type));
+            sym->setProperty("type", c.types.insert(type));
+        }
+
+        sym->setProperty("thistransformed", true);
     }
 
     if(node.body)

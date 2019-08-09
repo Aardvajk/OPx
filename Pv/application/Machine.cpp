@@ -84,6 +84,8 @@ void Machine::shutdown()
     if(rg.sp() != mm.size())
     {
         std::cout << "stack pointer invalid\n";
+
+std::cout << rg.sp() << " " << mm.size() << "\n";
         ok = false;
     }
 

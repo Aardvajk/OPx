@@ -19,6 +19,8 @@
 
 #include <pcx/scoped_push.h>
 
+#include <algorithm>
+
 namespace
 {
 
@@ -113,7 +115,7 @@ void args(Context &c, NodeList &container, bool get)
 
 void funcConstruct(Context &c, BlockNode *block, bool get)
 {
-    auto nn = CommonConstructs::extendedName(c, get);
+    NodePtr nn = CommonConstructs::extendedName(c, get);
 
     if(c.containers.back() == Sym::Type::Func)
     {
@@ -123,16 +125,28 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
     auto n = new FuncNode(nn->location(), nn);
     block->push_back(n);
 
+    auto special = NameVisitors::isNameSpecial(nn.get());
+
     c.scanner.consume(Token::Type::LeftParen, false);
     if(c.scanner.token().type() != Token::Type::RightParen)
     {
         args(c, n->args, false);
     }
 
+    if(special == Token::Type::RwDelete && !n->args.empty())
+    {
+        throw Error(nn->location(), "delete function cannot take parameters");
+    }
+
     c.scanner.consume(Token::Type::RightParen, false);
 
     if(c.scanner.token().type() == Token::Type::Colon)
     {
+        if(special != Token::Type::Invalid)
+        {
+            throw Error(nn->location(), "cannot return a value - ", NameVisitors::prettyName(nn.get()));
+        }
+
         n->type = TypeConstructs::type(c, true);
     }
 
