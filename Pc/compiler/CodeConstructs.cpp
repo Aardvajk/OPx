@@ -8,6 +8,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/ExprConstructs.h"
@@ -43,12 +44,29 @@ void whileConstruct(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     c.scanner.match(Token::Type::LeftParen, true);
-
     n->expr = ExprConstructs::expr(c, true);
-
     c.scanner.match(Token::Type::RightParen, false);
 
     n->body = CommonConstructs::scopeContents(c, tok.location(), true);
+}
+
+void ifConstruct(Context &c, BlockNode *block, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::RwIf, get);
+
+    auto n = new IfNode(tok.location());
+    block->push_back(n);
+
+    c.scanner.match(Token::Type::LeftParen, true);
+    n->expr = ExprConstructs::expr(c, true);
+    c.scanner.match(Token::Type::RightParen, false);
+
+    n->body = CommonConstructs::scopeContents(c, tok.location(), true);
+
+    if(c.scanner.token().type() == Token::Type::RwElse)
+    {
+        n->elseBody = CommonConstructs::scopeContents(c, tok.location(), true);
+    }
 }
 
 void scopeConstruct(Context &c, BlockNode *block, bool get)
@@ -85,6 +103,7 @@ void CodeConstructs::entity(Context &c, BlockNode *block, bool get)
     {
         case Token::Type::RwReturn: returnConstruct(c, block, false); break;
         case Token::Type::RwWhile: whileConstruct(c, block, false); break;
+        case Token::Type::RwIf: ifConstruct(c, block, false); break;
 
         case Token::Type::LeftBrace: scopeConstruct(c, block, false); break;
 

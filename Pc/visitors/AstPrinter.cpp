@@ -22,6 +22,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/PrimitiveCastNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IfNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -360,6 +361,20 @@ void AstPrinter::visit(LogicalNode &node)
     auto g = pcx::scoped_counter(tc);
     node.left->accept(*this);
     node.right->accept(*this);
+}
+
+void AstPrinter::visit(IfNode &node)
+{
+    tab() << "if\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+    node.body->accept(*this);
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
 }
 
 std::ostream &AstPrinter::tab() const

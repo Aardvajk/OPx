@@ -216,43 +216,43 @@ void ExprGenerator::visit(LogicalNode &node)
 {
     if(node.op == Operators::Type::And)
     {
-        auto l0 = c.nextLabel();
-        auto l1 = c.nextLabel();
+        auto l0 = c.nextLabelQuoted();
+        auto l1 = c.nextLabelQuoted();
 
         CommonGenerator::generateBooleanExpression(c, os, *node.left);
-        os << "    jmp ifz \"" << l0 << "\";\n";
+        os << "    jmp ifz " << l0 << ";\n";
 
         CommonGenerator::generateBooleanExpression(c, os, *node.right);
-        os << "    jmp ifz \"" << l0 << "\";\n";
+        os << "    jmp ifz " << l0 << ";\n";
 
         os << "    push char(1);\n";
-        os << "    jmp \"" << l1 << "\";\n";
+        os << "    jmp " << l1 << ";\n";
 
-        os << "\"" << l0 << "\":\n";
+        os << l0 << ":\n";
         os << "    push char(0);\n";
-        os << "\"" << l1 << "\":\n";
+        os << l1 << ":\n";
     }
     else
     {
-        auto l0 = c.nextLabel();
-        auto l1 = c.nextLabel();
-        auto l2 = c.nextLabel();
+        auto l0 = c.nextLabelQuoted();
+        auto l1 = c.nextLabelQuoted();
+        auto l2 = c.nextLabelQuoted();
 
         CommonGenerator::generateBooleanExpression(c, os, *node.left);
         os << "    not char;\n";
-        os << "    jmp ifz \"" << l0 << "\";\n";
+        os << "    jmp ifz " << l0 << ";\n";
 
         CommonGenerator::generateBooleanExpression(c, os, *node.right);
-        os << "    jmp ifz \"" << l1 << "\";\n";
+        os << "    jmp ifz " << l1 << ";\n";
 
-        os << "\"" << l0 << "\":\n";
+        os << l0 << ":\n";
         os << "    push char(1);\n";
-        os << "    jmp \"" << l2 << "\";\n";
+        os << "    jmp " << l2 << ";\n";
 
-        os << "\"" << l1 << "\":\n";
+        os << l1 << ":\n";
         os << "    push char(0);\n";
 
-        os << "\"" << l2 << "\":\n";
+        os << l2 << ":\n";
     }
 
     sz = c.types.boolType()->size();

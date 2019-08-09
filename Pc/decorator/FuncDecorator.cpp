@@ -8,6 +8,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -32,7 +33,7 @@ void FuncDecorator::visit(BlockNode &node)
 
 void FuncDecorator::visit(ScopeNode &node)
 {
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), { }));
+    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", c.scopes++)));
     node.setProperty("sym", sym);
 
     auto g = c.tree.open(sym);
@@ -66,4 +67,15 @@ void FuncDecorator::visit(WhileNode &node)
 {
     ExprDecorator::decorate(c, nullptr, *node.expr);
     node.body->accept(*this);
+}
+
+void FuncDecorator::visit(IfNode &node)
+{
+    ExprDecorator::decorate(c, nullptr, *node.expr);
+    node.body->accept(*this);
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
 }

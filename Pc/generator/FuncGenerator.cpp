@@ -11,6 +11,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "generator/ExprGenerator.h"
 #include "generator/CommonGenerator.h"
@@ -54,16 +55,37 @@ void FuncGenerator::visit(ReturnNode &node)
 
 void FuncGenerator::visit(WhileNode &node)
 {
-    auto l0 = c.nextLabel();
-    auto l1 = c.nextLabel();
+    auto l0 = c.nextLabelQuoted();
+    auto l1 = c.nextLabelQuoted();
 
-    os << "\"" << l0 << "\":\n";
+    os << l0 << ":\n";
 
     CommonGenerator::generateBooleanExpression(c, os, *node.expr);
-    os << "    jmp ifz \"" << l1 << "\";\n";
+    os << "    jmp ifz " << l1 << ";\n";
 
     node.body->accept(*this);
 
-    os << "    jmp \"" << l0 << "\";\n";
-    os << "\"" << l1 << "\":\n";
+    os << "    jmp " << l0 << ";\n";
+    os << l1 << ":\n";
+}
+
+void FuncGenerator::visit(IfNode &node)
+{
+    auto l0 = c.nextLabelQuoted();
+    auto l1 = c.nextLabelQuoted();
+
+    CommonGenerator::generateBooleanExpression(c, os, *node.expr);
+    os << "    jmp ifz " << l0 << ";\n";
+
+    node.body->accept(*this);
+    os << "    jmp " << l1 << ";\n";
+
+    os << l0 << ":\n";
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
+
+    os << l1 << ":\n";
 }

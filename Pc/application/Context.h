@@ -27,6 +27,7 @@ public:
     std::size_t assertInitSize(Location location, const Type *type);
 
     std::string nextLabel();
+    std::string nextLabelQuoted();
 
     SourceList sources;
     Scanner scanner;
@@ -41,6 +42,7 @@ public:
 
     std::unordered_map<std::string, Node*> globals;
     std::size_t labels;
+    std::size_t scopes;
 };
 
 #endif // CONTEXT_H

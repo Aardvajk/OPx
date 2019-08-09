@@ -12,6 +12,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
@@ -95,4 +96,15 @@ void FuncTransformer::visit(WhileNode &node)
 {
     node.expr = ExprTransformer::transform(c, node.expr);
     node.body->accept(*this);
+}
+
+void FuncTransformer::visit(IfNode &node)
+{
+    node.expr = ExprTransformer::transform(c, node.expr);
+    node.body->accept(*this);
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
 }

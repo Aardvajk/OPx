@@ -34,6 +34,7 @@ public:
     virtual void visit(WhileNode &node) override;
     virtual void visit(PrimitiveCastNode &node) override;
     virtual void visit(LogicalNode &node) override;
+    virtual void visit(IfNode &node) override;
 
 private:
     std::ostream &tab() const;

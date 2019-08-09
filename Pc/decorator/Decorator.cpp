@@ -201,6 +201,7 @@ void Decorator::visit(FuncNode &node)
 
     if(node.body)
     {
+        c.scopes = 0;
         decorateFunctionBody(c, node, sym);
     }
 }
