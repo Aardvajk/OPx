@@ -80,6 +80,7 @@ SOURCES += \
         types/Type.cpp \
         types/TypeCache.cpp \
         types/TypeCompare.cpp \
+        types/TypeLookup.cpp \
         visitors/ArraySizeVisitor.cpp \
         visitors/AstPrinter.cpp \
         visitors/NameVisitors.cpp \
@@ -149,6 +150,7 @@ HEADERS += \
     types/Type.h \
     types/TypeCache.h \
     types/TypeCompare.h \
+    types/TypeLookup.h \
     visitors/ArraySizeVisitor.h \
     visitors/AstPrinter.h \
     visitors/NameVisitors.h \

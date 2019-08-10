@@ -19,6 +19,7 @@
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+#include "types/TypeLookup.h"
 
 #include "transform/ExprTransformer.h"
 
@@ -80,12 +81,16 @@ void FuncTransformer::visit(VarNode &node)
         auto en = new ExprNode(node.location(), { });
         node.block()->insert(index + 1, en);
 
-        auto tn = new IdNode(node.location(), node.name, "new");
-
-        auto cn = new CallNode(node.location(), tn);
+        auto cn = new CallNode(node.location(), new IdNode(node.location(), node.name, "new"));
         en->expr = cn;
 
-        tn->setProperty("sym", type->sym->child("new"));
+        auto sym = TypeLookup::findNewMethod(c, type, { });
+        if(!sym)
+        {
+            throw Error(node.location(), "no default new method found - ", type->text());
+        }
+
+        cn->target->setProperty("sym", sym);
     }
 }
 
