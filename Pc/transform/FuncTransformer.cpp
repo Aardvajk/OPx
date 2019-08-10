@@ -47,6 +47,24 @@ void generatePrimitiveAssign(Context &c, Type *type, VarNode &node, NodePtr &val
     ExprDecorator::decorate(c, nullptr, *an);
 }
 
+void generateNonPrimitiveAssign(Context &c, Type *type, VarNode &node, std::size_t index)
+{
+    auto en = new ExprNode(node.location(), { });
+    node.block()->insert(index + 1, en);
+
+    auto cn = new CallNode(node.location(), new IdNode(node.location(), node.name, "new"));
+    en->expr = cn;
+
+    std::vector<Type*> tv;
+    for(auto &p: node.params)
+    {
+        cn->params.push_back(p);
+        tv.push_back(TypeVisitor::type(c, p.get()));
+    }
+
+    cn->target->setProperty("sym", TypeLookup::assertNewMethod(c, node.location(), type, tv));
+}
+
 }
 
 FuncTransformer::FuncTransformer(Context &c) : c(c), index(0)
@@ -79,7 +97,7 @@ void FuncTransformer::visit(VarNode &node)
         }
         else
         {
-            throw Error(node.location(), "internal error - no primitive-constructor type forms not supported");
+            generateNonPrimitiveAssign(c, type, node, index);
         }
     }
 
@@ -105,13 +123,10 @@ void FuncTransformer::visit(VarNode &node)
     }
     else if(!type->primitive())
     {
-        auto en = new ExprNode(node.location(), { });
-        node.block()->insert(index + 1, en);
-
-        auto cn = new CallNode(node.location(), new IdNode(node.location(), node.name, "new"));
-        en->expr = cn;
-
-        cn->target->setProperty("sym", TypeLookup::assertNewMethod(c, node.location(), type, { }));
+        if(node.params.empty())
+        {
+            generateNonPrimitiveAssign(c, type, node, index);
+        }
     }
 }
 
