@@ -42,6 +42,10 @@ void ExprGenerator::visit(IdNode &node)
     {
         os << "    push &\"" << s->fullname() << t->text() << "\";\n";
     }
+    else if(s->type() == Sym::Type::Class)
+    {
+        throw Error(node.location(), "invalid syntax - ", s->fullname());
+    }
     else
     {
         if(s->getProperty("member").value<bool>() && node.parent)
@@ -113,19 +117,26 @@ void ExprGenerator::visit(CallNode &node)
 {
     auto t = TypeVisitor::type(c, node.target.get());
 
-    auto rs = c.assertSize(node.location(), t->returnType);
-    os << "    allocs " << rs << ";\n";
-
-    for(auto &p: node.params)
+    if(t->function())
     {
-        ExprGenerator::generate(c, os, *p.get());
+        auto rs = c.assertSize(node.location(), t->returnType);
+        os << "    allocs " << rs << ";\n";
+
+        for(auto &p: node.params)
+        {
+            ExprGenerator::generate(c, os, *p.get());
+        }
+
+        ExprGenerator::generate(c, os, *node.target);
+
+        os << "    call;\n";
+
+        sz = rs;
     }
-
-    ExprGenerator::generate(c, os, *node.target);
-
-    os << "    call;\n";
-
-    sz = rs;
+    else
+    {
+        throw Error("internal error - non-primitive expressions not supported");
+    }
 }
 
 void ExprGenerator::visit(AddrOfNode &node)

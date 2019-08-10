@@ -23,6 +23,7 @@
 #include "transform/ExprTransformer.h"
 
 #include "decorator/ExprDecorator.h"
+#include "decorator/FuncDecorator.h"
 
 FuncTransformer::FuncTransformer(Context &c) : c(c), index(0)
 {
@@ -39,10 +40,10 @@ void FuncTransformer::visit(BlockNode &node)
 
 void FuncTransformer::visit(VarNode &node)
 {
+    auto type = node.property<Sym*>("sym")->property<Type*>("type");
+
     if(node.value)
     {
-        auto type = node.property<const Sym*>("sym")->property<const Type*>("type");
-
         if(type->primitive())
         {
             if(!TypeCompare::exact(type, TypeVisitor::type(c, node.value.get())))
@@ -73,6 +74,18 @@ void FuncTransformer::visit(VarNode &node)
 
             ExprDecorator::decorate(c, nullptr, *cn);
         }
+    }
+    else if(!type->primitive())
+    {
+        auto en = new ExprNode(node.location(), { });
+        node.block()->insert(index + 1, en);
+
+        auto tn = new IdNode(node.location(), node.name, "new");
+
+        auto cn = new CallNode(node.location(), tn);
+        en->expr = cn;
+
+        tn->setProperty("sym", type->sym->child("new"));
     }
 }
 

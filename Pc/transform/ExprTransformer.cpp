@@ -99,12 +99,16 @@ void ExprTransformer::visit(CallNode &node)
         ThisCallTransformer tt(c);
         node.target->accept(tt);
 
-        if(!tt.result())
+        auto tn = tt.result();
+
+        if(!tn)
         {
             throw Error(node.location(), "cannot call method without object - ", NameVisitors::prettyName(node.target.get()));
         }
 
-        node.params.insert(node.params.begin(), tt.result());
+        ExprDecorator::decorate(c, nullptr, *tn);
+
+        node.params.insert(node.params.begin(), tn);
     }
     else if(!t->function())
     {
@@ -132,10 +136,6 @@ void ExprTransformer::visit(CallNode &node)
                     throw Error("internal error - cast from non-primitive to primitive not supported");
                 }
             }
-        }
-        else
-        {
-            throw Error("internal error, non-primitive constructors not supported");
         }
     }
 }

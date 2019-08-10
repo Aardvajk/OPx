@@ -55,6 +55,8 @@ std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv,
                 throw Error(location, "callable expected - ", s->fullname());
             }
 
+std::cout << "compare " << expectedType->text() << " to " << s->property<const Type*>("type")->text() << "\n";
+
             if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
             {
                 rs.push_back(s);
