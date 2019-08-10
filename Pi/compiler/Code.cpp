@@ -96,19 +96,31 @@ void callConstruct(Context &c, bool get)
 
 void pushConstruct(Context &c, bool get)
 {
-    auto expr = Expr::get(c, true);
-
-    c.pd("-push ", astReconstruct(expr.get()));
-
-    PushVisitor pv(c);
-    expr->accept(pv);
-
-    if(!pv.okay())
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::Id && tok.text() == "sp")
     {
-        throw Error(expr->location(), "push syntax invalid - ", astReconstruct(expr.get()));
-    }
+        c.pd("-push sp");
 
-    c.scanner.consume(Token::Type::Semicolon, false);
+        c.func().bytes << OpCode::Op::PushR << OpCode::Reg::Sp;
+
+        c.scanner.consume(Token::Type::Semicolon, true);
+    }
+    else
+    {
+        auto expr = Expr::get(c, false);
+
+        c.pd("-push ", astReconstruct(expr.get()));
+
+        PushVisitor pv(c);
+        expr->accept(pv);
+
+        if(!pv.okay())
+        {
+            throw Error(expr->location(), "push syntax invalid - ", astReconstruct(expr.get()));
+        }
+
+        c.scanner.consume(Token::Type::Semicolon, false);
+    }
 }
 
 void popConstruct(Context &c, bool get)

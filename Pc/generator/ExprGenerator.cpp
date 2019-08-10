@@ -28,6 +28,7 @@
 #include "operators/CompareOperators.h"
 
 #include "types/Type.h"
+#include "types/TypeLookup.h"
 
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -135,7 +136,28 @@ void ExprGenerator::visit(CallNode &node)
     }
     else
     {
-        throw Error("internal error - non-primitive expressions not supported");
+        std::vector<Type*> pv;
+        for(auto &p: node.params)
+        {
+            pv.push_back(TypeVisitor::type(c, p.get()));
+        }
+
+        auto fn = TypeLookup::assertNewMethod(c, node.location(), t, pv);
+
+        auto rs = c.assertSize(node.location(), t);
+
+        os << "    allocs " << rs << ";\n";
+        os << "    push sp;\n";
+
+        for(auto &p: node.params)
+        {
+            ExprGenerator::generate(c, os, *p.get());
+        }
+
+        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+        os << "    call;\n";
+
+        sz = rs;
     }
 }
 

@@ -1,5 +1,7 @@
 #include "TypeLookup.h"
 
+#include "framework/Error.h"
+
 #include "application/Context.h"
 
 #include "types/Type.h"
@@ -31,4 +33,15 @@ Sym *TypeLookup::findNewMethod(Context &c, Type *type, const std::vector<Type*> 
     }
 
     return nullptr;
+}
+
+Sym *TypeLookup::assertNewMethod(Context &c, Location location, Type *type, const std::vector<Type*> &args)
+{
+    auto r = findNewMethod(c, type, args);
+    if(!r)
+    {
+        throw Error(location, "no default new method found - ", type->text());
+    }
+
+    return r;
 }

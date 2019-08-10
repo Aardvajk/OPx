@@ -1,6 +1,8 @@
 #ifndef TYPEVISITOR_H
 #define TYPEVISITOR_H
 
+#include "scanner/Location.h"
+
 #include "visitors/Visitor.h"
 
 class Context;

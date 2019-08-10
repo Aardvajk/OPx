@@ -62,13 +62,7 @@ void ExprDecorator::visit(CallNode &node)
     auto t = Type::makeFunction(0, c.types.nullType());
     for(auto &p: node.params)
     {
-        auto pt = TypeVisitor::type(c, p.get());
-        if(!pt)
-        {
-            throw Error(p->location(), "internal type lookup failed - ", NameVisitors::prettyName(p.get()));
-        }
-
-        t.args.push_back(pt);
+        t.args.push_back(TypeVisitor::type(c, p.get()));
     }
 
     ExprDecorator ed(c, c.types.insert(t));

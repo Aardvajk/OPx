@@ -213,5 +213,11 @@ Type *TypeVisitor::type(Context &c, Node *node)
     TypeVisitor tv(c);
     node->accept(tv);
 
+    if(!tv.result())
+    {
+        throw Error(node->location(), "internal error, type lookup failed - ", NameVisitors::prettyName(node));
+    }
+
     return tv.result();
 }
+

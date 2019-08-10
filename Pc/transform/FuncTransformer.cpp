@@ -84,13 +84,7 @@ void FuncTransformer::visit(VarNode &node)
         auto cn = new CallNode(node.location(), new IdNode(node.location(), node.name, "new"));
         en->expr = cn;
 
-        auto sym = TypeLookup::findNewMethod(c, type, { });
-        if(!sym)
-        {
-            throw Error(node.location(), "no default new method found - ", type->text());
-        }
-
-        cn->target->setProperty("sym", sym);
+        cn->target->setProperty("sym", TypeLookup::assertNewMethod(c, node.location(), type, { }));
     }
 }
 
