@@ -121,6 +121,17 @@ void AstPrinter::visit(VarNode &node)
         os << ":" << NameVisitors::prettyName(node.type.get());
     }
 
+    if(!node.params.empty())
+    {
+        std::vector<std::string> av;
+        for(auto &a: node.params)
+        {
+            av.push_back(NameVisitors::prettyName(a.get()));
+        }
+
+        os << "(" << pcx::join_str(av, ", ") << ")";
+    }
+
     if(auto s = node.getProperty("sym"))
     {
         auto sym = s.to<const Sym*>();
@@ -140,15 +151,13 @@ void AstPrinter::visit(FuncNode &node)
 {
     tab() << "func " << NameVisitors::prettyName(node.name.get());
 
-    os << "(";
-
     std::vector<std::string> av;
     for(auto &a: node.args)
     {
         av.push_back(NameVisitors::prettyName(a.get()));
     }
 
-    os << pcx::join_str(av, ", ") << ")";
+    os << "(" << pcx::join_str(av, ", ") << ")";
 
     if(node.type)
     {

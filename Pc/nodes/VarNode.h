@@ -12,6 +12,7 @@ public:
 
     NodePtr name;
     NodePtr type;
+    NodeList params;
     NodePtr value;
 };
 

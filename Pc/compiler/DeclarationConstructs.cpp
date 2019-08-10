@@ -63,6 +63,16 @@ void classConstruct(Context &c, BlockNode *block, bool get)
     }
 }
 
+void params(Context &c, NodeList &container, bool get)
+{
+    container.push_back(ExprConstructs::expr(c, get));
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        params(c, container, true);
+    }
+}
+
 void varConstruct(Context &c, BlockNode *block, bool get)
 {
     auto nn = CommonConstructs::name(c, get);
@@ -73,6 +83,17 @@ void varConstruct(Context &c, BlockNode *block, bool get)
     if(c.scanner.token().type() == Token::Type::Colon)
     {
         n->type = TypeConstructs::type(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::LeftParen)
+    {
+        auto tok = c.scanner.next(true);
+        if(tok.type() != Token::Type::RightParen)
+        {
+            params(c, n->params, false);
+        }
+
+        c.scanner.consume(Token::Type::RightParen, false);
     }
 
     if(c.scanner.token().type() == Token::Type::Assign)

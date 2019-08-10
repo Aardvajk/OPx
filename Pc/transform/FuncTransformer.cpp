@@ -26,6 +26,29 @@
 #include "decorator/ExprDecorator.h"
 #include "decorator/FuncDecorator.h"
 
+namespace
+{
+
+void generatePrimitiveAssign(Context &c, Type *type, VarNode &node, NodePtr &value, std::size_t index)
+{
+    if(!TypeCompare::exact(type, TypeVisitor::type(c, value.get())))
+    {
+        throw Error(value->location(), type->text(), " expected - ", NameVisitors::prettyName(value.get()));
+    }
+
+    auto en = new ExprNode(value->location(), { });
+    node.block()->insert(index + 1, en);
+
+    auto an = new AssignNode(node.location(), node.name);
+
+    en->expr = an;
+    an->expr = value;
+
+    ExprDecorator::decorate(c, nullptr, *an);
+}
+
+}
+
 FuncTransformer::FuncTransformer(Context &c) : c(c), index(0)
 {
 }
@@ -43,24 +66,28 @@ void FuncTransformer::visit(VarNode &node)
 {
     auto type = node.property<Sym*>("sym")->property<Type*>("type");
 
+    if(!node.params.empty())
+    {
+        if(type->primitive())
+        {
+            if(node.params.size() > 1)
+            {
+                throw Error(node.location(), "invalid number of parameters");
+            }
+
+            generatePrimitiveAssign(c, type, node, node.params.front(), index);
+        }
+        else
+        {
+            throw Error(node.location(), "internal error - no primitive-constructor type forms not supported");
+        }
+    }
+
     if(node.value)
     {
         if(type->primitive())
         {
-            if(!TypeCompare::exact(type, TypeVisitor::type(c, node.value.get())))
-            {
-                throw Error(node.value->location(), type->text(), " expected - ", NameVisitors::prettyName(node.value.get()));
-            }
-
-            auto en = new ExprNode(node.location(), { });
-            node.block()->insert(index + 1, en);
-
-            auto an = new AssignNode(node.location(), node.name);
-
-            en->expr = an;
-            an->expr = node.value;
-
-            ExprDecorator::decorate(c, nullptr, *an);
+            generatePrimitiveAssign(c, type, node, node.value, index);
         }
         else
         {

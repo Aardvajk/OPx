@@ -103,6 +103,11 @@ void NameVisitors::PrettyName::visit(SizeLiteralNode &node)
     r += pcx::str(node.value);
 }
 
+void NameVisitors::PrettyName::visit(StringLiteralNode &node)
+{
+    r += pcx::str("\"", Lexer::encodeString(node.value), "\"");
+}
+
 void NameVisitors::PrettyName::visit(ThisNode &node)
 {
     r += "this";

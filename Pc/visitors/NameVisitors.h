@@ -27,6 +27,7 @@ public:
     virtual void visit(CharLiteralNode &node) override;
     virtual void visit(BoolLiteralNode &node) override;
     virtual void visit(SizeLiteralNode &node) override;
+    virtual void visit(StringLiteralNode &node) override;
     virtual void visit(ThisNode &node) override;
 
 private:

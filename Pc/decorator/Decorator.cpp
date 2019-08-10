@@ -166,6 +166,12 @@ void Decorator::visit(VarNode &node)
         type = TypeBuilder::type(c, node.type.get());
     }
 
+    for(auto &p: node.params)
+    {
+        ExprDecorator ed(c, type);
+        p->accept(ed);
+    }
+
     if(node.value)
     {
         ExprDecorator ed(c, type);
