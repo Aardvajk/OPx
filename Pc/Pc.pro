@@ -161,6 +161,8 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../workspace/cstring.pc \
+    ../workspace/cstring.ph \
     ../workspace/script.pc \
     ../workspace/stdlib.ph \
     ../workspace/store.pc

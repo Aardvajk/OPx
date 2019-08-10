@@ -37,51 +37,72 @@ int main(int argc, char *argv[])
 
     try
     {
-        if(argc < 2)
+        bool quiet = false;
+
+        int arg = 0;
+        if(argc > 1 && std::string(argv[1]) == "-q")
+        {
+            quiet = true;
+            ++arg;
+        }
+
+        if(argc < 2 + arg)
         {
             throw Error("no source specified");
         }
 
-        if(argc < 3)
+        if(argc < 3 + arg)
         {
             throw Error("no output specified");
         }
 
-        c.open(argv[1]);
+        c.open(argv[arg + 1]);
 
         auto n = Compiler::compile(c);
 
-        std::cout << banner("nodes");
-        visit<AstPrinter>(n, std::cout);
+        if(!quiet)
+        {
+            std::cout << banner("nodes");
+            visit<AstPrinter>(n, std::cout);
+        }
 
         visit<Decorator>(n, c);
 
-        std::cout << banner("decorated nodes");
-        visit<AstPrinter>(n, std::cout);
+        if(!quiet)
+        {
+            std::cout << banner("decorated nodes");
+            visit<AstPrinter>(n, std::cout);
+        }
 
         visit<Transformer>(n, c);
 
-        std::cout << banner("transformed nodes");
-        visit<AstPrinter>(n, std::cout);
+        if(!quiet)
+        {
+            std::cout << banner("transformed nodes");
+            visit<AstPrinter>(n, std::cout);
 
-        std::cout << banner("symbols");
-        SymPrinter::print(c.tree.root(), std::cout);
+            std::cout << banner("symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
 
-        std::cout << banner("generate");
-        generate(c, std::cout, n);
+            std::cout << banner("generate");
+            generate(c, std::cout, n);
+        }
 
         if(true)
         {
-            std::ofstream os(argv[2]);
+            std::ofstream os(argv[arg + 2]);
             if(!os.is_open())
             {
-                throw Error("unable to create - ", argv[2]);
+                throw Error("unable to create - ", argv[arg + 2]);
             }
 
             generate(c, os, n);
         }
 
-        std::cout << banner();
+        if(!quiet)
+        {
+            std::cout << banner();
+        }
     }
 
     catch(const Error &error)
