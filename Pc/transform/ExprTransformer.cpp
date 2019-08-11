@@ -54,7 +54,7 @@ void ExprTransformer::visit(IdNode &node)
 
 void ExprTransformer::visit(StringLiteralNode &node)
 {
-    auto name = pcx::str("#global", c.globals.size());
+    auto name = pcx::str("#global.", c.sources.path(c.scanner.sourceId()), c.globals.size());
 
     c.globals[name] = &node;
     node.setProperty("global", name);

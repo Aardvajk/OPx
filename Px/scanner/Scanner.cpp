@@ -55,3 +55,8 @@ Token Scanner::token() const
 {
     return state.back().tok;
 }
+
+Location::Id Scanner::sourceId() const
+{
+    return state.back().src->location().id();
+}

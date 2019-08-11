@@ -22,6 +22,7 @@ public:
     Token consume(Token::Type type, bool get);
 
     Token token() const;
+    Location::Id sourceId() const;
 
 private:
     struct State

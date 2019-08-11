@@ -162,4 +162,6 @@ HEADERS += \
 
 DISTFILES += \
     ../workspace/script.pc \
-    ../workspace/store.pc
+    ../workspace/store.pc \
+    ../workspace/string.pc \
+    ../workspace/string.ph
