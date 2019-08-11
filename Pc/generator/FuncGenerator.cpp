@@ -69,17 +69,20 @@ void FuncGenerator::visit(ScopeNode &node)
 
     c.destructs.pop_back();
 
-    if(node.body->getProperty("returned").value<bool>())
+    os << "    push &\"@rf\";\n";
+    os << "    load 1;\n";
+    os << "    jmp ifz \"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\";\n";
+
+    if(c.destructs.empty() || c.destructs.back().empty())
     {
-        if(c.destructs.empty() || c.destructs.back().empty())
-        {
-            os << "    jmp \"#end_function\";\n";
-        }
-        else
-        {
-            os << "    jmp \"#destroy_" << c.destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
-        }
+        os << "    jmp \"#end_function\";\n";
     }
+    else
+    {
+        os << "    jmp \"#destroy_" << c.destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
+    }
+
+    os << "\"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\":\n";
 }
 
 void FuncGenerator::visit(ExprNode &node)
@@ -94,9 +97,11 @@ void FuncGenerator::visit(ReturnNode &node)
     os << "    push &\"@ret\";\n";
     os << "    store " << sz << ";\n";
     os << "    pop " << sz << ";\n";
-//    os << "    jmp \"#end_function\";\n";
 
-    node.block()->setProperty("returned", true);
+    os << "    push char(1);\n";
+    os << "    push &\"@rf\";\n";
+    os << "    store 1;\n";
+    os << "    pop 1;\n";
 }
 
 void FuncGenerator::visit(WhileNode &node)

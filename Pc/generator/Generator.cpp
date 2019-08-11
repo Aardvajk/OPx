@@ -91,8 +91,15 @@ void Generator::visit(FuncNode &node)
 
         c.labels = 0;
 
+        os << "    var \"@rf\":1;\n";
+
         LocalsGenerator lg(c, os);
         node.body->accept(lg);
+
+        os << "    push char(0);\n";
+        os << "    push &\"@rf\";\n";
+        os << "    store 1;\n";
+        os << "    pop 1;\n";
 
         FuncGenerator fg(c, os);
         node.body->accept(fg);
