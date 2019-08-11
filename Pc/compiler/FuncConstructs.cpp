@@ -1,4 +1,4 @@
-#include "CodeConstructs.h"
+#include "FuncConstructs.h"
 
 #include "application/Context.h"
 
@@ -91,7 +91,7 @@ void exprConstruct(Context &c, BlockNode *block, bool get)
 
 }
 
-void CodeConstructs::entity(Context &c, BlockNode *block, bool get)
+void FuncConstructs::entity(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.next(get);
     if(c.containers.back() != Sym::Type::Func)

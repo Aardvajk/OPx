@@ -7,6 +7,7 @@
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/VarNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
@@ -17,9 +18,13 @@
 #include "generator/CommonGenerator.h"
 
 #include "visitors/TypeVisitor.h"
+#include "visitors/NameVisitors.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+#include "types/TypeLookup.h"
+
+#include <pcx/range_reverse.h>
 
 FuncGenerator::FuncGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -33,9 +38,48 @@ void FuncGenerator::visit(BlockNode &node)
     }
 }
 
+void FuncGenerator::visit(VarNode &node)
+{
+    auto s = node.property<Sym*>("sym");
+
+    if(!s->property<const Type*>("type")->primitive())
+    {
+        c.destructs.back().push_back(&node);
+    }
+}
+
 void FuncGenerator::visit(ScopeNode &node)
 {
+    auto g = c.tree.open(node.property<Sym*>("sym"));
+    c.destructs.push_back({ });
+
     node.body->accept(*this);
+
+    for(auto np: pcx::range_reverse(c.destructs.back()))
+    {
+        auto sym = np->property<Sym*>("sym");
+        auto dm = TypeLookup::assertDeleteMethod(c, np->location(), sym->property<Type*>("type"));
+
+        os << "\"#destroy_" << sym->fullname() << "\":\n";
+
+        os << "    push &\"" << sym->fullname() << "\";\n";
+        os << "    push &\"" << dm->fullname() << dm->property<const Type*>("type")->text() << "\";\n";
+        os << "    call;\n";
+    }
+
+    c.destructs.pop_back();
+
+    if(node.body->getProperty("returned").value<bool>())
+    {
+        if(c.destructs.empty() || c.destructs.back().empty())
+        {
+            os << "    jmp \"#end_function\";\n";
+        }
+        else
+        {
+            os << "    jmp \"#destroy_" << c.destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
+        }
+    }
 }
 
 void FuncGenerator::visit(ExprNode &node)
@@ -50,7 +94,9 @@ void FuncGenerator::visit(ReturnNode &node)
     os << "    push &\"@ret\";\n";
     os << "    store " << sz << ";\n";
     os << "    pop " << sz << ";\n";
-    os << "    jmp \"#end_function\";\n";
+//    os << "    jmp \"#end_function\";\n";
+
+    node.block()->setProperty("returned", true);
 }
 
 void FuncGenerator::visit(WhileNode &node)

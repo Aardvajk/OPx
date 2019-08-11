@@ -35,12 +35,33 @@ Sym *TypeLookup::findNewMethod(Context &c, Type *type, const std::vector<Type*> 
     return nullptr;
 }
 
+Sym *TypeLookup::findDeleteMethod(Context &c, Type *type)
+{
+    if(type->sym)
+    {
+        return type->sym->child("delete");
+    }
+
+    return nullptr;
+}
+
 Sym *TypeLookup::assertNewMethod(Context &c, Location location, Type *type, const std::vector<Type*> &args)
 {
     auto r = findNewMethod(c, type, args);
     if(!r)
     {
         throw Error(location, "no default new method found - ", type->text());
+    }
+
+    return r;
+}
+
+Sym *TypeLookup::assertDeleteMethod(Context &c, Location location, Type *type)
+{
+    auto r = findDeleteMethod(c, type);
+    if(!r)
+    {
+        throw Error(location, "no delete method found - ", type->text());
     }
 
     return r;

@@ -13,8 +13,10 @@ namespace TypeLookup
 {
 
 Sym *findNewMethod(Context &c, Type *type, const std::vector<Type*> &args);
+Sym *findDeleteMethod(Context &c, Type *type);
 
 Sym *assertNewMethod(Context &c, Location location, Type *type, const std::vector<Type*> &args);
+Sym *assertDeleteMethod(Context &c, Location location, Type *type);
 
 }
 

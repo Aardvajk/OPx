@@ -43,6 +43,8 @@ public:
     std::unordered_map<std::string, Node*> globals;
     std::size_t labels;
     std::size_t scopes;
+
+    std::vector<std::vector<Node*> > destructs;
 };
 
 #endif // CONTEXT_H

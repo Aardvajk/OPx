@@ -10,6 +10,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/ScopeNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -174,7 +175,7 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         auto cg = pcx::scoped_push(c.containers, Sym::Type::Func);
-        n->body = CommonConstructs::blockContents(c, n->location(), false);
+        n->body = CommonConstructs::funcContents(c, n->location(), false);
     }
     else
     {

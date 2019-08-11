@@ -13,6 +13,7 @@ public:
     FuncGenerator(Context &c, std::ostream &os);
 
     virtual void visit(BlockNode &node) override;
+    virtual void visit(VarNode &node) override;
     virtual void visit(ScopeNode &node) override;
     virtual void visit(ExprNode &node) override;
     virtual void visit(ReturnNode &node) override;

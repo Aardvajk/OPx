@@ -21,11 +21,11 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
-        compiler/CodeConstructs.cpp \
         compiler/CommonConstructs.cpp \
         compiler/Compiler.cpp \
         compiler/DeclarationConstructs.cpp \
         compiler/ExprConstructs.cpp \
+        compiler/FuncConstructs.cpp \
         compiler/IncludeConstructs.cpp \
         compiler/TypeConstructs.cpp \
         decorator/ClassDecorator.cpp \
@@ -92,11 +92,11 @@ SOURCES += \
 
 HEADERS += \
     application/Context.h \
-    compiler/CodeConstructs.h \
     compiler/CommonConstructs.h \
     compiler/Compiler.h \
     compiler/DeclarationConstructs.h \
     compiler/ExprConstructs.h \
+    compiler/FuncConstructs.h \
     compiler/IncludeConstructs.h \
     compiler/TypeConstructs.h \
     decorator/ClassDecorator.h \
@@ -161,8 +161,5 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../workspace/cstring.pc \
-    ../workspace/cstring.ph \
     ../workspace/script.pc \
-    ../workspace/stdlib.ph \
     ../workspace/store.pc

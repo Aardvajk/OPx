@@ -8,7 +8,7 @@
 
 #include "compiler/IncludeConstructs.h"
 #include "compiler/DeclarationConstructs.h"
-#include "compiler/CodeConstructs.h"
+#include "compiler/FuncConstructs.h"
 
 #include <pcx/scoped_push.h>
 
@@ -24,7 +24,7 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwVar:
         case Token::Type::RwFunc: DeclarationConstructs::entity(c, block, false); break;
 
-        default: CodeConstructs::entity(c, block, false);
+        default: FuncConstructs::entity(c, block, false);
     }
 }
 

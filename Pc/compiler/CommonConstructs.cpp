@@ -96,6 +96,27 @@ NodePtr CommonConstructs::blockContents(Context &c, Location location, bool get)
     return nn;
 }
 
+NodePtr CommonConstructs::funcContents(Context &c, Location location, bool get)
+{
+    auto scope = new ScopeNode(location);
+    NodePtr nn(scope);
+
+    auto block = new BlockNode(location);
+    scope->body = block;
+
+    c.scanner.match(Token::Type::LeftBrace, get);
+
+    c.scanner.next(true);
+    while(c.scanner.token().type() != Token::Type::RightBrace)
+    {
+        Compiler::construct(c, block, false);
+    }
+
+    c.scanner.next(true);
+
+    return nn;
+}
+
 NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)
 {
     auto scope = new ScopeNode(location);
