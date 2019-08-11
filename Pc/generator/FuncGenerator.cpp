@@ -98,10 +98,12 @@ void FuncGenerator::visit(ReturnNode &node)
     os << "    store " << sz << ";\n";
     os << "    pop " << sz << ";\n";
 
-    os << "    push char(1);\n";
-    os << "    push &\"@rf\";\n";
-    os << "    store 1;\n";
-    os << "    pop 1;\n";
+    os << "    setf \"@rf\";\n";
+
+//    os << "    push char(1);\n";
+//    os << "    push &\"@rf\";\n";
+//    os << "    store 1;\n";
+//    os << "    pop 1;\n";
 }
 
 void FuncGenerator::visit(WhileNode &node)

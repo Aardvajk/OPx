@@ -32,6 +32,9 @@ const char *s[] =
     "alloc",
     "free",
 
+    "setf",
+    "clrf",
+
     "svc",
     ""
 };

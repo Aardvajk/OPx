@@ -35,6 +35,9 @@ enum class Type
     Alloc,
     Free,
 
+    SetF,
+    ClrF,
+
     Svc,
     Invalid
 };

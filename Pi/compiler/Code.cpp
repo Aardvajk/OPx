@@ -41,6 +41,15 @@ Primitive::Type primitiveFromToken(const Token &token)
     return r;
 }
 
+void setFlag(Context &c, const Token &id, char value)
+{
+    auto sym = c.find(id.location(), id.text());
+
+    c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Bp << OpCode::Reg::Dx;
+    c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Dx << sym->properties["offset"].to<std::size_t>();
+    c.func().bytes << OpCode::Op::CopyAI << OpCode::Reg::Dx << std::size_t(1) << char(value);
+}
+
 void jmpConstruct(Context &c, bool get)
 {
     bool ifz = false;
@@ -208,6 +217,26 @@ void freeConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void setFConstruct(Context &c, bool get)
+{
+    auto id = c.matchId(get);
+    c.pd("-setf ", id.text());
+
+    setFlag(c, id, char(1));
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
+void clrFConstruct(Context &c, bool get)
+{
+    auto id = c.matchId(get);
+    c.pd("-clrf ", id.text());
+
+    setFlag(c, id, char(0));
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void svcConstruct(Context &c, bool get)
 {
     auto id = c.scanner.match(Token::Type::IntLiteral, get);
@@ -262,10 +291,13 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::Lt: opConstruct(c, "lt", OpCode::Op::Lt, true); break;
         case Instruction::Type::LtEq: opConstruct(c, "lteq", OpCode::Op::LtEq, true); break;
 
+        case Instruction::Type::Convert: convertConstruct(c, true); break;
+
         case Instruction::Type::Alloc: allocConstruct(c, true); break;
         case Instruction::Type::Free: freeConstruct(c, true); break;
 
-        case Instruction::Type::Convert: convertConstruct(c, true); break;
+        case Instruction::Type::SetF: setFConstruct(c, true); break;
+        case Instruction::Type::ClrF: clrFConstruct(c, true); break;
 
         case Instruction::Type::Svc: svcConstruct(c, true); break;
 
