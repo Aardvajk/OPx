@@ -11,7 +11,7 @@
 #include "operations/CompareOps.h"
 #include "operations/ConvertOps.h"
 
-Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 5), fs(mm, v.size()), sp(sp)
+Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 10), fs(mm, v.size()), sp(sp)
 {
     std::memcpy(mm(0), v.data(), v.size());
 
