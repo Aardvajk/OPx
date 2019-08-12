@@ -80,7 +80,6 @@ void ExprGenerator::visit(IdNode &node)
 
 void ExprGenerator::visit(NullLiteralNode &node)
 {
-    os << "    allocs 0;\n";
     sz = 0;
 }
 
@@ -121,7 +120,11 @@ void ExprGenerator::visit(CallNode &node)
     if(t->function())
     {
         auto rs = c.assertSize(node.location(), t->returnType);
-        os << "    allocs " << rs << ";\n";
+
+        if(rs)
+        {
+            os << "    allocs " << rs << ";\n";
+        }
 
         for(auto &p: node.params)
         {
@@ -146,7 +149,11 @@ void ExprGenerator::visit(CallNode &node)
 
         auto rs = c.assertSize(node.location(), t);
 
-        os << "    allocs " << rs << ";\n";
+        if(rs)
+        {
+            os << "    allocs " << rs << ";\n";
+        }
+
         os << "    push sp;\n";
 
         for(auto &p: node.params)

@@ -88,22 +88,23 @@ void FuncGenerator::visit(ScopeNode &node)
 void FuncGenerator::visit(ExprNode &node)
 {
     auto sz = ExprGenerator::generate(c, os, *node.expr);
-    os << "    pop " << sz << ";\n";
+
+    if(sz)
+    {
+        os << "    pop " << sz << ";\n";
+    }
 }
 
 void FuncGenerator::visit(ReturnNode &node)
 {
-    auto sz = ExprGenerator::generate(c, os, *node.expr);
-    os << "    push &\"@ret\";\n";
-    os << "    store " << sz << ";\n";
-    os << "    pop " << sz << ";\n";
+    if(auto sz = ExprGenerator::generate(c, os, *node.expr))
+    {
+        os << "    push &\"@ret\";\n";
+        os << "    store " << sz << ";\n";
+        os << "    pop " << sz << ";\n";
+    }
 
     os << "    setf \"@rf\";\n";
-
-//    os << "    push char(1);\n";
-//    os << "    push &\"@rf\";\n";
-//    os << "    store 1;\n";
-//    os << "    pop 1;\n";
 }
 
 void FuncGenerator::visit(WhileNode &node)
