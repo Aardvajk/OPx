@@ -14,7 +14,7 @@ public:
         Id, IntLiteral, CharLiteral, StringLiteral, SizeLiteral,
         LeftBrace, RightBrace, LeftParen, RightParen, LeftSub, RightSub,
         Dot, Comma, Semicolon, Colon, Assign, Amp, Star, Add, Sub, Div, Mod, Eq, Neq, Lt, LtEq, Gt, GtEq, Exclaim, And, Or,
-        RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwOperator, RwInclude, RwThis,
+        RwClass, RwNamespace, RwPublic, RwPrivate, RwVar, RwArg, RwFunc, RwPtr, RwRef, RwOperator, RwInclude, RwThis,
         RwWhile, RwIf, RwElse,
         RwNew, RwDelete,
         RwTrue, RwFalse,
