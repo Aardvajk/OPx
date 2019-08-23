@@ -14,6 +14,8 @@ public:
 
     NodePtr result(){ return rn; }
 
+    virtual void visit(AssignNode &node) override;
+
     static NodePtr lower(Context &c, NodePtr &node);
 
 private:

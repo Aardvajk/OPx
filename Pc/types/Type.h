@@ -21,6 +21,8 @@ public:
     bool primitive() const;
     Primitive::Type primitiveType() const;
 
+    Type refToPtr() const;
+
     static Type makePrimary(unsigned ptr, Sym *sym);
     static Type makeFunction(unsigned ptr, Type *returnType);
     static Type removeSub(const Type &type);

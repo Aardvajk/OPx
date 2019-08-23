@@ -122,6 +122,14 @@ Primitive::Type Type::primitiveType() const
     return Primitive::Type::Invalid;
 }
 
+Type Type::refToPtr() const
+{
+    auto t = *this;
+    ++t.ptr;
+
+    return t;
+}
+
 Type Type::makePrimary(unsigned ptr, Sym *sym)
 {
     Type t;
