@@ -15,7 +15,7 @@ public:
     Machine(const std::vector<char> &v, ServiceProc sp);
 
     void execute();
-    void shutdown();
+    void shutdown(bool quiet);
 
 private:
     Memory mm;

@@ -77,7 +77,7 @@ void Machine::execute()
     }
 }
 
-void Machine::shutdown()
+void Machine::shutdown(bool quiet)
 {
     bool ok = true;
 
@@ -87,7 +87,7 @@ void Machine::shutdown()
         ok = false;
     }
 
-    if(ok)
+    if(ok && !quiet)
     {
         std::cout << "okay\n";
     }

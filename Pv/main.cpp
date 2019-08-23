@@ -80,16 +80,28 @@ int main(int argc, char *argv[])
             throw Error("no program specified");
         }
 
-        std::cout << banner("executing");
+        bool quiet = args.contains("q");
+
+        if(!quiet)
+        {
+            std::cout << banner("executing");
+        }
 
         Machine m(loadBinaryFile(files[0]), intProc);
 
         m.execute();
 
-        std::cout << banner("shutdown");
-        m.shutdown();
+        if(!quiet)
+        {
+            std::cout << banner("shutdown");
+        }
 
-        std::cout << banner();
+        m.shutdown(quiet);
+
+        if(!quiet)
+        {
+            std::cout << banner();
+        }
     }
 
     catch(const Error &error)
