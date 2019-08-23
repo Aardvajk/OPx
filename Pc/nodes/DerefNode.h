@@ -6,7 +6,7 @@
 class DerefNode : public Node
 {
 public:
-    explicit DerefNode(Location location) : Node(location) { }
+    explicit DerefNode(Location location, NodePtr expr = { }) : Node(location), expr(expr) { }
 
     virtual void accept(Visitor &v) override;
 

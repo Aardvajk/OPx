@@ -16,6 +16,8 @@
 
 #include "types/Type.h"
 
+#include "visitors/TypeVisitor.h"
+
 #include "lower/ExprLower.h"
 
 FuncLower::FuncLower(Context &c) : c(c)
@@ -38,16 +40,6 @@ void FuncLower::visit(VarNode &node)
     if(type->ref)
     {
         sym->setProperty("type", c.types.insert(type->refToPtr()));
-
-        for(std::size_t i = 0; i < node.params.size(); ++i)
-        {
-            node.params[i] = new AddrOfNode(node.params[i]->location(), node.params[i]);
-        }
-
-        if(node.value)
-        {
-            node.value = new AddrOfNode(node.value->location(), node.value);
-        }
     }
 }
 

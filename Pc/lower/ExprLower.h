@@ -10,16 +10,18 @@ class Context;
 class ExprLower : public Visitor
 {
 public:
-    explicit ExprLower(Context &c);
+    explicit ExprLower(Context &c, NodePtr &cn);
 
     NodePtr result(){ return rn; }
 
+    virtual void visit(IdNode &node) override;
     virtual void visit(AssignNode &node) override;
 
     static NodePtr lower(Context &c, NodePtr &node);
 
 private:
     Context &c;
+    NodePtr &cn;
     NodePtr rn;
 };
 
