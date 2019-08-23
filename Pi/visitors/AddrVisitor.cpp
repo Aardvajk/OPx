@@ -12,8 +12,8 @@ AddrVisitor::AddrVisitor(Context &c) : c(c)
 
 void AddrVisitor::visit(IdNode &node)
 {
-    auto sym = c.find(node.location(), node.value);
-    if(sym->type == Sym::Type::Global || sym->type == Sym::Type::Func)
+    auto sym = c.syms.find(node.value);
+    if(!sym || sym->type == Sym::Type::Global || sym->type == Sym::Type::Func)
     {
         ByteStreamPatch p;
 

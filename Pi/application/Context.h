@@ -23,8 +23,6 @@ public:
 
     void assertUnique(Location location, const std::string &text);
 
-    Sym *find(Location location, const std::string &name);
-
     std::size_t funcPosition() const;
     Function &func(){ return funcs.back(); }
 

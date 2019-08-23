@@ -49,12 +49,12 @@ void PushVisitor::visit(LiteralNode<std::size_t> &node)
 
 void PushVisitor::visit(IdNode &node)
 {
-    auto sym = c.find(node.location(), node.value);
-    if(sym->type == Sym::Type::Global)
+    auto sym = c.syms.find(node.value);
+    if(!sym || sym->type == Sym::Type::Global)
     {
         ByteStreamPatch p;
 
-        auto size = sym->properties["size"].to<std::size_t>();
+        auto size = sym ? sym->properties["size"].to<std::size_t>() : sizeof(std::size_t);
 
         c.func().bytes << OpCode::Op::SetRI << OpCode::Reg::Dx << p;
         c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Sp << size;

@@ -45,16 +45,6 @@ void Context::assertUnique(Location location, const std::string &text)
     }
 }
 
-Sym *Context::find(Location location, const std::string &name)
-{
-    if(auto s = syms.find(name))
-    {
-        return s;
-    }
-
-    throw Error(location, "not found - ", name);
-}
-
 std::size_t Context::funcPosition() const
 {
     return funcs.back().bytes.position();

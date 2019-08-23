@@ -72,13 +72,13 @@ void Generator::visit(VarNode &node)
 
 void Generator::visit(FuncNode &node)
 {
-    auto sym = node.property<const Sym*>("sym");
-    auto type = sym->property<const Type*>("type");
-
-    os << "func \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
-
     if(node.body)
     {
+        auto sym = node.property<const Sym*>("sym");
+        auto type = sym->property<const Type*>("type");
+
+        os << "func \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
+
         os << "\n{\n";
 
         for(auto &a: node.args)
@@ -96,10 +96,6 @@ void Generator::visit(FuncNode &node)
         LocalsGenerator lg(c, os);
         node.body->accept(lg);
 
-//        os << "    push char(0);\n";
-//        os << "    push &\"@rf\";\n";
-//        os << "    store 1;\n";
-//        os << "    pop 1;\n";
         os << "    clrf \"@rf\";\n";
 
         FuncGenerator fg(c, os);
@@ -107,9 +103,5 @@ void Generator::visit(FuncNode &node)
 
         os << "\"#end_function\":\n";
         os << "}\n";
-    }
-    else
-    {
-        os << ";\n";
     }
 }

@@ -43,7 +43,11 @@ Primitive::Type primitiveFromToken(const Token &token)
 
 void setFlag(Context &c, const Token &id, char value)
 {
-    auto sym = c.find(id.location(), id.text());
+    auto sym = c.syms.find(id.text());
+    if(!sym)
+    {
+        throw Error(id.location(), "flag not found - ", id.text());
+    }
 
     c.func().bytes << OpCode::Op::CopyRR << OpCode::Reg::Bp << OpCode::Reg::Dx;
     c.func().bytes << OpCode::Op::SubRI << OpCode::Reg::Dx << sym->properties["offset"].to<std::size_t>();
