@@ -1,5 +1,6 @@
 #include <pcx/str.h>
 #include <pcx/textfile.h>
+#include <pcx/args.h>
 
 #include <cstdlib>
 #include <vector>
@@ -7,8 +8,17 @@
 
 int main(int argc, char *argv[])
 {
+    std::vector<std::string> files;
+    pcx::args args(argc, argv, files);
+
+    if(files.size() < 1)
+    {
+        std::cerr << "pb error: no batch file specified\n";
+        return -1;
+    }
+
     std::vector<std::string> pb;
-    pcx::textfile::read("pb.bat", pb);
+    pcx::textfile::read(files[0], pb);
 
     for(auto s: pb)
     {

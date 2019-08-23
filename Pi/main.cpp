@@ -5,6 +5,8 @@
 
 #include "compiler/Compiler.h"
 
+#include <pcx/args.h>
+
 #include <fstream>
 
 int main(int argc, char *argv[])
@@ -13,20 +15,23 @@ int main(int argc, char *argv[])
 
     try
     {
-        if(argc < 2)
+        std::vector<std::string> files;
+        pcx::args args(argc, argv, files);
+
+        if(files.size() < 1)
         {
             throw Error("no source specified");
         }
 
-        c.open(argv[1]);
-        compile(c);
-
-        if(argc < 3)
+        if(files.size() < 2)
         {
             throw Error("no output specified");
         }
 
-        std::string output = argv[2];
+        c.open(files[0]);
+        compile(c);
+
+        std::string output = files[1];
 
         if(true)
         {

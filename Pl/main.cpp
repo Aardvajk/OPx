@@ -6,8 +6,9 @@
 #include "application/Generator.h"
 #include "application/Linker.h"
 
-#include <iostream>
+#include <pcx/args.h>
 
+#include <iostream>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -16,22 +17,25 @@ int main(int argc, char *argv[])
 {
     try
     {
-        if(argc < 2)
+        std::vector<std::string> files;
+        pcx::args args(argc, argv, files);
+
+        if(files.size() < 1)
         {
             throw Error("no output specified");
         }
 
-        std::string output = argv[1];
+        std::string output = files[0];
 
-        if(argc < 3)
+        if(files.size() < 2)
         {
             throw Error("no sources specified");
         }
 
         std::vector<std::string> paths;
-        for(int i = 2; i < argc; ++i)
+        for(std::size_t i = 1; i < files.size(); ++i)
         {
-            paths.push_back(argv[i]);
+            paths.push_back(files[i]);
         }
 
         Context c;

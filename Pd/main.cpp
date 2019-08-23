@@ -4,6 +4,8 @@
 #include "application/Context.h"
 #include "application/Process.h"
 
+#include <pcx/args.h>
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -15,12 +17,15 @@ int main(int argc, char *argv[])
 
     try
     {
-        if(argc < 2)
+        std::vector<std::string> files;
+        pcx::args args(argc, argv, files);
+
+        if(files.size() < 1)
         {
             throw Error("no source specified");
         }
 
-        std::string path = argv[1];
+        std::string path = files[0];
 
         if(true)
         {

@@ -5,6 +5,8 @@
 
 #include "application/Machine.h"
 
+#include <pcx/args.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -70,14 +72,17 @@ int main(int argc, char *argv[])
 {
     try
     {
-        if(argc < 2)
+        std::vector<std::string> files;
+        pcx::args args(argc, argv, files);
+
+        if(files.size() < 1)
         {
             throw Error("no program specified");
         }
 
         std::cout << banner("executing");
 
-        Machine m(loadBinaryFile(argv[1]), intProc);
+        Machine m(loadBinaryFile(files[0]), intProc);
 
         m.execute();
 

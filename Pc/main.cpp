@@ -19,6 +19,8 @@
 
 #include "syms/SymPrinter.h"
 
+#include <pcx/args.h>
+
 #include <fstream>
 
 template<typename T, typename... Args> void visit(NodePtr &node, Args&&... args)
@@ -39,26 +41,22 @@ int main(int argc, char *argv[])
 
     try
     {
-        bool quiet = false;
+        std::vector<std::string> files;
+        pcx::args args(argc, argv, files);
 
-        int arg = 0;
-        if(argc > 1 && std::string(argv[1]) == "-q")
-        {
-            quiet = true;
-            ++arg;
-        }
+        bool quiet = args.contains("q");
 
-        if(argc < 2 + arg)
+        if(files.size() < 1)
         {
             throw Error("no source specified");
         }
 
-        if(argc < 3 + arg)
+        if(files.size() < 2)
         {
             throw Error("no output specified");
         }
 
-        c.open(argv[arg + 1]);
+        c.open(files[0]);
 
         auto n = Compiler::compile(c);
 
@@ -106,10 +104,10 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            std::ofstream os(argv[arg + 2]);
+            std::ofstream os(files[1]);
             if(!os.is_open())
             {
-                throw Error("unable to create - ", argv[arg + 2]);
+                throw Error("unable to create - ", files[1]);
             }
 
             generate(c, os, n);
