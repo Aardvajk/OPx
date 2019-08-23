@@ -6,8 +6,11 @@ class Type;
 namespace TypeCompare
 {
 
+bool compatible(const Type *a, const Type *b);
+bool compatibleArgs(const Type *a, const Type *b);
+
 bool exact(const Type *a, const Type *b);
-bool args(const Type *a, const Type *b);
+bool exactArgs(const Type *a, const Type *b);
 
 }
 

@@ -122,6 +122,10 @@ void args(Context &c, NodeList &container, bool get)
         name = tok.text();
         c.scanner.next(true);
     }
+    else
+    {
+        name = pcx::str("#unnamed", c.labels++);
+    }
 
     auto n = new VarNode(tok.location(), new IdNode(tok.location(), { }, name));
     container.push_back(n);

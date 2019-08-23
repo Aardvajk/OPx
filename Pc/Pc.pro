@@ -41,6 +41,9 @@ SOURCES += \
         generator/Generator.cpp \
         generator/GlobalsGenerator.cpp \
         generator/LocalsGenerator.cpp \
+        lower/ExprLower.cpp \
+        lower/FuncLower.cpp \
+        lower/Lower.cpp \
         main.cpp \
         nodes/AddrOfNode.cpp \
         nodes/AssignNode.cpp \
@@ -112,6 +115,9 @@ HEADERS += \
     generator/Generator.h \
     generator/GlobalsGenerator.h \
     generator/LocalsGenerator.h \
+    lower/ExprLower.h \
+    lower/FuncLower.h \
+    lower/Lower.h \
     nodes/AddrOfNode.h \
     nodes/AssignNode.h \
     nodes/BinaryNode.h \

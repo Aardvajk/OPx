@@ -185,7 +185,7 @@ void AstPrinter::visit(ScopeNode &node)
 
 void AstPrinter::visit(TypeNode &node)
 {
-    tab() << "type ptr(" << node.ptr << ")\n";
+    tab() << "type " << (node.ref ? "ref " : "") << " ptr(" << node.ptr << ")\n";
 
     if(node.function)
     {

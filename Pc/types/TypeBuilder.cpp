@@ -26,6 +26,8 @@ void TypeBuilder::visit(TypeNode &node)
             t.args.push_back(type(c, a.get()));
         }
 
+        t.ref = node.ref;
+
         if(node.sub)
         {
             t.sub = ArraySizeVisitor::value(*node.sub);
@@ -45,6 +47,8 @@ void TypeBuilder::visit(TypeNode &node)
         }
 
         auto t = Type::makePrimary(node.ptr, sv.front());
+
+        t.ref = node.ref;
 
         if(node.sub)
         {

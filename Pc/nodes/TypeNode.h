@@ -6,9 +6,11 @@
 class TypeNode : public Node
 {
 public:
-    explicit TypeNode(Location location) : Node(location), ptr(0), function(false) { }
+    explicit TypeNode(Location location) : Node(location), ref(false), ptr(0), function(false) { }
 
     virtual void accept(Visitor &v) override;
+
+    bool ref;
 
     unsigned ptr;
     bool function;

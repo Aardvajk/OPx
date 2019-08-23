@@ -12,6 +12,8 @@
 
 #include "decorator/Decorator.h"
 
+#include "lower/Lower.h"
+
 #include "generator/Generator.h"
 #include "generator/GlobalsGenerator.h"
 
@@ -83,7 +85,21 @@ int main(int argc, char *argv[])
 
             std::cout << banner("symbols");
             SymPrinter::print(c.tree.root(), std::cout);
+        }
 
+        visit<Lower>(n, c);
+
+        if(!quiet)
+        {
+            std::cout << banner("lowered nodes");
+            visit<AstPrinter>(n, std::cout);
+
+            std::cout << banner("lowered symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
+        }
+
+        if(!quiet)
+        {
             std::cout << banner("generate");
             generate(c, std::cout, n);
         }

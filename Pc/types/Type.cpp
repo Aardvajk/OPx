@@ -11,6 +11,12 @@ namespace
 std::string toString(const Type *type)
 {
     std::string s;
+
+    if(type->ref)
+    {
+        s += "ref ";
+    }
+
     for(unsigned i = 0; i < type->ptr; ++i)
     {
         s += "ptr ";
@@ -144,6 +150,6 @@ Type Type::removeSub(const Type &type)
     return r;
 }
 
-Type::Type() : ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
+Type::Type() : ref(false), ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
 {
 }

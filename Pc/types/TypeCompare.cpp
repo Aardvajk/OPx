@@ -2,7 +2,30 @@
 
 #include "types/Type.h"
 
-bool TypeCompare::exact(const Type *a, const Type *b)
+namespace
+{
+
+bool args(const Type *a, const Type *b, bool(*cmp)(const Type*, const Type*))
+{
+    if(a->args.size() != b->args.size())
+    {
+        return false;
+    }
+
+    for(std::size_t i = 0; i < a->args.size(); ++i)
+    {
+        if(!cmp(a->args[i], b->args[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+}
+
+bool TypeCompare::compatible(const Type *a, const Type *b)
 {
     if(!a && !b)
     {
@@ -29,23 +52,28 @@ bool TypeCompare::exact(const Type *a, const Type *b)
         return false;
     }
 
-    return args(a, b);
+    return exactArgs(a, b);
 }
 
-bool TypeCompare::args(const Type *a, const Type *b)
+bool TypeCompare::compatibleArgs(const Type *a, const Type *b)
 {
-    if(a->args.size() != b->args.size())
-    {
-        return false;
-    }
+    return args(a, b, compatible);
+}
 
-    for(std::size_t i = 0; i < a->args.size(); ++i)
+bool TypeCompare::exact(const Type *a, const Type *b)
+{
+    if(a && b)
     {
-        if(!exact(a->args[i], b->args[i]))
+        if(a->ref != b->ref)
         {
             return false;
         }
     }
 
-    return true;
+    return compatible(a, b);
+}
+
+bool TypeCompare::exactArgs(const Type *a, const Type *b)
+{
+    return args(a, b, exact);
 }

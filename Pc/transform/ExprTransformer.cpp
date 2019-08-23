@@ -80,7 +80,7 @@ void ExprTransformer::visit(AssignNode &node)
     else
     {
         auto et = TypeVisitor::type(c, node.expr.get());
-        if(!TypeCompare::exact(tt, et))
+        if(!TypeCompare::compatible(tt, et))
         {
             throw Error(node.location(), "different primitive types to operator= - ", tt->text(), " and ", et->text());
         }

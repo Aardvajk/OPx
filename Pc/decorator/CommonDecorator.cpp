@@ -29,7 +29,7 @@ Sym *searchCallableLocal(Context &c, FuncNode &node, const Type *type)
             throw Error(node.location(), "function expected - ", s->fullname());
         }
 
-        if(TypeCompare::args(type, s->property<const Type*>("type")))
+        if(TypeCompare::compatibleArgs(type, s->property<const Type*>("type")))
         {
             return s;
         }
@@ -55,7 +55,7 @@ std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv,
                 throw Error(location, "callable expected - ", s->fullname());
             }
 
-            if(TypeCompare::args(expectedType, s->property<const Type*>("type")))
+            if(TypeCompare::compatibleArgs(expectedType, s->property<const Type*>("type")))
             {
                 rs.push_back(s);
             }
@@ -119,7 +119,14 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
     Sym *sym = searchCallableLocal(c, node, type);
     if(sym)
     {
-        if(!TypeCompare::exact(type->returnType, sym->property<const Type*>("type")->returnType))
+        auto st = sym->property<const Type*>("type");
+
+        if(!TypeCompare::exactArgs(type, st))
+        {
+            throw Error(node.location(), "mismatched parameter references");
+        }
+
+        if(!TypeCompare::exact(type->returnType, st->returnType))
         {
             throw Error(node.location(), "mismatched returns");
         }

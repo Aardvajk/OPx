@@ -24,7 +24,7 @@ Sym *TypeLookup::findNewMethod(Context &c, Type *type, const std::vector<Type*> 
         {
             if(s->name() == "new")
             {
-                if(TypeCompare::args(s->property<Type*>("type"), &ct))
+                if(TypeCompare::exactArgs(s->property<Type*>("type"), &ct))
                 {
                     return s;
                 }

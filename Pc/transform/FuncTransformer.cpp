@@ -31,7 +31,7 @@ namespace
 
 void generatePrimitiveAssign(Context &c, Type *type, VarNode &node, NodePtr &value, std::size_t index)
 {
-    if(!TypeCompare::exact(type, TypeVisitor::type(c, value.get())))
+    if(!TypeCompare::compatible(type, TypeVisitor::type(c, value.get())))
     {
         throw Error(value->location(), type->text(), " expected - ", NameVisitors::prettyName(value.get()));
     }

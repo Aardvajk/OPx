@@ -59,9 +59,16 @@ TypeNodePtr primary(Context &c, bool get)
 
 TypeNodePtr outer(Context &c, bool get)
 {
-    unsigned ptr = 0;
-
     auto tok = c.scanner.next(get);
+
+    bool ref = false;
+    if(tok.type() == Token::Type::RwRef)
+    {
+        ref = true;
+        tok = c.scanner.next(true);
+    }
+
+    unsigned ptr = 0;
     while(tok.type() == Token::Type::RwPtr)
     {
         ++ptr;
@@ -69,6 +76,8 @@ TypeNodePtr outer(Context &c, bool get)
     }
 
     auto n = primary(c, false);
+
+    n->ref = ref;
     n->ptr = ptr;
 
     if(c.scanner.token().type() == Token::Type::LeftSub)
