@@ -29,7 +29,7 @@
 namespace
 {
 
-void generatePrimitiveAssign(Context &c, Type *type, VarNode &node, NodePtr &value, std::size_t index)
+void generatePrimitiveConstruct(Context &c, Type *type, VarNode &node, NodePtr &value, std::size_t index)
 {
     if(!TypeCompare::compatible(type, TypeVisitor::type(c, value.get())))
     {
@@ -40,6 +40,7 @@ void generatePrimitiveAssign(Context &c, Type *type, VarNode &node, NodePtr &val
     node.block()->insert(index + 1, en);
 
     auto an = new AssignNode(node.location(), node.name);
+    an->setProperty("constructor", true);
 
     en->expr = an;
     an->expr = value;
@@ -47,7 +48,7 @@ void generatePrimitiveAssign(Context &c, Type *type, VarNode &node, NodePtr &val
     ExprDecorator::decorate(c, nullptr, *an);
 }
 
-void generateNonPrimitiveAssign(Context &c, Type *type, VarNode &node, std::size_t index)
+void generateNonPrimitiveConstruct(Context &c, Type *type, VarNode &node, std::size_t index)
 {
     auto en = new ExprNode(node.location(), { });
     node.block()->insert(index + 1, en);
@@ -93,11 +94,11 @@ void FuncTransformer::visit(VarNode &node)
                 throw Error(node.location(), "invalid number of parameters");
             }
 
-            generatePrimitiveAssign(c, type, node, node.params.front(), index);
+            generatePrimitiveConstruct(c, type, node, node.params.front(), index);
         }
         else
         {
-            generateNonPrimitiveAssign(c, type, node, index);
+            generateNonPrimitiveConstruct(c, type, node, index);
         }
     }
 
@@ -105,7 +106,7 @@ void FuncTransformer::visit(VarNode &node)
     {
         if(type->primitive())
         {
-            generatePrimitiveAssign(c, type, node, node.value, index);
+            generatePrimitiveConstruct(c, type, node, node.value, index);
         }
         else
         {
@@ -125,7 +126,7 @@ void FuncTransformer::visit(VarNode &node)
     {
         if(node.params.empty())
         {
-            generateNonPrimitiveAssign(c, type, node, index);
+            generateNonPrimitiveConstruct(c, type, node, index);
         }
     }
 }

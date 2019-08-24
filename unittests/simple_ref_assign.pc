@@ -1,0 +1,24 @@
+include "stdtest.ph";
+
+func main()
+{
+    var i = 1;
+    var r:ref std.int = i;
+    var r2:ref std.int = r;
+
+    test.assert(i == 1);
+    test.assert(r == 1);
+    test.assert(r2 == 1);
+
+    r = 2;
+
+    test.assert(i == 2);
+    test.assert(r == 2);
+    test.assert(r2 == 2);
+
+    r2 = 3;
+
+    test.assert(i == 3);
+    test.assert(r == 3);
+    test.assert(r2 == 3);
+}

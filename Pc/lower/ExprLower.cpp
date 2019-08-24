@@ -55,9 +55,19 @@ void ExprLower::visit(AssignNode &node)
     node.target = ExprLower::lower(c, node.target, nullptr, Flag::NoTopLevel);
     node.expr = ExprLower::lower(c, node.expr, nullptr, Flag::NoTopLevel);
 
-    if(TypeVisitor::type(c, node.target.get())->ref && !TypeVisitor::type(c, node.expr.get())->ref)
+    if(node.getProperty("constructor").value<bool>())
     {
-        node.expr = new AddrOfNode(node.expr->location(), node.expr);
+        if(TypeVisitor::type(c, node.target.get())->ref && !TypeVisitor::type(c, node.expr.get())->ref)
+        {
+            node.expr = new AddrOfNode(node.expr->location(), node.expr);
+        }
+    }
+    else
+    {
+        if(TypeVisitor::type(c, node.target.get())->ref)
+        {
+            node.target = new DerefNode(node.target->location(), node.target);
+        }
     }
 }
 
