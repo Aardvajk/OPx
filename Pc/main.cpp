@@ -111,9 +111,11 @@ int main(int argc, char *argv[])
             generate(c, os, n);
         }
 
-        if(!quiet)
+        if(c.args.contains("test"))
         {
-            std::cout << banner();
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pv/release/pv script.pv").c_str())) return -1;
         }
     }
 

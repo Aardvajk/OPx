@@ -33,6 +33,11 @@ int main(int argc, char *argv[])
 
         std::string output = files[1];
 
+        if(!args.contains("q"))
+        {
+            std::cout << banner("pi ", output);
+        }
+
         if(true)
         {
             std::ofstream os(output, std::ios::binary);
@@ -76,6 +81,11 @@ int main(int argc, char *argv[])
             }
         }
 
+        if(!args.contains("q"))
+        {
+            std::cout << "created " << output << "\n";
+        }
+
         if(true)
         {
             std::ofstream os(output + ".pmap");
@@ -86,6 +96,11 @@ int main(int argc, char *argv[])
 
             c.vd.write(os);
             c.pd.write(os);
+
+            if(!args.contains("q"))
+            {
+                std::cout << "created " << output << ".pmap" << "\n";
+            }
         }
     }
 

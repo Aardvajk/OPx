@@ -42,8 +42,18 @@ int main(int argc, char *argv[])
 
         auto mp = Prologue::generate(c);
 
+        if(!args.contains("q"))
+        {
+            std::cout << banner("linking");
+        }
+
         for(auto &p: paths)
         {
+            if(!args.contains("q"))
+            {
+                std::cout << p << "\n";
+            }
+
             Generator::generate(c, p);
         }
 

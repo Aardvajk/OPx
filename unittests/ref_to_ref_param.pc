@@ -1,0 +1,19 @@
+include "stdtest.ph";
+
+func f(a:ref std.int)
+{
+	test.assert(a == 1);
+    a = 2;
+}
+
+func g(a:ref std.int)
+{
+    f(a);
+}
+
+func main()
+{
+    var i = 1;
+    g(i);
+	test.assert(i == 2);
+}

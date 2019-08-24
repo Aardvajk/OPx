@@ -22,8 +22,8 @@ bool runTest(const std::string &dir, const std::string &path)
     std::cout << test << "\n";
 
     if(std::system(pcx::str(exePath("pc"), " -q -I=../lib ", file, ".pc unittest.pi").c_str())) return false;
-    if(std::system(pcx::str(exePath("pi"), " unittest.pi unittest.po").c_str())) return false;
-    if(std::system(pcx::str(exePath("pl"), " unittest.px unittest.po ../lib/stdlib.po ../lib/stdtest.po").c_str())) return false;
+    if(std::system(pcx::str(exePath("pi"), " -q unittest.pi unittest.po").c_str())) return false;
+    if(std::system(pcx::str(exePath("pl"), " -q unittest.px unittest.po ../lib/stdlib.po ../lib/stdtest.po").c_str())) return false;
     if(std::system(pcx::str(exePath("pv"), " -q unittest.px > unittest_result.txt").c_str()))
     {
         std::cout << "pb error: unit test failed\n";
@@ -72,7 +72,6 @@ bool runTests(const std::string &dir)
         }
     }
 
-    std::cout << banner("all tests passed");
     return true;
 }
 
@@ -106,6 +105,7 @@ int main(int argc, char *argv[])
 
             if(!quiet && echo)
             {
+                std::cout << banner();
                 std::cout << "> " << s << "\n";
             }
 
