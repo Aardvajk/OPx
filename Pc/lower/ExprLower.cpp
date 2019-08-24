@@ -13,7 +13,7 @@
 
 #include "types/Type.h"
 
-ExprLower::ExprLower(Context &c, NodePtr &cn, Flags flags) : c(c), cn(cn), flags(flags)
+ExprLower::ExprLower(Context &c, NodePtr &cn, const Type *type, Flags flags) : c(c), cn(cn), type(type), flags(flags)
 {
 }
 
@@ -24,21 +24,36 @@ void ExprLower::visit(IdNode &node)
         node.parent = ExprLower::lower(c, node.parent);
     }
 
-    if(!(flags & Flag::NoTopLevel) && TypeVisitor::type(c, &node)->ref)
+    if(!(flags & Flag::NoTopLevel))
     {
-        rn = new DerefNode(node.location(), cn);
+        if(TypeVisitor::type(c, &node)->ref)
+        {
+            if(!type || !type->ref)
+            {
+                rn = new DerefNode(node.location(), cn);
+            }
+        }
+        else if(type && type->ref)
+        {
+            rn = new AddrOfNode(node.location(), cn);
+        }
     }
 }
 
 void ExprLower::visit(CallNode &node)
 {
-    ExprLower::lower(c, node.params);
+    auto t = TypeVisitor::type(c, node.target.get());
+
+    for(std::size_t i = 0; i < node.params.size(); ++i)
+    {
+        node.params[i] = ExprLower::lower(c, node.params[i], t->args[i]);
+    }
 }
 
 void ExprLower::visit(AssignNode &node)
 {
-    node.target = ExprLower::lower(c, node.target, Flag::NoTopLevel);
-    node.expr = ExprLower::lower(c, node.expr, Flag::NoTopLevel);
+    node.target = ExprLower::lower(c, node.target, nullptr, Flag::NoTopLevel);
+    node.expr = ExprLower::lower(c, node.expr, nullptr, Flag::NoTopLevel);
 
     if(TypeVisitor::type(c, node.target.get())->ref && !TypeVisitor::type(c, node.expr.get())->ref)
     {
@@ -52,18 +67,10 @@ void ExprLower::visit(BinaryNode &node)
     node.right = ExprLower::lower(c, node.right);
 }
 
-NodePtr ExprLower::lower(Context &c, NodePtr &node, Flags flags)
+NodePtr ExprLower::lower(Context &c, NodePtr &node, const Type *type, Flags flags)
 {
-    ExprLower el(c, node, flags);
+    ExprLower el(c, node, type, flags);
     node->accept(el);
 
     return el.result() ? el.result() : node;
-}
-
-void ExprLower::lower(Context &c, NodeList &nodes, Flags flags)
-{
-    for(std::size_t i = 0; i < nodes.size(); ++i)
-    {
-        nodes[i] = ExprLower::lower(c, nodes[i], flags);
-    }
 }

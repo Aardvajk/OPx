@@ -8,6 +8,7 @@
 #include <pcx/flags.h>
 
 class Context;
+class Type;
 
 class ExprLower : public Visitor
 {
@@ -19,7 +20,7 @@ public:
 
     using Flags = pcx::flags<Flag>;
 
-    explicit ExprLower(Context &c, NodePtr &cn, Flags flags);
+    explicit ExprLower(Context &c, NodePtr &cn, const Type *type, Flags flags);
 
     NodePtr result(){ return rn; }
 
@@ -28,12 +29,12 @@ public:
     virtual void visit(AssignNode &node) override;
     virtual void visit(BinaryNode &node) override;
 
-    static NodePtr lower(Context &c, NodePtr &node, Flags flags = { });
-    static void lower(Context &c, NodeList &nodes, Flags flags = { });
+    static NodePtr lower(Context &c, NodePtr &node, const Type *type = nullptr, Flags flags = { });
 
 private:
     Context &c;
     NodePtr &cn;
+    const Type *type;
     Flags flags;
     NodePtr rn;
 };
