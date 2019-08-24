@@ -72,6 +72,7 @@ bool runTests(const std::string &dir)
         }
     }
 
+    std::cout << banner("all tests passed");
     return true;
 }
 

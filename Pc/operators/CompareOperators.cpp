@@ -62,7 +62,7 @@ std::size_t CompareOperators::generate(Context &c, std::ostream &os, BinaryNode 
     auto lt = TypeVisitor::type(c, node.left.get());
     auto rt = TypeVisitor::type(c, node.right.get());
 
-    if(!TypeCompare::exact(lt, rt))
+    if(!TypeCompare::compatible(lt, rt))
     {
         throw Error(node.location(), "invalid comparison - ", lt->text(), " and ", rt->text());
     }
