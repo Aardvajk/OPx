@@ -1,0 +1,14 @@
+F, "std.print(std.int):std.null", 85
+{
+    0, "func std.print(std.int):std.null:0";
+    0, "{";
+    0, "-function prologue";
+    5, "-allocate locals";
+    15, "-push std.print.i";
+    49, "-svc 1";
+    54, "-pop 4";
+    64, "-free locals";
+    74, "-function epilogue";
+    85, "-end func std.print(std.int):std.null";
+    85, "}";
+}

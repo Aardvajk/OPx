@@ -37,14 +37,12 @@ void generate(Context &c, std::ostream &os, NodePtr &n)
 
 int main(int argc, char *argv[])
 {
-    Context c;
+    std::vector<std::string> files;
+    Context c(argc, argv, files);
 
     try
     {
-        std::vector<std::string> files;
-        pcx::args args(argc, argv, files);
-
-        bool quiet = args.contains("q");
+        bool quiet = c.args.contains("q");
 
         if(files.size() < 1)
         {

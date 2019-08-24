@@ -8,13 +8,15 @@
 
 #include "types/TypeCache.h"
 
+#include <pcx/args.h>
+
 class Node;
 class FuncNode;
 
 class Context
 {
 public:
-    Context();
+    Context(int argc, char *argv[], std::vector<std::string> &files);
 
     void open(const std::string &path);
 
@@ -28,6 +30,8 @@ public:
 
     std::string nextLabel();
     std::string nextLabelQuoted();
+
+    pcx::args args;
 
     SourceList sources;
     Scanner scanner;

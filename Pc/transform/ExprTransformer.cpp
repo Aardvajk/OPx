@@ -201,7 +201,7 @@ void ExprTransformer::visit(BinaryNode &node)
     }
     else
     {
-        if(!TypeCompare::exact(lt, rt))
+        if(!TypeCompare::compatible(lt, rt))
         {
             throw Error(node.location(), "different primitive types to operator", Operators::toString(node.op), " - ", lt->text(), " and ", rt->text());
         }
