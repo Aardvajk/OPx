@@ -1,0 +1,31 @@
+F, "test.assert(std.bool):std.null", 275
+{
+    0, "func test.assert(std.bool):std.null:0";
+    0, "{";
+    0, "-function prologue";
+    5, "-allocate locals";
+    15, "-clrf @rf";
+    39, "-push test.assert.b";
+    73, "-not char";
+    75, "-jmp ifz #label_0";
+    94, "-push &std.abort():std.null";
+    106, "-call";
+    110, "-push &@rf";
+    125, "-load 1";
+    148, "-jmp ifz #no_return_exit_test.assert.#scope0.#scope1";
+    167, "-jmp #end_function";
+    177, "-label #no_return_exit_test.assert.#scope0.#scope1";
+    177, "-jmp #label_1";
+    187, "-label #label_0";
+    187, "-label #label_1";
+    187, "-push &@rf";
+    202, "-load 1";
+    225, "-jmp ifz #no_return_exit_test.assert.#scope0";
+    244, "-jmp #end_function";
+    254, "-label #no_return_exit_test.assert.#scope0";
+    254, "-label #end_function";
+    254, "-free locals";
+    264, "-function epilogue";
+    275, "-end func test.assert(std.bool):std.null";
+    275, "}";
+}

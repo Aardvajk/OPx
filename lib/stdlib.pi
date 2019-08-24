@@ -5,3 +5,8 @@ func "std.print(std.int):std.null":0
 	svc 1;
 	pop 4;
 }
+
+func "std.abort():std.null":0
+{
+	svc 999;
+}

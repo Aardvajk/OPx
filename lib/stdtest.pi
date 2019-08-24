@@ -1,0 +1,25 @@
+func "test.assert(std.bool):std.null":0
+{
+    arg "test.assert.b":1;
+    var "@rf":1;
+    clrf "@rf";
+    push "test.assert.b";
+    not char;
+    jmp ifz "#label_0";
+    push &"std.abort():std.null";
+    call;
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_test.assert.#scope0.#scope1";
+    jmp "#end_function";
+"#no_return_exit_test.assert.#scope0.#scope1":
+    jmp "#label_1";
+"#label_0":
+"#label_1":
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_test.assert.#scope0";
+    jmp "#end_function";
+"#no_return_exit_test.assert.#scope0":
+"#end_function":
+}

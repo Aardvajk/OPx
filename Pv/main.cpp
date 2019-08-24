@@ -10,6 +10,8 @@
 #include <iostream>
 #include <fstream>
 
+struct SilentAbort { };
+
 void intProc(int code, Memory &mm, Registers &rg)
 {
     auto sp = rg.sp();
@@ -62,6 +64,10 @@ void intProc(int code, Memory &mm, Registers &rg)
 
         std::cout << "ptr to ptr to int " << i << " value = " << *(reinterpret_cast<const int*>(p2)) << "\n";
     }
+    else if(code == 999)
+    {
+        throw SilentAbort();
+    }
     else if(code >= 1000)
     {
         std::cout << "int " << code << "\n";
@@ -107,6 +113,11 @@ int main(int argc, char *argv[])
     catch(const Error &error)
     {
         std::cerr << "pv error: " << error.what() << "\n";
+        return -1;
+    }
+
+    catch(const SilentAbort&)
+    {
         return -1;
     }
 }
