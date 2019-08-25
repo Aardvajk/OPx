@@ -171,10 +171,6 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../unittests/complex_ref_members.pc \
-    ../unittests/func_ref.pc \
-    ../unittests/init_lists.pc \
-    ../unittests/ref_member.pc \
     ../workspace/script.pc \
     ../workspace/store.pc \
     ../workspace/string.pc \
