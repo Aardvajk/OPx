@@ -105,7 +105,15 @@ void TypeVisitor::visit(ThisNode &node)
     auto p = f->parent();
     if(p->type() == Sym::Type::Class)
     {
-        r = c.types.insert(Type::makePrimary(1, p));
+        auto t = Type::makePrimary(0, p);
+        t.ref = true;
+
+        if(c.refsLowered)
+        {
+            ++t.ptr;
+        }
+
+        r = c.types.insert(t);
     }
     else
     {

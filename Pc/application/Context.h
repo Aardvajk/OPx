@@ -49,6 +49,8 @@ public:
     std::size_t scopes;
 
     std::vector<std::vector<Node*> > destructs;
+
+    bool refsLowered;
 };
 
 #endif // CONTEXT_H

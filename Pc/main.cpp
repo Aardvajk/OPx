@@ -93,6 +93,8 @@ int main(int argc, char *argv[])
             }
         }
 
+        c.refsLowered = true;
+
         visit<Lower>(n, c);
 
         if(!quiet)

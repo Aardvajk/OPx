@@ -83,6 +83,11 @@ void ExprLower::visit(ThisNode &node)
     rn = new DerefNode(node.location(), cn);
 }
 
+void ExprLower::visit(AddrOfNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+}
+
 NodePtr ExprLower::lower(Context &c, NodePtr &node, const Type *type, Flags flags)
 {
     ExprLower el(c, node, type, flags);

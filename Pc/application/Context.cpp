@@ -39,7 +39,8 @@ void addPrimitive(Context &c, const std::string &name, Primitive::Type type, std
 
 }
 
-Context::Context(int argc, char *argv[], std::vector<std::string> &files) : args(argc, argv, files), scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0)
+Context::Context(int argc, char *argv[], std::vector<std::string> &files)
+    : args(argc, argv, files), scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0), refsLowered(false)
 {
     tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
