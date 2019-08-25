@@ -167,6 +167,7 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../unittests/this_addr.pc \
     ../workspace/script.pc \
     ../workspace/store.pc \
     ../workspace/string.pc \

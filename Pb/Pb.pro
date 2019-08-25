@@ -30,6 +30,16 @@ SOURCES += \
         main.cpp
 
 DISTFILES += \
+    ../lib/stdlib.ph \
+    ../lib/stdlib.pi \
+    ../lib/stdtest.pc \
+    ../lib/stdtest.ph \
+    ../unittests/addr_of_ref.pc \
+    ../unittests/ref_param.pc \
+    ../unittests/ref_to_ref_param.pc \
+    ../unittests/simple_ref_assign.pc \
+    ../unittests/simple_refs.pc \
+    ../unittests/this_ref.pc \
     ../workspace/pb.bat \
     ../workspace/script.pc \
     ../workspace/script.pi
