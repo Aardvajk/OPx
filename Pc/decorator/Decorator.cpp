@@ -82,6 +82,12 @@ void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
     }
 
     FuncDecorator fd(c);
+
+    for(auto &i: node.inits)
+    {
+        i->accept(fd);
+    }
+
     node.body->accept(fd);
 }
 

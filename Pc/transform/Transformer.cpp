@@ -8,10 +8,67 @@
 #include "nodes/VarNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/AssignNode.h"
+#include "nodes/InitNode.h"
 
 #include "types/Type.h"
 
 #include "transform/FuncTransformer.h"
+#include "transform/InitMapBuilder.h"
+
+namespace
+{
+
+void generateInitialisers(Context &c, FuncNode &node, Sym *sym)
+{
+    std::unordered_map<std::string, NodePtr> map;
+
+    for(auto &i: node.inits)
+    {
+        InitMapBuilder mb(map, i);
+        i->accept(mb);
+    }
+
+    auto block = new BlockNode(node.location());
+    node.initialisers = block;
+
+    for(auto s: sym->parent()->children())
+    {
+        if(s->type() == Sym::Type::Var)
+        {
+            NodePtr n;
+
+            auto i = map.find(s->name());
+            if(i != map.end())
+            {
+                n = i->second;
+            }
+
+            if(!n)
+            {
+                auto t = s->property<const Type*>("type");
+
+                if(t->ref)
+                {
+                    throw Error(node.location(), "reference ", s->name(), " must be initialised - ", sym->fullname());
+                }
+
+                if(!t->primitive())
+                {
+                    n = new InitNode(node.location(), s->name());
+                    n->setProperty("sym", s);
+                }
+            }
+
+            if(n)
+            {
+                block->push_back(n);
+            }
+        }
+    }
+}
+
+}
 
 Transformer::Transformer(Context &c) : c(c)
 {
@@ -70,6 +127,19 @@ void Transformer::visit(FuncNode &node)
         }
 
         sym->setProperty("thistransformed", true);
+
+        if(sym->name() == "new")
+        {
+            generateInitialisers(c, node, sym);
+        }
+    }
+
+    if(node.initialisers)
+    {
+        auto g = c.tree.open(node.property<Sym*>("sym"));
+
+        FuncTransformer ft(c);
+        node.initialisers->accept(ft);
     }
 
     if(node.body)

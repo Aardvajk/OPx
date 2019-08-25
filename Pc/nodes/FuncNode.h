@@ -13,6 +13,8 @@ public:
     NodePtr name;
     NodePtr type;
     NodeList args;
+    NodeList inits;
+    NodePtr initialisers;
     NodePtr body;
 };
 

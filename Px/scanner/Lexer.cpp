@@ -159,6 +159,24 @@ Token::Type reserved(Lexer::Mode mode, const std::string &text)
     }
 }
 
+Token dots(Source &source, Location location)
+{
+    auto ch = source.get();
+    if(ch == '.')
+    {
+        ch = source.get();
+        if(ch == '.')
+        {
+            return Token(Token::Type::Ellipsis, location, "...");
+        }
+
+        return Token(Token::Type::Invalid, location, "..");
+    }
+
+    source.unget(ch);
+    return Token(Token::Type::Dot, location, '.');
+}
+
 typedef std::pair<Source::Char, Token::Type> char_type_pair;
 Token speculate(Source &source, Location location, char_type_pair in, const std::vector<char_type_pair> &c)
 {
@@ -191,7 +209,6 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == '[') return Token(Token::Type::LeftSub, loc, ch);
     if(ch == ']') return Token(Token::Type::RightSub, loc, ch);
 
-    if(ch == '.') return Token(Token::Type::Dot, loc, ch);
     if(ch == ':') return Token(Token::Type::Colon, loc, ch);
     if(ch == ',') return Token(Token::Type::Comma, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
@@ -200,6 +217,8 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == '-') return Token(Token::Type::Sub, loc, ch);
     if(ch == '/') return Token(Token::Type::Div, loc, ch);
     if(ch == '%') return Token(Token::Type::Mod, loc, ch);
+
+    if(ch == '.') return dots(source, loc);
 
     if(ch == '=') return speculate(source, loc, { '=', Token::Type::Assign }, { { '=', Token::Type::Eq } });
     if(ch == '!') return speculate(source, loc, { '!', Token::Type::Exclaim }, { { '=', Token::Type::Neq } });

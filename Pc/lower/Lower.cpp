@@ -52,6 +52,11 @@ void Lower::visit(FuncNode &node)
             a->accept(fl);
         }
 
+        if(node.initialisers)
+        {
+            node.initialisers->accept(fl);
+        }
+
         node.body->accept(fl);
     }
 }

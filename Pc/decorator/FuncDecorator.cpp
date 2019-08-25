@@ -9,6 +9,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/InitNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -77,5 +78,23 @@ void FuncDecorator::visit(IfNode &node)
     if(node.elseBody)
     {
         node.elseBody->accept(*this);
+    }
+}
+
+void FuncDecorator::visit(InitNode &node)
+{
+    auto p = c.tree.current()->container()->parent();
+
+    auto sym = p->child(node.name);
+    if(!sym)
+    {
+        throw Error(node.location(), "no member found - ", node.name);
+    }
+
+    node.setProperty("sym", sym);
+
+    for(auto &p: node.params)
+    {
+        ExprDecorator::decorate(c, sym->property<const Type*>("type"), *p);
     }
 }

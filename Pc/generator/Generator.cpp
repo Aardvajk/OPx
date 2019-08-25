@@ -99,6 +99,12 @@ void Generator::visit(FuncNode &node)
         os << "    clrf \"@rf\";\n";
 
         FuncGenerator fg(c, os);
+
+        if(node.initialisers)
+        {
+            node.initialisers->accept(fg);
+        }
+
         node.body->accept(fg);
 
         os << "\"#end_function\":\n";

@@ -115,3 +115,7 @@ void Visitor::visit(LogicalNode &node)
 void Visitor::visit(IfNode &node)
 {
 }
+
+void Visitor::visit(InitNode &node)
+{
+}

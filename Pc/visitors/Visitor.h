@@ -29,6 +29,7 @@ class WhileNode;
 class PrimitiveCastNode;
 class LogicalNode;
 class IfNode;
+class InitNode;
 
 class Visitor
 {
@@ -63,6 +64,7 @@ public:
     virtual void visit(PrimitiveCastNode &node);
     virtual void visit(LogicalNode &node);
     virtual void visit(IfNode &node);
+    virtual void visit(InitNode &node);
 };
 
 #endif // VISITOR_H

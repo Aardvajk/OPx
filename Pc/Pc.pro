@@ -56,6 +56,7 @@ SOURCES += \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
         nodes/IfNode.cpp \
+        nodes/InitNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
@@ -78,6 +79,7 @@ SOURCES += \
         syms/SymTree.cpp \
         transform/ExprTransformer.cpp \
         transform/FuncTransformer.cpp \
+        transform/InitMapBuilder.cpp \
         transform/ThisCallTransformer.cpp \
         transform/Transformer.cpp \
         types/Type.cpp \
@@ -129,6 +131,7 @@ HEADERS += \
     nodes/FuncNode.h \
     nodes/IdNode.h \
     nodes/IfNode.h \
+    nodes/InitNode.h \
     nodes/LiteralNodes.h \
     nodes/LogicalNode.h \
     nodes/NamespaceNode.h \
@@ -151,6 +154,7 @@ HEADERS += \
     syms/SymTree.h \
     transform/ExprTransformer.h \
     transform/FuncTransformer.h \
+    transform/InitMapBuilder.h \
     transform/ThisCallTransformer.h \
     transform/Transformer.h \
     types/Type.h \
@@ -168,6 +172,7 @@ HEADERS += \
 
 DISTFILES += \
     ../unittests/func_ref.pc \
+    ../unittests/init_lists.pc \
     ../workspace/script.pc \
     ../workspace/store.pc \
     ../workspace/string.pc \

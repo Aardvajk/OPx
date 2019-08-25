@@ -11,6 +11,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
+#include "nodes/InitNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -139,6 +140,26 @@ void args(Context &c, NodeList &container, bool get)
     }
 }
 
+void inits(Context &c, NodeList &container, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Id, get);
+
+    auto n = new InitNode(tok.location(), tok.text());
+    container.push_back(n);
+
+    c.scanner.consume(Token::Type::LeftParen, true);
+    if(c.scanner.token().type() != Token::Type::RightParen)
+    {
+        params(c, n->params, false);
+    }
+
+    c.scanner.consume(Token::Type::RightParen, false);
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        inits(c, container, true);
+    }
+}
+
 void funcConstruct(Context &c, BlockNode *block, bool get)
 {
     NodePtr nn = CommonConstructs::extendedName(c, get);
@@ -174,6 +195,11 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
         }
 
         n->type = TypeConstructs::type(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Ellipsis && special == Token::Type::RwNew)
+    {
+        inits(c, n->inits, true);
     }
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)

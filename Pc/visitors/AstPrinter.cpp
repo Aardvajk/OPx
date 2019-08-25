@@ -23,6 +23,7 @@
 #include "nodes/PrimitiveCastNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/InitNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -170,6 +171,16 @@ void AstPrinter::visit(FuncNode &node)
     }
 
     os << "\n";
+
+    for(auto &i: node.inits)
+    {
+        i->accept(*this);
+    }
+
+    if(node.initialisers)
+    {
+        node.initialisers->accept(*this);
+    }
 
     if(node.body)
     {
@@ -383,6 +394,25 @@ void AstPrinter::visit(IfNode &node)
     if(node.elseBody)
     {
         node.elseBody->accept(*this);
+    }
+}
+
+void AstPrinter::visit(InitNode &node)
+{
+    tab() << "init " << node.name;
+
+    if(auto sp = node.getProperty("sym"))
+    {
+        auto s = sp.to<const Sym*>();
+        os << " -> " << s->fullname() << ":" << s->property<const Type*>("type")->text() << " [" << s << "]";
+    }
+
+    os << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    for(auto &p: node.params)
+    {
+        p->accept(*this);
     }
 }
 

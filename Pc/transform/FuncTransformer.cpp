@@ -11,8 +11,10 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/ThisNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/InitNode.h"
 
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
@@ -87,6 +89,11 @@ void FuncTransformer::visit(VarNode &node)
 
     if(!node.params.empty())
     {
+        if(node.value)
+        {
+            throw Error(node.value->location(), "duplicate initialiser - ", NameVisitors::prettyName(node.name.get()));
+        }
+
         if(type->primitive())
         {
             if(node.params.size() > 1)
@@ -154,5 +161,40 @@ void FuncTransformer::visit(IfNode &node)
     if(node.elseBody)
     {
         node.elseBody->accept(*this);
+    }
+}
+
+void FuncTransformer::visit(InitNode &node)
+{
+    auto type = node.property<Sym*>("sym")->property<Type*>("type");
+
+    if(type->primitive() || type->ref)
+    {
+        if(node.params.size() > 1)
+        {
+            throw Error(node.location(), "invalid number of parameters");
+        }
+
+        NodePtr value;
+        if(node.params.empty())
+        {
+            throw Error("internal error - default primitive construction not supported");
+        }
+        else
+        {
+            value = node.params.front();
+        }
+
+        NodePtr tn(new ThisNode(node.location()));
+        NodePtr name(new IdNode(node.location(), tn, node.name));
+
+        generatePrimitiveConstruct(c, type, node, name, value, index);
+    }
+    else
+    {
+        NodePtr tn(new ThisNode(node.location()));
+        NodePtr name(new IdNode(node.location(), tn, node.name));
+
+        generateNonPrimitiveConstruct(c, type, node, name, node.params, index);
     }
 }
