@@ -67,7 +67,7 @@ void ExprTransformer::visit(AssignNode &node)
 
     auto tt = TypeVisitor::type(c, node.target.get());
 
-    if(!tt->primitive())
+    if(!tt->primitive() && !tt->ref)
     {
         auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
         rn = cn;

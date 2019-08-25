@@ -34,8 +34,21 @@ void Lower::visit(ClassNode &node)
 {
     if(node.body)
     {
-        auto g = c.tree.open(node.property<Sym*>("sym"));
+        auto sym = node.property<Sym*>("sym");
+
+        auto g = c.tree.open(sym);
         node.body->accept(*this);
+
+        std::size_t sz = 0;
+        for(auto s: sym->children())
+        {
+            if(s->type() == Sym::Type::Var)
+            {
+                sz += c.assertInitSize(node.location(), s->property<const Type*>("type"));
+            }
+        }
+
+        sym->setProperty("size", sz);
     }
 }
 
