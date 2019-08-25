@@ -1,0 +1,28 @@
+include "stdtest.ph";
+
+var i:std.int = 23;
+
+func f():ref std.int
+{
+    return i;
+}
+
+func g(x:ref std.int):ref std.int
+{
+    return x;
+}
+
+func main()
+{
+    var r = f();
+    test.assert(r == 23);
+
+    r = 34;
+    test.assert(i == 34);
+
+    var r2 = g(r);
+    test.assert(r2 == 34);
+
+    g(r) = 45;
+    test.assert(i == 45);
+}

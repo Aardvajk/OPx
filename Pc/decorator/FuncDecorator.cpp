@@ -57,7 +57,7 @@ void FuncDecorator::visit(ReturnNode &node)
 
     ExprDecorator::decorate(c, rt, *node.expr);
 
-    if(!TypeCompare::exact(TypeVisitor::type(c, node.expr.get()), rt))
+    if(!TypeCompare::compatible(TypeVisitor::type(c, node.expr.get()), rt))
     {
         throw Error(node.expr->location(), rt->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
     }

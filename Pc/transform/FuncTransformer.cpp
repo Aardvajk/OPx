@@ -29,7 +29,7 @@
 namespace
 {
 
-void generatePrimitiveConstruct(Context &c, Type *type, VarNode &node, NodePtr &value, std::size_t index)
+void generatePrimitiveConstruct(Context &c, Type *type, Node &node, NodePtr &name, NodePtr &value, std::size_t index)
 {
     if(!TypeCompare::compatible(type, TypeVisitor::type(c, value.get())))
     {
@@ -39,7 +39,7 @@ void generatePrimitiveConstruct(Context &c, Type *type, VarNode &node, NodePtr &
     auto en = new ExprNode(value->location(), { });
     node.block()->insert(index + 1, en);
 
-    auto an = new AssignNode(node.location(), node.name);
+    auto an = new AssignNode(node.location(), name);
     an->setProperty("constructor", true);
 
     en->expr = an;
@@ -48,16 +48,16 @@ void generatePrimitiveConstruct(Context &c, Type *type, VarNode &node, NodePtr &
     ExprDecorator::decorate(c, nullptr, *an);
 }
 
-void generateNonPrimitiveConstruct(Context &c, Type *type, VarNode &node, std::size_t index)
+void generateNonPrimitiveConstruct(Context &c, Type *type, Node &node, NodePtr &name, NodeList &params, std::size_t index)
 {
     auto en = new ExprNode(node.location(), { });
     node.block()->insert(index + 1, en);
 
-    auto cn = new CallNode(node.location(), new IdNode(node.location(), node.name, "new"));
+    auto cn = new CallNode(node.location(), new IdNode(node.location(), name, "new"));
     en->expr = cn;
 
     std::vector<Type*> tv;
-    for(auto &p: node.params)
+    for(auto &p: params)
     {
         cn->params.push_back(p);
         tv.push_back(TypeVisitor::type(c, p.get()));
@@ -94,11 +94,11 @@ void FuncTransformer::visit(VarNode &node)
                 throw Error(node.location(), "invalid number of parameters");
             }
 
-            generatePrimitiveConstruct(c, type, node, node.params.front(), index);
+            generatePrimitiveConstruct(c, type, node, node.name, node.params.front(), index);
         }
         else
         {
-            generateNonPrimitiveConstruct(c, type, node, index);
+            generateNonPrimitiveConstruct(c, type, node, node.name, node.params, index);
         }
     }
 
@@ -106,27 +106,20 @@ void FuncTransformer::visit(VarNode &node)
     {
         if(type->primitive())
         {
-            generatePrimitiveConstruct(c, type, node, node.value, index);
+            generatePrimitiveConstruct(c, type, node, node.name, node.value, index);
         }
         else
         {
-            auto en = new ExprNode(node.location(), { });
-            node.block()->insert(index + 1, en);
-
-            auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
-            en->expr = cn;
-
-            cn->params.push_back(new AddrOfNode(node.location(), node.name));
-            cn->params.push_back(node.value);
-
-            ExprDecorator::decorate(c, nullptr, *cn);
+            NodeList params = { node.value };
+            generateNonPrimitiveConstruct(c, type, node, node.name, params, index);
         }
     }
     else if(!type->primitive())
     {
         if(node.params.empty())
         {
-            generateNonPrimitiveConstruct(c, type, node, index);
+            NodeList params;
+            generateNonPrimitiveConstruct(c, type, node, node.name, params, index);
         }
     }
 }

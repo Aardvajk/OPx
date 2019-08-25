@@ -43,7 +43,12 @@ void AddrGenerator::visit(IdNode &node)
     }
     else
     {
-        if(sym->type() == Sym::Type::Var)
+        if(sym->type() == Sym::Type::Func)
+        {
+            os << "    push &\"" << sym->fullname() << sym->property<const Type*>("type")->text() << "\";\n";
+            ok = true;
+        }
+        else if(sym->type() == Sym::Type::Var)
         {
             os << "    push &\"" << sym->fullname() << "\";\n";
             ok = true;

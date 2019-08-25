@@ -9,6 +9,8 @@
 
 #include "syms/Sym.h"
 
+#include <pcx/join_str.h>
+
 Sym *TypeLookup::findNewMethod(Context &c, Type *type, const std::vector<Type*> &args)
 {
     if(type->sym)
@@ -20,13 +22,18 @@ Sym *TypeLookup::findNewMethod(Context &c, Type *type, const std::vector<Type*> 
         auto tp = Type::makePrimary(0, type->sym);
         tp.ref = true;
 
+        if(c.refsLowered)
+        {
+            ++tp.ptr;
+        }
+
         ct.args.insert(ct.args.begin(), c.types.insert(tp));
 
         for(auto s: type->sym->children())
         {
             if(s->name() == "new")
             {
-                if(TypeCompare::exactArgs(s->property<Type*>("type"), &ct))
+                if(TypeCompare::compatibleArgs(s->property<Type*>("type"), &ct))
                 {
                     return s;
                 }
@@ -52,7 +59,7 @@ Sym *TypeLookup::assertNewMethod(Context &c, Location location, Type *type, cons
     auto r = findNewMethod(c, type, args);
     if(!r)
     {
-        throw Error(location, "no default new method found - ", type->text());
+        throw Error(location, "no new(", pcx::join_str(args, ", ", [](Type *t){ return t->text(); }), ") method found - ", type->text());
     }
 
     return r;

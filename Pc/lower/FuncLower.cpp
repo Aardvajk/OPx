@@ -45,7 +45,9 @@ void FuncLower::visit(ExprNode &node)
 
 void FuncLower::visit(ReturnNode &node)
 {
-    node.expr = ExprLower::lower(c, node.expr);
+    auto r = c.tree.current()->container()->property<Type*>("type")->returnType;
+
+    node.expr = ExprLower::lower(c, node.expr, r);
 }
 
 void FuncLower::visit(WhileNode &node)

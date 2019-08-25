@@ -1,0 +1,16 @@
+include "stdtest.ph";
+
+func f(x:ref std.int):ref std.int
+{
+    return x;
+}
+
+func main()
+{
+    var i = 1;
+    var a:ref (ref std.int):ref std.int = f;
+
+    test.assert(i == 1);
+    a(i) = 2;
+    test.assert(i == 2);
+}
