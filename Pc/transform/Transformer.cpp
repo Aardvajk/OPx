@@ -49,7 +49,10 @@ void Transformer::visit(FuncNode &node)
         auto n = new VarNode(node.location(), new IdNode(node.location(), { }, "this"));
         node.args.insert(node.args.begin(), n);
 
-        auto tt = c.types.insert(Type::makePrimary(1, sym->parent()));
+        auto t = Type::makePrimary(0, sym->parent());
+        t.ref = true;
+
+        auto tt = c.types.insert(t);
 
         auto s = sym->add(new Sym(Sym::Type::Var, node.location(), "this"));
         s->setProperty("type", tt);

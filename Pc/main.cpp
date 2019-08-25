@@ -19,6 +19,8 @@
 
 #include "syms/SymPrinter.h"
 
+#include "types/Type.h"
+
 #include <pcx/args.h>
 
 #include <fstream>
@@ -81,6 +83,14 @@ int main(int argc, char *argv[])
 
             std::cout << banner("symbols");
             SymPrinter::print(c.tree.root(), std::cout);
+        }
+
+        for(auto &t: c.types)
+        {
+            if(t.ref)
+            {
+                ++t.ptr;
+            }
         }
 
         visit<Lower>(n, c);

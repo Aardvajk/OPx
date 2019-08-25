@@ -28,6 +28,7 @@ public:
     virtual void visit(CallNode &node) override;
     virtual void visit(AssignNode &node) override;
     virtual void visit(BinaryNode &node) override;
+    virtual void visit(ThisNode &node) override;
 
     static NodePtr lower(Context &c, NodePtr &node, const Type *type = nullptr, Flags flags = { });
 

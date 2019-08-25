@@ -17,8 +17,10 @@ Sym *TypeLookup::findNewMethod(Context &c, Type *type, const std::vector<Type*> 
         ct.args = args;
         ct.method = true;
 
-        auto tp = Type::makePrimary(1, type->sym);
-        ct.args.insert(ct.args.begin(), &tp);
+        auto tp = Type::makePrimary(0, type->sym);
+        tp.ref = true;
+
+        ct.args.insert(ct.args.begin(), c.types.insert(tp));
 
         for(auto s: type->sym->children())
         {

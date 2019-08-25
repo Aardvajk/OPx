@@ -32,17 +32,6 @@ void FuncLower::visit(BlockNode &node)
     }
 }
 
-void FuncLower::visit(VarNode &node)
-{
-    auto sym = node.property<Sym*>("sym");
-    auto type = sym->property<Type*>("type");
-
-    if(type->ref)
-    {
-        sym->setProperty("type", c.types.insert(type->refToPtr()));
-    }
-}
-
 void FuncLower::visit(ScopeNode &node)
 {
     auto g = c.tree.open(node.property<Sym*>("sym"));

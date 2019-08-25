@@ -4,6 +4,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/ThisNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 
@@ -75,6 +76,11 @@ void ExprLower::visit(BinaryNode &node)
 {
     node.left = ExprLower::lower(c, node.left);
     node.right = ExprLower::lower(c, node.right);
+}
+
+void ExprLower::visit(ThisNode &node)
+{
+    rn = new DerefNode(node.location(), cn);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr &node, const Type *type, Flags flags)

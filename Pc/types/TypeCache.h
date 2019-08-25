@@ -19,6 +19,9 @@ public:
     Type *boolType();
     Type *sizeType();
 
+    pcx::ptr_vector<Type>::iterator begin(){ return v.begin(); }
+    pcx::ptr_vector<Type>::iterator end(){ return v.end(); }
+
 private:
     pcx::ptr_vector<Type> v;
 };

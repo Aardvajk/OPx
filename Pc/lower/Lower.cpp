@@ -1,5 +1,6 @@
 #include "Lower.h"
 
+
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
@@ -42,20 +43,7 @@ void Lower::visit(FuncNode &node)
 {
     if(node.body)
     {
-        auto sym = node.property<Sym*>("sym");
-        auto type = sym->property<Type*>("type");
-
-        for(std::size_t i = 0; i < type->args.size(); ++i)
-        {
-            if(type->args[i]->ref)
-            {
-                type->args[i] = c.types.insert(type->args[i]->refToPtr());
-            }
-        }
-
-        sym->setProperty("type", type);
-
-        auto g = c.tree.open(sym);
+        auto g = c.tree.open(node.property<Sym*>("sym"));
 
         FuncLower fl(c);
 
