@@ -13,7 +13,7 @@ class bar
 
 class foo
 {
-    func new() ... x(1), y(2), w(321, 'x') { }
+    func new() ... x(1), y(x), w(321, 'x') { }
     func delete(){ }
 
     var x:std.int;
@@ -27,7 +27,7 @@ func main()
     var a:foo;
 
     test.assert(a.x == 1);
-    test.assert(a.y == 2);
+    test.assert(a.y == 1);
     test.assert(a.z.x == 123);
     test.assert(a.w.x == 321);
     test.assert(ch == 'x');

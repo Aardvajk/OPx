@@ -35,6 +35,7 @@ DISTFILES += \
     ../lib/stdtest.pc \
     ../lib/stdtest.ph \
     ../unittests/addr_of_ref.pc \
+    ../unittests/init_lists.pc \
     ../unittests/ref_param.pc \
     ../unittests/ref_to_ref_param.pc \
     ../unittests/return_ref.pc \
