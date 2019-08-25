@@ -11,12 +11,15 @@
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+#include "types/TypeLookup.h"
 
 #include "visitors/NameVisitors.h"
 
 #include "generator/LocalsGenerator.h"
 #include "generator/FuncGenerator.h"
 #include "generator/ByteListGenerator.h"
+
+#include <pcx/range_reverse.h>
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -108,6 +111,31 @@ void Generator::visit(FuncNode &node)
         node.body->accept(fg);
 
         os << "\"#end_function\":\n";
+
+        if(sym->name() == "delete")
+        {
+            auto cs = sym->parent()->children();
+
+            for(auto s: pcx::range_reverse(cs))
+            {
+                if(s->type() == Sym::Type::Var)
+                {
+                    auto t = s->property<Type*>("type");
+                    if(!t->primitive() && !t->ref)
+                    {
+                        auto fn = TypeLookup::assertDeleteMethod(c, node.location(), t);
+
+                        os << "    push \"" << sym->fullname() << ".this\";\n";
+                        os << "    push size(" << s->property<std::size_t>("offset") << ");\n";
+                        os << "    add size;\n";
+
+                        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+                        os << "    call;\n";
+                    }
+                }
+            }
+        }
+
         os << "}\n";
     }
 }
