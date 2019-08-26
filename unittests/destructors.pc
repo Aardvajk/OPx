@@ -1,0 +1,32 @@
+include "stdlib.ph";
+
+class foo
+{
+    func new(z:std.int) ... x(z) { std.print(100); std.print(x); }
+    func delete(){ std.print(200); std.print(x); }
+
+    var x:std.int;
+}
+
+class bar
+{
+    func new() ... a(123), b(321) { }
+    func delete(){ }
+
+    var a:foo;
+    var b:foo;
+}
+
+class woo
+{
+    func new(){ }
+    func delete(){ }
+
+    var x:bar;
+    var y:bar;
+}
+
+func main()
+{
+    var a:woo;
+}
