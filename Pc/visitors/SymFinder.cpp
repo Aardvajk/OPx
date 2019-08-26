@@ -1,6 +1,7 @@
 #include "SymFinder.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
@@ -91,13 +92,14 @@ void SymFinder::visit(IdNode &node)
     }
 }
 
+void SymFinder::visit(CallNode &node)
+{
+    node.target->accept(*this);
+}
+
 void SymFinder::visit(AddrOfNode &node)
 {
     node.expr->accept(*this);
-}
-
-void SymFinder::visit(ThisNode &node)
-{
 }
 
 void SymFinder::visit(DerefNode &node)

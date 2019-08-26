@@ -35,6 +35,17 @@ void FuncGenerator::visit(BlockNode &node)
     for(auto &n: node.nodes)
     {
         n->accept(*this);
+
+        for(auto &t: c.tempDestructs)
+        {
+            auto fn = TypeLookup::assertDeleteMethod(c, node.location(), t.second);
+
+            os << "    push &\"" << t.first << "\";\n";
+            os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+            os << "    call;\n";
+        }
+
+        c.tempDestructs.clear();
     }
 }
 

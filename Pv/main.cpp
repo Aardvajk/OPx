@@ -33,7 +33,8 @@ void intProc(int code, Memory &mm, Registers &rg)
     }
     else if(code >= 1000)
     {
-        std::cout << "int " << code << "\n";
+        auto i = sr.get<std::size_t>();
+        std::cout << code << ": " << i << "\n";
     }
 }
 

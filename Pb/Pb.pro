@@ -44,6 +44,7 @@ DISTFILES += \
     ../unittests/return_ref.pc \
     ../unittests/simple_ref_assign.pc \
     ../unittests/simple_refs.pc \
+    ../unittests/temp_construct.pc \
     ../unittests/this_ref.pc \
     ../workspace/pb.bat \
     ../workspace/script.pc \

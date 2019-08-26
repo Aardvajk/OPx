@@ -137,6 +137,13 @@ void ExprTransformer::visit(CallNode &node)
                 }
             }
         }
+        else
+        {
+            auto temp = pcx::str("#temp", c.labels++);
+            c.temps[c.tree.current()->container()].push_back(std::make_pair(temp, t));
+
+            node.setProperty("temp", temp);
+        }
     }
 }
 

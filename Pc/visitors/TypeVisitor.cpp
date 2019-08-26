@@ -20,6 +20,7 @@
 #include "visitors/NameVisitors.h"
 
 #include "decorator/CommonDecorator.h"
+#include "decorator/ExprDecorator.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
@@ -30,6 +31,11 @@ TypeVisitor::TypeVisitor(Context &c) : c(c), r(nullptr)
 
 void TypeVisitor::visit(IdNode &node)
 {
+    if(!node.getProperty("sym"))
+    {
+        ExprDecorator::decorate(c, nullptr, node);
+    }
+
     r = node.property<const Sym*>("sym")->property<Type*>("type");
 }
 

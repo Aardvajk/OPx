@@ -13,6 +13,7 @@
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+#include "types/TypeLookup.h"
 
 ExprLower::ExprLower(Context &c, NodePtr &cn, const Type *type, Flags flags) : c(c), cn(cn), type(type), flags(flags)
 {
@@ -44,6 +45,10 @@ void ExprLower::visit(IdNode &node)
 void ExprLower::visit(CallNode &node)
 {
     auto t = TypeVisitor::type(c, node.target.get());
+    if(!t->function())
+    {
+        t = node.target->property<Sym*>("newmethod")->property<Type*>("type");
+    }
 
     for(std::size_t i = 0; i < node.params.size(); ++i)
     {

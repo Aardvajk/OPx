@@ -7,6 +7,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 #include "types/TypeBuilder.h"
+#include "types/TypeLookup.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/SymFinder.h"
@@ -65,6 +66,19 @@ std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv,
     return rs;
 }
 
+void checkResult(Node &node, const std::vector<Sym*> &rs, const Type *expectedType)
+{
+    if(rs.empty())
+    {
+        throw Error(node.location(), "no function matched - ", NameVisitors::prettyName(&node), expectedType->text());
+    }
+
+    if(rs.size() > 1)
+    {
+        throw Error(node.location(), "ambigous reference - ", NameVisitors::prettyName(&node), expectedType->text());
+    }
+}
+
 }
 
 Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *expectedType)
@@ -87,18 +101,28 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
     }
 
     auto rs = searchCallable(node.location(), sv, expectedType);
+    checkResult(node, rs, expectedType);
 
-    if(rs.empty())
+    auto sym = rs.front();
+    if(sym->type() == Sym::Type::Class)
     {
-        throw Error(node.location(), "no function matched - ", NameVisitors::prettyName(&node), expectedType->text());
+        std::vector<Sym*> v;
+        for(auto s: sym->children())
+        {
+            if(s->type() == Sym::Type::Func && s->name() == "new")
+            {
+                if(TypeCompare::compatibleArgs(expectedType, s->property<const Type*>("type")))
+                {
+                    v.push_back(s);
+                }
+            }
+        }
+
+        checkResult(node, v, expectedType);
+        node.setProperty("newmethod", v.front());
     }
 
-    if(rs.size() > 1)
-    {
-        throw Error(node.location(), "ambigous reference - ", NameVisitors::prettyName(&node), expectedType->text());
-    }
-
-    return rs.front();
+    return sym;
 }
 
 Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)

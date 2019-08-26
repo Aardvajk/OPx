@@ -10,6 +10,8 @@
 
 #include <pcx/args.h>
 
+#include <unordered_map>
+
 class Node;
 class FuncNode;
 
@@ -49,6 +51,9 @@ public:
     std::size_t scopes;
 
     std::vector<std::vector<Node*> > destructs;
+
+    std::unordered_map<const Sym*, std::vector<std::pair<std::string, const Type*> > > temps;
+    std::vector<std::pair<std::string, Type*> > tempDestructs;
 
     bool refsLowered;
 };

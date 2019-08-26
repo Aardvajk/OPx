@@ -99,6 +99,11 @@ void Generator::visit(FuncNode &node)
         LocalsGenerator lg(c, os);
         node.body->accept(lg);
 
+        for(auto &t: c.temps[sym])
+        {
+            os << "    var \"" << t.first << "\":" << c.assertSize(node.location(), t.second) << ";\n";
+        }
+
         os << "    clrf \"@rf\";\n";
 
         FuncGenerator fg(c, os);

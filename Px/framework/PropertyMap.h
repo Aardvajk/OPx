@@ -28,7 +28,7 @@ template<typename T> T PropertyMap::get(const std::string &name) const
     auto i = v.find(name);
     if(i == v.end())
     {
-        throw Error("bad property read");
+        throw Error("bad property read - ", name);
     }
 
     return i->second.to<T>();

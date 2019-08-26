@@ -5,6 +5,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/CallNode.h"
 #include "nodes/DerefNode.h"
 
 #include "visitors/NameVisitors.h"
@@ -53,6 +54,23 @@ void AddrGenerator::visit(IdNode &node)
             os << "    push &\"" << sym->fullname() << "\";\n";
             ok = true;
         }
+    }
+}
+
+void AddrGenerator::visit(CallNode &node)
+{
+    auto t = TypeVisitor::type(c, node.target.get());
+    if(t->function())
+    {
+    }
+    else
+    {
+        auto temp = node.property<std::string>("temp");
+
+        ExprGenerator::generate(c, os, node);
+
+        os << "    push &\"" << temp << "\";\n";
+        ok = true;
     }
 }
 

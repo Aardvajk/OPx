@@ -1,9 +1,12 @@
 #include "SymScopeVisitor.h"
 
+#include "nodes/IdNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 
 #include "syms/Sym.h"
+
+#include "types/Type.h"
 
 SymScopeVisitor::SymScopeVisitor(Sym *curr) : curr(curr)
 {

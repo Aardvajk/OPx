@@ -139,6 +139,8 @@ void ExprGenerator::visit(CallNode &node)
     }
     else
     {
+        auto temp = node.property<std::string>("temp");
+
         std::vector<Type*> pv;
         for(auto &p: node.params)
         {
@@ -147,14 +149,7 @@ void ExprGenerator::visit(CallNode &node)
 
         auto fn = TypeLookup::assertNewMethod(c, node.location(), t, pv);
 
-        auto rs = c.assertSize(node.location(), t);
-
-        if(rs)
-        {
-            os << "    allocs " << rs << ";\n";
-        }
-
-        os << "    push sp;\n";
+        os << "    push &\"" << temp << "\";\n";
 
         for(auto &p: node.params)
         {
@@ -164,7 +159,9 @@ void ExprGenerator::visit(CallNode &node)
         os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
         os << "    call;\n";
 
-        sz = rs;
+        c.tempDestructs.push_back(std::make_pair(temp, t));
+
+        sz = 0;
     }
 }
 

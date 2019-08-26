@@ -1,0 +1,22 @@
+include "stdtest.ph";
+
+var g = 0;
+
+class foo
+{
+    func new(a:ref std.int) ... x(a) { }
+    func delete(){ g = g + 1; }
+
+    var x:ref std.int;
+}
+
+func main()
+{
+    var i = 123;
+    test.assert(foo(i).x == 123);
+
+    foo(i).x = 321;
+    test.assert(i == 321);
+
+    test.assert(g == 2);
+}

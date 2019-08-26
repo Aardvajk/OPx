@@ -29,6 +29,11 @@ ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expec
 
 void ExprDecorator::visit(IdNode &node)
 {
+    if(node.parent)
+    {
+        ExprDecorator::decorate(c, nullptr, *node.parent);
+    }
+
     if(expectedType && expectedType->function())
     {
         node.setProperty("sym", CommonDecorator::searchCallableByType(c, node, expectedType));
