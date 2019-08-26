@@ -141,6 +141,21 @@ void Generator::visit(FuncNode &node)
             }
         }
 
+        for(auto a: pcx::range_reverse(node.args))
+        {
+            auto s = a->property<const Sym*>("sym");
+            auto t = s->property<Type*>("type");
+
+            if(!t->primitive() && !t->ref)
+            {
+                auto fn = TypeLookup::assertDeleteMethod(c, a->location(), t);
+
+                os << "    push &\"" << s->fullname() << "\";\n";
+                os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+                os << "    call;\n";
+            }
+        }
+
         os << "}\n";
     }
 }

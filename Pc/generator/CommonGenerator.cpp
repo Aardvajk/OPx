@@ -7,11 +7,15 @@
 #include "application/Context.h"
 
 #include "generator/ExprGenerator.h"
+#include "generator/AddrGenerator.h"
+
+#include "nodes/Node.h"
 
 #include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+#include "types/TypeLookup.h"
 
 void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, Node &node)
 {
@@ -29,5 +33,23 @@ void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, No
         {
             throw Error("internal error - boolean cast of non-primitive not supported");
         }
+    }
+}
+
+void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node &node, Type *type)
+{
+    if(type->primitive() || type->ref)
+    {
+        ExprGenerator::generate(c, os, node);
+    }
+    else
+    {
+        auto fn = TypeLookup::assertNewCopyMethod(c, node.location(), type);
+
+        os << "    allocs " << c.assertSize(node.location(), type) << ";\n";
+        os << "    push sp;\n";
+        AddrGenerator::generate(c, os, node);
+        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+        os << "    call;\n";
     }
 }

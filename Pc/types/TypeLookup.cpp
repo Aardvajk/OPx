@@ -65,6 +65,15 @@ Sym *TypeLookup::assertNewMethod(Context &c, Location location, Type *type, cons
     return r;
 }
 
+Sym *TypeLookup::assertNewCopyMethod(Context &c, Location location, Type *type)
+{
+    auto t = *type;
+    t.ref = true;
+    ++t.ptr;
+
+    return assertNewMethod(c, location, type, { &t });
+}
+
 Sym *TypeLookup::assertDeleteMethod(Context &c, Location location, Type *type)
 {
     auto r = findDeleteMethod(c, type);

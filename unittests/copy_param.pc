@@ -1,0 +1,41 @@
+include "stdtest.ph";
+
+var g = 0;
+var t = 0;
+
+class foo
+{
+    func new(a:ref std.int) ... x(a) { g = g + 1; t = t + 1; }
+    func new(a:ref foo) ... x(a.x) { g = g + 1; t = t + 1; }
+    func delete(){ g = g - 1; }
+
+    var x:ref std.int;
+}
+
+func f(x:foo)
+{
+    test.assert(x.x == 123);
+    x.x = 34;
+}
+
+func main()
+{
+    var i = 123;
+    f(foo(i));
+
+    test.assert(i == 34);
+    test.assert(g == 0);
+
+    i = 123;
+
+    {
+        var x = foo(i);
+        f(x);
+
+        test.assert(i == 34);
+        test.assert(g == 1);
+    }
+
+    test.assert(g == 0);
+}
+

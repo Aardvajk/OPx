@@ -30,6 +30,8 @@
 #include "types/Type.h"
 #include "types/TypeLookup.h"
 
+#include <pcx/indexed_range.h>
+
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -126,9 +128,9 @@ void ExprGenerator::visit(CallNode &node)
             os << "    allocs " << rs << ";\n";
         }
 
-        for(auto &p: node.params)
+        for(auto p: pcx::indexed_range(node.params))
         {
-            ExprGenerator::generate(c, os, *p.get());
+            CommonGenerator::generateParameter(c, os, *p.value, t->args[p.index]);
         }
 
         ExprGenerator::generate(c, os, *node.target);
@@ -151,9 +153,9 @@ void ExprGenerator::visit(CallNode &node)
 
         os << "    push &\"" << temp << "\";\n";
 
-        for(auto &p: node.params)
+        for(auto p: pcx::indexed_range(node.params))
         {
-            ExprGenerator::generate(c, os, *p.get());
+            CommonGenerator::generateParameter(c, os, *p.value, fn->property<Type*>("type")->args[p.index + 1]);
         }
 
         os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
