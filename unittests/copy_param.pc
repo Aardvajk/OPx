@@ -18,6 +18,12 @@ func f(x:foo)
     x.x = 34;
 }
 
+func f2(x:foo, y:foo)
+{
+    test.assert(x.x == 2);
+    test.assert(y.x == 2);
+}
+
 func main()
 {
     var i = 123;
@@ -34,6 +40,13 @@ func main()
 
         test.assert(i == 34);
         test.assert(g == 1);
+
+        var y = foo(x);
+        test.assert(y.x == 34);
+
+        x.x = 1;
+        y.x = 2;
+        f2(x, y);
     }
 
     test.assert(g == 0);
