@@ -68,8 +68,6 @@ void AddrGenerator::visit(CallNode &node)
         auto temp = node.property<std::string>("temp");
 
         ExprGenerator::generate(c, os, node);
-
-        os << "    push &\"" << temp << "\";\n";
         ok = true;
     }
 }

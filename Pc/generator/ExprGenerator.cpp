@@ -159,9 +159,11 @@ void ExprGenerator::visit(CallNode &node)
         os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
         os << "    call;\n";
 
+        os << "    push &\"" << temp << "\";\n";
+
         c.tempDestructs.push_back(std::make_pair(temp, t));
 
-        sz = 0;
+        sz = sizeof(std::size_t);
     }
 }
 
