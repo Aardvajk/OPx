@@ -36,6 +36,7 @@ DISTFILES += \
     ../lib/stdtest.ph \
     ../unittests/addr_of_ref.pc \
     ../unittests/complex_ref_members.pc \
+    ../unittests/copy_construct_init.pc \
     ../unittests/destructors.pc \
     ../unittests/init_lists.pc \
     ../unittests/ref_member.pc \
