@@ -16,6 +16,7 @@
 
 #include "generator/ExprGenerator.h"
 #include "generator/CommonGenerator.h"
+#include "generator/AddrGenerator.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -108,11 +109,27 @@ void FuncGenerator::visit(ExprNode &node)
 
 void FuncGenerator::visit(ReturnNode &node)
 {
-    if(auto sz = ExprGenerator::generate(c, os, *node.expr))
+    auto r = c.tree.current()->container()->property<Type*>("type")->returnType;
+
+    if(r->primitive() || r->ref)
     {
+        auto sz = ExprGenerator::generate(c, os, *node.expr);
+
         os << "    push &\"@ret\";\n";
         os << "    store " << sz << ";\n";
         os << "    pop " << sz << ";\n";
+    }
+    else
+    {
+        auto fn = TypeLookup::assertNewCopyMethod(c, node.location(), r);
+
+        os << "    push &\"@ret\";\n";
+        os << "    load 8;\n";
+
+        AddrGenerator::generate(c, os, *node.expr);
+
+        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+        os << "    call;\n";
     }
 
     os << "    setf \"@rf\";\n";

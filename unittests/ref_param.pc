@@ -2,8 +2,8 @@ include "stdtest.ph";
 
 func foo(a:ref std.int, b:std.int)
 {
-	test.assert(a == 123);
-	test.assert(b == 123);
+    test.assert(a == 123);
+    test.assert(b == 123);
 }
 
 func main()

@@ -1,6 +1,5 @@
 #include "SymScopeVisitor.h"
 
-#include "nodes/IdNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 

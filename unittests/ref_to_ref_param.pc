@@ -2,7 +2,7 @@ include "stdtest.ph";
 
 func f(a:ref std.int)
 {
-	test.assert(a == 1);
+    test.assert(a == 1);
     a = 2;
 }
 
@@ -15,5 +15,5 @@ func main()
 {
     var i = 1;
     g(i);
-	test.assert(i == 2);
+    test.assert(i == 2);
 }

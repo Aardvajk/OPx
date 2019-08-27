@@ -139,8 +139,20 @@ void ExprTransformer::visit(CallNode &node)
         }
         else
         {
-            auto temp = pcx::str("#temp", c.labels++);
+            auto temp = pcx::str("#temp_", t->text(), c.labels++);
             c.temps[c.tree.current()->container()].push_back(std::make_pair(temp, t));
+
+            node.setProperty("temp", temp);
+        }
+    }
+
+    if(t->function())
+    {
+        auto r = t->returnType;
+        if(!r->primitive() && !r->ref)
+        {
+            auto temp = pcx::str("#tempreturn_", r->text(), c.labels++);
+            c.temps[c.tree.current()->container()].push_back(std::make_pair(temp, r));
 
             node.setProperty("temp", temp);
         }

@@ -5,8 +5,8 @@ class foo
     func new(){ this.x = 123; }
     func delete(){ }
 
-	func h(){ this.x = 321; }
-	func g(){ h(); }
+    func h(){ this.x = 321; }
+    func g(){ h(); }
 
     var x:std.int;
 }
@@ -16,6 +16,6 @@ func main()
     var a:foo;
     test.assert(a.x == 123);
 
-	a.g();
-	test.assert(a.x == 321);
+    a.g();
+    test.assert(a.x == 321);
 }

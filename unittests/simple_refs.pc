@@ -6,7 +6,7 @@ func main()
     var b:ref std.int = a;
     var c:ref std.int = b;
 
-	test.assert(a == b);
-	test.assert(b == c);
-	test.assert(c == a);
+    test.assert(a == b);
+    test.assert(b == c);
+    test.assert(c == a);
 }

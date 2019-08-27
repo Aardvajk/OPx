@@ -43,6 +43,7 @@ DISTFILES += \
     ../unittests/ref_member.pc \
     ../unittests/ref_param.pc \
     ../unittests/ref_to_ref_param.pc \
+    ../unittests/return_by_value.pc \
     ../unittests/return_ref.pc \
     ../unittests/simple_ref_assign.pc \
     ../unittests/simple_refs.pc \

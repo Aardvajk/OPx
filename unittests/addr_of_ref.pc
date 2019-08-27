@@ -5,5 +5,5 @@ func main()
     var i = 10;
     var r:ref std.int = i;
 
-	test.assert(&i == &r);
+    test.assert(&i == &r);
 }

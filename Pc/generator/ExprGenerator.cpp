@@ -121,11 +121,26 @@ void ExprGenerator::visit(CallNode &node)
 
     if(t->function())
     {
-        auto rs = c.assertSize(node.location(), t->returnType);
+        auto r = t->returnType;
+        auto rs = c.assertSize(node.location(), r);
 
-        if(rs)
+        if(r->primitive() || r->ref)
         {
-            os << "    allocs " << rs << ";\n";
+            if(rs)
+            {
+                os << "    allocs " << rs << ";\n";
+            }
+
+            sz = rs;
+        }
+        else
+        {
+            auto temp = node.property<std::string>("temp");
+
+            os << "    push &\"" << temp << "\";\n";
+
+            c.tempDestructs.push_back(std::make_pair(temp, r));
+            sz = sizeof(std::size_t);
         }
 
         for(auto p: pcx::indexed_range(node.params))
@@ -136,20 +151,12 @@ void ExprGenerator::visit(CallNode &node)
         ExprGenerator::generate(c, os, *node.target);
 
         os << "    call;\n";
-
-        sz = rs;
     }
     else
     {
         auto temp = node.property<std::string>("temp");
 
-        std::vector<Type*> pv;
-        for(auto &p: node.params)
-        {
-            pv.push_back(TypeVisitor::type(c, p.get()));
-        }
-
-        auto fn = TypeLookup::assertNewMethod(c, node.location(), t, pv);
+        auto fn = node.target->property<Sym*>("newmethod");
 
         os << "    push &\"" << temp << "\";\n";
 
