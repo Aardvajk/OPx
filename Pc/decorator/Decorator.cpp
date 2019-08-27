@@ -31,7 +31,7 @@ namespace
 Sym *searchNamespace(Context &c, NamespaceNode &node)
 {
     std::vector<Sym*> sv;
-    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
 
     for(auto s: sv)
     {
@@ -49,7 +49,7 @@ Sym *searchNamespace(Context &c, NamespaceNode &node)
 Sym *searchClass(Context &c, ClassNode &node)
 {
     std::vector<Sym*> sv;
-    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
 
     for(auto s: sv)
     {

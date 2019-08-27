@@ -21,7 +21,7 @@ namespace
 Sym *searchCallableLocal(Context &c, FuncNode &node, const Type *type)
 {
     std::vector<Sym*> sv;
-    SymFinder::find(SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
 
     for(auto s: sv)
     {
@@ -93,11 +93,11 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
     }
 
     std::vector<Sym*> sv;
-    SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node, sv);
+    SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
 
     for(auto s: search)
     {
-        SymFinder::find(SymFinder::Type::Local, s, &node, sv);
+        SymFinder::find(c, SymFinder::Type::Local, s, &node, sv);
     }
 
     auto rs = searchCallable(node.location(), sv, expectedType);

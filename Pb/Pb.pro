@@ -39,6 +39,7 @@ DISTFILES += \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
     ../unittests/destructors.pc \
+    ../unittests/func_member_access.pc \
     ../unittests/init_lists.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_param.pc \

@@ -39,7 +39,7 @@ void TypeBuilder::visit(TypeNode &node)
     else
     {
         std::vector<Sym*> sv;
-        SymFinder::find(SymFinder::Type::Global, c.tree.current(), node.name.get(), sv);
+        SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), node.name.get(), sv);
 
         if(sv.empty() || sv.front()->type() != Sym::Type::Class)
         {

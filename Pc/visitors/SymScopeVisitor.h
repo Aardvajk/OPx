@@ -3,20 +3,23 @@
 
 #include "visitors/Visitor.h"
 
+class Context;
 class Sym;
 
 class SymScopeVisitor : public Visitor
 {
 public:
-    explicit SymScopeVisitor(Sym *curr);
+    SymScopeVisitor(Context &c, Sym *curr);
 
     Sym *result(){ return curr; }
 
+    virtual void visit(CallNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(ThisNode &node) override;
     virtual void visit(DerefNode &node) override;
 
 private:
+    Context &c;
     Sym *curr;
 };
 

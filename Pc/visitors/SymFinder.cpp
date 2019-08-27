@@ -50,7 +50,7 @@ void search(SymFinder::Type type, Sym *scope, const std::string &name, std::vect
 
 }
 
-SymFinder::SymFinder(Type type, Sym *curr, std::vector<Sym*> &result) : type(type), curr(curr), r(result)
+SymFinder::SymFinder(Context &c, Type type, Sym *curr, std::vector<Sym*> &result) : c(c), type(type), curr(curr), r(result)
 {
 }
 
@@ -58,13 +58,13 @@ void SymFinder::visit(IdNode &node)
 {
     if(node.parent)
     {
-        SymScopeVisitor sv(curr);
+        SymScopeVisitor sv(c, curr);
         node.parent->accept(sv);
 
         std::vector<Sym*> sc;
         if(sv.result() == curr)
         {
-            SymFinder::find(type, curr, node.parent.get(), sc);
+            SymFinder::find(c, type, curr, node.parent.get(), sc);
 
             if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
             {
@@ -112,9 +112,9 @@ void SymFinder::visit(SubscriptNode &node)
     node.target->accept(*this);
 }
 
-void SymFinder::find(Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
+void SymFinder::find(Context &c, Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
 {
-    SymFinder sf(type, curr, result);
+    SymFinder sf(c, type, curr, result);
     node->accept(sf);
 }
 

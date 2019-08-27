@@ -50,9 +50,11 @@ void ExprLower::visit(CallNode &node)
         t = node.target->property<Sym*>("newmethod")->property<Type*>("type");
     }
 
+    std::size_t off = t->args.size() > node.params.size() ? 1 : 0;
+
     for(std::size_t i = 0; i < node.params.size(); ++i)
     {
-        node.params[i] = ExprLower::lower(c, node.params[i], t->args[i]);
+        node.params[i] = ExprLower::lower(c, node.params[i], t->args[i + off]);
     }
 }
 

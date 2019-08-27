@@ -41,7 +41,7 @@ void ExprDecorator::visit(IdNode &node)
     else
     {
         std::vector<Sym*> sv;
-        SymFinder::find(SymFinder::Type::Global, c.tree.current(), &node, sv);
+        SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
 
         if(sv.empty())
         {

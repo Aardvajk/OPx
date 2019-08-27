@@ -59,17 +59,8 @@ void AddrGenerator::visit(IdNode &node)
 
 void AddrGenerator::visit(CallNode &node)
 {
-    auto t = TypeVisitor::type(c, node.target.get());
-    if(t->function())
-    {
-    }
-    else
-    {
-        auto temp = node.property<std::string>("temp");
-
-        ExprGenerator::generate(c, os, node);
-        ok = true;
-    }
+    ExprGenerator::generate(c, os, node);
+    ok = true;
 }
 
 void AddrGenerator::visit(DerefNode &node)
