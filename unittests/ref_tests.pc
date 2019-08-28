@@ -6,13 +6,15 @@ class foo
     func new(a:ref foo) ... x(a.x) { }
     func delete(){ }
 
+    func clone():foo { return foo(x); }
+
     var x:ref std.int;
 }
 
 func f(n:ref std.int):foo
 {
     var a = foo(n);
-    return a;
+    return a.clone();
 }
 
 func main()
@@ -22,7 +24,7 @@ func main()
 
     test.assert(n.x == 123);
 
-    n.x = 321;
+    n.clone().x = 321;
 
     test.assert(a == 321);
 

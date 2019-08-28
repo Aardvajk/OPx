@@ -40,9 +40,12 @@ DISTFILES += \
     ../unittests/copy_param.pc \
     ../unittests/destructors.pc \
     ../unittests/func_member_access.pc \
+    ../unittests/func_ref.pc \
     ../unittests/init_lists.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_param.pc \
+    ../unittests/ref_return_access.pc \
+    ../unittests/ref_tests.pc \
     ../unittests/ref_to_ref_param.pc \
     ../unittests/return_by_value.pc \
     ../unittests/return_ref.pc \

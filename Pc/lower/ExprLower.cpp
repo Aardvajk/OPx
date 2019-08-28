@@ -56,15 +56,23 @@ void ExprLower::visit(CallNode &node)
     {
         node.params[i] = ExprLower::lower(c, node.params[i], t->args[i + off]);
     }
+
+    if(!(flags & Flag::NoTopLevel))
+    {
+        if(t->returnType && t->returnType->ref)
+        {
+            rn = new DerefNode(node.location(), cn);
+        }
+    }
 }
 
 void ExprLower::visit(AssignNode &node)
 {
-    node.target = ExprLower::lower(c, node.target, nullptr, Flag::NoTopLevel);
-    node.expr = ExprLower::lower(c, node.expr, nullptr, Flag::NoTopLevel);
-
     if(node.getProperty("constructor").value<bool>())
     {
+        node.target = ExprLower::lower(c, node.target, nullptr, Flag::NoTopLevel);
+        node.expr = ExprLower::lower(c, node.expr, nullptr, Flag::NoTopLevel);
+
         if(TypeVisitor::type(c, node.target.get())->ref && !TypeVisitor::type(c, node.expr.get())->ref)
         {
             node.expr = new AddrOfNode(node.expr->location(), node.expr);
@@ -72,10 +80,8 @@ void ExprLower::visit(AssignNode &node)
     }
     else
     {
-        if(TypeVisitor::type(c, node.target.get())->ref)
-        {
-            node.target = new DerefNode(node.target->location(), node.target);
-        }
+        node.target = ExprLower::lower(c, node.target, nullptr);
+        node.expr = ExprLower::lower(c, node.expr, nullptr);
     }
 }
 

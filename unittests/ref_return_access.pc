@@ -1,0 +1,23 @@
+include "stdtest.ph";
+
+class foo
+{
+    func new() ... x(123) { }
+    func delete(){ }
+
+    var x:std.int;
+}
+
+func f(n:ref foo):ref foo
+{
+    return n;
+}
+
+func main()
+{
+    var n:foo;
+    test.assert(f(n).x == 123);
+
+    f(n).x = 321;
+    test.assert(n.x == 321);
+}
