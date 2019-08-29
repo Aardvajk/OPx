@@ -38,6 +38,11 @@ void NameVisitors::PrettyName::visit(VarNode &node)
 
 void NameVisitors::PrettyName::visit(TypeNode &node)
 {
+    if(node.ref)
+    {
+        r += "ref ";
+    }
+
     for(std::size_t i = 0; i < node.ptr; ++i)
     {
         r += "ptr ";

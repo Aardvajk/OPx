@@ -22,6 +22,7 @@
 #include "decorator/ExprDecorator.h"
 #include "decorator/ClassDecorator.h"
 #include "decorator/CommonDecorator.h"
+#include "decorator/ClassMethodDecorator.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -150,6 +151,9 @@ void Decorator::visit(ClassNode &node)
 
         ClassDecorator cd(c);
         node.body->accept(cd);
+
+        ClassMethodDecorator md(c, sym);
+        node.body->accept(md);
     }
 
     if(!c.classDepth)

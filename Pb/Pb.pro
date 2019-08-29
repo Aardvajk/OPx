@@ -41,7 +41,9 @@ DISTFILES += \
     ../unittests/destructors.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
+    ../unittests/generated_new_copy_delete_funcs.pc \
     ../unittests/init_lists.pc \
+    ../unittests/primitive_array.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_param.pc \
     ../unittests/ref_return_access.pc \
