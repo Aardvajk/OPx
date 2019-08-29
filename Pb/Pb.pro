@@ -51,8 +51,11 @@ DISTFILES += \
     ../unittests/return_ref.pc \
     ../unittests/simple_ref_assign.pc \
     ../unittests/simple_refs.pc \
+    ../unittests/temp_access.pc \
     ../unittests/temp_construct.pc \
+    ../unittests/this_as_param.pc \
     ../unittests/this_ref.pc \
+    ../unittests/this_as_param.pc \
     ../workspace/pb.bat \
     ../workspace/script.pc \
     ../workspace/script.pi

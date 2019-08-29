@@ -69,6 +69,12 @@ void AddrGenerator::visit(DerefNode &node)
     ok = true;
 }
 
+void AddrGenerator::visit(ThisNode &node)
+{
+    os << "    push \"" << c.tree.current()->container()->fullname() << ".this\";\n";
+    ok = true;
+}
+
 void AddrGenerator::generate(Context &c, std::ostream &os, Node &node)
 {
     AddrGenerator ag(c, os);

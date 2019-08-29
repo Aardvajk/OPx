@@ -36,7 +36,10 @@ void ExprDecorator::visit(IdNode &node)
 
     if(expectedType && expectedType->function())
     {
-        node.setProperty("sym", CommonDecorator::searchCallableByType(c, node, expectedType));
+        if(!node.getProperty("newmethod"))
+        {
+            node.setProperty("sym", CommonDecorator::searchCallableByType(c, node, expectedType));
+        }
     }
     else
     {

@@ -95,7 +95,10 @@ void ExprLower::visit(ThisNode &node)
 {
     if(!(flags & Flag::NoThisDeref))
     {
-        rn = new DerefNode(node.location(), cn);
+        if(!type || !type->ref)
+        {
+            rn = new DerefNode(node.location(), cn);
+        }
     }
 }
 

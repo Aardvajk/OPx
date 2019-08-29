@@ -18,6 +18,7 @@ public:
     virtual void visit(IdNode &node) override;
     virtual void visit(CallNode &node) override;
     virtual void visit(DerefNode &node) override;
+    virtual void visit(ThisNode &node) override;
 
     static void generate(Context &c, std::ostream &os, Node &node);
 
