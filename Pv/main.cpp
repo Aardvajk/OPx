@@ -27,6 +27,11 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<char>();
         std::cout << "bool " << (i ? "true" : "false") << "\n";
     }
+    else if(code == 3)
+    {
+        auto i = sr.get<std::size_t>();
+        std::cout << mm(i);
+    }
     else if(code == 999)
     {
         throw SilentAbort();

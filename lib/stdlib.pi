@@ -14,6 +14,14 @@ func "std.print(std.bool):std.null":0
 	pop 1;
 }
 
+func "std.print(ptr std.char):std.null":0
+{
+	arg "std.print.i":8;
+	push "std.print.i";
+	svc 3;
+	pop 8;
+}
+
 func "std.abort():std.null":0
 {
 	svc 999;
