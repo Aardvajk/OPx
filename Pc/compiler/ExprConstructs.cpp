@@ -250,7 +250,7 @@ NodePtr assign(Context &c, bool get)
         auto an = new AssignNode(c.scanner.token().location(), n);
         n = an;
 
-        an->expr = sums(c, true);
+        an->expr = expression(c, true);
     }
 
     return n;

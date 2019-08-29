@@ -64,7 +64,7 @@ void ExprTransformer::visit(AssignNode &node)
 
     auto tt = TypeVisitor::type(c, node.target.get());
 
-    if(!tt->primitive() && !tt->ref && tt->sym)
+    if(!tt->primitive() && (node.getProperty("constructor").value<bool>() ? !tt->ref : true))
     {
         NodePtr pn(new IdNode(node.location(), { }, tt->sym->name()));
 

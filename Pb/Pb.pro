@@ -44,6 +44,7 @@ DISTFILES += \
     ../unittests/generated_new_copy_delete_funcs.pc \
     ../unittests/init_lists.pc \
     ../unittests/operator_eq.pc \
+    ../unittests/operator_eq_chain.pc \
     ../unittests/primitive_array.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_param.pc \
