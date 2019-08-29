@@ -8,7 +8,11 @@
 #include "nodes/VarNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/ExprNode.h"
+#include "nodes/AssignNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/ReturnNode.h"
+#include "nodes/ThisNode.h"
 
 #include "decorator/ClassDecorator.h"
 
@@ -18,7 +22,7 @@
 namespace
 {
 
-FuncNode *createBasicFunction(Sym *sym, BlockNode *block, const std::string &name)
+std::pair<FuncNode*, BlockNode*> createBasicFunction(Sym *sym, BlockNode *block, const std::string &name)
 {
     NodePtr nn(new IdNode(block->location(), { }, name));
 
@@ -28,9 +32,10 @@ FuncNode *createBasicFunction(Sym *sym, BlockNode *block, const std::string &nam
     auto sc = new ScopeNode(block->location());
     fn->body = sc;
 
-    sc->body = new BlockNode(block->location());
+    auto bn = new BlockNode(block->location());
+    sc->body = bn;
 
-    return fn;
+    return std::make_pair(fn, bn);
 }
 
 bool hasNewCopyMethod(Sym *sym)
@@ -67,7 +72,7 @@ void ClassMethodDecorator::visit(BlockNode &node)
         auto fn = createBasicFunction(sym, &node, "new");
 
         ClassDecorator cd(c);
-        fn->accept(cd);
+        fn.first->accept(cd);
     }
 
     if(!hasNewCopyMethod(sym))
@@ -77,7 +82,7 @@ void ClassMethodDecorator::visit(BlockNode &node)
         NodePtr pn = new IdNode(node.location(), { }, "#tempcopy");
 
         auto vn = new VarNode(node.location(), pn);
-        fn->args.push_back(vn);
+        fn.first->args.push_back(vn);
 
         auto tn = new TypeNode(node.location());
         vn->type = tn;
@@ -90,14 +95,14 @@ void ClassMethodDecorator::visit(BlockNode &node)
             if(s->type() == Sym::Type::Var)
             {
                 auto in = new InitNode(node.location(), s->name());
-                fn->inits.push_back(in);
+                fn.first->inits.push_back(in);
 
                 in->params.push_back(new IdNode(node.location(), pn, s->name()));
             }
         }
 
         ClassDecorator cd(c);
-        fn->accept(cd);
+        fn.first->accept(cd);
     }
 
     if(!sym->child("delete"))
@@ -105,6 +110,50 @@ void ClassMethodDecorator::visit(BlockNode &node)
         auto fn = createBasicFunction(sym, &node, "delete");
 
         ClassDecorator cd(c);
-        fn->accept(cd);
+        fn.first->accept(cd);
+    }
+
+    if(!sym->child("operator="))
+    {
+        auto fn = createBasicFunction(sym, &node, "operator=");
+
+        NodePtr pn = new IdNode(node.location(), { }, "#tempcopy");
+
+        auto tn = new TypeNode(node.location());
+        NodePtr tnn(tn);
+
+        fn.first->type = tnn;
+
+        tn->name = new IdNode(node.location(), { }, sym->name());
+        tn->ref = true;
+
+        auto vn = new VarNode(node.location(), pn);
+        fn.first->args.push_back(vn);
+
+        vn->type = tnn;
+
+        for(auto s: sym->children())
+        {
+            if(s->type() == Sym::Type::Var)
+            {
+                auto en = new ExprNode(node.location(), { });
+                fn.second->push_back(en);
+
+                NodePtr tn(new IdNode(node.location(), { }, s->name()));
+
+                auto an = new AssignNode(node.location(), tn);
+                en->expr = an;
+
+                an->expr = new IdNode(node.location(), pn, s->name());
+            }
+        }
+
+        auto rn = new ReturnNode(node.location());
+        fn.second->push_back(rn);
+
+        rn->expr = new ThisNode(node.location());
+
+        ClassDecorator cd(c);
+        fn.first->accept(cd);
     }
 }

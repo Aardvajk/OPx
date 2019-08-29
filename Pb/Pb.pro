@@ -41,6 +41,7 @@ DISTFILES += \
     ../unittests/destructors.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
+    ../unittests/generate_op_assign.pc \
     ../unittests/generated_new_copy_delete_funcs.pc \
     ../unittests/init_lists.pc \
     ../unittests/operator_eq.pc \
