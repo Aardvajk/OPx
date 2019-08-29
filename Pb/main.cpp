@@ -24,36 +24,10 @@ bool runTest(const std::string &dir, const std::string &path)
     if(std::system(pcx::str(exePath("pc"), " -q -I=../lib ", file, ".pc unittest.pi").c_str())) return false;
     if(std::system(pcx::str(exePath("pi"), " -q unittest.pi unittest.po").c_str())) return false;
     if(std::system(pcx::str(exePath("pl"), " -q unittest.px unittest.po ../lib/stdlib.po ../lib/stdtest.po").c_str())) return false;
-    if(std::system(pcx::str(exePath("pv"), " -q unittest.px > unittest_result.txt").c_str()))
+    if(std::system(pcx::str(exePath("pv"), " -q unittest.px").c_str()))
     {
         std::cout << "pb error: unit test failed\n";
         return false;
-    }
-
-    std::vector<std::string> tr;
-    pcx::textfile::read("unittest_result.txt", tr);
-
-    std::vector<std::string> cmp;
-    if(pcx::textfile::read(pcx::str(file, ".pc.txt"), cmp))
-    {
-        if(tr.size() != cmp.size())
-        {
-            std::cout << "pb error: output comparison failed\n";
-            return false;
-        }
-
-        for(std::size_t i = 0; i < tr.size(); ++i)
-        {
-            if(tr[i] != cmp[i])
-            {
-                std::cout << "pb error: output comparison failed\n";
-                return false;
-            }
-        }
-    }
-    else if(tr.size())
-    {
-        pcx::textfile::write(pcx::str(file, ".pc.txt"), tr);
     }
 
     return true;

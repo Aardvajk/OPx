@@ -1,9 +1,11 @@
-include "stdlib.ph";
+include "stdtest.ph";
+
+var g = 0;
 
 class foo
 {
-    func new(z:std.int) ... x(z) { std.print(100); std.print(x); }
-    func delete(){ std.print(200); std.print(x); }
+    func new(z:std.int) ... x(z) { g = g + 1; }
+    func delete(){ g = g - 1; }
 
     var x:std.int;
 }
@@ -28,5 +30,11 @@ class woo
 
 func main()
 {
-    var a:woo;
+    {
+        var a:woo;
+
+        test.assert(g == 4);
+    }
+
+    test.assert(g == 0);
 }
