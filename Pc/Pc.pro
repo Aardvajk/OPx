@@ -171,6 +171,7 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../unittests/this_as_param.pc \
     ../workspace/script.pc \
     ../workspace/script.pi \
     ../workspace/store.pc \

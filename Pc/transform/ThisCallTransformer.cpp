@@ -20,8 +20,5 @@ void ThisCallTransformer::visit(IdNode &node)
         throw Error(node.location(), "temp error, no id parent for this generator");
     }
 
-    auto a = new AddrOfNode(node.location());
-    rn = a;
-
-    a->expr = node.parent;
+    rn = node.parent;
 }

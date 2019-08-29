@@ -43,10 +43,7 @@ void ExprTransformer::visit(IdNode &node)
 
             if(sym->getProperty("member").value<bool>() || sym->getProperty("method").value<bool>())
             {
-                auto n = new DerefNode(node.location());
-                n->expr = new ThisNode(node.location());
-
-                node.parent = n;
+                node.parent = new ThisNode(node.location());
             }
         }
     }

@@ -15,7 +15,8 @@ class ExprLower : public Visitor
 public:
     enum class Flag
     {
-        NoTopLevel = 1
+        NoTopLevel = 1,
+        NoThisDeref = 2
     };
 
     using Flags = pcx::flags<Flag>;

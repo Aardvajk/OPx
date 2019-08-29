@@ -54,7 +54,7 @@ void ExprLower::visit(CallNode &node)
 
     for(std::size_t i = 0; i < node.params.size(); ++i)
     {
-        node.params[i] = ExprLower::lower(c, node.params[i], t->args[i + off]);
+        node.params[i] = ExprLower::lower(c, node.params[i], t->args[i + off], Flag::NoThisDeref);
     }
 
     if(!(flags & Flag::NoTopLevel))
@@ -93,7 +93,10 @@ void ExprLower::visit(BinaryNode &node)
 
 void ExprLower::visit(ThisNode &node)
 {
-    rn = new DerefNode(node.location(), cn);
+    if(!(flags & Flag::NoThisDeref))
+    {
+        rn = new DerefNode(node.location(), cn);
+    }
 }
 
 void ExprLower::visit(AddrOfNode &node)

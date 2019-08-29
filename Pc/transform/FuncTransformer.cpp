@@ -111,7 +111,7 @@ void FuncTransformer::visit(VarNode &node)
 
     if(node.value)
     {
-        if(type->primitive())
+        if(type->primitive() || type->ref)
         {
             generatePrimitiveConstruct(c, type, node, node.name, node.value, index);
         }
@@ -121,7 +121,7 @@ void FuncTransformer::visit(VarNode &node)
             generateNonPrimitiveConstruct(c, type, node, node.name, params, index);
         }
     }
-    else if(!type->primitive())
+    else if(!type->primitive() && !type->ref)
     {
         if(node.params.empty())
         {
