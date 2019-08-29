@@ -1,0 +1,25 @@
+include "stdtest.ph";
+
+class foo
+{
+    func new(a:std.int) ... x(a) { }
+
+    func operator=(a:ref foo){ x = a.x; }
+    func operator=(a:std.int){ x = a; }
+
+    var x:std.int;
+}
+
+func main()
+{
+    var a:foo(123), b:foo(321);
+
+    test.assert(b.x == 321);
+
+    b = a;
+
+    test.assert(b.x == 123);
+
+    a = 765;
+    test.assert(a.x == 765);
+}

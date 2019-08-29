@@ -64,12 +64,14 @@ void ExprTransformer::visit(AssignNode &node)
 
     auto tt = TypeVisitor::type(c, node.target.get());
 
-    if(!tt->primitive() && !tt->ref)
+    if(!tt->primitive() && !tt->ref && tt->sym)
     {
-        auto cn = new CallNode(node.location(), new IdNode(node.location(), { }, "operator="));
+        NodePtr pn(new IdNode(node.location(), { }, tt->sym->name()));
+
+        auto cn = new CallNode(node.location(), new IdNode(node.location(), pn, "operator="));
         rn = cn;
 
-        cn->params.push_back(new AddrOfNode(node.target->location(), node.target));
+        cn->params.push_back(node.target);
         cn->params.push_back(node.expr);
 
         ExprDecorator::decorate(c, nullptr, *cn);
