@@ -59,6 +59,22 @@ bool hasNewCopyMethod(Sym *sym)
     return false;
 }
 
+bool anyRefMembers(Sym *sym)
+{
+    for(auto s: sym->children())
+    {
+        if(s->type() == Sym::Type::Var)
+        {
+            if(s->property<const Type*>("type")->ref)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 }
 
 ClassMethodDecorator::ClassMethodDecorator(Context &c, Sym *sym) : c(c), sym(sym)
@@ -113,7 +129,7 @@ void ClassMethodDecorator::visit(BlockNode &node)
         fn.first->accept(cd);
     }
 
-    if(!sym->child("operator="))
+    if(!sym->child("operator=") && !anyRefMembers(sym))
     {
         auto fn = createBasicFunction(sym, &node, "operator=");
 
