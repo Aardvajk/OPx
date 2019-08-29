@@ -59,7 +59,7 @@ void ExprLower::visit(CallNode &node)
 
     if(!(flags & Flag::NoTopLevel))
     {
-        if(t->returnType && t->returnType->ref)
+        if(t->returnType && t->returnType->ref && (!type || !type->ref))
         {
             rn = new DerefNode(node.location(), cn);
         }
