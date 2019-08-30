@@ -25,7 +25,7 @@
 
 #include "transform/ThisCallTransformer.h"
 
-ExprTransformer::ExprTransformer(Context &c) : c(c)
+ExprTransformer::ExprTransformer(Context &c, const Type *expectedType) : c(c), expectedType(expectedType)
 {
 }
 
@@ -89,9 +89,21 @@ void ExprTransformer::visit(AssignNode &node)
 void ExprTransformer::visit(CallNode &node)
 {
     node.target = ExprTransformer::transform(c, node.target);
-    ExprTransformer::transform(c, node.params);
 
     auto t = TypeVisitor::type(c, node.target.get());
+
+    auto ft = t;
+    if(!ft->function())
+    {
+        ft = node.target->property<Sym*>("newmethod")->property<Type*>("type");
+    }
+
+    std::size_t off = ft->args.size() > node.params.size() ? 1 : 0;
+
+    for(std::size_t i = 0; i < node.params.size(); ++i)
+    {
+        node.params[i] = ExprTransformer::transform(c, node.params[i], ft->args[i + off]);
+    }
 
     if(t->method)
     {
@@ -243,18 +255,10 @@ void ExprTransformer::visit(LogicalNode &node)
     node.right = ExprTransformer::transform(c, node.right);
 }
 
-NodePtr ExprTransformer::transform(Context &c, NodePtr &node)
+NodePtr ExprTransformer::transform(Context &c, NodePtr &node, const Type *expectedType)
 {
-    ExprTransformer et(c);
+    ExprTransformer et(c, expectedType);
     node->accept(et);
 
     return et.result() ? et.result() : node;
-}
-
-void ExprTransformer::transform(Context &c, NodeList &nodes)
-{
-    for(std::size_t i = 0; i < nodes.size(); ++i)
-    {
-        nodes[i] = ExprTransformer::transform(c, nodes[i]);
-    }
 }
