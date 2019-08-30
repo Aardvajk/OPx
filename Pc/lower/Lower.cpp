@@ -44,6 +44,7 @@ void Lower::visit(ClassNode &node)
         {
             if(s->type() == Sym::Type::Var)
             {
+                s->setProperty("offset", sz);
                 sz += c.assertInitSize(node.location(), s->property<const Type*>("type"));
             }
         }
