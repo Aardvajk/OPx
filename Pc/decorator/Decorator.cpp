@@ -13,6 +13,7 @@
 #include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
+#include "visitors/TakesAddrVisitor.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
@@ -193,6 +194,14 @@ void Decorator::visit(VarNode &node)
             if(type->sub && c.tree.current()->container()->type() == Sym::Type::Func)
             {
                 type = c.types.insert(Type::removeSub(*type));
+            }
+
+            if(type->ref && TakesAddrVisitor::examine(*node.value))
+            {
+                auto t = *type;
+                t.ref = false;
+
+                type = c.types.insert(t);
             }
         }
     }

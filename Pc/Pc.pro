@@ -93,6 +93,7 @@ SOURCES += \
         visitors/SymFinder.cpp \
         types/TypeBuilder.cpp \
         visitors/SymScopeVisitor.cpp \
+        visitors/TakesAddrVisitor.cpp \
         visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
@@ -169,6 +170,7 @@ HEADERS += \
     visitors/SymFinder.h \
     types/TypeBuilder.h \
     visitors/SymScopeVisitor.h \
+    visitors/TakesAddrVisitor.h \
     visitors/TypeVisitor.h \
     visitors/Visitor.h
 

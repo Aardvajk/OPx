@@ -6,4 +6,9 @@ func main()
     var r:ref std.int = i;
 
     test.assert(&i == &r);
+
+    var r2 = &r;
+
+    test.assert(r2 == &i);
+    test.assert(*r2 == 10);
 }
