@@ -128,17 +128,27 @@ void ExprTransformer::visit(CallNode &node)
 
     auto t = TypeVisitor::type(c, node.target.get());
 
-    auto ft = t;
-    if(!ft->function())
+    if(t->primitive() && !t->function())
     {
-        ft = node.target->property<Sym*>("newmethod")->property<Type*>("type");
+        for(std::size_t i = 0; i < node.params.size(); ++i)
+        {
+            node.params[i] = ExprTransformer::transform(c, node.params[i]);
+        }
     }
-
-    std::size_t off = ft->args.size() > node.params.size() ? 1 : 0;
-
-    for(std::size_t i = 0; i < node.params.size(); ++i)
+    else
     {
-        node.params[i] = ExprTransformer::transform(c, node.params[i], ft->args[i + off]);
+        auto ft = t;
+        if(!ft->function())
+        {
+            ft = node.target->property<Sym*>("newmethod")->property<Type*>("type");
+        }
+
+        std::size_t off = ft->args.size() > node.params.size() ? 1 : 0;
+
+        for(std::size_t i = 0; i < node.params.size(); ++i)
+        {
+            node.params[i] = ExprTransformer::transform(c, node.params[i], ft->args[i + off]);
+        }
     }
 
     if(t->method)

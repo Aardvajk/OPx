@@ -104,7 +104,7 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
     checkResult(node, rs, expectedType);
 
     auto sym = rs.front();
-    if(sym->type() == Sym::Type::Class)
+    if(sym->type() == Sym::Type::Class && !sym->property<const Type*>("type")->primitive())
     {
         std::vector<Sym*> v;
         for(auto s: sym->children())

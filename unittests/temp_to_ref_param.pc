@@ -4,7 +4,7 @@ func foo(a:ref std.int, b:ref std.bool, c:ref std.size)
 {
     test.assert(a == 132);
     test.assert(b);
-    test.assert(c == 99s);
+    test.assert(c == std.size(99));
 }
 
 func main()
