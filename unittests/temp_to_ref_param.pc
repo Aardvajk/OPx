@@ -1,13 +1,27 @@
 include "stdtest.ph";
 
-func foo(a:ref std.int, b:ref std.bool, c:ref std.size)
+func f(a:ref std.int, b:ref std.bool, c:ref std.size)
 {
     test.assert(a == 132);
     test.assert(b);
     test.assert(c == std.size(99));
 }
 
+class foo
+{
+    func new() ... x(123) { }
+
+    var x:std.int;
+}
+
+func f2(a:ref foo, b:ref std.int)
+{
+    test.assert(a.x == 123);
+    test.assert(b == 321);
+}
+
 func main()
 {
-    foo(132, true, 99s);
+    f(132, true, 99s);
+    f2(foo(), 321);
 }
