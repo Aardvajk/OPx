@@ -45,10 +45,12 @@ DISTFILES += \
     ../unittests/generate_op_assign.pc \
     ../unittests/generated_new_copy_delete_funcs.pc \
     ../unittests/init_lists.pc \
+    ../unittests/no_assign_gen.pc \
     ../unittests/operator_eq.pc \
     ../unittests/operator_eq_chain.pc \
     ../unittests/primitive_array.pc \
     ../unittests/ref_member.pc \
+    ../unittests/ref_must_init.pc \
     ../unittests/ref_param.pc \
     ../unittests/ref_return_access.pc \
     ../unittests/ref_tests.pc \

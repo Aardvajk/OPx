@@ -1,0 +1,11 @@
+pragma set "test_error=reference a must be initialised - foo.new";
+
+class foo
+{
+    var a:ref std.int;
+}
+
+func main()
+{
+    var a:foo;
+}
