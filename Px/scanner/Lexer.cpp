@@ -60,6 +60,8 @@ Source::Char translateEscapeChar(Source::Char ch)
         case 'n': return '\n';
         case 't': return '\t';
         case '0': return '\0';
+        case '\"': return '\"';
+        case '\'': return '\'';
 
         default: return ch;
     }
@@ -116,7 +118,15 @@ Token charConstant(Source &source, Location location)
 Token stringConstant(Source &source, Location location, std::string &s)
 {
     auto ch = source.get();
-    while(ch != '\"')
+    bool translated = false;
+
+    if(ch == '\\')
+    {
+        ch = translateEscapeChar(source.get());
+        translated = true;
+    }
+
+    while(ch != '\"' || translated)
     {
         if(!ch || ch == '\n')
         {
@@ -124,7 +134,15 @@ Token stringConstant(Source &source, Location location, std::string &s)
         }
 
         s += char(ch);
+
         ch = source.get();
+
+        translated = false;
+        if(ch == '\\')
+        {
+            ch = translateEscapeChar(source.get());
+            translated = true;
+        }
     }
 
     ch = skip(source);
