@@ -1,0 +1,13 @@
+include "stdtest.ph";
+
+func foo(a:ref std.int, b:ref std.bool, c:ref std.size)
+{
+    test.assert(a == 132);
+    test.assert(b);
+    test.assert(c == 99s);
+}
+
+func main()
+{
+    foo(132, true, 99s);
+}

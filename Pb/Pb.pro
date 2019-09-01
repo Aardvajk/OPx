@@ -58,6 +58,7 @@ DISTFILES += \
     ../unittests/simple_refs.pc \
     ../unittests/temp_access.pc \
     ../unittests/temp_construct.pc \
+    ../unittests/temp_to_ref_param.pc \
     ../unittests/this_as_param.pc \
     ../unittests/this_ref.pc \
     ../unittests/this_as_param.pc \

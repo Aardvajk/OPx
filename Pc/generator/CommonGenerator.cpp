@@ -40,7 +40,23 @@ void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node &node
 {
     if(type->primitive() || type->ref)
     {
-        ExprGenerator::generate(c, os, node);
+        auto tp = node.getProperty("temp_literal");
+
+        if(type->ref && tp)
+        {
+            auto temp = tp.to<std::string>();
+            auto sz = c.assertSize(node.location(), TypeVisitor::type(c, &node));
+
+            ExprGenerator::generate(c, os, node);
+            os << "    push &\"" << temp << "\";\n";
+            os << "    store " << sz << ";\n";
+            os << "    pop " << sz << ";\n";
+            os << "    push &\"" << temp << "\";\n";
+        }
+        else
+        {
+            ExprGenerator::generate(c, os, node);
+        }
     }
     else
     {

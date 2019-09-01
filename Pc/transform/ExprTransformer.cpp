@@ -25,6 +25,22 @@
 
 #include "transform/ThisCallTransformer.h"
 
+namespace
+{
+
+void handleLiteral(Context &c, const Type *expectedType, Node &node)
+{
+    if(expectedType && expectedType->ref)
+    {
+        auto name = pcx::str("#temp_literal", c.labels++);
+
+        node.setProperty("temp_literal", name);
+        c.temps[c.tree.current()->container()].push_back(std::make_pair(name, TypeVisitor::type(c, &node)));
+    }
+}
+
+}
+
 ExprTransformer::ExprTransformer(Context &c, const Type *expectedType) : c(c), expectedType(expectedType)
 {
 }
@@ -47,6 +63,26 @@ void ExprTransformer::visit(IdNode &node)
             }
         }
     }
+}
+
+void ExprTransformer::visit(CharLiteralNode &node)
+{
+    handleLiteral(c, expectedType, node);
+}
+
+void ExprTransformer::visit(IntLiteralNode &node)
+{
+    handleLiteral(c, expectedType, node);
+}
+
+void ExprTransformer::visit(BoolLiteralNode &node)
+{
+    handleLiteral(c, expectedType, node);
+}
+
+void ExprTransformer::visit(SizeLiteralNode &node)
+{
+    handleLiteral(c, expectedType, node);
 }
 
 void ExprTransformer::visit(StringLiteralNode &node)
