@@ -1,5 +1,7 @@
 #include "AstPrinter.h"
 
+#include "scanner/Lexer.h"
+
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
@@ -252,7 +254,7 @@ void AstPrinter::visit(SizeLiteralNode &node)
 
 void AstPrinter::visit(StringLiteralNode &node)
 {
-    tab() << "string literal \"" << node.value << "\"\n";
+    tab() << "string literal \"" << Lexer::encodeString(node.value) << "\"\n";
 }
 
 void AstPrinter::visit(ExprNode &node)
