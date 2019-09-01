@@ -128,7 +128,7 @@ Token stringConstant(Source &source, Location location, std::string &s)
 
     while(ch != '\"' || translated)
     {
-        if(!ch || ch == '\n')
+        if(!translated && (!ch || ch == '\n'))
         {
             throw Error(location, "non-terminated string constant");
         }
