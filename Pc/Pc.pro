@@ -27,6 +27,7 @@ SOURCES += \
         compiler/ExprConstructs.cpp \
         compiler/FuncConstructs.cpp \
         compiler/IncludeConstructs.cpp \
+        compiler/PragmaConstructs.cpp \
         compiler/TypeConstructs.cpp \
         decorator/ClassDecorator.cpp \
         decorator/ClassMethodDecorator.cpp \
@@ -63,6 +64,7 @@ SOURCES += \
         nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/PragmaNode.cpp \
         nodes/PrimitiveCastNode.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
@@ -75,6 +77,7 @@ SOURCES += \
         operators/CompareOperators.cpp \
         operators/MathOperators.cpp \
         operators/Operators.cpp \
+        optimise/EllideConstructorCopies.cpp \
         syms/Sym.cpp \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
@@ -106,6 +109,7 @@ HEADERS += \
     compiler/ExprConstructs.h \
     compiler/FuncConstructs.h \
     compiler/IncludeConstructs.h \
+    compiler/PragmaConstructs.h \
     compiler/TypeConstructs.h \
     decorator/ClassDecorator.h \
     decorator/ClassMethodDecorator.h \
@@ -141,6 +145,7 @@ HEADERS += \
     nodes/LogicalNode.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/PragmaNode.h \
     nodes/PrimitiveCastNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
@@ -153,6 +158,7 @@ HEADERS += \
     operators/CompareOperators.h \
     operators/MathOperators.h \
     operators/Operators.h \
+    optimise/EllideConstructorCopies.h \
     syms/Sym.h \
     syms/SymGuard.h \
     syms/SymPrinter.h \

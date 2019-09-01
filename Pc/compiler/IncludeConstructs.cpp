@@ -40,7 +40,7 @@ void IncludeConstructs::entity(Context &c, BlockNode *block, bool get)
     }
     else
     {
-        if(!searchAndOpen(c, c.args["I"], path.text()))
+        if(!searchAndOpen(c, c.args.back()["I"], path.text()))
         {
             throw Error(path.location(), "unable to locate - \"", path.text(), "\"");
         }

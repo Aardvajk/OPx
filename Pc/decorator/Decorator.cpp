@@ -19,6 +19,8 @@
 #include "types/TypeBuilder.h"
 #include "types/TypeCompare.h"
 
+#include "compiler/PragmaConstructs.h"
+
 #include "decorator/FuncDecorator.h"
 #include "decorator/ExprDecorator.h"
 #include "decorator/ClassDecorator.h"
@@ -229,4 +231,9 @@ void Decorator::visit(FuncNode &node)
         c.scopes = 0;
         decorateFunctionBody(c, node, sym);
     }
+}
+
+void Decorator::visit(PragmaNode &node)
+{
+    PragmaConstructs::execute(c, node);
 }

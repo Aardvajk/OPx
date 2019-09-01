@@ -12,7 +12,7 @@ class foo
     var x:ref std.int;
 }
 
-func main()
+func normal()
 {
     {
         var i = 123;
@@ -24,4 +24,34 @@ func main()
 
     test.assert(g == 0);
     test.assert(t == 2);
+}
+
+pragma push;
+pragma set "-O=ellide_constructor_copies";
+
+func optimised()
+{
+    {
+        var i = 123;
+        var f = foo(i);
+
+        test.assert(f.x == 123);
+        test.assert(g == 1);
+    }
+
+    test.assert(g == 0);
+    test.assert(t == 1);
+}
+
+pragma pop;
+
+func main()
+{
+    normal();
+
+    g = t = 0;
+    optimised();
+
+    g = t = 0;
+    normal();
 }

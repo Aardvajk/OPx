@@ -31,6 +31,7 @@ class LogicalNode;
 class IfNode;
 class InitNode;
 class ForNode;
+class PragmaNode;
 
 class Visitor
 {
@@ -67,6 +68,7 @@ public:
     virtual void visit(IfNode &node);
     virtual void visit(InitNode &node);
     virtual void visit(ForNode &node);
+    virtual void visit(PragmaNode &node);
 };
 
 #endif // VISITOR_H

@@ -40,8 +40,10 @@ void addPrimitive(Context &c, const std::string &name, Primitive::Type type, std
 }
 
 Context::Context(int argc, char *argv[], std::vector<std::string> &files)
-    : args(argc, argv, files), scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0), refsLowered(false)
+    : scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0), refsLowered(false)
 {
+    args.push_back({ argc, argv, files });
+
     tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
     addPrimitive(*this, "null", Primitive::Type::Null, 0);

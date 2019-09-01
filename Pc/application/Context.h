@@ -33,7 +33,7 @@ public:
     std::string nextLabel();
     std::string nextLabelQuoted();
 
-    pcx::args args;
+    std::vector<pcx::args> args;
 
     SourceList sources;
     Scanner scanner;

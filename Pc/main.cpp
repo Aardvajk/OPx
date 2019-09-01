@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        bool quiet = c.args.contains("q");
+        bool quiet = c.args.back().contains("q");
 
         if(files.size() < 1)
         {
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
             generate(c, os, n);
         }
 
-        if(c.args.contains("test"))
+        if(c.args.back().contains("test"))
         {
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po").c_str())) return -1;

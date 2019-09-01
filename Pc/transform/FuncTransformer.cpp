@@ -29,6 +29,10 @@
 #include "decorator/ExprDecorator.h"
 #include "decorator/FuncDecorator.h"
 
+#include "optimise/EllideConstructorCopies.h"
+
+#include <algorithm>
+
 namespace
 {
 
@@ -86,6 +90,16 @@ void FuncTransformer::visit(BlockNode &node)
 
 void FuncTransformer::visit(VarNode &node)
 {
+    if(node.value)
+    {
+        auto ops = c.args.back()["O"];
+        if(std::find(ops.begin(), ops.end(), "ellide_constructor_copies") != ops.end())
+        {
+            EllideConstructorCopies ec(c, node);
+            node.value->accept(ec);
+        }
+    }
+
     auto type = node.property<Sym*>("sym")->property<Type*>("type");
 
     if(!node.params.empty())

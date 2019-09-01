@@ -13,6 +13,8 @@
 #include "types/Type.h"
 #include "types/TypeLookup.h"
 
+#include "compiler/PragmaConstructs.h"
+
 #include "visitors/NameVisitors.h"
 
 #include "generator/LocalsGenerator.h"
@@ -158,4 +160,9 @@ void Generator::visit(FuncNode &node)
 
         os << "}\n";
     }
+}
+
+void Generator::visit(PragmaNode &node)
+{
+    PragmaConstructs::execute(c, node);
 }

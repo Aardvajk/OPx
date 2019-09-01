@@ -7,6 +7,7 @@
 #include "nodes/BlockNode.h"
 
 #include "compiler/IncludeConstructs.h"
+#include "compiler/PragmaConstructs.h"
 #include "compiler/DeclarationConstructs.h"
 #include "compiler/FuncConstructs.h"
 
@@ -18,6 +19,7 @@ void Compiler::construct(Context &c, BlockNode *block, bool get)
     switch(tok.type())
     {
         case Token::Type::RwInclude: IncludeConstructs::entity(c, block, false); break;
+        case Token::Type::RwPragma: PragmaConstructs::entity(c, block, false); break;
 
         case Token::Type::RwNamespace:
         case Token::Type::RwClass:

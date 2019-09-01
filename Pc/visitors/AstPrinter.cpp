@@ -27,6 +27,7 @@
 #include "nodes/IfNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/PragmaNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -441,6 +442,18 @@ void AstPrinter::visit(ForNode &node)
     }
 
     node.body->accept(*this);
+}
+
+void AstPrinter::visit(PragmaNode &node)
+{
+    tab() << "pragma " << node.cmd;
+
+    if(!node.arg.empty())
+    {
+        os << " \"" << Lexer::encodeString(node.arg) << "\"";
+    }
+
+    os << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

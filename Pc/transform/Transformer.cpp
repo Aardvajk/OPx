@@ -13,6 +13,8 @@
 
 #include "types/Type.h"
 
+#include "compiler/PragmaConstructs.h"
+
 #include "transform/FuncTransformer.h"
 #include "transform/InitMapBuilder.h"
 
@@ -149,4 +151,9 @@ void Transformer::visit(FuncNode &node)
         FuncTransformer ft(c);
         node.body->accept(ft);
     }
+}
+
+void Transformer::visit(PragmaNode &node)
+{
+    PragmaConstructs::execute(c, node);
 }
