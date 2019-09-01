@@ -7,6 +7,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 LocalsGenerator::LocalsGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -44,4 +45,9 @@ void LocalsGenerator::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+}
+
+void LocalsGenerator::visit(ForNode &node)
+{
+    node.body->accept(*this);
 }
