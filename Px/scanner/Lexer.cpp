@@ -33,6 +33,7 @@ static const std::vector<Reserved> pcReserved =
     { "while", Token::Type::RwWhile },
     { "if", Token::Type::RwIf },
     { "else", Token::Type::RwElse },
+    { "for", Token::Type::RwFor },
     { "new", Token::Type::RwNew },
     { "delete", Token::Type::RwDelete },
     { "true", Token::Type::RwTrue },

@@ -9,6 +9,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/ExprConstructs.h"
@@ -69,6 +70,39 @@ void ifConstruct(Context &c, BlockNode *block, bool get)
     }
 }
 
+void forConstruct(Context &c, BlockNode *block, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::RwFor, get);
+
+    auto n = new ForNode(tok.location());
+    block->push_back(n);
+
+    c.scanner.consume(Token::Type::LeftParen, true);
+
+    if(c.scanner.token().type() != Token::Type::Semicolon)
+    {
+        n->init = ExprConstructs::expr(c, false);
+    }
+
+    c.scanner.next(true);
+
+    if(c.scanner.token().type() != Token::Type::Semicolon)
+    {
+        n->cond = ExprConstructs::expr(c, false);
+    }
+
+    c.scanner.next(true);
+
+    if(c.scanner.token().type() != Token::Type::RightParen)
+    {
+        n->post = ExprConstructs::expr(c, false);
+    }
+
+    c.scanner.match(Token::Type::RightParen, false);
+
+    n->body = CommonConstructs::scopeContents(c, tok.location(), true);
+}
+
 void scopeConstruct(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.match(Token::Type::LeftBrace, get);
@@ -104,6 +138,7 @@ void FuncConstructs::entity(Context &c, BlockNode *block, bool get)
         case Token::Type::RwReturn: returnConstruct(c, block, false); break;
         case Token::Type::RwWhile: whileConstruct(c, block, false); break;
         case Token::Type::RwIf: ifConstruct(c, block, false); break;
+        case Token::Type::RwFor: forConstruct(c, block, false); break;
 
         case Token::Type::LeftBrace: scopeConstruct(c, block, false); break;
 

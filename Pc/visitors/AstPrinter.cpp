@@ -26,6 +26,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/ForNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -416,6 +417,30 @@ void AstPrinter::visit(InitNode &node)
     {
         p->accept(*this);
     }
+}
+
+void AstPrinter::visit(ForNode &node)
+{
+    tab() << "for\n";
+
+    auto g = pcx::scoped_counter(tc);
+
+    if(node.init)
+    {
+        node.init->accept(*this);
+    }
+
+    if(node.cond)
+    {
+        node.cond->accept(*this);
+    }
+
+    if(node.post)
+    {
+        node.post->accept(*this);
+    }
+
+    node.body->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

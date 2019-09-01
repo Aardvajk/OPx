@@ -30,6 +30,7 @@ class PrimitiveCastNode;
 class LogicalNode;
 class IfNode;
 class InitNode;
+class ForNode;
 
 class Visitor
 {
@@ -65,6 +66,7 @@ public:
     virtual void visit(LogicalNode &node);
     virtual void visit(IfNode &node);
     virtual void visit(InitNode &node);
+    virtual void visit(ForNode &node);
 };
 
 #endif // VISITOR_H

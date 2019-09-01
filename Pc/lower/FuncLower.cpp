@@ -13,6 +13,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "types/Type.h"
 
@@ -65,4 +66,24 @@ void FuncLower::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+}
+
+void FuncLower::visit(ForNode &node)
+{
+    if(node.init)
+    {
+        node.init = ExprLower::lower(c, node.init);
+    }
+
+    if(node.cond)
+    {
+        node.cond = ExprLower::lower(c, node.cond);
+    }
+
+    if(node.post)
+    {
+        node.post = ExprLower::lower(c, node.post);
+    }
+
+    node.body->accept(*this);
 }

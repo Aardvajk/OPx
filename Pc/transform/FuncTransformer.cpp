@@ -15,6 +15,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/ForNode.h"
 
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
@@ -197,4 +198,24 @@ void FuncTransformer::visit(InitNode &node)
 
         generateNonPrimitiveConstruct(c, type, node, name, node.params, index);
     }
+}
+
+void FuncTransformer::visit(ForNode &node)
+{
+    if(node.init)
+    {
+        node.init = ExprTransformer::transform(c, node.init);
+    }
+
+    if(node.cond)
+    {
+        node.cond = ExprTransformer::transform(c, node.cond);
+    }
+
+    if(node.post)
+    {
+        node.post = ExprTransformer::transform(c, node.post);
+    }
+
+    node.body->accept(*this);
 }

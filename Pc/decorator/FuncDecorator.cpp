@@ -10,6 +10,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/ForNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -97,4 +98,24 @@ void FuncDecorator::visit(InitNode &node)
     {
         ExprDecorator::decorate(c, sym->property<const Type*>("type"), *p);
     }
+}
+
+void FuncDecorator::visit(ForNode &node)
+{
+    if(node.init)
+    {
+        ExprDecorator::decorate(c, nullptr, *node.init);
+    }
+
+    if(node.cond)
+    {
+        ExprDecorator::decorate(c, nullptr, *node.cond);
+    }
+
+    if(node.post)
+    {
+        ExprDecorator::decorate(c, nullptr, *node.post);
+    }
+
+    node.body->accept(*this);
 }

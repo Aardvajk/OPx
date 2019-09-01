@@ -13,6 +13,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "generator/ExprGenerator.h"
 #include "generator/CommonGenerator.h"
@@ -168,6 +169,38 @@ void FuncGenerator::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+
+    os << l1 << ":\n";
+}
+
+void FuncGenerator::visit(ForNode &node)
+{
+    auto l0 = c.nextLabelQuoted();
+    auto l1 = c.nextLabelQuoted();
+
+    if(node.init)
+    {
+        auto sz = ExprGenerator::generate(c, os, *node.init);
+        os << "    pop " << sz << ";\n";
+    }
+
+    os << l0 << ":\n";
+
+    if(node.cond)
+    {
+        CommonGenerator::generateBooleanExpression(c, os, *node.cond);
+        os << "    jmp ifz " << l1 << ";\n";
+    }
+
+    node.body->accept(*this);
+
+    if(node.post)
+    {
+        auto sz = ExprGenerator::generate(c, os, *node.post);
+        os << "    pop " << sz << ";\n";
+    }
+
+    os << "    jmp " << l0 << ";\n";
 
     os << l1 << ":\n";
 }
