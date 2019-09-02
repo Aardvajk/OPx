@@ -1,6 +1,7 @@
 #include "Lower.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -8,8 +9,6 @@
 #include "nodes/FuncNode.h"
 
 #include "types/Type.h"
-
-#include "compiler/PragmaConstructs.h"
 
 #include "lower/FuncLower.h"
 
@@ -78,5 +77,5 @@ void Lower::visit(FuncNode &node)
 
 void Lower::visit(PragmaNode &node)
 {
-    PragmaConstructs::execute(c, node);
+    Pragmas::execute(c, node);
 }

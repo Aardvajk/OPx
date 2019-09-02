@@ -26,8 +26,8 @@ func normal()
     test.assert(t == 2);
 }
 
-pragma push;
-pragma set "O=ellide_constructor_copies";
+pragma(push);
+pragma(set, "O=ellide_constructor_copies");
 
 func optimised()
 {
@@ -43,7 +43,7 @@ func optimised()
     test.assert(t == 1);
 }
 
-pragma pop;
+pragma(pop);
 
 func main()
 {

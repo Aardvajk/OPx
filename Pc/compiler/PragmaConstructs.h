@@ -3,13 +3,11 @@
 
 class Context;
 class BlockNode;
-class PragmaNode;
 
 namespace PragmaConstructs
 {
 
 void entity(Context &c, BlockNode *block, bool get);
-void execute(Context &c, PragmaNode &node);
 
 }
 

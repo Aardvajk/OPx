@@ -21,6 +21,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
+        application/Pragmas.cpp \
         compiler/CommonConstructs.cpp \
         compiler/Compiler.cpp \
         compiler/DeclarationConstructs.cpp \
@@ -103,6 +104,7 @@ SOURCES += \
 
 HEADERS += \
     application/Context.h \
+    application/Pragmas.h \
     compiler/CommonConstructs.h \
     compiler/Compiler.h \
     compiler/DeclarationConstructs.h \

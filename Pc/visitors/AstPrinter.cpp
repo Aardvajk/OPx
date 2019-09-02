@@ -446,7 +446,7 @@ void AstPrinter::visit(ForNode &node)
 
 void AstPrinter::visit(PragmaNode &node)
 {
-    tab() << "pragma " << node.cmd;
+    tab() << "pragma " << Pragmas::toString(node.cmd);
 
     if(!node.arg.empty())
     {

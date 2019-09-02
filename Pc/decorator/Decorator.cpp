@@ -3,6 +3,7 @@
 #include "framework/Error.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -18,8 +19,6 @@
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
 #include "types/TypeCompare.h"
-
-#include "compiler/PragmaConstructs.h"
 
 #include "decorator/FuncDecorator.h"
 #include "decorator/ExprDecorator.h"
@@ -235,5 +234,5 @@ void Decorator::visit(FuncNode &node)
 
 void Decorator::visit(PragmaNode &node)
 {
-    PragmaConstructs::execute(c, node);
+    Pragmas::execute(c, node);
 }

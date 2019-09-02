@@ -1,6 +1,7 @@
 #include "Transformer.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -12,8 +13,6 @@
 #include "nodes/InitNode.h"
 
 #include "types/Type.h"
-
-#include "compiler/PragmaConstructs.h"
 
 #include "transform/FuncTransformer.h"
 #include "transform/InitMapBuilder.h"
@@ -155,5 +154,5 @@ void Transformer::visit(FuncNode &node)
 
 void Transformer::visit(PragmaNode &node)
 {
-    PragmaConstructs::execute(c, node);
+    Pragmas::execute(c, node);
 }

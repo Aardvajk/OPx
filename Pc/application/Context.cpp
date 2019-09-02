@@ -41,7 +41,7 @@ void addPrimitive(Context &c, const std::string &name, Primitive::Type type, std
 }
 
 Context::Context(int argc, char *argv[], std::vector<std::string> &files)
-    : scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0), refsLowered(false)
+    : scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0), refsLowered(false), pragmaPushes(0)
 {
     args.push_back({ argc, argv, files });
 

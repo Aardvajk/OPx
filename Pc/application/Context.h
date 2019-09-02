@@ -58,6 +58,7 @@ public:
     std::vector<std::pair<std::string, Type*> > tempDestructs;
 
     bool refsLowered;
+    std::size_t pragmaPushes;
 };
 
 #endif // CONTEXT_H

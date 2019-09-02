@@ -1,6 +1,7 @@
 #include "Generator.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -12,8 +13,6 @@
 
 #include "types/Type.h"
 #include "types/TypeLookup.h"
-
-#include "compiler/PragmaConstructs.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -164,5 +163,5 @@ void Generator::visit(FuncNode &node)
 
 void Generator::visit(PragmaNode &node)
 {
-    PragmaConstructs::execute(c, node);
+    Pragmas::execute(c, node);
 }

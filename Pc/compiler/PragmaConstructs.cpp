@@ -1,55 +1,61 @@
 #include "PragmaConstructs.h"
 
-#include "framework/Error.h"
-
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/PragmaNode.h"
 
 void PragmaConstructs::entity(Context &c, BlockNode *block, bool get)
 {
-    auto tok = c.scanner.match(Token::Type::RwPragma, get);
+    c.scanner.match(Token::Type::RwPragma, get);
+    c.scanner.match(Token::Type::LeftParen, true);
 
-    std::string cmd;
-    std::string arg;
+    auto tok = c.scanner.match(Token::Type::Id, true);
 
-    cmd = c.scanner.match(Token::Type::Id, true).text();
-
-    c.scanner.next(true);
-    if(c.scanner.token().type() != Token::Type::Semicolon)
+    auto cmd = Pragmas::fromString(tok.text());
+    if(cmd == Pragmas::Type::Invalid)
     {
-        arg = c.scanner.match(Token::Type::StringLiteral, false).text();
-        c.scanner.next(true);
+        throw Error(tok.location(), "unknown pragma - ", tok.text());
     }
 
-    block->push_back(new PragmaNode(tok.location(), cmd, arg));
-
-    c.scanner.consume(Token::Type::Semicolon, false);
-}
-
-void PragmaConstructs::execute(Context &c, PragmaNode &node)
-{
-    if(node.cmd == "push")
+    if(cmd == Pragmas::Type::Push)
     {
-        c.args.push_back(c.args.back());
+        ++c.pragmaPushes;
     }
-    else if(node.cmd == "pop")
+    else if(cmd == Pragmas::Type::Pop)
     {
-        if(c.args.size() < 2)
+        if(!c.pragmaPushes)
         {
-            throw Error(node.location(), "pragma pop without push");
+            throw Error(tok.location(), "pragma pop without previous push");
         }
 
-        c.args.pop_back();
+        --c.pragmaPushes;
     }
-    else if(node.cmd == "set")
+
+    bool takesArg = Pragmas::takesArgument(cmd);
+
+    auto n = new PragmaNode(tok.location(), cmd);
+    block->push_back(n);
+
+    tok = c.scanner.next(true);
+    if(c.scanner.token().type() == Token::Type::Comma)
     {
-        c.args.back().process(node.arg);
+        n->arg = c.scanner.match(Token::Type::StringLiteral, true).text();
+
+        if(!takesArg)
+        {
+            throw Error(tok.location(), "unexpected argument to pragma - ", Pragmas::toString(cmd));
+        }
+
+        c.scanner.next(true);
     }
-    else
+    else if(takesArg)
     {
-        throw Error(node.location(), "unknown pragma - ", node.cmd);
+        throw Error(tok.location(), "pragma missing argument - ", Pragmas::toString(cmd));
     }
+
+    c.scanner.consume(Token::Type::RightParen, false);
+    c.scanner.consume(Token::Type::Semicolon, false);
 }
 
