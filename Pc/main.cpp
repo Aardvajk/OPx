@@ -123,6 +123,11 @@ int main(int argc, char *argv[])
             generate(c, os, n);
         }
 
+        if(!c.args.back()["test_error"].empty())
+        {
+            throw Error("error expected - ", c.args.back()["test_error"].front());
+        }
+
         if(c.args.back().contains("test"))
         {
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
