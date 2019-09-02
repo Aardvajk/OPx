@@ -31,8 +31,6 @@
 
 #include "optimise/EllideConstructorCopies.h"
 
-#include <algorithm>
-
 namespace
 {
 
@@ -92,8 +90,7 @@ void FuncTransformer::visit(VarNode &node)
 {
     if(node.value)
     {
-        auto ops = c.args.back()["O"];
-        if(std::find(ops.begin(), ops.end(), "ellide_constructor_copies") != ops.end())
+        if(c.option("O", "ellide_constructor_copies"))
         {
             EllideConstructorCopies ec(c, node);
             node.value->accept(ec);

@@ -33,6 +33,8 @@ public:
     std::string nextLabel();
     std::string nextLabelQuoted();
 
+    bool option(const std::string &key, const std::string &value) const;
+
     std::vector<pcx::args> args;
 
     SourceList sources;

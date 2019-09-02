@@ -12,10 +12,6 @@
 
 #include "operators/Operators.h"
 
-#include <algorithm>
-
-#include "visitors/NameVisitors.h"
-
 namespace
 {
 

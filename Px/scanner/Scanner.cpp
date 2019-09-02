@@ -4,8 +4,6 @@
 
 #include "scanner/Lexer.h"
 
-#include <algorithm>
-
 Scanner::Scanner(Lexer::Mode mode) : mode(mode)
 {
 }

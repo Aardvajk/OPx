@@ -14,6 +14,7 @@
 #include <pcx/scoped_ptr.h>
 
 #include <fstream>
+#include <algorithm>
 
 namespace
 {
@@ -126,4 +127,18 @@ std::string Context::nextLabel()
 std::string Context::nextLabelQuoted()
 {
     return pcx::str("\"", nextLabel(), "\"");
+}
+
+bool Context::option(const std::string &key, const std::string &value) const
+{
+    if(args.back().contains(key))
+    {
+        auto v = args.back()[key];
+        if(std::find(v.begin(), v.end(), value) != v.end())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

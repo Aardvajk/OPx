@@ -24,7 +24,6 @@
 #include <pcx/args.h>
 
 #include <fstream>
-#include <algorithm>
 
 template<typename T, typename... Args> void visit(NodePtr &node, Args&&... args)
 {
@@ -134,9 +133,7 @@ int main(int argc, char *argv[])
 
     catch(const Error &error)
     {
-        auto traps = c.args.back()["test_error"];
-
-        if(std::find(traps.begin(), traps.end(), std::string(error.what())) != traps.end())
+        if(c.option("test_error", error.what()))
         {
             return 0;
         }

@@ -1,7 +1,5 @@
 #include "SymStack.h"
 
-#include <algorithm>
-
 SymStack::SymStack()
 {
     sc.push_back(0);

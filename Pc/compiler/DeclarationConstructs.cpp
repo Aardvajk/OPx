@@ -21,8 +21,6 @@
 
 #include <pcx/scoped_push.h>
 
-#include <algorithm>
-
 namespace
 {
 
