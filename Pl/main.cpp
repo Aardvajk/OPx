@@ -58,14 +58,14 @@ int main(int argc, char *argv[])
             Generator::generate(c, p);
         }
 
-        Composor::compose(c);
-        Linker::link(c);
-
         auto me = c.find("main():std.null");
         if(!me)
         {
             throw Error("main():std.null not found");
         }
+
+        Composor::compose(c);
+        Linker::link(c);
 
         mp.patch(c.ds, c.ds.position() + me->offset);
 

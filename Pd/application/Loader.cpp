@@ -48,7 +48,7 @@ Object::Unit Loader::loadObjectUnit(const std::string &path, std::vector<std::ve
         segments.emplace_back();
 
         SegmentWrapper sw(segments.back());
-        unit.entities.push_back(Object::readEntity(is, pcx::make_callback(&sw, &SegmentWrapper::read)));
+        unit.entities.push_back(Object::readEntity(is, 0, pcx::make_callback(&sw, &SegmentWrapper::read)));
     }
 
     return unit;

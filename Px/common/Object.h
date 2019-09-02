@@ -25,11 +25,12 @@ public:
 class Entity
 {
 public:
-    Entity(char type, std::size_t id, std::size_t offset);
+    Entity(char type, std::size_t id, std::size_t offset, std::size_t unit);
 
     char type;
     std::size_t id;
     std::size_t offset;
+    std::size_t unit;
     std::vector<Link> links;
 };
 
@@ -44,7 +45,7 @@ public:
 };
 
 std::vector<std::string> readStringTable(InputStream &is);
-Entity readEntity(InputStream &is, pcx::callback<void, char, InputStream&> read);
+Entity readEntity(InputStream &is, std::size_t unit, pcx::callback<void, char, InputStream&> read);
 
 }
 

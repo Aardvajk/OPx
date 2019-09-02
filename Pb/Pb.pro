@@ -63,9 +63,9 @@ DISTFILES += \
     ../unittests/temp_access.pc \
     ../unittests/temp_construct.pc \
     ../unittests/temp_to_ref_param.pc \
+    ../unittests/this_addr.pc \
     ../unittests/this_as_param.pc \
     ../unittests/this_ref.pc \
-    ../unittests/this_as_param.pc \
     ../workspace/pb.bat \
     ../workspace/script.pc \
     ../workspace/script.pi

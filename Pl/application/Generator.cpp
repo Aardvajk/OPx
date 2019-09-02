@@ -67,7 +67,7 @@ void Generator::generate(Context &c, const std::string &path)
     for(std::size_t i = 0; i < count; ++i)
     {
         Wrapper w(c, c.units.size() - 1, unit.entities.size());
-        unit.entities.push_back(Object::readEntity(is, pcx::make_callback(&w, &Wrapper::readData)));
+        unit.entities.push_back(Object::readEntity(is, c.units.size() - 1, pcx::make_callback(&w, &Wrapper::readData)));
     }
 
     std::ifstream dmap(path + ".pmap");

@@ -6,6 +6,8 @@
 #include "common/Object.h"
 #include "common/DebugMap.h"
 
+#include <unordered_map>
+
 class InputStream;
 
 class Context

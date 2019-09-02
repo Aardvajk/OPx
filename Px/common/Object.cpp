@@ -2,7 +2,7 @@
 
 #include "framework/InputStream.h"
 
-Object::Entity::Entity(char type, std::size_t id, std::size_t offset) : type(type), id(id), offset(offset)
+Object::Entity::Entity(char type, std::size_t id, std::size_t offset, std::size_t unit) : type(type), id(id), offset(offset), unit(unit)
 {
 }
 
@@ -23,12 +23,12 @@ std::vector<std::string> Object::readStringTable(InputStream &is)
     return v;
 }
 
-Object::Entity Object::readEntity(InputStream &is, pcx::callback<void, char, InputStream&> read)
+Object::Entity Object::readEntity(InputStream &is, std::size_t unit, pcx::callback<void, char, InputStream&> read)
 {
     auto type = is.get<char>();
     auto id = is.get<std::size_t>();
 
-    Entity e(type, id, 0);
+    Entity e(type, id, 0, unit);
 
     auto n = is.get<std::size_t>();
     for(std::size_t i = 0; i < n; ++i)

@@ -26,13 +26,9 @@ bool searchAndOpen(Context &c, const std::vector<std::string> &search, const std
     return false;
 }
 
-}
-
-void IncludeConstructs::entity(Context &c, BlockNode *block, bool get)
+void process(Context &c, BlockNode *block, bool get)
 {
-    c.scanner.match(Token::Type::RwInclude, get);
-
-    auto path = c.scanner.match(Token::Type::StringLiteral, true);
+    auto path = c.scanner.match(Token::Type::StringLiteral, get);
 
     if(pcx::filesys::exists(path.text()))
     {
@@ -53,5 +49,27 @@ void IncludeConstructs::entity(Context &c, BlockNode *block, bool get)
     }
 
     c.scanner.pop();
+
+    c.scanner.next(true);
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        process(c, block, true);
+    }
+}
+
+}
+
+void IncludeConstructs::entity(Context &c, BlockNode *block, bool get)
+{
+    c.scanner.match(Token::Type::RwInclude, get);
+
+    c.scanner.consume(Token::Type::LeftParen, true);
+
+    if(c.scanner.token().type() != Token::Type::RightParen)
+    {
+        process(c, block, false);
+    }
+
+    c.scanner.match(Token::Type::RightParen, false);
     c.scanner.consume(Token::Type::Semicolon, true);
 }
