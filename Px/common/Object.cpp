@@ -23,12 +23,12 @@ std::vector<std::string> Object::readStringTable(InputStream &is)
     return v;
 }
 
-Object::Entity Object::readEntity(InputStream &is, pcx::callback<std::size_t, char> offset, pcx::callback<void, char, InputStream&> read)
+Object::Entity Object::readEntity(InputStream &is, pcx::callback<void, char, InputStream&> read)
 {
     auto type = is.get<char>();
     auto id = is.get<std::size_t>();
 
-    Entity e(type, id, offset(type));
+    Entity e(type, id, 0);
 
     auto n = is.get<std::size_t>();
     for(std::size_t i = 0; i < n; ++i)

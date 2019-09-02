@@ -4,6 +4,7 @@
 #include "application/Context.h"
 #include "application/Prologue.h"
 #include "application/Generator.h"
+#include "application/Composor.h"
 #include "application/Linker.h"
 
 #include <pcx/args.h>
@@ -57,6 +58,7 @@ int main(int argc, char *argv[])
             Generator::generate(c, p);
         }
 
+        Composor::compose(c);
         Linker::link(c);
 
         auto me = c.find("main():std.null");

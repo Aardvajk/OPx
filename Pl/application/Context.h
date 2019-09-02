@@ -21,6 +21,7 @@ public:
     void readData(char type, InputStream &is);
 
     std::vector<Object::Unit> units;
+    std::vector<std::vector<std::vector<char> > > data;
 
     ByteStream ds;
     ByteStream ps;

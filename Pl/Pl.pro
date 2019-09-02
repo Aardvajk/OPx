@@ -21,6 +21,7 @@ LIBS += "C:/Projects/pcx/build-pcx/release/libpcx.a" \
 PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
+        application/Composor.cpp \
         application/Context.cpp \
         application/Generator.cpp \
         application/Linker.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
+    application/Composor.h \
     application/Context.h \
     application/Generator.h \
     application/Linker.h \

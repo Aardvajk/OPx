@@ -44,7 +44,7 @@ public:
 };
 
 std::vector<std::string> readStringTable(InputStream &is);
-Entity readEntity(InputStream &is, pcx::callback<std::size_t, char> offset, pcx::callback<void, char, InputStream&> read);
+Entity readEntity(InputStream &is, pcx::callback<void, char, InputStream&> read);
 
 }
 
