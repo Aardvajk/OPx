@@ -185,6 +185,7 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../workspace/notes.txt \
     ../workspace/script.pc \
     ../workspace/script.pi \
     ../workspace/store.pc \

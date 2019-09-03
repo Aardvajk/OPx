@@ -62,7 +62,6 @@ void process(Context &c, BlockNode *block, bool get)
 void IncludeConstructs::entity(Context &c, BlockNode *block, bool get)
 {
     c.scanner.match(Token::Type::RwInclude, get);
-
     c.scanner.consume(Token::Type::LeftParen, true);
 
     if(c.scanner.token().type() != Token::Type::RightParen)

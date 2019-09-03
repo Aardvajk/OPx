@@ -12,10 +12,13 @@ void Composor::compose(Context &c)
         {
             auto &ent = unit.entities[e];
 
-            auto &bs = (ent.type == 'V' ? c.ds : c.ps);
-            ent.offset = bs.position();
+            if(c.refs.find(unit.strings[ent.id]) != c.refs.end())
+            {
+                auto &bs = (ent.type == 'V' ? c.ds : c.ps);
+                ent.offset = bs.position();
 
-            bs.write(c.data[u][e].data(), c.data[u][e].size());
+                bs.write(c.data[u][e].data(), c.data[u][e].size());
+            }
         }
     }
 }

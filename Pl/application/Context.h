@@ -7,6 +7,7 @@
 #include "common/DebugMap.h"
 
 #include <unordered_map>
+#include <unordered_set>
 
 class InputStream;
 
@@ -24,6 +25,8 @@ public:
 
     std::vector<Object::Unit> units;
     std::vector<std::vector<std::vector<char> > > data;
+
+    std::unordered_set<std::string> refs;
 
     ByteStream ds;
     ByteStream ps;

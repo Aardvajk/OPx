@@ -14,6 +14,36 @@
 #include <string>
 #include <fstream>
 
+void generateRefs(Context &c, Object::Entity *e)
+{
+    for(auto n: e->links)
+    {
+        auto r = c.units[e->unit].strings[n.id];
+        c.refs.insert(r);
+
+        auto re = c.find(r);
+        if(re)
+        {
+            generateRefs(c, re);
+        }
+    }
+}
+
+void updateDebugMap(Context &c, DebugMap &dm)
+{
+    DebugMap rm;
+
+    for(std::size_t i = 0; i < dm.size(); ++i)
+    {
+        if(dm[i].name.empty() || c.refs.find(dm[i].name) != c.refs.end())
+        {
+            rm.push_back(dm[i]);
+        }
+    }
+
+    dm = rm;
+}
+
 int main(int argc, char *argv[])
 {
     try
@@ -64,6 +94,11 @@ int main(int argc, char *argv[])
             throw Error("main():std.null not found");
         }
 
+        c.refs.insert("main():std.null");
+        generateRefs(c, me);
+
+        for(auto s: c.refs) std::cout << "[" << s << "]\n";
+
         Composor::compose(c);
         Linker::link(c);
 
@@ -86,6 +121,9 @@ int main(int argc, char *argv[])
 
         if(true)
         {
+            updateDebugMap(c, c.vd);
+            updateDebugMap(c, c.pd);
+
             auto s = pcx::str(output, ".pmap");
 
             std::ofstream os(s);

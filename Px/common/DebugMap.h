@@ -42,6 +42,7 @@ public:
 
     void read(std::istream &is);
     void write(std::ostream &os) const;
+    void writeEntity(std::size_t index, std::ostream &os) const;
 
     Entity &operator[](std::size_t index){ return v[index]; }
     const Entity &operator[](std::size_t index) const { return v[index]; }

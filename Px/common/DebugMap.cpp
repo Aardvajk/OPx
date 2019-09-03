@@ -60,16 +60,23 @@ void DebugMap::read(std::istream &is)
 
 void DebugMap::write(std::ostream &os) const
 {
-    for(auto &e: v)
+    for(std::size_t i = 0; i < v.size(); ++i)
     {
-        os << e.type << ", \"" << Lexer::encodeString(e.name) << "\", " << e.size << "\n";
-        os << "{\n";
-
-        for(auto &c: e.comments)
-        {
-            os << "    " << c.address << ", \"" << Lexer::encodeString(c.text) << "\";\n";
-        }
-
-        os << "}\n";
+        writeEntity(i, os);
     }
+}
+
+void DebugMap::writeEntity(std::size_t index, std::ostream &os) const
+{
+    auto &e = v[index];
+
+    os << e.type << ", \"" << Lexer::encodeString(e.name) << "\", " << e.size << "\n";
+    os << "{\n";
+
+    for(auto &c: e.comments)
+    {
+        os << "    " << c.address << ", \"" << Lexer::encodeString(c.text) << "\";\n";
+    }
+
+    os << "}\n";
 }
