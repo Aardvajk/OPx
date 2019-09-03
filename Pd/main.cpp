@@ -40,6 +40,10 @@ int main(int argc, char *argv[])
         {
             Process::processUnit(c, path);
         }
+        else if(path.length() > 6 && path.substr(path.length() - 5) == ".praw")
+        {
+            Process::processExe(c, path);
+        }
         else
         {
             if(c.dm.empty())

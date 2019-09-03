@@ -2,6 +2,10 @@
 
 #include "application/Context.h"
 
+#include <fstream>
+
+#include <pcx/str.h>
+
 void Composor::compose(Context &c)
 {
     for(std::size_t u = 0; u < c.units.size(); ++u)

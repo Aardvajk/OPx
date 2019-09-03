@@ -97,9 +97,8 @@ int main(int argc, char *argv[])
         c.refs.insert("main():std.null");
         generateRefs(c, me);
 
-        for(auto s: c.refs) std::cout << "[" << s << "]\n";
-
         Composor::compose(c);
+
         Linker::link(c);
 
         mp.patch(c.ds, c.ds.position() + me->offset);
