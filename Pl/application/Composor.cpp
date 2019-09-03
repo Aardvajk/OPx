@@ -16,7 +16,7 @@ void Composor::compose(Context &c)
         {
             auto &ent = unit.entities[e];
 
-            if(c.refs.find(unit.strings[ent.id]) != c.refs.end())
+            if(!c.trim || c.refs.find(unit.strings[ent.id]) != c.refs.end())
             {
                 auto &bs = (ent.type == 'V' ? c.ds : c.ps);
                 ent.offset = bs.position();

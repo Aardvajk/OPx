@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
         }
 
         Context c;
+        c.trim = args.contains("trim");
 
         auto mp = Prologue::generate(c);
 
@@ -94,8 +95,11 @@ int main(int argc, char *argv[])
             throw Error("main():std.null not found");
         }
 
-        c.refs.insert("main():std.null");
-        generateRefs(c, me);
+        if(c.trim)
+        {
+            c.refs.insert("main():std.null");
+            generateRefs(c, me);
+        }
 
         Composor::compose(c);
 
@@ -120,8 +124,11 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            updateDebugMap(c, c.vd);
-            updateDebugMap(c, c.pd);
+            if(c.trim)
+            {
+                updateDebugMap(c, c.vd);
+                updateDebugMap(c, c.pd);
+            }
 
             auto s = pcx::str(output, ".pmap");
 

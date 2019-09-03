@@ -2,7 +2,7 @@
 
 #include "framework/InputStream.h"
 
-Context::Context()
+Context::Context() : trim(false)
 {
 }
 

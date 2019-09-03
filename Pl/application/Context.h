@@ -33,6 +33,8 @@ public:
 
     DebugMap vd;
     DebugMap pd;
+
+    bool trim;
 };
 
 #endif // CONTEXT_H
