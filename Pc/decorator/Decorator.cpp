@@ -212,6 +212,11 @@ void Decorator::visit(VarNode &node)
         throw Error(node.location(), "type missing - ", NameVisitors::prettyName(node.name.get()));
     }
 
+    if(type->ref && type->sub)
+    {
+        throw Error(node.location(), "arrays of references not supported - ", NameVisitors::prettyName(node.name.get()));
+    }
+
     auto name = c.assertSimpleNameUnique(node.name.get());
 
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.name->location(), name));
