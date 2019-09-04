@@ -34,7 +34,7 @@ void Linker::link(Context &c)
     {
         for(auto &entity: unit.entities)
         {
-            if(!c.trim || c.refs.find(unit.strings[entity.id]) != c.refs.end())
+            if(!c.args.contains("trim") || c.refs.find(unit.strings[entity.id]) != c.refs.end())
             {
                 linkEntity(c, unit, entity);
             }

@@ -6,6 +6,8 @@
 #include "common/Object.h"
 #include "common/DebugMap.h"
 
+#include <pcx/args.h>
+
 #include <unordered_map>
 #include <unordered_set>
 
@@ -14,11 +16,13 @@ class InputStream;
 class Context
 {
 public:
-    Context();
+    Context(int argc, char *argv[], std::vector<std::string> &files);
 
     Object::Entity *find(const std::string &text);
 
     ByteStream &stream(char type);
+
+    pcx::args args;
 
     std::vector<Object::Unit> units;
     std::unordered_set<std::string> refs;
@@ -28,8 +32,6 @@ public:
 
     DebugMap vd;
     DebugMap pd;
-
-    bool trim;
 };
 
 #endif // CONTEXT_H

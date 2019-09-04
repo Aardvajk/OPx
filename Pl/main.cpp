@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     try
     {
         std::vector<std::string> files;
-        pcx::args args(argc, argv, files);
+        Context c(argc, argv, files);
 
         if(files.size() < 1)
         {
@@ -69,19 +69,16 @@ int main(int argc, char *argv[])
             paths.push_back(files[i]);
         }
 
-        Context c;
-        c.trim = args.contains("trim");
-
         auto mp = Prologue::generate(c);
 
-        if(!args.contains("q"))
+        if(!c.args.contains("q"))
         {
             std::cout << banner("linking");
         }
 
         for(auto &p: paths)
         {
-            if(!args.contains("q"))
+            if(!c.args.contains("q"))
             {
                 std::cout << p << "\n";
             }
@@ -95,7 +92,7 @@ int main(int argc, char *argv[])
             throw Error("main():std.null not found");
         }
 
-        if(c.trim)
+        if(c.args.contains("trim"))
         {
             c.refs.insert("main():std.null");
             generateRefs(c, me);
@@ -124,7 +121,7 @@ int main(int argc, char *argv[])
 
         if(true)
         {
-            if(c.trim)
+            if(c.args.contains("trim"))
             {
                 updateDebugMap(c, c.vd);
                 updateDebugMap(c, c.pd);
