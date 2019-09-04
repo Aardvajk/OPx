@@ -4,31 +4,7 @@
 
 #include <fstream>
 
-namespace
-{
-
-class SegmentWrapper
-{
-public:
-    SegmentWrapper(std::vector<char> &sg) : sg(sg) { }
-
-    void read(char type, InputStream &is);
-
-private:
-    std::vector<char> &sg;
-};
-
-void SegmentWrapper::read(char type, InputStream &is)
-{
-    auto bytes = is.get<std::size_t>();
-
-    sg.resize(bytes);
-    is.read(sg.data(), bytes);
-}
-
-}
-
-Object::Unit Loader::loadObjectUnit(const std::string &path, std::vector<std::vector<char> > &segments)
+Object::Unit Loader::loadObjectUnit(const std::string &path)
 {
     Object::Unit unit(path);
 
@@ -45,10 +21,7 @@ Object::Unit Loader::loadObjectUnit(const std::string &path, std::vector<std::ve
     auto count = is.get<std::size_t>();
     for(std::size_t i = 0; i < count; ++i)
     {
-        segments.emplace_back();
-
-        SegmentWrapper sw(segments.back());
-        unit.entities.push_back(Object::readEntity(is, 0, pcx::make_callback(&sw, &SegmentWrapper::read)));
+        unit.entities.push_back(Object::readEntity(is, 0));
     }
 
     return unit;

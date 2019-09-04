@@ -74,8 +74,14 @@ void forConstruct(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.match(Token::Type::RwFor, get);
 
+    auto sc = new ScopeNode(tok.location());
+    block->push_back(sc);
+
+    auto bn = new BlockNode(tok.location());
+    sc->body = bn;
+
     auto n = new ForNode(tok.location());
-    block->push_back(n);
+    bn->push_back(n);
 
     c.scanner.consume(Token::Type::LeftParen, true);
 

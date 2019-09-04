@@ -43,19 +43,17 @@ void outputValue(Context &c, std::size_t index, pcx::optional<std::size_t> addre
     std::cout << pcx::join_str(v, ",", [](char c){ return pcx::str(int(static_cast<unsigned char>(c))); }) << (reduced ? "..." : "") << "\n";
 }
 
-void processFunction(Context &c, std::size_t index)
+void processFunction(Context &c, Object::Entity &entity, std::size_t index)
 {
-    auto &sg = c.segments[index];
-
     Disassembler ds(index);
-    ds.disassemble(c, std::cout, sg.data(), sg.size());
+    ds.disassemble(c, std::cout, entity.data.data(), entity.data.size());
 }
 
 }
 
 void Process::processUnit(Context &c, const std::string &path)
 {
-    c.unit = Loader::loadObjectUnit(path, c.segments);
+    c.unit = Loader::loadObjectUnit(path);
 
     auto &u = c.unit;
 
@@ -73,8 +71,8 @@ void Process::processUnit(Context &c, const std::string &path)
 
         switch(e.value.type)
         {
-            case 'V': outputValue(c, e.index, { }, c.segments[e.index]); break;
-            case 'F': processFunction(c, e.index); break;
+            case 'V': outputValue(c, e.index, { }, e.value.data); break;
+            case 'F': processFunction(c, e.value, e.index); break;
         }
     }
 }

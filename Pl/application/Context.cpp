@@ -26,18 +26,3 @@ ByteStream &Context::stream(char type)
 {
     return type == 'V' ? ds : ps;
 }
-
-std::size_t Context::offset(char type)
-{
-    return stream(type).position();
-}
-
-void Context::readData(char type, InputStream &is)
-{
-    auto bytes = is.get<std::size_t>();
-
-    std::vector<char> v(bytes);
-    is.read(v.data(), bytes);
-
-    stream(type).write(v.data(), bytes);
-}

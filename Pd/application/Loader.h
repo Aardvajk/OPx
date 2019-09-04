@@ -6,7 +6,7 @@
 namespace Loader
 {
 
-Object::Unit loadObjectUnit(const std::string &path, std::vector<std::vector<char> > &segments);
+Object::Unit loadObjectUnit(const std::string &path);
 
 }
 

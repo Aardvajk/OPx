@@ -3,8 +3,6 @@
 
 #include "framework/InputStream.h"
 
-#include <pcx/callback.h>
-
 #include <vector>
 #include <string>
 #include <iostream>
@@ -32,6 +30,7 @@ public:
     std::size_t offset;
     std::size_t unit;
     std::vector<Link> links;
+    std::vector<char> data;
 };
 
 class Unit
@@ -45,7 +44,7 @@ public:
 };
 
 std::vector<std::string> readStringTable(InputStream &is);
-Entity readEntity(InputStream &is, std::size_t unit, pcx::callback<void, char, InputStream&> read);
+Entity readEntity(InputStream &is, std::size_t unit);
 
 }
 

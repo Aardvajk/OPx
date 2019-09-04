@@ -11,7 +11,6 @@ class Context
 public:
     Context();
 
-    std::vector<std::vector<char> > segments;
     Object::Unit unit;
 
     DebugMap dm;

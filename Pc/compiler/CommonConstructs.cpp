@@ -121,14 +121,7 @@ NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)
     auto block = new BlockNode(location);
     scope->body = block;
 
-    blockContents(c, block, true);
-
-    return nn;
-}
-
-void CommonConstructs::blockContents(Context &c, BlockNode *block, bool get)
-{
-    auto tok = c.scanner.next(get);
+    auto tok = c.scanner.next(true);
 
     if(tok.type() == Token::Type::LeftBrace)
     {
@@ -144,4 +137,6 @@ void CommonConstructs::blockContents(Context &c, BlockNode *block, bool get)
     {
         Compiler::construct(c, block, false);
     }
+
+    return nn;
 }

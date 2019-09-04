@@ -20,12 +20,7 @@ public:
 
     ByteStream &stream(char type);
 
-    std::size_t offset(char type);
-    void readData(char type, InputStream &is);
-
     std::vector<Object::Unit> units;
-    std::vector<std::vector<std::vector<char> > > data;
-
     std::unordered_set<std::string> refs;
 
     ByteStream ds;

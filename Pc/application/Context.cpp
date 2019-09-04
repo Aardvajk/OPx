@@ -38,6 +38,10 @@ void addPrimitive(Context &c, const std::string &name, Primitive::Type type, std
     s->setProperty("type", t);
 }
 
+void assertUniqueHelper(Location location, const std::string &name, Sym *scope)
+{
+}
+
 }
 
 Context::Context(int argc, char *argv[], std::vector<std::string> &files)

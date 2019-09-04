@@ -16,8 +16,6 @@ NodePtr blockContents(Context &c, Location location, bool get);
 NodePtr funcContents(Context &c, Location location, bool get);
 NodePtr scopeContents(Context &c, Location location, bool get);
 
-void blockContents(Context &c, BlockNode *block, bool get);
-
 }
 
 #endif // COMMONCONSTRUCTS_H

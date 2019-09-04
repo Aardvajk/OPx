@@ -10,44 +10,6 @@
 
 #include <fstream>
 
-namespace
-{
-
-class Wrapper
-{
-public:
-    Wrapper(Context &c, std::size_t unit, std::size_t entity) : c(c), unit(unit), entity(entity) { }
-
-    void readData(char type, InputStream &is);
-
-private:
-    Context &c;
-    std::size_t unit;
-    std::size_t entity;
-};
-
-void Wrapper::readData(char type, InputStream &is)
-{
-    if(c.data.size() <= unit)
-    {
-        c.data.push_back({ });
-    }
-
-    if(c.data[unit].size() <= entity)
-    {
-        c.data[unit].push_back({ });
-    }
-
-    auto &sg = c.data[unit][entity];
-
-    auto bytes = is.get<std::size_t>();
-
-    sg.resize(bytes);
-    is.read(sg.data(), bytes);
-}
-
-}
-
 void Generator::generate(Context &c, const std::string &path)
 {
     std::ifstream file(path, std::ios::binary);
@@ -66,8 +28,7 @@ void Generator::generate(Context &c, const std::string &path)
     auto count = is.get<std::size_t>();
     for(std::size_t i = 0; i < count; ++i)
     {
-        Wrapper w(c, c.units.size() - 1, unit.entities.size());
-        unit.entities.push_back(Object::readEntity(is, c.units.size() - 1, pcx::make_callback(&w, &Wrapper::readData)));
+        unit.entities.push_back(Object::readEntity(is, c.units.size() - 1));
     }
 
     std::ifstream dmap(path + ".pmap");

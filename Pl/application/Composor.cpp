@@ -21,7 +21,7 @@ void Composor::compose(Context &c)
                 auto &bs = (ent.type == 'V' ? c.ds : c.ps);
                 ent.offset = bs.position();
 
-                bs.write(c.data[u][e].data(), c.data[u][e].size());
+                bs.write(ent.data.data(), ent.data.size());
             }
         }
     }
