@@ -1,4 +1,4 @@
-pragma(set, "test_error=not found - i");
+pragma(set, "test_error+=not found - i");
 
 func main()
 {

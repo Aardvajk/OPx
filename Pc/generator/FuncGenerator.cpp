@@ -28,6 +28,25 @@
 
 #include <pcx/range_reverse.h>
 
+namespace
+{
+
+void processTempDestructs(Context &c, std::ostream &os, Location location)
+{
+    for(auto &t: c.tempDestructs)
+    {
+        auto fn = TypeLookup::assertDeleteMethod(c, location, t.second);
+
+        os << "    push &\"" << t.first << "\";\n";
+        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
+        os << "    call;\n";
+    }
+
+    c.tempDestructs.clear();
+}
+
+}
+
 FuncGenerator::FuncGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -37,17 +56,7 @@ void FuncGenerator::visit(BlockNode &node)
     for(auto &n: node.nodes)
     {
         n->accept(*this);
-
-        for(auto &t: c.tempDestructs)
-        {
-            auto fn = TypeLookup::assertDeleteMethod(c, node.location(), t.second);
-
-            os << "    push &\"" << t.first << "\";\n";
-            os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
-            os << "    call;\n";
-        }
-
-        c.tempDestructs.clear();
+        processTempDestructs(c, os, node.location());
     }
 }
 
@@ -183,6 +192,8 @@ void FuncGenerator::visit(ForNode &node)
         auto sz = ExprGenerator::generate(c, os, *node.init);
         os << "    pop " << sz << ";\n";
     }
+
+    processTempDestructs(c, os, node.location());
 
     os << l0 << ":\n";
 

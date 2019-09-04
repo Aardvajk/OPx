@@ -27,7 +27,7 @@ func normal()
 }
 
 pragma(push);
-pragma(set, "O=ellide_constructor_copies");
+pragma(set, "O+=ellide_constructor_copies");
 
 func optimised()
 {

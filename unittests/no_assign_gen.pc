@@ -1,4 +1,4 @@
-pragma(set, "test_error=no function matched - foo.operator=(foo,foo):std.null");
+pragma(set, "test_error+=no function matched - foo.operator=(foo,foo):std.null");
 
 class foo
 {
