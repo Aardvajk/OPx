@@ -185,7 +185,6 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../unittests/for_scope.pc \
     ../workspace/notes.txt \
     ../workspace/script.pc \
     ../workspace/script.pi \

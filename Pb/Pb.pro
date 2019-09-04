@@ -40,6 +40,8 @@ DISTFILES += \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
     ../unittests/destructors.pc \
+    ../unittests/for_scope.pc \
+    ../unittests/for_scope_count.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
     ../unittests/generate_op_assign.pc \

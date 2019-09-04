@@ -1,0 +1,25 @@
+include("stdtest.ph");
+
+var g = 0, t = 0;
+
+class foo
+{
+    func new(a:std.int) ... x(a) { g = g + 1; t = t + 1; }
+    func delete(){ g = g - 1; }
+
+    var x:std.int;
+}
+
+pragma(set, "O=ellide_constructor_copies");
+
+func main()
+{
+    for(var i = 5, f = foo(1); i < 10; i = i + 1)
+    {
+        var i = 10;
+        var f:foo(i);
+    }
+
+    test.assert(g == 0);
+    test.assert(t == 6);
+}
