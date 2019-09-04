@@ -1,5 +1,6 @@
 #include "ExprLower.h"
 
+#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AssignNode.h"
@@ -15,8 +16,19 @@
 #include "types/Type.h"
 #include "types/TypeLookup.h"
 
+#include "lower/FuncLower.h"
+
 ExprLower::ExprLower(Context &c, NodePtr &cn, const Type *type, Flags flags) : c(c), cn(cn), type(type), flags(flags)
 {
+}
+
+void ExprLower::visit(BlockNode &node)
+{
+    for(std::size_t i = 0; i < node.nodes.size(); ++i)
+    {
+        FuncLower fl(c);
+        node.nodes[i]->accept(fl);
+    }
 }
 
 void ExprLower::visit(IdNode &node)

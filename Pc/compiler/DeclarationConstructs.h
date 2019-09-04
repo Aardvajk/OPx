@@ -8,6 +8,7 @@ namespace DeclarationConstructs
 {
 
 void entity(Context &c, BlockNode *block, bool get);
+void var(Context &c, BlockNode *block, bool get);
 
 }
 

@@ -73,7 +73,7 @@ void params(Context &c, NodeList &container, bool get)
     }
 }
 
-void varConstruct(Context &c, BlockNode *block, bool get)
+void varConstructImp(Context &c, BlockNode *block, bool get)
 {
     auto nn = CommonConstructs::name(c, get);
 
@@ -103,12 +103,14 @@ void varConstruct(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {
-        varConstruct(c, block, true);
+        varConstructImp(c, block, true);
     }
-    else
-    {
-        c.scanner.consume(Token::Type::Semicolon, false);
-    }
+}
+
+void varConstruct(Context &c, BlockNode *block, bool get)
+{
+    varConstructImp(c, block, get);
+    c.scanner.consume(Token::Type::Semicolon, false);
 }
 
 void args(Context &c, NodeList &container, bool get)
@@ -226,3 +228,9 @@ void DeclarationConstructs::entity(Context &c, BlockNode *block, bool get)
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }
 }
+
+void DeclarationConstructs::var(Context &c, BlockNode *block, bool get)
+{
+    return varConstructImp(c, block, get);
+}
+

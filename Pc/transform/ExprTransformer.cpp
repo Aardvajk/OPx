@@ -2,6 +2,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/LiteralNodes.h"
@@ -24,6 +25,7 @@
 #include "visitors/NameVisitors.h"
 
 #include "transform/ThisCallTransformer.h"
+#include "transform/FuncTransformer.h"
 
 namespace
 {
@@ -43,6 +45,12 @@ void handleLiteral(Context &c, const Type *expectedType, Node &node)
 
 ExprTransformer::ExprTransformer(Context &c, const Type *expectedType) : c(c), expectedType(expectedType)
 {
+}
+
+void ExprTransformer::visit(BlockNode &node)
+{
+    FuncTransformer ft(c);
+    node.accept(ft);
 }
 
 void ExprTransformer::visit(IdNode &node)

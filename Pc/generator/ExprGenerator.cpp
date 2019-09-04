@@ -6,6 +6,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
@@ -30,10 +31,23 @@
 #include "types/Type.h"
 #include "types/TypeLookup.h"
 
+#include "generator/FuncGenerator.h"
+
 #include <pcx/indexed_range.h>
 
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
+}
+
+void ExprGenerator::visit(BlockNode &node)
+{
+    for(auto &n: node.nodes)
+    {
+        FuncGenerator fg(c, os);
+        n->accept(fg);
+    }
+
+    sz = 0;
 }
 
 void ExprGenerator::visit(IdNode &node)

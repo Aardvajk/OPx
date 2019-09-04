@@ -15,6 +15,7 @@ public:
 
     NodePtr result(){ return rn; }
 
+    virtual void visit(BlockNode &node) override;
     virtual void visit(IdNode &node) override;
     virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;

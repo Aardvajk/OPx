@@ -13,6 +13,7 @@
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/ExprConstructs.h"
+#include "compiler/DeclarationConstructs.h"
 
 namespace
 {
@@ -87,7 +88,17 @@ void forConstruct(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() != Token::Type::Semicolon)
     {
-        n->init = ExprConstructs::expr(c, false);
+        if(c.scanner.token().type() == Token::Type::RwVar)
+        {
+            auto b = new BlockNode(tok.location());
+            n->init = b;
+
+            DeclarationConstructs::var(c, b, true);
+        }
+        else
+        {
+            n->init = ExprConstructs::expr(c, false);
+        }
     }
 
     c.scanner.next(true);

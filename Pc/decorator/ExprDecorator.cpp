@@ -4,6 +4,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
@@ -21,10 +22,20 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
+#include "decorator/Decorator.h"
 #include "decorator/CommonDecorator.h"
 
 ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expectedType(expectedType)
 {
+}
+
+void ExprDecorator::visit(BlockNode &node)
+{
+    for(auto &n: node.nodes)
+    {
+        Decorator d(c);
+        n->accept(d);
+    }
 }
 
 void ExprDecorator::visit(IdNode &node)

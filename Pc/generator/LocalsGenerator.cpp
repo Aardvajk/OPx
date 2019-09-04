@@ -49,5 +49,10 @@ void LocalsGenerator::visit(IfNode &node)
 
 void LocalsGenerator::visit(ForNode &node)
 {
+    if(node.init)
+    {
+        node.init->accept(*this);
+    }
+
     node.body->accept(*this);
 }

@@ -17,7 +17,11 @@ void intProc(int code, Memory &mm, Registers &rg)
     auto sp = rg.sp();
     ByteReader sr(mm(0), sp);
 
-    if(code == 1)
+    if(code == 0)
+    {
+        std::cout << "trace\n";
+    }
+    else if(code == 1)
     {
         auto i = sr.get<int>();
         std::cout << "integer " << i << "\n";
