@@ -8,10 +8,15 @@
 
 void PragmaConstructs::entity(Context &c, BlockNode *block, bool get)
 {
-    c.scanner.match(Token::Type::RwPragma, get);
+    auto tok = c.scanner.match(Token::Type::RwPragma, get);
+    if(c.containers.back() != Sym::Type::Namespace)
+    {
+        throw Error(tok.location(), "invalid pragma");
+    }
+
     c.scanner.match(Token::Type::LeftParen, true);
 
-    auto tok = c.scanner.match(Token::Type::Id, true);
+    tok = c.scanner.match(Token::Type::Id, true);
 
     auto cmd = Pragmas::fromString(tok.text());
     if(cmd == Pragmas::Type::Invalid)
