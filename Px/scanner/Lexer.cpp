@@ -232,12 +232,13 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == ':') return Token(Token::Type::Colon, loc, ch);
     if(ch == ',') return Token(Token::Type::Comma, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
-    if(ch == '*') return Token(Token::Type::Star, loc, ch);
-    if(ch == '/') return Token(Token::Type::Div, loc, ch);
-    if(ch == '%') return Token(Token::Type::Mod, loc, ch);
 
-    if(ch == '+') return speculate(source, loc, { '+', Token::Type::Add }, { { '+', Token::Type::Inc } });
-    if(ch == '-') return speculate(source, loc, { '-', Token::Type::Sub }, { { '-', Token::Type::Dec } });
+    if(ch == '+') return speculate(source, loc, { '+', Token::Type::Add }, { { '+', Token::Type::Inc }, { '=', Token::Type::AddEq } });
+    if(ch == '-') return speculate(source, loc, { '-', Token::Type::Sub }, { { '-', Token::Type::Dec }, { '=', Token::Type::SubEq } });
+
+    if(ch == '*') return speculate(source, loc, { '*', Token::Type::Star }, { { '=', Token::Type::MulEq } });
+    if(ch == '/') return speculate(source, loc, { '/', Token::Type::Div }, { { '=', Token::Type::DivEq } });
+    if(ch == '%') return speculate(source, loc, { '%', Token::Type::Mod }, { { '=', Token::Type::ModEq } });
 
     if(ch == '.') return dots(source, loc);
 

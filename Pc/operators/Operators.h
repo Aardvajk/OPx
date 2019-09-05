@@ -33,7 +33,13 @@ enum class Type
     PreInc,
     PreDec,
     PostInc,
-    PostDec
+    PostDec,
+
+    AddEq,
+    SubEq,
+    MulEq,
+    DivEq,
+    ModEq
 };
 
 const char *toString(Type v);
