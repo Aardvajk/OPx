@@ -314,9 +314,21 @@ void ExprTransformer::visit(IncDecNode &node)
 {
     node.target= ExprTransformer::transform(c, node.target);
 
-    if(!TypeVisitor::type(c, node.target.get()))
+    if(!TypeVisitor::type(c, node.target.get())->primitive())
     {
-        throw Error("internal error - non-primitive incdec not implemented");
+        NodePtr fn(new IdNode(node.location(), { }, node.op == Operators::Type::PreInc || node.op == Operators::Type::PostInc ? "operator++" : "operator--"));
+
+        auto cn = new CallNode(node.location(), fn);
+        rn = cn;
+
+        auto pn = IdNode::create(node.location(), { "std", node.op == Operators::Type::PreInc || node.op == Operators::Type::PreDec ? "prefix" : "postfix" });
+        pn->setProperty("newmethod", c.assertChainedSym(node.location(), c.tree.root(), { "std", "prefix", "new" }));
+
+        cn->params.push_back(new CallNode(node.location(), pn));
+        cn->params.push_back(node.target);
+
+        ExprDecorator::decorate(c, nullptr, *cn);
+        rn = ExprTransformer::transform(c, rn);
     }
 }
 

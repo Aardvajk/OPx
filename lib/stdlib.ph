@@ -7,4 +7,7 @@ func print(:ptr std.char);
 
 func abort();
 
+class prefix { }
+class postfix { }
+
 }

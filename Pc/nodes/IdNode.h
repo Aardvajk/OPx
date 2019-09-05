@@ -12,6 +12,8 @@ public:
 
     virtual void accept(Visitor &v) override;
 
+    static NodePtr create(Location location, const std::vector<std::string> &names);
+
     NodePtr parent;
     std::string name;
     Token::Type special;

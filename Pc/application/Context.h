@@ -30,6 +30,8 @@ public:
     std::size_t assertSize(Location location, const Type *type);
     std::size_t assertInitSize(Location location, const Type *type);
 
+    Sym *assertChainedSym(Location location, Sym *start, const std::vector<std::string> &names);
+
     std::string nextLabel();
     std::string nextLabelQuoted();
 

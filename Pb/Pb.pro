@@ -48,6 +48,7 @@ DISTFILES += \
     ../unittests/generated_new_copy_delete_funcs.pc \
     ../unittests/init_lists.pc \
     ../unittests/no_assign_gen.pc \
+    ../unittests/non_prim_incdec.pc \
     ../unittests/operator_eq.pc \
     ../unittests/operator_eq_chain.pc \
     ../unittests/primitive_array.pc \

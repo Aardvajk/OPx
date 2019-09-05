@@ -119,6 +119,23 @@ std::size_t Context::assertInitSize(Location location, const Type *type)
     return *sz;
 }
 
+Sym *Context::assertChainedSym(Location location, Sym *start, const std::vector<std::string> &names)
+{
+    Sym *cs = start;
+    for(std::size_t i = 0; i < names.size(); ++i)
+    {
+        auto s = cs->child(names[i]);
+        if(!s)
+        {
+            throw Error(location, "not found - ", names[i]);
+        }
+
+        cs = s;
+    }
+
+    return cs;
+}
+
 std::string Context::nextLabel()
 {
     return pcx::str("#label_", labels++);

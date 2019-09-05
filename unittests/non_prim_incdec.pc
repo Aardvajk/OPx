@@ -1,0 +1,53 @@
+include("stdlib.ph");
+include("stdtest.ph");
+
+class foo
+{
+    func new() ... x(0) { }
+    func new(a:std.int) ... x(a) { }
+
+    var x:std.int;
+}
+
+func operator++(:std.prefix, a:ref foo):ref foo
+{
+    ++a.x;
+    return a;
+}
+
+func operator--(:std.prefix, a:ref foo):ref foo
+{
+    --a.x;
+    return a;
+}
+
+func operator++(:std.postfix, a:ref foo):foo
+{
+    var t = a.x;
+
+    ++a.x;
+    return foo(t);
+}
+
+func operator--(:std.postfix, a:ref foo):foo
+{
+    var t = a.x;
+
+    --a.x;
+    return foo(t);
+}
+
+func main()
+{
+    var f = foo(10);
+
+    test.assert(f.x == 10);
+    ++f;
+    test.assert(f.x == 11);
+    --f;
+    test.assert(f.x == 10);
+    f++;
+    test.assert(f.x == 11);
+    f--;
+    test.assert(f.x == 10);
+}
