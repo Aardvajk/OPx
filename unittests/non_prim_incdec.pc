@@ -42,12 +42,12 @@ func main()
     var f = foo(10);
 
     test.assert(f.x == 10);
-    ++f;
+    test.assert((++f).x == 11);
+    test.assert((--f).x == 10);
+
+    test.assert(f++.x == 10);
     test.assert(f.x == 11);
-    --f;
-    test.assert(f.x == 10);
-    f++;
-    test.assert(f.x == 11);
-    f--;
+
+    test.assert(f--.x == 11);
     test.assert(f.x == 10);
 }

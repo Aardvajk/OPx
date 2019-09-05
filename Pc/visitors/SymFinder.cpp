@@ -6,6 +6,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "syms/Sym.h"
 
@@ -108,6 +109,11 @@ void SymFinder::visit(DerefNode &node)
 }
 
 void SymFinder::visit(SubscriptNode &node)
+{
+    node.target->accept(*this);
+}
+
+void SymFinder::visit(IncDecNode &node)
 {
     node.target->accept(*this);
 }
