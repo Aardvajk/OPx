@@ -28,7 +28,15 @@ void Generator::generate(Context &c, const std::string &path)
     auto count = is.get<std::size_t>();
     for(std::size_t i = 0; i < count; ++i)
     {
-        unit.entities.push_back(Object::readEntity(is, c.units.size() - 1));
+        auto e = Object::readEntity(is, c.units.size() - 1);
+
+        auto name = unit.strings[e.id];
+        if(c.find(name))
+        {
+            throw Error("multiple definition - ", name);
+        }
+
+        unit.entities.push_back(e);
     }
 
     std::ifstream dmap(path + ".pmap");
