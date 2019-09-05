@@ -34,6 +34,7 @@ public:
     virtual void visit(BinaryNode &node) override;
     virtual void visit(PrimitiveCastNode &node) override;
     virtual void visit(LogicalNode &node) override;
+    virtual void visit(IncDecNode &node) override;
 
     static std::size_t generate(Context &c, std::ostream &os, Node &node);
 

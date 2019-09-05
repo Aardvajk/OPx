@@ -233,10 +233,11 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == ',') return Token(Token::Type::Comma, loc, ch);
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
     if(ch == '*') return Token(Token::Type::Star, loc, ch);
-    if(ch == '+') return Token(Token::Type::Add, loc, ch);
-    if(ch == '-') return Token(Token::Type::Sub, loc, ch);
     if(ch == '/') return Token(Token::Type::Div, loc, ch);
     if(ch == '%') return Token(Token::Type::Mod, loc, ch);
+
+    if(ch == '+') return speculate(source, loc, { '+', Token::Type::Add }, { { '+', Token::Type::Inc } });
+    if(ch == '-') return speculate(source, loc, { '-', Token::Type::Sub }, { { '-', Token::Type::Dec } });
 
     if(ch == '.') return dots(source, loc);
 

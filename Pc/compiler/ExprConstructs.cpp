@@ -17,6 +17,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -105,6 +106,18 @@ NodePtr id(Context &c, bool get)
     return n;
 }
 
+NodePtr preIncDec(Context &c, Operators::Type op, bool get)
+{
+    auto tok = c.scanner.next(get);
+
+    auto n = new IncDecNode(tok.location(), op);
+    NodePtr nn(n);
+
+    n->target = entity(c, true);
+
+    return nn;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     NodePtr n;
@@ -132,6 +145,9 @@ NodePtr primary(Context &c, bool get)
 
         case Token::Type::Exclaim: return unary(c, Operators::Type::Not, false);
         case Token::Type::Sub: return unary(c, Operators::Type::Neg, false);
+
+        case Token::Type::Inc: return preIncDec(c, Operators::Type::PreInc, false);
+        case Token::Type::Dec: return preIncDec(c, Operators::Type::PreDec, false);
 
         default: throw Error(tok.location(), "expression expected - ", tok.text());
     }
@@ -191,6 +207,18 @@ NodePtr subscript(Context &c, NodePtr target, bool get)
     return n;
 }
 
+NodePtr postIncDec(Context &c, Operators::Type op, NodePtr target, bool get)
+{
+    auto tok = c.scanner.next(get);
+
+    auto n = new IncDecNode(tok.location(), op, target);
+    NodePtr nn(n);
+
+    c.scanner.next(true);
+
+    return nn;
+}
+
 NodePtr entity(Context &c, bool get)
 {
     auto n = primary(c, get);
@@ -202,6 +230,9 @@ NodePtr entity(Context &c, bool get)
             case Token::Type::Dot: n = dot(c, n, false); break;
             case Token::Type::LeftParen: n = call(c, n, false); break;
             case Token::Type::LeftSub: n = subscript(c, n, false); break;
+
+            case Token::Type::Inc: n = postIncDec(c, Operators::Type::PostInc, n, false); break;
+            case Token::Type::Dec: n = postIncDec(c, Operators::Type::PostDec, n, false); break;
 
             default: return n;
         }

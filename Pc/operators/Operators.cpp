@@ -24,7 +24,12 @@ const char *Operators::toString(Type v)
         ">=",
 
         "&&",
-        "||"
+        "||",
+
+        "++",
+        "--",
+        "++",
+        "--"
     };
 
     return s[static_cast<int>(v)];
@@ -46,7 +51,9 @@ bool Operators::allowed(Token::Type v)
         case Token::Type::Lt:
         case Token::Type::LtEq:
         case Token::Type::Gt:
-        case Token::Type::GtEq: return true;
+        case Token::Type::GtEq:
+        case Token::Type::Inc:
+        case Token::Type::Dec: return true;
 
         default: return false;
     };

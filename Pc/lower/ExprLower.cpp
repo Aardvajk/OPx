@@ -8,6 +8,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -117,6 +118,11 @@ void ExprLower::visit(ThisNode &node)
 void ExprLower::visit(AddrOfNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
+}
+
+void ExprLower::visit(IncDecNode &node)
+{
+    node.target = ExprLower::lower(c, node.target);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr &node, const Type *type, Flags flags)

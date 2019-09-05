@@ -28,7 +28,12 @@ enum class Type
     GtEq,
 
     And,
-    Or
+    Or,
+
+    PreInc,
+    PreDec,
+    PostInc,
+    PostDec
 };
 
 const char *toString(Type v);

@@ -15,6 +15,7 @@
 #include "nodes/SubscriptNode.h"
 #include "nodes/PrimitiveCastNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -307,6 +308,16 @@ void ExprTransformer::visit(LogicalNode &node)
 {
     node.left = ExprTransformer::transform(c, node.left);
     node.right = ExprTransformer::transform(c, node.right);
+}
+
+void ExprTransformer::visit(IncDecNode &node)
+{
+    node.target= ExprTransformer::transform(c, node.target);
+
+    if(!TypeVisitor::type(c, node.target.get()))
+    {
+        throw Error("internal error - non-primitive incdec not implemented");
+    }
 }
 
 NodePtr ExprTransformer::transform(Context &c, NodePtr &node, const Type *expectedType)

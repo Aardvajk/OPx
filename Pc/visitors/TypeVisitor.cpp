@@ -16,6 +16,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/SubscriptNode.h"
 #include "nodes/PrimitiveCastNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -220,6 +221,11 @@ void TypeVisitor::visit(PrimitiveCastNode &node)
 void TypeVisitor::visit(LogicalNode &node)
 {
     r = c.types.boolType();
+}
+
+void TypeVisitor::visit(IncDecNode &node)
+{
+    node.target->accept(*this);
 }
 
 Type *TypeVisitor::type(Context &c, Node *node)

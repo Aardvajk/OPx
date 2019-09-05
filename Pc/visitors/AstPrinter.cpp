@@ -28,6 +28,7 @@
 #include "nodes/InitNode.h"
 #include "nodes/ForNode.h"
 #include "nodes/PragmaNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -454,6 +455,14 @@ void AstPrinter::visit(PragmaNode &node)
     }
 
     os << "\n";
+}
+
+void AstPrinter::visit(IncDecNode &node)
+{
+    tab() << "incdec " << Operators::toString(node.op) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.target->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

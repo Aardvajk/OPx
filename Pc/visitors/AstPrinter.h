@@ -38,6 +38,7 @@ public:
     virtual void visit(InitNode &node) override;
     virtual void visit(ForNode &node) override;
     virtual void visit(PragmaNode &node) override;
+    virtual void visit(IncDecNode &node) override;
 
 private:
     std::ostream &tab() const;

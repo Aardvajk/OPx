@@ -60,6 +60,7 @@ SOURCES += \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
         nodes/IfNode.cpp \
+        nodes/IncDecNode.cpp \
         nodes/InitNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/LogicalNode.cpp \
@@ -142,6 +143,7 @@ HEADERS += \
     nodes/FuncNode.h \
     nodes/IdNode.h \
     nodes/IfNode.h \
+    nodes/IncDecNode.h \
     nodes/InitNode.h \
     nodes/LiteralNodes.h \
     nodes/LogicalNode.h \

@@ -51,6 +51,7 @@ DISTFILES += \
     ../unittests/operator_eq.pc \
     ../unittests/operator_eq_chain.pc \
     ../unittests/primitive_array.pc \
+    ../unittests/primitive_incdec.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_must_init.pc \
     ../unittests/ref_param.pc \

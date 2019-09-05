@@ -127,3 +127,7 @@ void Visitor::visit(ForNode &node)
 void Visitor::visit(PragmaNode &node)
 {
 }
+
+void Visitor::visit(IncDecNode &node)
+{
+}

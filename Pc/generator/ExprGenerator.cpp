@@ -18,6 +18,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/PrimitiveCastNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNode.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -318,6 +319,41 @@ void ExprGenerator::visit(LogicalNode &node)
     }
 
     sz = c.types.boolType()->size();
+}
+
+void ExprGenerator::visit(IncDecNode &node)
+{
+    auto t = TypeVisitor::type(c, node.target.get());
+    auto pr = Primitive::toString(t->primitiveType());
+
+    auto s = c.assertSize(node.location(), t);
+
+    if(node.op == Operators::Type::PostInc || node.op == Operators::Type::PostDec)
+    {
+        ExprGenerator::generate(c, os, *node.target);
+    }
+
+    ExprGenerator::generate(c, os, *node.target);
+    os << "    push " << pr << "(1);\n";
+
+    if(node.op == Operators::Type::PreInc || node.op == Operators::Type::PostInc)
+    {
+        os << "    add " << pr << ";\n";
+    }
+    else
+    {
+        os << "    sub " << pr << ";\n";
+    }
+
+    AddrGenerator::generate(c, os, *node.target);
+    os << "    store " << s << ";\n";
+
+    if(node.op == Operators::Type::PostInc || node.op == Operators::Type::PostDec)
+    {
+        os << "    pop " << s << ";\n";
+    }
+
+    sz = s;
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)
