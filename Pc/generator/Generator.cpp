@@ -81,7 +81,15 @@ void Generator::visit(FuncNode &node)
         auto sym = node.property<const Sym*>("sym");
         auto type = sym->property<const Type*>("type");
 
-        os << "func \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
+        os << "func";
+
+        auto flags = sym->getProperty("flags").value<Object::Entity::Flags>();
+        if(flags & Object::Entity::Flag::AutoGen)
+        {
+            os << "[autogen]";
+        }
+
+        os << " \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
 
         os << "\n{\n";
 

@@ -1,6 +1,8 @@
 #ifndef FUNCNODE_H
 #define FUNCNODE_H
 
+#include "common/Object.h"
+
 #include "nodes/Node.h"
 
 class FuncNode : public Node
@@ -16,6 +18,7 @@ public:
     NodeList inits;
     NodePtr initialisers;
     NodePtr body;
+    Object::Entity::Flags flags;
 };
 
 #endif // FUNCNODE_H

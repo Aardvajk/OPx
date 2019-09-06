@@ -32,12 +32,17 @@ void generateRefs(Context &c, Object::Entity *e)
 void updateDebugMap(Context &c, DebugMap &dm)
 {
     DebugMap rm;
+    std::unordered_set<std::string> done;
 
     for(std::size_t i = 0; i < dm.size(); ++i)
     {
         if(dm[i].name.empty() || c.refs.find(dm[i].name) != c.refs.end())
         {
-            rm.push_back(dm[i]);
+            if(done.find(dm[i].name) == done.end())
+            {
+                rm.push_back(dm[i]);
+                done.insert(dm[i].name);
+            }
         }
     }
 

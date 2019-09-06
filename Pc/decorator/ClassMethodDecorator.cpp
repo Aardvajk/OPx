@@ -29,6 +29,8 @@ std::pair<FuncNode*, BlockNode*> createBasicFunction(Sym *sym, BlockNode *block,
     auto fn = new FuncNode(block->location(), nn);
     block->push_back(fn);
 
+    fn->flags |= Object::Entity::Flag::AutoGen;
+
     auto sc = new ScopeNode(block->location());
     fn->body = sc;
 

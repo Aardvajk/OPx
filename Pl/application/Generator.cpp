@@ -30,13 +30,25 @@ void Generator::generate(Context &c, const std::string &path)
     {
         auto e = Object::readEntity(is, c.units.size() - 1);
 
+        bool ignore = false;
+
         auto name = unit.strings[e.id];
         if(c.find(name))
         {
-            throw Error("multiple definition - ", name);
+            if(e.flags & Object::Entity::Flag::AutoGen)
+            {
+                ignore = true;
+            }
+            else
+            {
+                throw Error("multiple definition - ", name);
+            }
         }
 
-        unit.entities.push_back(e);
+        if(!ignore)
+        {
+            unit.entities.push_back(e);
+        }
     }
 
     std::ifstream dmap(path + ".pmap");

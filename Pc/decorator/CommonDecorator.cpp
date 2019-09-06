@@ -163,6 +163,8 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
         sym->setProperty("type", type);
     }
 
+    sym->setProperty("flags", node.flags);
+
     if(NameVisitors::isNameSpecial(node.name.get()) != Token::Type::Invalid)
     {
         if(!sym->parent() || sym->parent()->type() != Sym::Type::Class)
