@@ -16,6 +16,7 @@
 #include "nodes/PrimitiveCastNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNode.h"
+#include "nodes/OpEqNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -312,7 +313,7 @@ void ExprTransformer::visit(LogicalNode &node)
 
 void ExprTransformer::visit(IncDecNode &node)
 {
-    node.target= ExprTransformer::transform(c, node.target);
+    node.target = ExprTransformer::transform(c, node.target);
 
     if(!TypeVisitor::type(c, node.target.get())->primitive())
     {
@@ -329,6 +330,25 @@ void ExprTransformer::visit(IncDecNode &node)
 
         ExprDecorator::decorate(c, nullptr, *cn);
         rn = ExprTransformer::transform(c, rn);
+    }
+}
+
+void ExprTransformer::visit(OpEqNode &node)
+{
+    node.target = ExprTransformer::transform(c, node.target);
+    node.expr = ExprTransformer::transform(c, node.expr);
+
+    if(TypeVisitor::type(c, node.target.get())->primitive())
+    {
+        auto an = new AssignNode(node.location(), node.target);
+        rn = an;
+
+        an->expr = new BinaryNode(node.location(), Operators::opFromOpEq(node.op), node.target, node.expr);
+        ExprTransformer::transform(c, rn);
+    }
+    else
+    {
+        throw Error("internal - non-primitive opeq not supported");
     }
 }
 

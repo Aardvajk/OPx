@@ -75,3 +75,18 @@ bool Operators::allowed(Token::Type v)
         default: return false;
     };
 }
+
+Operators::Type Operators::opFromOpEq(Type v)
+{
+    switch(v)
+    {
+        case Type::AddEq: return Type::Add;
+        case Type::SubEq: return Type::Sub;
+        case Type::MulEq: return Type::Mul;
+        case Type::DivEq: return Type::Div;
+        case Type::ModEq: return Type::Mod;
+
+        default: return { };
+    }
+}
+

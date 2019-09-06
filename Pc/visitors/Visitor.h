@@ -33,6 +33,7 @@ class InitNode;
 class ForNode;
 class PragmaNode;
 class IncDecNode;
+class OpEqNode;
 
 class Visitor
 {
@@ -71,6 +72,7 @@ public:
     virtual void visit(ForNode &node);
     virtual void visit(PragmaNode &node);
     virtual void visit(IncDecNode &node);
+    virtual void visit(OpEqNode &node);
 };
 
 #endif // VISITOR_H

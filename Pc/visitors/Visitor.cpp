@@ -131,3 +131,7 @@ void Visitor::visit(PragmaNode &node)
 void Visitor::visit(IncDecNode &node)
 {
 }
+
+void Visitor::visit(OpEqNode &node)
+{
+}

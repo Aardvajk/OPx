@@ -66,6 +66,7 @@ SOURCES += \
         nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/OpEqNode.cpp \
         nodes/PragmaNode.cpp \
         nodes/PrimitiveCastNode.cpp \
         nodes/ReturnNode.cpp \
@@ -149,6 +150,7 @@ HEADERS += \
     nodes/LogicalNode.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/OpEqNode.h \
     nodes/PragmaNode.h \
     nodes/PrimitiveCastNode.h \
     nodes/ReturnNode.h \
@@ -187,6 +189,7 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../unittests/primitive_opeq.pc \
     ../workspace/notes.txt \
     ../workspace/script.pc \
     ../workspace/script.pi \

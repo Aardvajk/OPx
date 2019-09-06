@@ -7,6 +7,7 @@
 
 class Context;
 class Type;
+class OpEqNode;
 
 class ExprTransformer : public Visitor
 {
@@ -32,6 +33,7 @@ public:
     virtual void visit(SubscriptNode &node) override;
     virtual void visit(LogicalNode &node) override;
     virtual void visit(IncDecNode &node) override;
+    virtual void visit(OpEqNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr &node, const Type *expectedType = nullptr);
 

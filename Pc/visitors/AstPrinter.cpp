@@ -29,6 +29,7 @@
 #include "nodes/ForNode.h"
 #include "nodes/PragmaNode.h"
 #include "nodes/IncDecNode.h"
+#include "nodes/OpEqNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -463,6 +464,15 @@ void AstPrinter::visit(IncDecNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.target->accept(*this);
+}
+
+void AstPrinter::visit(OpEqNode &node)
+{
+    tab() << "opeq " << Operators::toString(node.op) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.target->accept(*this);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

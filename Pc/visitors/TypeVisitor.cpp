@@ -17,6 +17,7 @@
 #include "nodes/SubscriptNode.h"
 #include "nodes/PrimitiveCastNode.h"
 #include "nodes/IncDecNode.h"
+#include "nodes/OpEqNode.h"
 
 #include "visitors/NameVisitors.h"
 
@@ -224,6 +225,11 @@ void TypeVisitor::visit(LogicalNode &node)
 }
 
 void TypeVisitor::visit(IncDecNode &node)
+{
+    node.target->accept(*this);
+}
+
+void TypeVisitor::visit(OpEqNode &node)
 {
     node.target->accept(*this);
 }

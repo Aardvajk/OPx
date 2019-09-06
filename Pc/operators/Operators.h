@@ -45,6 +45,8 @@ enum class Type
 const char *toString(Type v);
 bool allowed(Token::Type v);
 
+Type opFromOpEq(Type v);
+
 }
 
 #endif // OPERATORS_H

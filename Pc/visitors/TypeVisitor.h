@@ -35,6 +35,7 @@ public:
     virtual void visit(PrimitiveCastNode &node) override;
     virtual void visit(LogicalNode &node) override;
     virtual void visit(IncDecNode &node) override;
+    virtual void visit(OpEqNode &node) override;
 
     static Type *type(Context &c, Node *node);
 

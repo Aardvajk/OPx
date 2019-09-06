@@ -18,6 +18,7 @@
 #include "nodes/SubscriptNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNode.h"
+#include "nodes/OpEqNode.h"
 
 #include "compiler/CommonConstructs.h"
 
@@ -219,6 +220,18 @@ NodePtr postIncDec(Context &c, Operators::Type op, NodePtr target, bool get)
     return nn;
 }
 
+NodePtr opEq(Context &c, Operators::Type op, NodePtr target, bool get)
+{
+    auto tok = c.scanner.next(get);
+
+    auto n = new OpEqNode(tok.location(), op, target);
+    NodePtr nn(n);
+
+    n->expr = expression(c, true);
+
+    return nn;
+}
+
 NodePtr entity(Context &c, bool get)
 {
     auto n = primary(c, get);
@@ -233,6 +246,12 @@ NodePtr entity(Context &c, bool get)
 
             case Token::Type::Inc: n = postIncDec(c, Operators::Type::PostInc, n, false); break;
             case Token::Type::Dec: n = postIncDec(c, Operators::Type::PostDec, n, false); break;
+
+            case Token::Type::AddEq: n = opEq(c, Operators::Type::AddEq, n, false); break;
+            case Token::Type::SubEq: n = opEq(c, Operators::Type::SubEq, n, false); break;
+            case Token::Type::MulEq: n = opEq(c, Operators::Type::MulEq, n, false); break;
+            case Token::Type::DivEq: n = opEq(c, Operators::Type::DivEq, n, false); break;
+            case Token::Type::ModEq: n = opEq(c, Operators::Type::ModEq, n, false); break;
 
             default: return n;
         }
