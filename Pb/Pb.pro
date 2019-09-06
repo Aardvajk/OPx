@@ -49,10 +49,12 @@ DISTFILES += \
     ../unittests/init_lists.pc \
     ../unittests/no_assign_gen.pc \
     ../unittests/non_prim_incdec.pc \
+    ../unittests/non_prim_opeq.pc \
     ../unittests/operator_eq.pc \
     ../unittests/operator_eq_chain.pc \
     ../unittests/primitive_array.pc \
     ../unittests/primitive_incdec.pc \
+    ../unittests/primitive_opeq.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_must_init.pc \
     ../unittests/ref_param.pc \

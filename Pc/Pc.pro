@@ -189,7 +189,6 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../unittests/primitive_opeq.pc \
     ../workspace/notes.txt \
     ../workspace/script.pc \
     ../workspace/script.pi \

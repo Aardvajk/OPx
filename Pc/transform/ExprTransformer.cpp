@@ -348,7 +348,16 @@ void ExprTransformer::visit(OpEqNode &node)
     }
     else
     {
-        throw Error("internal - non-primitive opeq not supported");
+        NodePtr fn(new IdNode(node.location(), { }, pcx::str("operator", Operators::toString(node.op))));
+
+        auto cn = new CallNode(node.location(), fn);
+        rn = cn;
+
+        cn->params.push_back(node.target);
+        cn->params.push_back(node.expr);
+
+        ExprDecorator::decorate(c, nullptr, *rn);
+        rn = ExprTransformer::transform(c, rn);
     }
 }
 
