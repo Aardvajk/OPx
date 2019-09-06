@@ -35,7 +35,9 @@ const char *Operators::toString(Type v)
         "-=",
         "*=",
         "/=",
-        "%="
+        "%=",
+
+        "<<"
     };
 
     return s[static_cast<int>(v)];
@@ -70,7 +72,9 @@ bool Operators::allowed(Token::Type v)
         case Token::Type::SubEq:
         case Token::Type::MulEq:
         case Token::Type::DivEq:
-        case Token::Type::ModEq: return true;
+        case Token::Type::ModEq:
+
+        case Token::Type::LeftShift: return true;
 
         default: return false;
     };

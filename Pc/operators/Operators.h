@@ -39,7 +39,9 @@ enum class Type
     SubEq,
     MulEq,
     DivEq,
-    ModEq
+    ModEq,
+
+    LeftShift
 };
 
 const char *toString(Type v);

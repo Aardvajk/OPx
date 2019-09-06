@@ -245,7 +245,7 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == '=') return speculate(source, loc, { '=', Token::Type::Assign }, { { '=', Token::Type::Eq } });
     if(ch == '!') return speculate(source, loc, { '!', Token::Type::Exclaim }, { { '=', Token::Type::Neq } });
 
-    if(ch == '<') return speculate(source, loc, { '<', Token::Type::Lt }, { { '=', Token::Type::LtEq } });
+    if(ch == '<') return speculate(source, loc, { '<', Token::Type::Lt }, { { '=', Token::Type::LtEq }, { '<', Token::Type::LeftShift } });
     if(ch == '>') return speculate(source, loc, { '>', Token::Type::Gt }, { { '=', Token::Type::GtEq } });
 
     if(ch == '&') return speculate(source, loc, { '&', Token::Type::Amp }, { { '&', Token::Type::And } });

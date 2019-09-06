@@ -189,6 +189,8 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../workspace/foo.pc \
+    ../workspace/foo.ph \
     ../workspace/notes.txt \
     ../workspace/script.pc \
     ../workspace/script.pi \

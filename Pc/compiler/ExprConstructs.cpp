@@ -293,9 +293,25 @@ NodePtr sums(Context &c, bool get)
     }
 }
 
-NodePtr assign(Context &c, bool get)
+NodePtr shifts(Context &c, bool get)
 {
     auto n = sums(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+        switch(c.scanner.token().type())
+        {
+            case Token::Type::LeftShift: n = new BinaryNode(loc, Operators::Type::LeftShift, n, sums(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
+NodePtr assign(Context &c, bool get)
+{
+    auto n = shifts(c, get);
 
     while(c.scanner.token().type() == Token::Type::Assign)
     {
