@@ -1,0 +1,27 @@
+include("stdios.ph");
+include("stdlib.ph");
+
+func std.operator<<(o:ref std.ostream, v:std.int):ref std.ostream
+{
+    std.print(v);
+    return o;
+}
+
+func std.operator<<(o:ref std.ostream, v:std.bool):ref std.ostream
+{
+    std.print(v);
+    return o;
+}
+
+func std.operator<<(o:ref std.ostream, v:ptr std.char):ref std.ostream
+{
+    std.print(v);
+    return o;
+}
+
+var instance:ref std.ostream;
+
+func std.out():ref std.ostream
+{
+    return instance;
+}

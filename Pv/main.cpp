@@ -24,12 +24,12 @@ void intProc(int code, Memory &mm, Registers &rg)
     else if(code == 1)
     {
         auto i = sr.get<int>();
-        std::cout << "integer " << i << "\n";
+        std::cout << i;
     }
     else if(code == 2)
     {
         auto i = sr.get<char>();
-        std::cout << "bool " << (i ? "true" : "false") << "\n";
+        std::cout << (i ? "true" : "false");
     }
     else if(code == 3)
     {
