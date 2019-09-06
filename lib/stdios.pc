@@ -19,7 +19,7 @@ func std.operator<<(o:ref std.ostream, v:ptr std.char):ref std.ostream
     return o;
 }
 
-var instance:ref std.ostream;
+var instance:std.ostream;
 
 func std.out():ref std.ostream
 {
