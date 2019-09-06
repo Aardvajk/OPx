@@ -3,6 +3,8 @@
 
 #include "framework/InputStream.h"
 
+#include <pcx/flags.h>
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -23,9 +25,17 @@ public:
 class Entity
 {
 public:
-    Entity(char type, std::size_t id, std::size_t offset, std::size_t unit);
+    enum class Flag : std::uint32_t
+    {
+        AutoGen = 1
+    };
+
+    using Flags = pcx::flags<Flag>;
+
+    Entity(char type, Flags flags, std::size_t id, std::size_t offset, std::size_t unit);
 
     char type;
+    Flags flags;
     std::size_t id;
     std::size_t offset;
     std::size_t unit;
@@ -47,5 +57,7 @@ std::vector<std::string> readStringTable(InputStream &is);
 Entity readEntity(InputStream &is, std::size_t unit);
 
 }
+
+template<> struct pcx_is_flag_enum<Object::Entity::Flag> : std::true_type { };
 
 #endif // OBJECT_H

@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
             bs << c.globs.size() + c.funcs.size();
             for(auto &g: c.globs)
             {
-                bs << 'V' << g.id;
+                bs << 'V' << std::uint32_t(g.sym->properties["flags"].to<Object::Entity::Flags>()) << g.id;
 
                 bs << std::size_t(0);
 
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
             {
                 ByteStreamPatch p;
 
-                bs << 'F' << f.id;
+                bs << 'F' << std::uint32_t(f.sym->properties["flags"].to<Object::Entity::Flags>()) << f.id;
 
                 bs << f.links.size();
                 for(auto i: f.links)

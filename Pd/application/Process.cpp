@@ -67,7 +67,7 @@ void Process::processUnit(Context &c, const std::string &path)
 
     for(auto e: pcx::indexed_range(u.entities))
     {
-        std::cout << banner(u.strings[e.value.id]);
+        std::cout << banner(u.strings[e.value.id], " flags[", static_cast<unsigned>(e.value.flags), "]");
 
         switch(e.value.type)
         {

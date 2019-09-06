@@ -1,10 +1,10 @@
 include("stdtest.ph");
-include "stdlib.ph";
+include("stdlib.ph");
 
 func test.assert(b:std.bool)
 {
-	if(!b)
-	{
-		std.abort();
-	}
+    if(!b)
+    {
+        std.abort();
+    }
 }

@@ -6,6 +6,7 @@
 #include "scanner/Lexer.h"
 
 #include "common/OpCode.h"
+#include "common/Object.h"
 
 #include "application/Context.h"
 
@@ -51,12 +52,62 @@ void byteListConstruct(Context &c, std::vector<char> &v, bool get)
     }
 }
 
+void propertyConstruct(Context &c, std::vector<std::string> &container, bool get)
+{
+    auto tok = c.matchId(get);
+    container.push_back(tok.text());
+
+    tok = c.scanner.next(true);
+    if(tok.type() == Token::Type::Comma)
+    {
+        propertyConstruct(c, container, true);
+    }
+}
+
+std::vector<std::string> properties(Context &c, bool get)
+{
+    std::vector<std::string> props;
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::LeftSub)
+    {
+        tok = c.scanner.next(true);
+        if(tok.type() != Token::Type::RightSub)
+        {
+            propertyConstruct(c, props, false);
+        }
+
+        c.scanner.consume(Token::Type::RightSub, false);
+    }
+
+    return props;
+}
+
+void processProperties(Context &c, Sym *sym, const std::vector<std::string> &props)
+{
+    Object::Entity::Flags flags;
+
+    for(auto &s: props)
+    {
+        if(s == "autogen")
+        {
+            flags |= Object::Entity::Flag::AutoGen;
+        }
+    }
+
+    sym->properties["flags"] = flags;
+}
+
 void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 {
-    auto id = c.matchId(get);
+    auto props = properties(c, get);
+    auto id = c.matchId(false);
+
     c.assertUnique(id.location(), id.text());
 
     auto sym = c.syms.add(new Sym(type, id.text()));
+
+    processProperties(c, sym, props);
 
     auto next = c.scanner.next(true);
     if(next.type() == Token::Type::Colon)
@@ -114,7 +165,8 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 
 void funcConstruct(Context &c, bool get)
 {
-    auto id = c.matchId(get);
+    auto props = properties(c, get);
+    auto id = c.matchId(false);
 
     Sym *sym = c.syms.find(id.text());
     if(sym)
@@ -129,6 +181,8 @@ void funcConstruct(Context &c, bool get)
         sym = c.syms.add(new Sym(Sym::Type::Func, id.text()));
         sym->properties["size"] = sizeof(std::size_t);
     }
+
+    processProperties(c, sym, props);
 
     auto rs = sym->properties["returnSize"];
 
