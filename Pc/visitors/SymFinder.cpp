@@ -3,6 +3,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/BinaryNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/SubscriptNode.h"
@@ -97,6 +98,11 @@ void SymFinder::visit(IdNode &node)
 void SymFinder::visit(CallNode &node)
 {
     node.target->accept(*this);
+}
+
+void SymFinder::visit(BinaryNode &node)
+{
+    node.left->accept(*this);
 }
 
 void SymFinder::visit(AddrOfNode &node)

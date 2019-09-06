@@ -22,6 +22,7 @@ public:
 
     virtual void visit(IdNode &node) override;
     virtual void visit(CallNode &node) override;
+    virtual void visit(BinaryNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(DerefNode &node) override;
     virtual void visit(SubscriptNode &node) override;
