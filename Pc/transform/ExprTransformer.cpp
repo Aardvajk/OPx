@@ -124,7 +124,10 @@ void ExprTransformer::visit(AssignNode &node)
     }
     else
     {
-        c.assertMutable(node.target->location(), tt);
+        if(!node.getProperty("constructor").value<bool>())
+        {
+            c.assertMutable(node.target->location(), tt);
+        }
 
         auto et = TypeVisitor::type(c, node.expr.get());
         if(!TypeCompare::compatible(tt, et))

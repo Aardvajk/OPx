@@ -189,9 +189,16 @@ void Decorator::visit(VarNode &node)
         ExprDecorator ed(c, type);
         node.value->accept(ed);
 
+        auto valueType = TypeVisitor::type(c, node.value.get());
+
+        if(type && !type->constant && valueType->constant)
+        {
+            throw Error(node.location(), "cannot assign const to mutable - ",  NameVisitors::prettyName(node.name.get()));
+        }
+
         if(!type)
         {
-            type = TypeVisitor::type(c, node.value.get());
+            type = valueType;
             if(type->sub && c.tree.current()->container()->type() == Sym::Type::Func)
             {
                 type = c.types.insert(Type::removeSub(*type));
