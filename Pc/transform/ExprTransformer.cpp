@@ -124,6 +124,8 @@ void ExprTransformer::visit(AssignNode &node)
     }
     else
     {
+        c.assertMutable(node.target->location(), tt);
+
         auto et = TypeVisitor::type(c, node.expr.get());
         if(!TypeCompare::compatible(tt, et))
         {
@@ -315,7 +317,13 @@ void ExprTransformer::visit(IncDecNode &node)
 {
     node.target = ExprTransformer::transform(c, node.target);
 
-    if(!TypeVisitor::type(c, node.target.get())->primitive())
+    auto t = TypeVisitor::type(c, node.target.get());
+
+    if(t->primitive())
+    {
+        c.assertMutable(node.target->location(), t);
+    }
+    else
     {
         NodePtr fn(new IdNode(node.location(), { }, node.op == Operators::Type::PreInc || node.op == Operators::Type::PostInc ? "operator++" : "operator--"));
 

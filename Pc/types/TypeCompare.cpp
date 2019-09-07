@@ -68,6 +68,11 @@ bool TypeCompare::exact(const Type *a, const Type *b)
         {
             return false;
         }
+
+        if(a->constant != b->constant)
+        {
+            return false;
+        }
     }
 
     return compatible(a, b);

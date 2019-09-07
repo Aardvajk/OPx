@@ -79,6 +79,14 @@ void Context::assertUnique(Location location, const std::string &name)
     }
 }
 
+void Context::assertMutable(Location location, const Type *type)
+{
+    if(type->constant)
+    {
+        throw Error(location, "cannot mutate a constant - ", type->text());
+    }
+}
+
 std::string Context::assertSimpleName(Node *node)
 {
     if(!NameVisitors::isNameSimple(node))
