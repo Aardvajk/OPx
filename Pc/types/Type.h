@@ -27,6 +27,7 @@ public:
     static Type makeFunction(unsigned ptr, Type *returnType);
     static Type removeSub(const Type &type);
 
+    bool constant;
     bool ref;
 
     unsigned ptr;

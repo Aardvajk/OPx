@@ -12,6 +12,11 @@ std::string toString(const Type *type)
 {
     std::string s;
 
+    if(type->constant)
+    {
+        s += "const ";
+    }
+
     if(type->ref)
     {
         s += "ref ";
@@ -158,6 +163,6 @@ Type Type::removeSub(const Type &type)
     return r;
 }
 
-Type::Type() : ref(false), ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
+Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
 {
 }

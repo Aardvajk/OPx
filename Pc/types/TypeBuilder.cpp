@@ -26,6 +26,7 @@ void TypeBuilder::visit(TypeNode &node)
             t.args.push_back(type(c, a.get()));
         }
 
+        t.constant = node.constant;
         t.ref = node.ref;
 
         if(node.sub)
@@ -48,6 +49,7 @@ void TypeBuilder::visit(TypeNode &node)
 
         auto t = Type::makePrimary(node.ptr, sv.front());
 
+        t.constant = node.constant;
         t.ref = node.ref;
 
         if(node.sub)

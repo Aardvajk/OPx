@@ -202,7 +202,7 @@ void AstPrinter::visit(ScopeNode &node)
 
 void AstPrinter::visit(TypeNode &node)
 {
-    tab() << "type " << (node.ref ? "ref " : "") << " ptr(" << node.ptr << ")\n";
+    tab() << "type " << (node.constant ? "const " : "") << (node.ref ? "ref " : "") << " ptr(" << node.ptr << ")\n";
 
     if(node.function)
     {

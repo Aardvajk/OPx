@@ -61,6 +61,13 @@ TypeNodePtr outer(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
 
+    bool constant = false;
+    if(tok.type() == Token::Type::RwConst)
+    {
+        constant = true;
+        tok = c.scanner.next(true);
+    }
+
     bool ref = false;
     if(tok.type() == Token::Type::RwRef)
     {
@@ -77,6 +84,7 @@ TypeNodePtr outer(Context &c, bool get)
 
     auto n = primary(c, false);
 
+    n->constant = constant;
     n->ref = ref;
     n->ptr = ptr;
 
