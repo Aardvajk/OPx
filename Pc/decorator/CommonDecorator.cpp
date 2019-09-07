@@ -18,7 +18,7 @@
 namespace
 {
 
-Sym *searchCallableLocal(Context &c, FuncNode &node, const Type *type)
+Sym *searchCallableExact(Context &c, FuncNode &node, const Type *type)
 {
     std::vector<Sym*> sv;
     SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
@@ -30,7 +30,7 @@ Sym *searchCallableLocal(Context &c, FuncNode &node, const Type *type)
             throw Error(node.location(), "function expected - ", s->fullname());
         }
 
-        if(TypeCompare::compatibleArgs(type, s->property<const Type*>("type")))
+        if(TypeCompare::exactArgs(type, s->property<const Type*>("type")))
         {
             return s;
         }
@@ -140,15 +140,10 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
 
     auto type = c.types.insert(t);
 
-    Sym *sym = searchCallableLocal(c, node, type);
+    Sym *sym = searchCallableExact(c, node, type);
     if(sym)
     {
         auto st = sym->property<const Type*>("type");
-
-        if(!TypeCompare::exactArgs(type, st))
-        {
-            throw Error(node.location(), "mismatched parameter references");
-        }
 
         if(!TypeCompare::exact(type->returnType, st->returnType))
         {
