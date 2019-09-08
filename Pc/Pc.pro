@@ -96,6 +96,7 @@ SOURCES += \
         types/TypeLookup.cpp \
         visitors/ArraySizeVisitor.cpp \
         visitors/AstPrinter.cpp \
+        visitors/ConstChainCheck.cpp \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         types/TypeBuilder.cpp \
@@ -180,6 +181,7 @@ HEADERS += \
     types/TypeLookup.h \
     visitors/ArraySizeVisitor.h \
     visitors/AstPrinter.h \
+    visitors/ConstChainCheck.h \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
     types/TypeBuilder.h \
