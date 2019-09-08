@@ -14,6 +14,7 @@
 #include "visitors/NameVisitors.h"
 
 #include <unordered_set>
+#include <map>
 
 namespace
 {
@@ -66,6 +67,32 @@ std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv,
     return rs;
 }
 
+std::vector<Sym*> pruneConstCountResult(const std::vector<Sym*> &rs, const Type *expectedType)
+{
+    std::map<std::size_t, std::vector<Sym*> > map;
+
+    for(auto &r: rs)
+    {
+        auto t = r->property<const Type*>("type");
+
+        std::size_t n = 0;
+        for(std::size_t i = 0; i < t->args.size(); ++i)
+        {
+            auto p = t->args[i];
+            auto e = expectedType->args[i];
+
+            if(p->constant && (p->ref || p->ptr) && !e->constant)
+            {
+                ++n;
+            }
+        }
+
+        map[n].push_back(r);
+    }
+
+    return map.begin()->second;
+}
+
 std::vector<Sym*> pruneResult(const std::vector<Sym*> &rs, const Type *expectedType)
 {
     std::vector<Sym*> v;
@@ -76,7 +103,7 @@ std::vector<Sym*> pruneResult(const std::vector<Sym*> &rs, const Type *expectedT
 
         if(t->args.empty())
         {
-            v.push_back(r);
+            return rs;
         }
         else
         {
@@ -98,6 +125,11 @@ std::vector<Sym*> pruneResult(const std::vector<Sym*> &rs, const Type *expectedT
                 v.push_back(r);
             }
         }
+    }
+
+    if(v.size() > 1)
+    {
+        v = pruneConstCountResult(v, expectedType);
     }
 
     return v;

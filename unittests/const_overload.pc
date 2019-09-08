@@ -1,20 +1,24 @@
 include("stdtest.ph");
 
-var g = false;
+var c = false;
+var m = false;
 
 func f(a:ref std.int)
 {
+    m = true;
 }
 
 func f(a:const ref std.int)
 {
-    g = true;
+    c = true;
 }
 
 func main()
 {
     var a:const std.int = 10;
     f(a);
+    f(10);
 
-    test.assert(g);
+    test.assert(m);
+    test.assert(c);
 }
