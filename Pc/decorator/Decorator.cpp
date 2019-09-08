@@ -191,17 +191,20 @@ void Decorator::visit(VarNode &node)
 
         auto valueType = TypeVisitor::type(c, node.value.get());
 
-        if(type && !type->constant && valueType->constant)
-        {
-            throw Error(node.location(), "cannot assign const to mutable - ",  NameVisitors::prettyName(node.name.get()));
-        }
-
         if(!type)
         {
             type = valueType;
             if(type->sub && c.tree.current()->container()->type() == Sym::Type::Func)
             {
                 type = c.types.insert(Type::removeSub(*type));
+            }
+
+            if(!type->ref && type->constant)
+            {
+                auto t = *type;
+                t.constant = false;
+
+                type = c.types.insert(t);
             }
 
             if(type->ref && TakesAddrVisitor::examine(*node.value))
@@ -211,6 +214,11 @@ void Decorator::visit(VarNode &node)
 
                 type = c.types.insert(t);
             }
+        }
+
+        if(type && !type->constant && valueType->constant)
+        {
+            throw Error(node.location(), "cannot assign const to mutable - ",  NameVisitors::prettyName(node.name.get()));
         }
     }
 

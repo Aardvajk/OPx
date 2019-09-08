@@ -127,6 +127,14 @@ void ExprTransformer::visit(AssignNode &node)
         if(!node.getProperty("constructor").value<bool>())
         {
             c.assertMutable(node.target->location(), tt);
+
+            if(tt->ptr || tt->ref)
+            {
+                if(TypeVisitor::type(c, node.expr.get())->constant)
+                {
+                    throw Error(node.expr->location(), "cannot assign const to mutable - ", NameVisitors::prettyName(node.expr.get()));
+                }
+            }
         }
 
         auto et = TypeVisitor::type(c, node.expr.get());
