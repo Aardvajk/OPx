@@ -58,6 +58,7 @@ DISTFILES += \
     ../unittests/ref_member.pc \
     ../unittests/ref_must_init.pc \
     ../unittests/ref_param.pc \
+    ../unittests/ref_ptr.pc \
     ../unittests/ref_return_access.pc \
     ../unittests/ref_tests.pc \
     ../unittests/ref_to_ref_param.pc \

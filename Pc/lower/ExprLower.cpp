@@ -45,12 +45,18 @@ void ExprLower::visit(IdNode &node)
         {
             if(!type || !type->ref)
             {
-                rn = new DerefNode(node.location(), cn);
+                auto dn = new DerefNode(node.location(), cn);
+                rn = dn;
+
+                dn->setProperty("lower_generated", true);
             }
         }
         else if(type && type->ref)
         {
-            rn = new AddrOfNode(node.location(), cn);
+            auto an = new AddrOfNode(node.location(), cn);
+            rn = an;
+
+            an->setProperty("lower_generated", true);
         }
     }
 }
@@ -74,7 +80,10 @@ void ExprLower::visit(CallNode &node)
     {
         if(t->returnType && t->returnType->ref && (!type || !type->ref))
         {
-            rn = new DerefNode(node.location(), cn);
+            auto dn = new DerefNode(node.location(), cn);
+            rn = dn;
+
+            dn->setProperty("lower_generated", true);
         }
     }
 }
@@ -88,7 +97,10 @@ void ExprLower::visit(AssignNode &node)
 
         if(TypeVisitor::type(c, node.target.get())->ref && !TypeVisitor::type(c, node.expr.get())->ref)
         {
-            node.expr = new AddrOfNode(node.expr->location(), node.expr);
+            auto an = new AddrOfNode(node.expr->location(), node.expr);
+            node.expr = an;
+
+            an->setProperty("lower_generated", true);
         }
     }
     else
@@ -110,14 +122,28 @@ void ExprLower::visit(ThisNode &node)
     {
         if(!type || !type->ref)
         {
-            rn = new DerefNode(node.location(), cn);
+            auto dn = new DerefNode(node.location(), cn);
+            rn = dn;
+
+            dn->setProperty("lower_generated", true);
         }
     }
 }
 
 void ExprLower::visit(AddrOfNode &node)
 {
-    node.expr = ExprLower::lower(c, node.expr);
+    if(!node.getProperty("lower_generated").value<bool>())
+    {
+        node.expr = ExprLower::lower(c, node.expr);
+    }
+}
+
+void ExprLower::visit(DerefNode &node)
+{
+    if(!node.getProperty("lower_generated").value<bool>())
+    {
+        node.expr = ExprLower::lower(c, node.expr);
+    }
 }
 
 void ExprLower::visit(IncDecNode &node)
