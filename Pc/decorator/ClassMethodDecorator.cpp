@@ -61,13 +61,15 @@ bool hasNewCopyMethod(Sym *sym)
     return false;
 }
 
-bool anyRefMembers(Sym *sym)
+bool anyRefOrConstMembers(Sym *sym)
 {
     for(auto s: sym->children())
     {
         if(s->type() == Sym::Type::Var)
         {
-            if(s->property<const Type*>("type")->ref)
+            auto t = s->property<const Type*>("type");
+
+            if(t->ref || t->constant)
             {
                 return true;
             }
@@ -106,6 +108,7 @@ void ClassMethodDecorator::visit(BlockNode &node)
         vn->type = tn;
 
         tn->name = new IdNode(node.location(), { }, sym->name());
+        tn->constant = true;
         tn->ref = true;
 
         for(auto s: sym->children())
@@ -131,7 +134,7 @@ void ClassMethodDecorator::visit(BlockNode &node)
         fn.first->accept(cd);
     }
 
-    if(!sym->child("operator=") && !anyRefMembers(sym))
+    if(!sym->child("operator=") && !anyRefOrConstMembers(sym))
     {
         auto fn = createBasicFunction(sym, &node, "operator=");
 
@@ -143,6 +146,7 @@ void ClassMethodDecorator::visit(BlockNode &node)
         fn.first->type = tnn;
 
         tn->name = new IdNode(node.location(), { }, sym->name());
+        tn->constant = true;
         tn->ref = true;
 
         auto vn = new VarNode(node.location(), pn);
