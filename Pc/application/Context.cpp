@@ -10,6 +10,7 @@
 #include "nodes/Node.h"
 
 #include "visitors/NameVisitors.h"
+#include "visitors/CheckMutable.h"
 
 #include <pcx/scoped_ptr.h>
 
@@ -79,11 +80,14 @@ void Context::assertUnique(Location location, const std::string &name)
     }
 }
 
-void Context::assertMutable(Location location, const Type *type)
+void Context::assertMutable(Node *node)
 {
-    if(type->constant)
+    CheckMutable cm(*this);
+    node->accept(cm);
+
+    if(!cm.result())
     {
-        throw Error(location, "cannot mutate a constant - ", type->text());
+        throw Error(node->location(), "cannot mutate a constant - ", NameVisitors::prettyName(node));
     }
 }
 

@@ -1,14 +1,14 @@
-#ifndef CONSTCHAINCHECK_H
-#define CONSTCHAINCHECK_H
+#ifndef CHECKMUTABLE_H
+#define CHECKMUTABLE_H
 
 #include "visitors/Visitor.h"
 
 class Context;
 
-class ConstChainCheck : public Visitor
+class CheckMutable : public Visitor
 {
 public:
-    explicit ConstChainCheck(Context &c);
+    explicit CheckMutable(Context &c);
 
     bool result() const { return r; }
 
@@ -20,4 +20,4 @@ private:
     bool r;
 };
 
-#endif // CONSTCHAINCHECK_H
+#endif // CHECKMUTABLE_H

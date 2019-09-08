@@ -96,7 +96,7 @@ SOURCES += \
         types/TypeLookup.cpp \
         visitors/ArraySizeVisitor.cpp \
         visitors/AstPrinter.cpp \
-        visitors/ConstChainCheck.cpp \
+        visitors/CheckMutable.cpp \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         types/TypeBuilder.cpp \
@@ -181,7 +181,7 @@ HEADERS += \
     types/TypeLookup.h \
     visitors/ArraySizeVisitor.h \
     visitors/AstPrinter.h \
-    visitors/ConstChainCheck.h \
+    visitors/CheckMutable.h \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
     types/TypeBuilder.h \
@@ -191,8 +191,6 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../lib/stdios.pc \
-    ../lib/stdios.ph \
     ../workspace/notes.txt \
     ../workspace/script.pc \
     ../workspace/script.pi \

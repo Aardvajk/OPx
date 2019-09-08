@@ -23,7 +23,7 @@ public:
     void open(const std::string &path);
 
     void assertUnique(Location location, const std::string &name);
-    void assertMutable(Location location, const Type *type);
+    void assertMutable(Node *node);
 
     std::string assertSimpleName(Node *node);
     std::string assertSimpleNameUnique(Node *node);

@@ -30,6 +30,8 @@ SOURCES += \
         main.cpp
 
 DISTFILES += \
+    ../lib/stdios.pc \
+    ../lib/stdios.ph \
     ../lib/stdlib.ph \
     ../lib/stdlib.pi \
     ../lib/stdtest.pc \

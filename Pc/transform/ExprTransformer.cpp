@@ -126,7 +126,7 @@ void ExprTransformer::visit(AssignNode &node)
     {
         if(!node.getProperty("constructor").value<bool>())
         {
-            c.assertMutable(node.target->location(), tt);
+            c.assertMutable(node.target.get());
 
             if(tt->ptr || tt->ref)
             {
@@ -332,7 +332,7 @@ void ExprTransformer::visit(IncDecNode &node)
 
     if(t->primitive())
     {
-        c.assertMutable(node.target->location(), t);
+        c.assertMutable(node.target.get());
     }
     else
     {

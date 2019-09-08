@@ -20,7 +20,6 @@
 #include "nodes/OpEqNode.h"
 
 #include "visitors/NameVisitors.h"
-#include "visitors/ConstChainCheck.h"
 
 #include "decorator/CommonDecorator.h"
 #include "decorator/ExprDecorator.h"
@@ -40,20 +39,6 @@ void TypeVisitor::visit(IdNode &node)
     }
 
     r = node.property<const Sym*>("sym")->property<Type*>("type");
-
-    if(node.parent)
-    {
-        ConstChainCheck cc(c);
-        node.parent->accept(cc);
-
-        if(cc.result())
-        {
-            auto t = *r;
-            t.constant = true;
-
-            r = c.types.insert(t);
-        }
-    }
 }
 
 void TypeVisitor::visit(VarNode &node)
