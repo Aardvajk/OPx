@@ -66,6 +66,29 @@ std::vector<Sym*> searchCallable(Location location, const std::vector<Sym*> &sv,
     return rs;
 }
 
+std::vector<Sym*> pruneResult(const std::vector<Sym*> &rs, const Type *expectedType)
+{
+    std::vector<Sym*> v;
+
+    for(auto &r: rs)
+    {
+        auto t = r->property<const Type*>("type");
+
+        for(std::size_t i = 0; i < t->args.size(); ++i)
+        {
+            auto p = t->args[i];
+            auto e = expectedType->args[i];
+
+            if(!(e->constant && (p->ref || p->ptr) && !p->constant))
+            {
+                v.push_back(r);
+            }
+        }
+    }
+
+    return v;
+}
+
 void checkResult(Node &node, const std::vector<Sym*> &rs, const Type *expectedType)
 {
     if(rs.empty())
@@ -101,6 +124,8 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
     }
 
     auto rs = searchCallable(node.location(), sv, expectedType);
+
+    rs = pruneResult(rs, expectedType);
     checkResult(node, rs, expectedType);
 
     auto sym = rs.front();
@@ -118,7 +143,9 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
             }
         }
 
+        v = pruneResult(v, expectedType);
         checkResult(node, v, expectedType);
+
         node.setProperty("newmethod", v.front());
     }
 

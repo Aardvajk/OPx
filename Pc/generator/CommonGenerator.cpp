@@ -39,12 +39,6 @@ void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, No
 
 void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node &node, Type *type)
 {
-    auto t = TypeVisitor::type(c, &node);
-    if(t->constant && (type->ref || type->ptr) && !type->constant)
-    {
-        throw Error(node.location(), "cannot pass const as mutable - ", NameVisitors::prettyName(&node));
-    }
-
     if(type->primitive() || type->ref)
     {
         auto tp = node.getProperty("temp_literal");
