@@ -74,12 +74,26 @@ std::vector<Sym*> pruneResult(const std::vector<Sym*> &rs, const Type *expectedT
     {
         auto t = r->property<const Type*>("type");
 
-        for(std::size_t i = 0; i < t->args.size(); ++i)
+        if(t->args.empty())
         {
-            auto p = t->args[i];
-            auto e = expectedType->args[i];
+            v.push_back(r);
+        }
+        else
+        {
+            bool disallow = false;
 
-            if(!(e->constant && (p->ref || p->ptr) && !p->constant))
+            for(std::size_t i = 0; i < t->args.size() && !disallow; ++i)
+            {
+                auto p = t->args[i];
+                auto e = expectedType->args[i];
+
+                if(e->constant && (p->ref || p->ptr) && !p->constant)
+                {
+                    disallow = true;
+                }
+            }
+
+            if(!disallow)
             {
                 v.push_back(r);
             }
@@ -125,7 +139,11 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
 
     auto rs = searchCallable(node.location(), sv, expectedType);
 
-    rs = pruneResult(rs, expectedType);
+    if(!rs.empty() && rs.front()->type() != Sym::Type::Class)
+    {
+        rs = pruneResult(rs, expectedType);
+    }
+
     checkResult(node, rs, expectedType);
 
     auto sym = rs.front();

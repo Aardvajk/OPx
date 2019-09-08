@@ -1,0 +1,20 @@
+include("stdtest.ph");
+
+var g = false;
+
+func f(a:ref std.int)
+{
+}
+
+func f(a:const ref std.int)
+{
+    g = true;
+}
+
+func main()
+{
+    var a:const std.int = 10;
+    f(a);
+
+    test.assert(g);
+}

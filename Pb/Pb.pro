@@ -37,6 +37,7 @@ DISTFILES += \
     ../unittests/addr_of_ref.pc \
     ../unittests/addr_of_ref_param.pc \
     ../unittests/complex_ref_members.pc \
+    ../unittests/const_overload.pc \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
     ../unittests/destructors.pc \
