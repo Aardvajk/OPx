@@ -40,6 +40,7 @@ public:
     virtual void visit(PragmaNode &node) override;
     virtual void visit(IncDecNode &node) override;
     virtual void visit(OpEqNode &node) override;
+    virtual void visit(BreakNode &node) override;
 
 private:
     std::ostream &tab() const;

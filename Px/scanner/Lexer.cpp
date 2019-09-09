@@ -36,6 +36,7 @@ static const std::vector<Reserved> pcReserved =
     { "if", Token::Type::RwIf },
     { "else", Token::Type::RwElse },
     { "for", Token::Type::RwFor },
+    { "break", Token::Type::RwBreak },
     { "new", Token::Type::RwNew },
     { "delete", Token::Type::RwDelete },
     { "true", Token::Type::RwTrue },

@@ -62,6 +62,34 @@ NodePtr nameImpl(Context &c, bool allowExtensions, NodePtr parent, bool get)
     return nn;
 }
 
+NodePtr scopeContentsImp(Context &c, Location location, bool loop, bool get)
+{
+    auto scope = new ScopeNode(location, loop);
+    NodePtr nn(scope);
+
+    auto block = new BlockNode(location);
+    scope->body = block;
+
+    auto tok = c.scanner.next(true);
+
+    if(tok.type() == Token::Type::LeftBrace)
+    {
+        c.scanner.next(true);
+        while(c.scanner.token().type() != Token::Type::RightBrace)
+        {
+            Compiler::construct(c, block, false);
+        }
+
+        c.scanner.next(true);
+    }
+    else
+    {
+        Compiler::construct(c, block, false);
+    }
+
+    return nn;
+}
+
 }
 
 NodePtr CommonConstructs::name(Context &c, bool get)
@@ -115,28 +143,10 @@ NodePtr CommonConstructs::funcContents(Context &c, Location location, bool get)
 
 NodePtr CommonConstructs::scopeContents(Context &c, Location location, bool get)
 {
-    auto scope = new ScopeNode(location);
-    NodePtr nn(scope);
+    return scopeContentsImp(c, location, false, get);
+}
 
-    auto block = new BlockNode(location);
-    scope->body = block;
-
-    auto tok = c.scanner.next(true);
-
-    if(tok.type() == Token::Type::LeftBrace)
-    {
-        c.scanner.next(true);
-        while(c.scanner.token().type() != Token::Type::RightBrace)
-        {
-            Compiler::construct(c, block, false);
-        }
-
-        c.scanner.next(true);
-    }
-    else
-    {
-        Compiler::construct(c, block, false);
-    }
-
-    return nn;
+NodePtr CommonConstructs::loopScopeContents(Context &c, Location location, bool get)
+{
+    return scopeContentsImp(c, location, true, get);
 }

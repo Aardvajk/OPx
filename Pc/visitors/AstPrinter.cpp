@@ -196,7 +196,7 @@ void AstPrinter::visit(FuncNode &node)
 
 void AstPrinter::visit(ScopeNode &node)
 {
-    tab() << "scope\n";
+    tab() << "scope " << (node.loop ? "(loop)" : "") << "\n";
     node.body->accept(*this);
 }
 
@@ -473,6 +473,11 @@ void AstPrinter::visit(OpEqNode &node)
     auto g = pcx::scoped_counter(tc);
     node.target->accept(*this);
     node.expr->accept(*this);
+}
+
+void AstPrinter::visit(BreakNode &node)
+{
+    tab() << "break\n";
 }
 
 std::ostream &AstPrinter::tab() const

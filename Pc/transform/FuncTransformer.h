@@ -21,6 +21,7 @@ public:
     virtual void visit(IfNode &node) override;
     virtual void visit(InitNode &node) override;
     virtual void visit(ForNode &node) override;
+    virtual void visit(BreakNode &node) override;
 
 private:
     Context &c;

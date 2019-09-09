@@ -135,3 +135,7 @@ void Visitor::visit(IncDecNode &node)
 void Visitor::visit(OpEqNode &node)
 {
 }
+
+void Visitor::visit(BreakNode &node)
+{
+}

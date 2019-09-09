@@ -16,6 +16,7 @@
 #include "nodes/IfNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/BreakNode.h"
 
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
@@ -145,7 +146,17 @@ void FuncTransformer::visit(VarNode &node)
 
 void FuncTransformer::visit(ScopeNode &node)
 {
-    auto g = c.tree.open(node.property<Sym*>("sym"));
+    auto sym = node.property<Sym*>("sym");
+
+    if(node.loop)
+    {
+        auto temp = pcx::str("#break_", c.labels++);
+        c.temps[c.tree.current()->container()].push_back(std::make_pair(temp, c.types.charType()));
+
+        sym->setProperty("breakflag", temp);
+    }
+
+    auto g = c.tree.open(sym);
     node.body->accept(*this);
 }
 
@@ -229,4 +240,20 @@ void FuncTransformer::visit(ForNode &node)
     }
 
     node.body->accept(*this);
+}
+
+void FuncTransformer::visit(BreakNode &node)
+{
+    auto s = c.tree.current();
+    while(s && !s->getProperty("loop").value<bool>())
+    {
+        s = s->parent();
+    }
+
+    if(!s)
+    {
+        throw Error(node.location(), "break outside of loop");
+    }
+
+    node.setProperty("target", s);
 }

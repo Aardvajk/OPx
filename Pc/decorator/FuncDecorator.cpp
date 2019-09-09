@@ -38,6 +38,8 @@ void FuncDecorator::visit(ScopeNode &node)
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", c.scopes++)));
     node.setProperty("sym", sym);
 
+    sym->setProperty("loop", node.loop);
+
     auto g = c.tree.open(sym);
     node.body->accept(*this);
 }

@@ -14,6 +14,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/BreakNode.h"
 
 #include "generator/ExprGenerator.h"
 #include "generator/CommonGenerator.h"
@@ -45,6 +46,20 @@ void processTempDestructs(Context &c, std::ostream &os, Location location)
     c.tempDestructs.clear();
 }
 
+void exitScope(Context &c, std::ostream &os, Node &node)
+{
+    processTempDestructs(c, os, node.location());
+
+    if(!c.destructs.empty() && !c.destructs.back().empty())
+    {
+        os << "    jmp \"#destroy_" << c.destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
+    }
+    else
+    {
+        os << "    jmp \"#no_return_exit_" << c.tree.current()->fullname() << "\";\n";
+    }
+}
+
 }
 
 FuncGenerator::FuncGenerator(Context &c, std::ostream &os) : c(c), os(os)
@@ -72,7 +87,14 @@ void FuncGenerator::visit(VarNode &node)
 
 void FuncGenerator::visit(ScopeNode &node)
 {
-    auto g = c.tree.open(node.property<Sym*>("sym"));
+    auto sym = node.property<Sym*>("sym");
+
+    if(auto bp = sym->getProperty("breakflag"))
+    {
+        os << "    clrf \"" << bp.to<std::string>() << "\";\n";
+    }
+
+    auto g = c.tree.open(sym);
     c.destructs.push_back({ });
 
     node.body->accept(*this);
@@ -143,6 +165,8 @@ void FuncGenerator::visit(ReturnNode &node)
     }
 
     os << "    setf \"@rf\";\n";
+
+    exitScope(c, os, node);
 }
 
 void FuncGenerator::visit(WhileNode &node)
@@ -157,7 +181,12 @@ void FuncGenerator::visit(WhileNode &node)
 
     node.body->accept(*this);
 
-    os << "    jmp " << l0 << ";\n";
+    auto flag = node.body->property<Sym*>("sym")->property<std::string>("breakflag");
+
+    os << "    push &\"" << flag << "\";\n";
+    os << "    load 1;\n";
+
+    os << "    jmp ifz " << l0 << ";\n";
     os << l1 << ":\n";
 }
 
@@ -211,7 +240,24 @@ void FuncGenerator::visit(ForNode &node)
         os << "    pop " << sz << ";\n";
     }
 
-    os << "    jmp " << l0 << ";\n";
+    auto flag = node.body->property<Sym*>("sym")->property<std::string>("breakflag");
+
+    os << "    push &\"" << flag << "\";\n";
+    os << "    load 1;\n";
+
+    os << "    jmp ifz " << l0 << ";\n";
 
     os << l1 << ":\n";
+}
+
+void FuncGenerator::visit(BreakNode &node)
+{
+    auto s = c.tree.current();
+    while(!s->getProperty("loop").value<bool>())
+    {
+        s = s->parent();
+    }
+
+    os << "    setf \"" << s->property<std::string>("breakflag") << "\";\n";
+    exitScope(c, os, node);
 }

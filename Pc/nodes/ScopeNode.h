@@ -6,10 +6,11 @@
 class ScopeNode : public Node
 {
 public:
-    explicit ScopeNode(Location location) : Node(location) { }
+    explicit ScopeNode(Location location, bool loop = false) : Node(location), loop(loop) { }
 
     virtual void accept(Visitor &v) override;
 
+    bool loop;
     NodePtr body;
 };
 

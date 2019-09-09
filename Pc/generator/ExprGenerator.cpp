@@ -207,13 +207,10 @@ void ExprGenerator::visit(AssignNode &node)
 {
     auto s = ExprGenerator::generate(c, os, *node.expr);
 
-    if(!c.option("O", "ellide_zero_ops") || s)
-    {
-        AddrGenerator::generate(c, os, *node.target);
+    AddrGenerator::generate(c, os, *node.target);
 
-        os << "    store " << s << ";\n";
-        sz = s;
-    }
+    os << "    store " << s << ";\n";
+    sz = s;
 }
 
 void ExprGenerator::visit(ThisNode &node)
@@ -226,11 +223,8 @@ void ExprGenerator::visit(DerefNode &node)
 {
     auto s = c.assertSize(node.expr->location(), TypeVisitor::type(c, &node));
 
-    if(!c.option("O", "ellide_zero_ops") || s)
-    {
-        ExprGenerator::generate(c, os, *node.expr);
-        os << "    load " << s << ";\n";
-    }
+    ExprGenerator::generate(c, os, *node.expr);
+    os << "    load " << s << ";\n";
 
     sz = s;
 }

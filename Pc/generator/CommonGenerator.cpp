@@ -48,14 +48,10 @@ void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node &node
             auto temp = tp.to<std::string>();
             auto sz = c.assertSize(node.location(), TypeVisitor::type(c, &node));
 
-            if(!c.option("O", "ellide_zero_ops") || sz)
-            {
-                ExprGenerator::generate(c, os, node);
-                os << "    push &\"" << temp << "\";\n";
-                os << "    store " << sz << ";\n";
-                os << "    pop " << sz << ";\n";
-            }
-
+            ExprGenerator::generate(c, os, node);
+            os << "    push &\"" << temp << "\";\n";
+            os << "    store " << sz << ";\n";
+            os << "    pop " << sz << ";\n";
             os << "    push &\"" << temp << "\";\n";
         }
         else

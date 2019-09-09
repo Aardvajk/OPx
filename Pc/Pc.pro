@@ -52,6 +52,7 @@ SOURCES += \
         nodes/AssignNode.cpp \
         nodes/BinaryNode.cpp \
         nodes/BlockNode.cpp \
+        nodes/BreakNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
         nodes/DerefNode.cpp \
@@ -137,6 +138,7 @@ HEADERS += \
     nodes/AssignNode.h \
     nodes/BinaryNode.h \
     nodes/BlockNode.h \
+    nodes/BreakNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
     nodes/DerefNode.h \

@@ -10,6 +10,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/BreakNode.h"
 
 #include "compiler/CommonConstructs.h"
 #include "compiler/ExprConstructs.h"
@@ -49,7 +50,7 @@ void whileConstruct(Context &c, BlockNode *block, bool get)
     n->expr = ExprConstructs::expr(c, true);
     c.scanner.match(Token::Type::RightParen, false);
 
-    n->body = CommonConstructs::scopeContents(c, tok.location(), true);
+    n->body = CommonConstructs::loopScopeContents(c, tok.location(), true);
 }
 
 void ifConstruct(Context &c, BlockNode *block, bool get)
@@ -117,7 +118,16 @@ void forConstruct(Context &c, BlockNode *block, bool get)
 
     c.scanner.match(Token::Type::RightParen, false);
 
-    n->body = CommonConstructs::scopeContents(c, tok.location(), true);
+    n->body = CommonConstructs::loopScopeContents(c, tok.location(), true);
+}
+
+void breakConstruct(Context &c, BlockNode *block, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::RwBreak, get);
+
+    block->push_back(new BreakNode(tok.location()));
+
+    c.scanner.consume(Token::Type::Semicolon, true);
 }
 
 void scopeConstruct(Context &c, BlockNode *block, bool get)
@@ -156,6 +166,7 @@ void FuncConstructs::entity(Context &c, BlockNode *block, bool get)
         case Token::Type::RwWhile: whileConstruct(c, block, false); break;
         case Token::Type::RwIf: ifConstruct(c, block, false); break;
         case Token::Type::RwFor: forConstruct(c, block, false); break;
+        case Token::Type::RwBreak: breakConstruct(c, block, false); break;
 
         case Token::Type::LeftBrace: scopeConstruct(c, block, false); break;
 
