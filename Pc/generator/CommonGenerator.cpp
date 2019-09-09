@@ -48,10 +48,14 @@ void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node &node
             auto temp = tp.to<std::string>();
             auto sz = c.assertSize(node.location(), TypeVisitor::type(c, &node));
 
-            ExprGenerator::generate(c, os, node);
-            os << "    push &\"" << temp << "\";\n";
-            os << "    store " << sz << ";\n";
-            os << "    pop " << sz << ";\n";
+            if(!c.option("O", "ellide_zero_ops") || sz)
+            {
+                ExprGenerator::generate(c, os, node);
+                os << "    push &\"" << temp << "\";\n";
+                os << "    store " << sz << ";\n";
+                os << "    pop " << sz << ";\n";
+            }
+
             os << "    push &\"" << temp << "\";\n";
         }
         else
@@ -63,7 +67,13 @@ void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node &node
     {
         auto fn = TypeLookup::assertNewCopyMethod(c, node.location(), type);
 
-        os << "    allocs " << c.assertSize(node.location(), type) << ";\n";
+        auto s = c.assertSize(node.location(), type);
+
+        if(!c.option("O", "ellide_zero_ops") || s)
+        {
+            os << "    allocs " << s << ";\n";
+        }
+
         os << "    push sp;\n";
         AddrGenerator::generate(c, os, node);
         os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";

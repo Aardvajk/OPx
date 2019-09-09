@@ -111,7 +111,7 @@ void FuncGenerator::visit(ExprNode &node)
 {
     auto sz = ExprGenerator::generate(c, os, *node.expr);
 
-    if(sz)
+    if(!c.option("O", "ellide_zero_ops") || sz)
     {
         os << "    pop " << sz << ";\n";
     }

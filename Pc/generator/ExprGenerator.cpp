@@ -141,7 +141,7 @@ void ExprGenerator::visit(CallNode &node)
 
         if(r->primitive() || r->ref)
         {
-            if(rs)
+            if(!c.option("O", "ellide_zero_ops") || rs)
             {
                 os << "    allocs " << rs << ";\n";
             }
@@ -201,11 +201,13 @@ void ExprGenerator::visit(AssignNode &node)
 {
     auto s = ExprGenerator::generate(c, os, *node.expr);
 
-    AddrGenerator::generate(c, os, *node.target);
+    if(!c.option("O", "ellide_zero_ops") || s)
+    {
+        AddrGenerator::generate(c, os, *node.target);
 
-    os << "    store " << s << ";\n";
-
-    sz = s;
+        os << "    store " << s << ";\n";
+        sz = s;
+    }
 }
 
 void ExprGenerator::visit(ThisNode &node)
@@ -218,9 +220,12 @@ void ExprGenerator::visit(DerefNode &node)
 {
     auto s = c.assertSize(node.expr->location(), TypeVisitor::type(c, &node));
 
-    ExprGenerator::generate(c, os, *node.expr);
+    if(!c.option("O", "ellide_zero_ops") || s)
+    {
+        ExprGenerator::generate(c, os, *node.expr);
+        os << "    load " << s << ";\n";
+    }
 
-    os << "    load " << s << ";\n";
     sz = s;
 }
 
