@@ -48,7 +48,7 @@ std::string toString(const Type *type)
 
     if(type->method)
     {
-        s += " <method>";
+        s += (type->constMethod ? " <const method>" : " <method>");
     }
 
     return s;
@@ -163,6 +163,6 @@ Type Type::removeSub(const Type &type)
     return r;
 }
 
-Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
+Type::Type() : constant(false), ref(false), constMethod(false), ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
 {
 }

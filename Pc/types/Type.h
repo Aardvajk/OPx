@@ -29,6 +29,7 @@ public:
 
     bool constant;
     bool ref;
+    bool constMethod;
 
     unsigned ptr;
     Sym *sym;

@@ -8,13 +8,14 @@
 class FuncNode : public Node
 {
 public:
-    FuncNode(Location location, NodePtr name) : Node(location), name(name) { }
+    FuncNode(Location location, NodePtr name) : Node(location), name(name), constMethod(false) { }
 
     virtual void accept(Visitor &v) override;
 
     NodePtr name;
     NodePtr type;
     NodeList args;
+    bool constMethod;
     NodeList inits;
     NodePtr initialisers;
     NodePtr body;

@@ -38,6 +38,11 @@ void NameVisitors::PrettyName::visit(VarNode &node)
 
 void NameVisitors::PrettyName::visit(TypeNode &node)
 {
+    if(node.constant)
+    {
+        r += "const ";
+    }
+
     if(node.ref)
     {
         r += "ref ";
@@ -65,6 +70,11 @@ void NameVisitors::PrettyName::visit(TypeNode &node)
         {
             r += ":";
             node.returnType->accept(*this);
+        }
+
+        if(node.constMethod)
+        {
+            r += " const";
         }
     }
     else

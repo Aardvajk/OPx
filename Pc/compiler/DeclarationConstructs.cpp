@@ -197,6 +197,17 @@ void funcConstruct(Context &c, BlockNode *block, bool get)
         n->type = TypeConstructs::type(c, true);
     }
 
+    if(c.scanner.token().type() == Token::Type::RwConst)
+    {
+        if(c.containers.back() != Sym::Type::Class || special != Token::Type::Invalid)
+        {
+            throw Error(nn->location(), "cannot be const - ", NameVisitors::prettyName(nn.get()));
+        }
+
+        n->constMethod = true;
+        c.scanner.next(true);
+    }
+
     if(c.scanner.token().type() == Token::Type::Ellipsis && special == Token::Type::RwNew)
     {
         inits(c, n->inits, true);

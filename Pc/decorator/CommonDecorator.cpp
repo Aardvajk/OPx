@@ -31,7 +31,9 @@ Sym *searchCallableExact(Context &c, FuncNode &node, const Type *type)
             throw Error(node.location(), "function expected - ", s->fullname());
         }
 
-        if(TypeCompare::exactArgs(type, s->property<const Type*>("type")))
+        auto st = s->property<const Type*>("type");
+
+        if(type->constMethod == st->constMethod && TypeCompare::exactArgs(type, st))
         {
             return s;
         }
@@ -214,6 +216,8 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
             throw Error(a->location(), "arrays cannot be arguments - ", NameVisitors::prettyName(a.get()));
         }
     }
+
+    t.constMethod = node.constMethod;
 
     auto type = c.types.insert(t);
 

@@ -73,6 +73,11 @@ bool TypeCompare::exact(const Type *a, const Type *b)
         {
             return false;
         }
+
+        if(a->constMethod != b->constMethod)
+        {
+            return false;
+        }
     }
 
     return compatible(a, b);
