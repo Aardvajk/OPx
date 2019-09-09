@@ -37,8 +37,13 @@ void AddrGenerator::visit(IdNode &node)
 
         node.parent->accept(*this);
 
-        os << "    push size(" << sym->property<std::size_t>("offset") << ");\n";
-        os << "    add size;\n";
+        auto o = sym->property<std::size_t>("offset");
+
+        if(!c.option("O", "ellide_zero_ops") || o)
+        {
+            os << "    push size(" << o << ");\n";
+            os << "    add size;\n";
+        }
 
         ok = true;
     }

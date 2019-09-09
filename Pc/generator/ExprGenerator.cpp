@@ -75,8 +75,14 @@ void ExprGenerator::visit(IdNode &node)
 
             AddrGenerator::generate(c, os, *node.parent);
 
-            os << "    push size(" << s->property<std::size_t>("offset") << ");\n";
-            os << "    add size;\n";
+            auto o = s->property<std::size_t>("offset");
+
+            if(!c.option("O", "ellide_zero_ops") || o)
+            {
+                os << "    push size(" << o << ");\n";
+                os << "    add size;\n";
+            }
+
             os << "    load " << c.assertSize(node.location(), t) << ";\n";
         }
         else
