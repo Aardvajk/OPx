@@ -38,7 +38,10 @@ void TypeVisitor::visit(IdNode &node)
         ExprDecorator::decorate(c, nullptr, node);
     }
 
-    r = node.property<const Sym*>("sym")->property<Type*>("type");
+    if(auto tp = node.property<Sym*>("sym")->getProperty("type"))
+    {
+        r = tp.to<Type*>();
+    }
 }
 
 void TypeVisitor::visit(VarNode &node)
@@ -114,6 +117,8 @@ void TypeVisitor::visit(ThisNode &node)
     if(p->type() == Sym::Type::Class)
     {
         auto t = Type::makePrimary(0, p);
+
+        t.constant = f->property<const Type*>("type")->constMethod;
         t.ref = true;
 
         if(c.refsLowered)
@@ -234,12 +239,12 @@ void TypeVisitor::visit(OpEqNode &node)
     node.target->accept(*this);
 }
 
-Type *TypeVisitor::type(Context &c, Node *node)
+Type *TypeVisitor::type(Context &c, Node *node, bool assert)
 {
     TypeVisitor tv(c);
     node->accept(tv);
 
-    if(!tv.result())
+    if(!tv.result() && assert)
     {
         throw Error(node->location(), "internal error, type lookup failed - ", NameVisitors::prettyName(node));
     }

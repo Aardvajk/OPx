@@ -20,6 +20,7 @@
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
+#include "visitors/CheckMutable.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
@@ -88,6 +89,17 @@ void ExprDecorator::visit(CallNode &node)
 
     ExprDecorator ed(c, c.types.insert(t));
     node.target->accept(ed);
+
+    CheckMutable cm(c);
+    node.target->accept(cm);
+
+    if(!cm.result())
+    {
+        t.constMethod = true;
+
+        ExprDecorator ed(c, c.types.insert(t));
+        node.target->accept(ed);
+    }
 }
 
 void ExprDecorator::visit(AddrOfNode &node)

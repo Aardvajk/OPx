@@ -137,6 +137,26 @@ std::vector<Sym*> pruneResult(const std::vector<Sym*> &rs, const Type *expectedT
     return v;
 }
 
+std::vector<Sym*> pruneConstMethodResult(const std::vector<Sym*> &rs, const Type *expectedType)
+{
+    if(rs.size() > 1)
+    {
+        std::vector<Sym*> v;
+
+        for(auto &r: rs)
+        {
+            if(r->property<const Type*>("type")->constMethod == expectedType->constMethod)
+            {
+                v.push_back(r);
+            }
+        }
+
+        return v;
+    }
+
+    return rs;
+}
+
 void checkResult(Node &node, const std::vector<Sym*> &rs, const Type *expectedType)
 {
     if(rs.empty())
@@ -176,6 +196,7 @@ Sym *CommonDecorator::searchCallableByType(Context &c, Node &node, const Type *e
     if(!rs.empty() && rs.front()->type() != Sym::Type::Class)
     {
         rs = pruneResult(rs, expectedType);
+        rs = pruneConstMethodResult(rs, expectedType);
     }
 
     checkResult(node, rs, expectedType);

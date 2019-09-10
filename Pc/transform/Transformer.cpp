@@ -109,6 +109,8 @@ void Transformer::visit(FuncNode &node)
         node.args.insert(node.args.begin(), n);
 
         auto t = Type::makePrimary(0, sym->parent());
+
+        t.constant = sym->property<const Type*>("type")->constMethod;
         t.ref = true;
 
         auto tt = c.types.insert(t);

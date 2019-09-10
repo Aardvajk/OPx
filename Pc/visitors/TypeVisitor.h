@@ -37,7 +37,7 @@ public:
     virtual void visit(IncDecNode &node) override;
     virtual void visit(OpEqNode &node) override;
 
-    static Type *type(Context &c, Node *node);
+    static Type *type(Context &c, Node *node, bool assert = true);
 
 private:
     Context &c;
