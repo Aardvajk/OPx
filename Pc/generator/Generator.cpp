@@ -12,6 +12,7 @@
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 #include "types/TypeLookup.h"
 
 #include "visitors/NameVisitors.h"
@@ -123,6 +124,11 @@ void Generator::visit(FuncNode &node)
         }
 
         node.body->accept(fg);
+
+        if(!TypeCompare::exact(type->returnType, c.types.nullType()) && !sym->getProperty("returned").value<bool>())
+        {
+            throw Error(node.location(), sym->fullname(), " must return a value - ", type->returnType->text());
+        }
 
         os << "\"#end_function\":\n";
 

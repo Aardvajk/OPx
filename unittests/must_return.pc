@@ -1,0 +1,12 @@
+pragma(set, "test_error=foo must return a value - std.int");
+
+func foo():std.int
+{
+    {
+        return 120;
+    }
+}
+
+func main()
+{
+}

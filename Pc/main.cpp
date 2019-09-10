@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
     {
         if(c.option("test_error", error.what()))
         {
-            return 0;
+            return 100;
         }
 
         std::cerr << "pc error";

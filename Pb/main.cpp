@@ -21,7 +21,12 @@ bool runTest(const std::string &dir, const std::string &path)
 
     std::cout << test << "\n";
 
-    if(std::system(pcx::str(exePath("pc"), " -q -I+=../lib ", file, ".pc unittest.pi").c_str())) return false;
+    auto r = std::system(pcx::str(exePath("pc"), " -q -I+=../lib ", file, ".pc unittest.pi").c_str());
+    if(r)
+    {
+        return r == 100;
+    }
+
     if(std::system(pcx::str(exePath("pi"), " -q unittest.pi unittest.po").c_str())) return false;
     if(std::system(pcx::str(exePath("pl"), " -q -trim unittest.px unittest.po ../lib/stdlib.po ../lib/stdtest.po").c_str())) return false;
     if(std::system(pcx::str(exePath("pv"), " -q unittest.px").c_str()))

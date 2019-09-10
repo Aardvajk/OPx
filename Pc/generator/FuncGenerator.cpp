@@ -167,6 +167,20 @@ void FuncGenerator::visit(ReturnNode &node)
     os << "    setf \"@rf\";\n";
 
     exitScope(c, os, node);
+
+    auto s = c.tree.current();
+    std::size_t n = 0;
+
+    while(s && s != c.tree.current()->container())
+    {
+        s = s->parent();
+        ++n;
+    }
+
+    if(n == 1)
+    {
+        c.tree.current()->container()->setProperty("returned", true);
+    }
 }
 
 void FuncGenerator::visit(WhileNode &node)

@@ -13,6 +13,7 @@
 #include "nodes/InitNode.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 #include "transform/FuncTransformer.h"
 #include "transform/InitMapBuilder.h"
