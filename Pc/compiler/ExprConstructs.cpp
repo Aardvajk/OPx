@@ -80,12 +80,7 @@ std::string convertId(Context &c, const Token &tok)
 {
     if(tok.type() == Token::Type::RwOperator)
     {
-        auto op = c.scanner.next(true);
-        if(!Operators::allowed(op.type()))
-        {
-            throw Error(op.location(), "invalid operator - ", op.text());
-        }
-
+        auto op = Operators::scan(c.scanner, true);
         return tok.text() + op.text();
     }
     else if(tok.type() != Token::Type::Id && tok.type() != Token::Type::RwNew && tok.type() != Token::Type::RwDelete)

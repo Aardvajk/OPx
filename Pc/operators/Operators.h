@@ -3,6 +3,8 @@
 
 #include "scanner/Token.h"
 
+class Scanner;
+
 namespace Operators
 {
 
@@ -44,8 +46,9 @@ enum class Type
     LeftShift
 };
 
+Token scan(Scanner &scanner, bool get);
+
 const char *toString(Type v);
-bool allowed(Token::Type v);
 
 Type opFromOpEq(Type v);
 

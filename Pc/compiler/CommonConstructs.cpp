@@ -23,12 +23,7 @@ NodePtr nameImpl(Context &c, bool allowExtensions, NodePtr parent, bool get)
     auto tok = c.scanner.next(get);
     if(tok.type() == Token::Type::RwOperator && allowExtensions)
     {
-        auto op = c.scanner.next(true);
-        if(!Operators::allowed(op.type()))
-        {
-            throw Error(op.location(), "invalid operator - ", op.text());
-        }
-
+        auto op = Operators::scan(c.scanner, true);
         name = tok.text() + op.text();
     }
     else if((tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete) && allowExtensions)
