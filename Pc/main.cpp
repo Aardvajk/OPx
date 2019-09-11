@@ -72,6 +72,9 @@ int main(int argc, char *argv[])
         {
             std::cout << banner("decorated nodes");
             visit<AstPrinter>(n, std::cout);
+
+            std::cout << banner("symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
         }
 
         visit<Transformer>(n, c);
@@ -80,15 +83,6 @@ int main(int argc, char *argv[])
         {
             std::cout << banner("transformed nodes");
             visit<AstPrinter>(n, std::cout);
-
-            std::cout << banner("symbols");
-            SymPrinter::print(c.tree.root(), std::cout);
-
-            std::cout << banner("types");
-            for(auto &t: c.types)
-            {
-                std::cout << t.text() << "\n";
-            }
         }
 
         for(auto &t: c.types)
@@ -110,12 +104,6 @@ int main(int argc, char *argv[])
 
             std::cout << banner("lowered symbols");
             SymPrinter::print(c.tree.root(), std::cout);
-
-            std::cout << banner("lowered types");
-            for(auto &t: c.types)
-            {
-                std::cout << t.text() << "\n";
-            }
         }
 
         if(!quiet)
