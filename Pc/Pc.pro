@@ -98,6 +98,7 @@ SOURCES += \
         visitors/ArraySizeVisitor.cpp \
         visitors/AstPrinter.cpp \
         visitors/CheckMutable.cpp \
+        visitors/HasParent.cpp \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         types/TypeBuilder.cpp \
@@ -184,6 +185,7 @@ HEADERS += \
     visitors/ArraySizeVisitor.h \
     visitors/AstPrinter.h \
     visitors/CheckMutable.h \
+    visitors/HasParent.h \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
     types/TypeBuilder.h \

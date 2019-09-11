@@ -21,6 +21,7 @@
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
 #include "visitors/CheckMutable.h"
+#include "visitors/HasParent.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
@@ -93,12 +94,33 @@ void ExprDecorator::visit(CallNode &node)
     CheckMutable cm(c);
     node.target->accept(cm);
 
-    if(!cm.result())
+    bool isConst = !cm.result();
+
+    if(cm.result())
+    {
+        if(TypeVisitor::type(c, node.target.get())->method)
+        {
+            HasParent hp;
+            node.target->accept(hp);
+
+            if(!hp.result())
+            {
+                isConst = c.tree.current()->container()->property<const Type*>("type")->constMethod;
+            }
+        }
+    }
+
+    if(isConst)
     {
         t.constMethod = true;
 
         ExprDecorator ed(c, c.types.insert(t));
         node.target->accept(ed);
+
+        if(!TypeVisitor::type(c, node.target.get())->constMethod)
+        {
+            throw Error(node.location(), "cannot call mutable method on const object - ", NameVisitors::prettyName(node.target.get()));
+        }
     }
 }
 

@@ -238,6 +238,11 @@ Sym *CommonDecorator::decorateFuncSignature(Context &c, FuncNode &node)
         }
     }
 
+    if(c.tree.current()->container()->type() == Sym::Type::Class)
+    {
+        t.method = true;
+    }
+
     t.constMethod = node.constMethod;
 
     auto type = c.types.insert(t);
