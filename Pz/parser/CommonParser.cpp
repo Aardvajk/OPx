@@ -4,7 +4,10 @@
 
 #include "operators/Operators.h"
 
+#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
+
+#include "parser/Parser.h"
 
 namespace
 {
@@ -54,4 +57,22 @@ NodePtr CommonParser::name(Context &c, bool get)
 NodePtr CommonParser::extendedName(Context &c, bool get)
 {
     return nameImp(c, { }, true, get);
+}
+
+NodePtr CommonParser::blockContents(Context &c, Location location, bool get)
+{
+    auto block = new BlockNode(location);
+    NodePtr nn(block);
+
+    c.scanner.match(Token::Type::LeftBrace, get);
+
+    c.scanner.next(true);
+    while(c.scanner.token().type() != Token::Type::RightBrace)
+    {
+        Parser::construct(c, block, false);
+    }
+
+    c.scanner.next(true);
+
+    return nn;
 }

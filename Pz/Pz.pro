@@ -24,10 +24,15 @@ SOURCES += \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/IdNode.cpp \
+        nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/TypeNode.cpp \
+        nodes/VarNode.cpp \
         operators/Operators.cpp \
         parser/CommonParser.cpp \
+        parser/DeclarationParser.cpp \
         parser/Parser.cpp \
+        parser/TypeParser.cpp \
         visitors/AstPrinter.cpp \
         visitors/DescVisitor.cpp \
         visitors/Visitor.cpp
@@ -36,10 +41,15 @@ HEADERS += \
     application/Context.h \
     nodes/BlockNode.h \
     nodes/IdNode.h \
+    nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/TypeNode.h \
+    nodes/VarNode.h \
     operators/Operators.h \
     parser/CommonParser.h \
+    parser/DeclarationParser.h \
     parser/Parser.h \
+    parser/TypeParser.h \
     visitors/AstPrinter.h \
     visitors/DescVisitor.h \
     visitors/Visitor.h

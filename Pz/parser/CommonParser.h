@@ -11,6 +11,8 @@ namespace CommonParser
 NodePtr name(Context &c, bool get);
 NodePtr extendedName(Context &c, bool get);
 
+NodePtr blockContents(Context &c, Location location, bool get);
+
 }
 
 #endif // COMMONPARSER_H

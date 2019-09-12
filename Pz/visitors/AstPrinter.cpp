@@ -2,6 +2,9 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
+#include "nodes/NamespaceNode.h"
+#include "nodes/TypeNode.h"
+#include "nodes/VarNode.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -35,6 +38,22 @@ void AstPrinter::visit(IdNode &node)
         auto g = pcx::scoped_counter(tc);
         node.parent->accept(*this);
     }
+}
+
+void AstPrinter::visit(NamespaceNode &node)
+{
+    tab() << "namespace " << node.name->description() << "\n";
+    node.body->accept(*this);
+}
+
+void AstPrinter::visit(TypeNode &node)
+{
+    tab() << "type " << node.description() << "\n";
+}
+
+void AstPrinter::visit(VarNode &node)
+{
+    tab() << "var " << node.description() << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

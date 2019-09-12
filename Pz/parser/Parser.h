@@ -8,6 +8,8 @@ class Context;
 namespace Parser
 {
 
+void construct(Context &c, BlockNode *block, bool get);
+
 NodePtr build(Context &c);
 
 }
