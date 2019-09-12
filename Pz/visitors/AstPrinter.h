@@ -11,6 +11,7 @@ public:
     AstPrinter(std::ostream &os);
 
     virtual void visit(BlockNode &node) override;
+    virtual void visit(IdNode &node) override;
 
 private:
     std::ostream &tab() const;

@@ -6,16 +6,23 @@
 
 #include "nodes/BlockNode.h"
 
+#include "parser/CommonParser.h"
+
 namespace
 {
 
 void construct(Context &c, BlockNode *block, bool get)
 {
-    auto tok = c.scanner.next(get);
-    switch(tok.type())
-    {
-        default: throw Error(tok.location(), "construct expected - ", tok.text());
-    }
+    auto n = CommonParser::extendedName(c, get);
+    block->push_back(n);
+
+    c.scanner.consume(Token::Type::Semicolon, false);
+
+//    auto tok = c.scanner.next(get);
+//    switch(tok.type())
+//    {
+//        default: throw Error(tok.location(), "construct expected - ", tok.text());
+//    }
 }
 
 }

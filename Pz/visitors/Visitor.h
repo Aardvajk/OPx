@@ -4,6 +4,7 @@
 #include <utility>
 
 class BlockNode;
+class IdNode;
 
 class Visitor
 {
@@ -11,6 +12,7 @@ public:
     virtual ~Visitor();
 
     virtual void visit(BlockNode &node);
+    virtual void visit(IdNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

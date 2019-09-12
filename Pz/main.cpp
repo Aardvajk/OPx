@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
 
         auto n = Parser::build(c);
 
-        n->property<int>("foo");
-
         if(!quiet)
         {
             std::cout << banner("nodes");

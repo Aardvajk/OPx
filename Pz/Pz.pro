@@ -23,7 +23,10 @@ SOURCES += \
         application/Context.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
+        nodes/IdNode.cpp \
         nodes/Node.cpp \
+        operators/Operators.cpp \
+        parser/CommonParser.cpp \
         parser/Parser.cpp \
         visitors/AstPrinter.cpp \
         visitors/DescVisitor.cpp \
@@ -32,7 +35,10 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     nodes/BlockNode.h \
+    nodes/IdNode.h \
     nodes/Node.h \
+    operators/Operators.h \
+    parser/CommonParser.h \
     parser/Parser.h \
     visitors/AstPrinter.h \
     visitors/DescVisitor.h \
