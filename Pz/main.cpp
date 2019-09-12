@@ -27,10 +27,12 @@ int main(int argc, char *argv[])
 
         auto n = Parser::build(c);
 
+        n->property<int>("foo");
+
         if(!quiet)
         {
             std::cout << banner("nodes");
-            Visitor::visit<AstPrinter>(n, std::cout);
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
         }
 
         if(!quiet)

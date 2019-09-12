@@ -9,6 +9,13 @@ public:
     explicit BlockNode(Location location) : Node(location) { }
 
     virtual void accept(Visitor &v) override;
+    virtual const char *classname() const override;
+
+    void push_back(Node *node);
+    void push_back(NodePtr &node);
+
+    void insert(std::size_t index, Node *node);
+    void insert(std::size_t index, NodePtr &node);
 
     NodeList nodes;
 };

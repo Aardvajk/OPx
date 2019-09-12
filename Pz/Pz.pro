@@ -26,6 +26,7 @@ SOURCES += \
         nodes/Node.cpp \
         parser/Parser.cpp \
         visitors/AstPrinter.cpp \
+        visitors/DescVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
@@ -34,6 +35,7 @@ HEADERS += \
     nodes/Node.h \
     parser/Parser.h \
     visitors/AstPrinter.h \
+    visitors/DescVisitor.h \
     visitors/Visitor.h
 
 DISTFILES += \
