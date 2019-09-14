@@ -2,7 +2,7 @@
 
 #include "framework/Error.h"
 
-#include "types/Type.h"
+#include "types/DefaultTypes.h"
 
 #include <fstream>
 #include <algorithm>
@@ -11,10 +11,7 @@ Context::Context(int argc, char *argv[], std::vector<std::string> &files) : scan
 {
     args.push_back({ argc, argv, files });
 
-    auto std = tree.root()->add(new Sym(Sym::Type::Namespace, { }, "std"));
-    auto null = std->add(new Sym(Sym::Type::Class, { }, "null"));
-
-    types.insert(*this, Type::makePrimary(null));
+    DefaultTypes::create(*this);
 }
 
 void Context::open(const std::string &path)

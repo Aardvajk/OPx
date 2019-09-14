@@ -22,6 +22,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         decorator/Decorator.cpp \
+        generator/Generator.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/ClassNode.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
+        types/DefaultTypes.cpp \
         types/Type.cpp \
         types/TypeBuilder.cpp \
         types/TypeCache.cpp \
@@ -49,11 +51,13 @@ SOURCES += \
         visitors/DescVisitor.cpp \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
+        visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
     decorator/Decorator.h \
+    generator/Generator.h \
     nodes/BlockNode.h \
     nodes/ClassNode.h \
     nodes/FuncNode.h \
@@ -72,6 +76,7 @@ HEADERS += \
     syms/SymGuard.h \
     syms/SymPrinter.h \
     syms/SymTree.h \
+    types/DefaultTypes.h \
     types/Type.h \
     types/TypeBuilder.h \
     types/TypeCache.h \
@@ -80,6 +85,7 @@ HEADERS += \
     visitors/DescVisitor.h \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
+    visitors/TypeVisitor.h \
     visitors/Visitor.h
 
 DISTFILES += \

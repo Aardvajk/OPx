@@ -1,0 +1,30 @@
+#include "DefaultTypes.h"
+
+#include "application/Context.h"
+
+#include "types/Type.h"
+
+#include <pcx/scoped_ptr.h>
+
+namespace
+{
+
+Sym *createPrimitive(Context &c, const std::string &name, std::size_t size)
+{
+    pcx::scoped_ptr<Sym> s = new Sym(Sym::Type::Class, { }, name);
+
+    s->setProperty("size", size);
+    s->setProperty("type", c.types.insert(c, Type::makePrimary(s.get())));
+
+    return s.release();
+}
+
+}
+
+void DefaultTypes::create(Context &c)
+{
+    auto ns = c.tree.root()->add(new Sym(Sym::Type::Namespace, { }, "std"));
+
+    ns->add(createPrimitive(c, "null", 0));
+    ns->add(createPrimitive(c, "int", 4));
+}

@@ -11,7 +11,7 @@ namespace
 
 bool hasScope(const Sym *sym)
 {
-    if(sym->type() == Sym::Type::Class)
+    if(sym->type() == Sym::Type::Func || sym->type() == Sym::Type::Class)
     {
         return sym->findProperty("defined").value<bool>();
     }

@@ -8,9 +8,11 @@
 #include "nodes/NamespaceNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/VarNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
+#include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
@@ -32,6 +34,27 @@ Sym *search(Context &c, Sym::Type type, Node *node)
         }
 
         return s;
+    }
+
+    return nullptr;
+}
+
+Sym *searchFunc(Context &c, Node *node, const Type *type)
+{
+    std::vector<Sym*> sv;
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node, sv);
+
+    for(auto s: sv)
+    {
+        if(s->type() != Sym::Type::Func)
+        {
+            throw Error(node->location(), "function expected - ", s->fullname());
+        }
+
+        if(TypeCompare(c).exactArgs(type, s->property<Type*>("type")))
+        {
+            return s;
+        }
     }
 
     return nullptr;
@@ -68,6 +91,54 @@ void Decorator::visit(NamespaceNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
+    for(auto &a: node.args)
+    {
+        a->accept(*this);
+    }
+
+    if(node.type)
+    {
+        node.type->setProperty("type", Visitor::query<TypeBuilder, Type*>(node.type.get(), c));
+    }
+
+    auto t = Type::makeFunction(node.type ? Visitor::query<TypeVisitor, Type*>(node.type.get()) : c.types.nullType());
+    for(auto &a: node.args)
+    {
+        t.args.push_back(Visitor::query<TypeVisitor, Type*>(a.get()));
+    }
+
+    auto type = c.types.insert(c, t);
+
+    auto sym = searchFunc(c, node.name.get(), type);
+    if(sym)
+    {
+        if(!TypeCompare(c).exact(sym->property<Type*>("type")->returnType, type->returnType))
+        {
+            throw Error(node.location(), "mismatched return type - ", node.name->description());
+        }
+    }
+    else
+    {
+        auto n = NameVisitors::assertSimpleName(c, node.name.get());
+
+        sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), n));
+        sym->setProperty("type", type);
+    }
+
+    node.setProperty("type", type);
+    node.setProperty("sym", sym);
+
+    if(node.body)
+    {
+        if(sym->findProperty("defined").value<bool>())
+        {
+            throw Error(node.location(), "already defined - ", sym->fullname());
+        }
+
+        sym->setProperty("defined", true);
+
+        auto sg = c.tree.open(sym);
+    }
 }
 
 void Decorator::visit(ClassNode &node)
@@ -97,4 +168,8 @@ void Decorator::visit(ClassNode &node)
 
 void Decorator::visit(VarNode &node)
 {
+    if(node.type)
+    {
+        node.type->setProperty("type", Visitor::query<TypeBuilder, Type*>(node.type.get(), c));
+    }
 }

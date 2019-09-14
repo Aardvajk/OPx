@@ -7,6 +7,8 @@
 
 #include "decorator/Decorator.h"
 
+#include "generator/Generator.h"
+
 #include "visitors/AstPrinter.h"
 
 #include "syms/SymPrinter.h"
@@ -46,6 +48,12 @@ int main(int argc, char *argv[])
 
             std::cout << banner("symbols");
             SymPrinter::print(c.tree.root(), std::cout);
+        }
+
+        if(!quiet)
+        {
+            std::cout << banner("generated");
+            Visitor::visit<Generator>(n.get(), c, std::cout);
         }
 
         if(!quiet)
