@@ -9,5 +9,5 @@ void NamespaceNode::accept(Visitor &v)
 
 const char *NamespaceNode::classname() const
 {
-    return "NamespaceNode";
+    return "namespace";
 }

@@ -9,5 +9,5 @@ void VarNode::accept(Visitor &v)
 
 const char *VarNode::classname() const
 {
-    return "VarNode";
+    return "var";
 }

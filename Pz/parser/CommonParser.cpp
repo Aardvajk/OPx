@@ -62,7 +62,7 @@ NodePtr CommonParser::extendedName(Context &c, bool get)
 NodePtr CommonParser::blockContents(Context &c, Location location, bool get)
 {
     auto block = new BlockNode(location);
-    NodePtr nn(block);
+    NodePtr n(block);
 
     c.scanner.match(Token::Type::LeftBrace, get);
 
@@ -74,5 +74,5 @@ NodePtr CommonParser::blockContents(Context &c, Location location, bool get)
 
     c.scanner.next(true);
 
-    return nn;
+    return n;
 }

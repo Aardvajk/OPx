@@ -9,13 +9,16 @@
 #include "parser/CommonParser.h"
 #include "parser/DeclarationParser.h"
 
+#include <pcx/scoped_push.h>
+
 void Parser::construct(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.next(get);
     switch(tok.type())
     {
         case Token::Type::RwNamespace:
-        case Token::Type::RwVar: DeclarationParser::build(c, block, false); break;
+        case Token::Type::RwFunc:
+        case Token::Type::RwClass: DeclarationParser::build(c, block, false); break;
 
         default: throw Error(tok.location(), "construct expected - ", tok.text());
     }
@@ -25,6 +28,8 @@ NodePtr Parser::build(Context &c)
 {
     auto block = new BlockNode(Location());
     NodePtr n(block);
+
+    auto cg = pcx::scoped_push(c.containers, Sym::Type::Namespace);
 
     c.scanner.next(true);
     while(c.scanner.token().type() != Token::Type::Eof)

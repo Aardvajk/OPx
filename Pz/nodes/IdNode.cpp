@@ -9,5 +9,5 @@ void IdNode::accept(Visitor &v)
 
 const char *IdNode::classname() const
 {
-    return "IdNode";
+    return "id";
 }

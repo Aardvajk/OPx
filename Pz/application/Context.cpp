@@ -2,12 +2,19 @@
 
 #include "framework/Error.h"
 
+#include "types/Type.h"
+
 #include <fstream>
 #include <algorithm>
 
 Context::Context(int argc, char *argv[], std::vector<std::string> &files) : scanner(Lexer::Mode::Pc)
 {
     args.push_back({ argc, argv, files });
+
+    auto std = tree.root()->add(new Sym(Sym::Type::Namespace, { }, "std"));
+    auto null = std->add(new Sym(Sym::Type::Class, { }, "null"));
+
+    types.insert(*this, Type::makePrimary(null));
 }
 
 void Context::open(const std::string &path)

@@ -4,9 +4,33 @@
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/TypeNode.h"
+#include "nodes/FuncNode.h"
+#include "nodes/ScopeNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 
+#include "syms/Sym.h"
+
+#include <pcx/str.h>
 #include <pcx/scoped_counter.h>
+
+namespace
+{
+
+std::string details(Node &node)
+{
+    std::string r;
+
+    if(auto s = node.findProperty("sym"))
+    {
+        auto sym = s.to<Sym*>();
+        r += pcx::str(" -> ", sym->fullname(), " [", sym, "]");
+    }
+
+    return r;
+}
+
+}
 
 AstPrinter::AstPrinter(std::ostream &os) : os(os), tc(0)
 {
@@ -31,7 +55,7 @@ void AstPrinter::visit(BlockNode &node)
 
 void AstPrinter::visit(IdNode &node)
 {
-    tab() << "id " << node.name << "\n";
+    tab() << "id " << node.name << details(node) << "\n";
 
     if(node.parent)
     {
@@ -42,18 +66,44 @@ void AstPrinter::visit(IdNode &node)
 
 void AstPrinter::visit(NamespaceNode &node)
 {
-    tab() << "namespace " << node.name->description() << "\n";
+    tab() << "namespace " << node.description() << details(node) << "\n";
     node.body->accept(*this);
 }
 
 void AstPrinter::visit(TypeNode &node)
 {
-    tab() << "type " << node.description() << "\n";
+    tab() << "type " << node.description() << details(node) << "\n";
+}
+
+void AstPrinter::visit(FuncNode &node)
+{
+    tab() << "func " << node.description() << details(node) << "\n";
+
+    if(node.body)
+    {
+        node.body->accept(*this);
+    }
+}
+
+void AstPrinter::visit(ScopeNode &node)
+{
+    tab() << "scope" << details(node) << "\n";
+    node.body->accept(*this);
+}
+
+void AstPrinter::visit(ClassNode &node)
+{
+    tab() << "class " << node.description() << details(node) << "\n";
+
+    if(node.body)
+    {
+        node.body->accept(*this);
+    }
 }
 
 void AstPrinter::visit(VarNode &node)
 {
-    tab() << "var " << node.description() << "\n";
+    tab() << "var " << node.description() << details(node) << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

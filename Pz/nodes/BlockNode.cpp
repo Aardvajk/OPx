@@ -9,7 +9,7 @@ void BlockNode::accept(Visitor &v)
 
 const char *BlockNode::classname() const
 {
-    return "BlockNode";
+    return "block";
 }
 
 void BlockNode::push_back(Node *node)

@@ -5,7 +5,11 @@
 
 #include "parser/Parser.h"
 
+#include "decorator/Decorator.h"
+
 #include "visitors/AstPrinter.h"
+
+#include "syms/SymPrinter.h"
 
 #include <iostream>
 
@@ -31,6 +35,17 @@ int main(int argc, char *argv[])
         {
             std::cout << banner("nodes");
             Visitor::visit<AstPrinter>(n.get(), std::cout);
+        }
+
+        Visitor::visit<Decorator>(n.get(), c);
+
+        if(!quiet)
+        {
+            std::cout << banner("decorated nodes");
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
+
+            std::cout << banner("symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
         }
 
         if(!quiet)

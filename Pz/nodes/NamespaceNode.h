@@ -6,7 +6,7 @@
 class NamespaceNode : public Node
 {
 public:
-    explicit NamespaceNode(Location location) : Node(location) { }
+    explicit NamespaceNode(Location location, NodePtr name) : Node(location), name(name) { }
 
     virtual void accept(Visitor &v) override;
     virtual const char *classname() const override;
