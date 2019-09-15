@@ -18,6 +18,8 @@
 #include "types/TypeCompare.h"
 #include "types/TypeBuilder.h"
 
+#include "decorator/TypeDecorator.h"
+
 namespace
 {
 
@@ -91,14 +93,16 @@ void Decorator::visit(NamespaceNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
+    TypeDecorator td(c);
+
     for(auto &a: node.args)
     {
-        a->accept(*this);
+        a->accept(td);
     }
 
     if(node.type)
     {
-        node.type->setProperty("type", Visitor::query<TypeBuilder, Type*>(node.type.get(), c));
+        node.type->accept(td);
     }
 
     auto t = Type::makeFunction(node.type ? Visitor::query<TypeVisitor, Type*>(node.type.get()) : c.types.nullType());
@@ -163,13 +167,5 @@ void Decorator::visit(ClassNode &node)
 
         auto sg = c.tree.open(sym);
         node.body->accept(*this);
-    }
-}
-
-void Decorator::visit(VarNode &node)
-{
-    if(node.type)
-    {
-        node.type->setProperty("type", Visitor::query<TypeBuilder, Type*>(node.type.get(), c));
     }
 }

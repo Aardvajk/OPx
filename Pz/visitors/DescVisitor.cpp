@@ -38,6 +38,21 @@ void DescVisitor::visit(NamespaceNode &node)
 
 void DescVisitor::visit(TypeNode &node)
 {
+    if(node.constant)
+    {
+        r += "const ";
+    }
+
+    if(node.ref)
+    {
+        r += "ref ";
+    }
+
+    for(std::size_t i = 0; i < node.ptr; ++i)
+    {
+        r += "ptr ";
+    }
+
     node.name->accept(*this);
 }
 

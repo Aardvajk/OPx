@@ -17,6 +17,10 @@ public:
 
     pcx::optional<std::size_t> size() const;
 
+    bool constant;
+    bool ref;
+    std::size_t ptr;
+
     Sym *sym;
 
     std::vector<Type*> args;

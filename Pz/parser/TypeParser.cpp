@@ -46,5 +46,34 @@ TypeNodePtr outer(Context &c, bool get)
 
 NodePtr TypeParser::build(Context &c, bool get)
 {
-    return NodePtr(outer(c, get).release());
+    auto tok = c.scanner.next(get);
+
+    bool constant = false;
+    if(tok.type() == Token::Type::RwConst)
+    {
+        constant = true;
+        tok = c.scanner.next(true);
+    }
+
+    bool ref = false;
+    if(tok.type() == Token::Type::RwRef)
+    {
+        ref = true;
+        tok = c.scanner.next(true);
+    }
+
+    std::size_t ptr = 0;
+    while(tok.type() == Token::Type::RwPtr)
+    {
+        ++ptr;
+        tok = c.scanner.next(true);
+    }
+
+    auto n = outer(c, false);
+
+    n->constant = constant;
+    n->ref = ref;
+    n->ptr = ptr;
+
+    return NodePtr(n.release());
 }

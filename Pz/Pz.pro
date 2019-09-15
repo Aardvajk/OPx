@@ -22,6 +22,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         decorator/Decorator.cpp \
+        decorator/TypeDecorator.cpp \
         generator/Generator.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
@@ -57,6 +58,7 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     decorator/Decorator.h \
+    decorator/TypeDecorator.h \
     generator/Generator.h \
     nodes/BlockNode.h \
     nodes/ClassNode.h \

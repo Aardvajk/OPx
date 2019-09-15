@@ -13,6 +13,21 @@ std::string toString(const Type *type)
 {
     std::string s;
 
+    if(type->constant)
+    {
+        s += "const ";
+    }
+
+    if(type->ref)
+    {
+        s += "ref ";
+    }
+
+    for(std::size_t i = 0; i < type->ptr; ++i)
+    {
+        s += "ptr ";
+    }
+
     if(type->sym)
     {
         s += type->sym->fullname();
@@ -48,10 +63,6 @@ Type Type::makeFunction(Type *returnType)
     return t;
 }
 
-Type::Type() : sym(nullptr), returnType(nullptr)
-{
-}
-
 std::string Type::text() const
 {
     return toString(this);
@@ -59,6 +70,11 @@ std::string Type::text() const
 
 pcx::optional<std::size_t> Type::size() const
 {
+    if(ptr)
+    {
+        return sizeof(std::size_t);
+    }
+
     if(sym)
     {
         if(auto sz = sym->findProperty("size"))
@@ -79,3 +95,8 @@ std::size_t Type::assertSize(Location location, const Type *type)
 
     throw Error(location, "use of forward-declared type - ", type->text());
 }
+
+Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr)
+{
+}
+

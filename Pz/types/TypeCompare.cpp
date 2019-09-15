@@ -18,6 +18,11 @@ bool TypeCompare::compatible(const Type *a, const Type *b) const
         return false;
     }
 
+    if(a->ptr != b->ptr)
+    {
+        return false;
+    }
+
     if(a->sym != b->sym)
     {
         return false;
@@ -56,7 +61,25 @@ bool TypeCompare::compatibleArgs(const Type *a, const Type *b) const
 
 bool TypeCompare::exact(const Type *a, const Type *b) const
 {
-    return compatible(a, b);
+    if(!compatible(a, b))
+    {
+        return false;
+    }
+
+    if(a && b)
+    {
+        if(a->constant != b->constant)
+        {
+            return false;
+        }
+
+        if(a->ref != b->ref)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool TypeCompare::exactArgs(const Type *a, const Type *b) const
