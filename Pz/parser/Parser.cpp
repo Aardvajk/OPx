@@ -18,7 +18,8 @@ void Parser::construct(Context &c, BlockNode *block, bool get)
     {
         case Token::Type::RwNamespace:
         case Token::Type::RwFunc:
-        case Token::Type::RwClass: DeclarationParser::build(c, block, false); break;
+        case Token::Type::RwClass:
+        case Token::Type::RwVar: DeclarationParser::build(c, block, false); break;
 
         default: throw Error(tok.location(), "construct expected - ", tok.text());
     }

@@ -12,6 +12,7 @@
 
 #include "parser/CommonParser.h"
 #include "parser/TypeParser.h"
+#include "parser/ExprParser.h"
 
 #include <pcx/scoped_push.h>
 
@@ -130,6 +131,35 @@ void buildClass(Context &c, BlockNode *block, bool get)
     }
 }
 
+void buildVarImp(Context &c, BlockNode *block, bool get)
+{
+    auto name = CommonParser::extendedName(c, get);
+
+    auto n = new VarNode(name->location(), name);
+    block->push_back(n);
+
+    if(c.scanner.token().type() == Token::Type::Colon)
+    {
+        n->type = TypeParser::build(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Assign)
+    {
+        n->value = ExprParser::build(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        buildVarImp(c, block, true);
+    }
+}
+
+void buildVar(Context &c, BlockNode *block, bool get)
+{
+    buildVarImp(c, block, get);
+    c.scanner.consume(Token::Type::Semicolon, false);
+}
+
 }
 
 void DeclarationParser::build(Context &c, BlockNode *block, bool get)
@@ -140,6 +170,7 @@ void DeclarationParser::build(Context &c, BlockNode *block, bool get)
         case Token::Type::RwNamespace: buildNamespace(c, block, true); break;
         case Token::Type::RwFunc: buildFunc(c, block, true); break;
         case Token::Type::RwClass: buildClass(c, block, true); break;
+        case Token::Type::RwVar: buildVar(c, block, true); break;
 
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }

@@ -22,13 +22,17 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         decorator/Decorator.cpp \
+        decorator/FuncDecorator.cpp \
         decorator/TypeDecorator.cpp \
+        decorator/VarDecorator.cpp \
         generator/Generator.cpp \
+        info/FuncInfo.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/ClassNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
+        nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
         nodes/ScopeNode.cpp \
@@ -37,6 +41,7 @@ SOURCES += \
         operators/Operators.cpp \
         parser/CommonParser.cpp \
         parser/DeclarationParser.cpp \
+        parser/ExprParser.cpp \
         parser/Parser.cpp \
         parser/TypeParser.cpp \
         syms/Sym.cpp \
@@ -59,12 +64,16 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     decorator/Decorator.h \
+    decorator/FuncDecorator.h \
     decorator/TypeDecorator.h \
+    decorator/VarDecorator.h \
     generator/Generator.h \
+    info/FuncInfo.h \
     nodes/BlockNode.h \
     nodes/ClassNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
+    nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
     nodes/ScopeNode.h \
@@ -73,6 +82,7 @@ HEADERS += \
     operators/Operators.h \
     parser/CommonParser.h \
     parser/DeclarationParser.h \
+    parser/ExprParser.h \
     parser/Parser.h \
     parser/TypeParser.h \
     syms/Sym.h \

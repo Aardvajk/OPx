@@ -19,6 +19,10 @@
 #include "types/TypeBuilder.h"
 
 #include "decorator/TypeDecorator.h"
+#include "decorator/VarDecorator.h"
+#include "decorator/FuncDecorator.h"
+
+#include <pcx/scoped_push.h>
 
 namespace
 {
@@ -94,16 +98,14 @@ void Decorator::visit(NamespaceNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
-    TypeDecorator td(c);
-
     for(auto &a: node.args)
     {
-        a->accept(td);
+        Visitor::visit<TypeDecorator>(a.get(), c);
     }
 
     if(node.type)
     {
-        node.type->accept(td);
+        Visitor::visit<TypeDecorator>(node.type.get(), c);
     }
 
     auto t = Type::makeFunction(node.type ? Visitor::query<TypeVisitor, Type*>(node.type.get()) : c.types.nullType());
@@ -151,7 +153,10 @@ void Decorator::visit(FuncNode &node)
 
         sym->setProperty("defined", true);
 
+        auto fg = pcx::scoped_push(c.functions, { });
+
         auto sg = c.tree.open(sym);
+        Visitor::visit<FuncDecorator>(node.body.get(), c);
     }
 }
 
@@ -178,4 +183,9 @@ void Decorator::visit(ClassNode &node)
         auto sg = c.tree.open(sym);
         node.body->accept(*this);
     }
+}
+
+void Decorator::visit(VarNode &node)
+{
+    Visitor::visit<VarDecorator>(&node, c);
 }

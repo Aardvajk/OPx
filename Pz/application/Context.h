@@ -8,6 +8,8 @@
 
 #include "types/TypeCache.h"
 
+#include "info/FuncInfo.h"
+
 #include <pcx/args.h>
 
 class Context
@@ -20,6 +22,8 @@ public:
     bool option(const std::string &key) const;
     bool option(const std::string &key, const std::string &value) const;
 
+    FuncInfo &func(){ return functions.back(); }
+
     std::vector<pcx::args> args;
 
     SourceList sources;
@@ -29,6 +33,7 @@ public:
     TypeCache types;
 
     std::vector<Sym::Type> containers;
+    std::vector<FuncInfo> functions;
 };
 
 #endif // CONTEXT_H
