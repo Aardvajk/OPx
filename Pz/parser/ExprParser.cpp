@@ -8,6 +8,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
+#include "nodes/CallNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -60,15 +61,39 @@ NodePtr primary(Context &c, bool get)
 
 NodePtr dot(Context &c, NodePtr parent, bool get)
 {
-    auto tok = c.scanner.match(Token::Type::Dot, get);
-
-    auto name = c.scanner.next(true);
+    auto name = c.scanner.next(get);
     auto value = convertId(c, name);
 
-    auto n = new IdNode(tok.location(), parent, value);
+    auto n = new IdNode(name.location(), parent, value);
     NodePtr nn(n);
 
     c.scanner.next(true);
+    return nn;
+}
+
+void params(Context &c, NodeList &container, bool get)
+{
+    auto n = expression(c, get);
+    container.push_back(n);
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        params(c, container, true);
+    }
+}
+
+NodePtr call(Context &c, NodePtr target, bool get)
+{
+    auto n = new CallNode(c.scanner.token().location(), target);
+    NodePtr nn(n);
+
+    auto tok = c.scanner.next(true);
+    if(tok.type() != Token::Type::RightParen)
+    {
+        params(c, n->params, false);
+    }
+
+    c.scanner.consume(Token::Type::RightParen, false);
     return nn;
 }
 
@@ -80,7 +105,8 @@ NodePtr entity(Context &c, bool get)
     {
         switch(c.scanner.token().type())
         {
-            case Token::Type::Dot: n = dot(c, n, false); break;
+            case Token::Type::Dot: n = dot(c, n, true); break;
+            case Token::Type::LeftParen: n = call(c, n, true); break;
 
             default: return n;
         }

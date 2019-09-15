@@ -43,3 +43,7 @@ void Visitor::visit(IntLiteralNode &node)
 void Visitor::visit(ExprNode &node)
 {
 }
+
+void Visitor::visit(CallNode &node)
+{
+}

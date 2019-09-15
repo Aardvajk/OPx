@@ -10,6 +10,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
+#include "nodes/CallNode.h"
 
 #include <pcx/join_str.h>
 
@@ -108,3 +109,13 @@ void DescVisitor::visit(IntLiteralNode &node)
 {
     r += pcx::str(node.value);
 }
+
+void DescVisitor::visit(CallNode &node)
+{
+    node.target->accept(*this);
+
+    r += "(";
+    r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
+    r += ")";
+}
+

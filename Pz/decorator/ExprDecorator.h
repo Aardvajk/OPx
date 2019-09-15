@@ -10,7 +10,9 @@ class ExprDecorator : public Visitor
 public:
     explicit ExprDecorator(Context &c);
 
+    virtual void visit(IdNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
+    virtual void visit(CallNode &node) override;
 
 private:
     Context &c;

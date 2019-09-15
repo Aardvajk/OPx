@@ -10,12 +10,14 @@
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
+#include "nodes/CallNode.h"
 
 #include "syms/Sym.h"
 
 #include "types/Type.h"
 
 #include <pcx/str.h>
+#include <pcx/join_str.h>
 #include <pcx/scoped_counter.h>
 
 namespace
@@ -29,6 +31,12 @@ std::string details(Node &node)
     {
         auto sym = s.to<Sym*>();
         r += pcx::str(" -> ", sym->fullname(), " [", sym, "]");
+    }
+
+    if(auto s = node.findProperty("syms"))
+    {
+        auto syms = s.to<std::vector<Sym*> >();
+        r += pcx::str(" -> ", pcx::join_str(syms, ", ", [](const Sym *s){ return s->fullname(); }));
     }
 
     if(auto t = node.findProperty("type"))
@@ -133,6 +141,19 @@ void AstPrinter::visit(ExprNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
+}
+
+void AstPrinter::visit(CallNode &node)
+{
+    tab() << "call\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.target->accept(*this);
+
+    for(auto &p: node.params)
+    {
+        p->accept(*this);
+    }
 }
 
 std::ostream &AstPrinter::tab() const

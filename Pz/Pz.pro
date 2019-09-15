@@ -31,6 +31,7 @@ SOURCES += \
         info/FuncInfo.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
+        nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
@@ -76,6 +77,7 @@ HEADERS += \
     generator/LocalsGenerator.h \
     info/FuncInfo.h \
     nodes/BlockNode.h \
+    nodes/CallNode.h \
     nodes/ClassNode.h \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
