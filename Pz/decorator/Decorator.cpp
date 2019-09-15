@@ -53,7 +53,8 @@ Sym *searchFunc(Context &c, Node *node, const Type *type)
             throw Error(node->location(), "function expected - ", s->fullname());
         }
 
-        if(TypeCompare(c).exactArgs(type, s->property<Type*>("type")))
+        auto t = s->property<Type*>("type");
+        if(TypeCompare(c).exactArgs(type, t) && type->constMethod == t->constMethod)
         {
             return s;
         }
@@ -106,6 +107,17 @@ void Decorator::visit(FuncNode &node)
     }
 
     auto t = Type::makeFunction(node.type ? Visitor::query<TypeVisitor, Type*>(node.type.get()) : c.types.nullType());
+
+    if(c.tree.current()->type() == Sym::Type::Class)
+    {
+        t.method = true;
+    }
+
+    if(node.constMethod)
+    {
+        t.constMethod = true;
+    }
+
     for(auto &a: node.args)
     {
         t.args.push_back(Visitor::query<TypeVisitor, Type*>(a.get()));

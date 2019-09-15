@@ -42,6 +42,16 @@ std::string toString(const Type *type)
         s += ":" + toString(type->returnType);
     }
 
+    if(type->constMethod)
+    {
+        s += " const";
+    }
+
+    if(type->method)
+    {
+        s += " [method]";
+    }
+
     return s;
 }
 
@@ -96,7 +106,7 @@ std::size_t Type::assertSize(Location location, const Type *type)
     throw Error(location, "use of forward-declared type - ", type->text());
 }
 
-Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr)
+Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr), method(false), constMethod(false)
 {
 }
 

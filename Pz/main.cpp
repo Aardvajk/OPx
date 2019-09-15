@@ -13,6 +13,9 @@
 
 #include "syms/SymPrinter.h"
 
+#include "types/Type.h"
+#include "types/LowerTypes.h"
+
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -47,6 +50,17 @@ int main(int argc, char *argv[])
             Visitor::visit<AstPrinter>(n.get(), std::cout);
 
             std::cout << banner("symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
+        }
+
+        LowerTypes::lower(c);
+
+        if(!quiet)
+        {
+            std::cout << banner("lowered nodes");
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
+
+            std::cout << banner("lowered symbols");
             SymPrinter::print(c.tree.root(), std::cout);
         }
 

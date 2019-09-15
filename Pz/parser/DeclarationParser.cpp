@@ -85,6 +85,17 @@ void buildFunc(Context &c, BlockNode *block, bool get)
         n->type = TypeParser::build(c, true);
     }
 
+    if(c.scanner.token().type() == Token::Type::RwConst)
+    {
+        if(c.containers.back() != Sym::Type::Class)
+        {
+            throw Error(c.scanner.token().location(), "free functions cannot be const - ", n->name->description());
+        }
+
+        n->constMethod = true;
+        c.scanner.next(true);
+    }
+
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         auto cg = pcx::scoped_push(c.containers, Sym::Type::Func);

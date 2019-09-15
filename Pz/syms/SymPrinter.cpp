@@ -23,7 +23,14 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 {
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
-    os << ts << Sym::toString(sym->type()) << " " << sym->fullname() << " [" << sym << "]\n";
+    os << ts << Sym::toString(sym->type()) << " " << sym->fullname() << " [" << sym << "]";
+
+    if(auto t = sym->findProperty("type"))
+    {
+        os << " -> " << t.to<Type*>()->text();
+    }
+
+    os << "\n";
 
     if(hasScope(sym))
     {

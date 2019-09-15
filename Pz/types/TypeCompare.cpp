@@ -38,6 +38,16 @@ bool TypeCompare::compatible(const Type *a, const Type *b) const
         return false;
     }
 
+    if(a->method != b->method)
+    {
+        return false;
+    }
+
+    if(a->constMethod != b->constMethod)
+    {
+        return false;
+    }
+
     return true;
 }
 

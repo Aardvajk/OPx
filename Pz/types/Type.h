@@ -26,6 +26,9 @@ public:
     std::vector<Type*> args;
     Type *returnType;
 
+    bool method;
+    bool constMethod;
+
     static Type makePrimary(Sym *sym);
     static Type makeFunction(Type *returnType);
 

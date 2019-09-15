@@ -6,7 +6,7 @@
 class FuncNode : public Node
 {
 public:
-    FuncNode(Location location, NodePtr name) : Node(location), name(name) { }
+    FuncNode(Location location, NodePtr name) : Node(location), name(name), constMethod(false) { }
 
     virtual void accept(Visitor &v) override;
     virtual const char *classname() const override;
@@ -15,6 +15,7 @@ public:
     NodeList args;
     NodePtr type;
     NodePtr body;
+    bool constMethod;
 };
 
 #endif // FUNCNODE_H

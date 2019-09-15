@@ -44,6 +44,7 @@ SOURCES += \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
         types/DefaultTypes.cpp \
+        types/LowerTypes.cpp \
         types/Type.cpp \
         types/TypeBuilder.cpp \
         types/TypeCache.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     syms/SymPrinter.h \
     syms/SymTree.h \
     types/DefaultTypes.h \
+    types/LowerTypes.h \
     types/Type.h \
     types/TypeBuilder.h \
     types/TypeCache.h \

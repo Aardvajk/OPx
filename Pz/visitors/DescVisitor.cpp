@@ -69,6 +69,11 @@ void DescVisitor::visit(FuncNode &node)
         r += ":";
         node.type->accept(*this);
     }
+
+    if(node.constMethod)
+    {
+        r += " const";
+    }
 }
 
 void DescVisitor::visit(ScopeNode &node)
