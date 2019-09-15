@@ -108,15 +108,8 @@ void Decorator::visit(FuncNode &node)
 
     auto t = Type::makeFunction(node.type ? Visitor::query<TypeVisitor, Type*>(node.type.get()) : c.types.nullType());
 
-    if(c.tree.current()->type() == Sym::Type::Class)
-    {
-        t.method = true;
-    }
-
-    if(node.constMethod)
-    {
-        t.constMethod = true;
-    }
+    t.method = c.tree.current()->type() == Sym::Type::Class;
+    t.constMethod = node.constMethod;
 
     for(auto &a: node.args)
     {
@@ -139,6 +132,11 @@ void Decorator::visit(FuncNode &node)
 
         sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), n));
         sym->setProperty("type", type);
+    }
+
+    if(t.constMethod && sym->parent()->type() != Sym::Type::Class)
+    {
+        throw Error(node.location(), "cannot be const - ", node.name->description());
     }
 
     node.setProperty("type", type);

@@ -87,11 +87,6 @@ void buildFunc(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::RwConst)
     {
-        if(c.containers.back() != Sym::Type::Class)
-        {
-            throw Error(c.scanner.token().location(), "free functions cannot be const - ", n->name->description());
-        }
-
         n->constMethod = true;
         c.scanner.next(true);
     }
