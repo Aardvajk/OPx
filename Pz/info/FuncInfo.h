@@ -9,6 +9,7 @@ public:
     FuncInfo();
 
     std::size_t scopes;
+    std::size_t labels;
 };
 
 #endif // FUNCINFO_H

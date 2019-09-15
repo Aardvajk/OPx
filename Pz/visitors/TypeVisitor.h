@@ -14,6 +14,7 @@ public:
 
     virtual void visit(TypeNode &node) override;
     virtual void visit(VarNode &node) override;
+    virtual void visit(IntLiteralNode &node) override;
 
 private:
     Type *r;

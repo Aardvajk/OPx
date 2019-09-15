@@ -12,6 +12,7 @@ class ScopeNode;
 class ClassNode;
 class VarNode;
 class IntLiteralNode;
+class ExprNode;
 
 class Visitor
 {
@@ -27,6 +28,7 @@ public:
     virtual void visit(ClassNode &node);
     virtual void visit(VarNode &node);
     virtual void visit(IntLiteralNode &node);
+    virtual void visit(ExprNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

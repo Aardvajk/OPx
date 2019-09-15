@@ -1,5 +1,5 @@
 #include "FuncInfo.h"
 
-FuncInfo::FuncInfo() : scopes(0)
+FuncInfo::FuncInfo() : scopes(0), labels(0)
 {
 }

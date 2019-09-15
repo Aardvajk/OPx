@@ -156,6 +156,12 @@ void Decorator::visit(FuncNode &node)
         auto fg = pcx::scoped_push(c.functions, { });
 
         auto sg = c.tree.open(sym);
+
+        for(auto &a: node.args)
+        {
+            Visitor::visit<VarDecorator>(a.get(), c);
+        }
+
         Visitor::visit<FuncDecorator>(node.body.get(), c);
     }
 }

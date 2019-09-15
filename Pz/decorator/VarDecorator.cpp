@@ -5,6 +5,7 @@
 #include "nodes/VarNode.h"
 
 #include "decorator/TypeDecorator.h"
+#include "decorator/ExprDecorator.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
@@ -25,12 +26,25 @@ void VarDecorator::visit(VarNode &node)
         type = Visitor::query<TypeVisitor, Type*>(node.type.get());
     }
 
+    if(node.value)
+    {
+        Visitor::visit<ExprDecorator>(node.value.get(), c);
+        if(!type)
+        {
+            type = Visitor::query<TypeVisitor, Type*>(node.value.get());
+        }
+    }
+
     if(!type)
     {
         throw Error(node.location(), "no type specified - ", node.name->description());
     }
 
     auto name = NameVisitors::assertSimpleUniqueName(c, node.name.get());
+    if(name.empty())
+    {
+        name = pcx::str("#unnamed", c.func().labels++);
+    }
 
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.location(), name));
     sym->setProperty("type", type);

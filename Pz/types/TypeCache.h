@@ -15,6 +15,7 @@ public:
     Type *insert(Context &c, const Type &type);
 
     Type *nullType();
+    Type *intType();
 
     pcx::ptr_vector<Type>::iterator begin(){ return v.begin(); }
     pcx::ptr_vector<Type>::iterator end(){ return v.end(); }

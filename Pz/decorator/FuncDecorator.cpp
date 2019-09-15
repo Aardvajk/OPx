@@ -5,8 +5,10 @@
 #include "nodes/BlockNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/ExprNode.h"
 
 #include "decorator/VarDecorator.h"
+#include "decorator/ExprDecorator.h"
 
 FuncDecorator::FuncDecorator(Context &c) : c(c)
 {
@@ -32,4 +34,9 @@ void FuncDecorator::visit(ScopeNode &node)
 void FuncDecorator::visit(VarNode &node)
 {
     Visitor::visit<VarDecorator>(&node, c);
+}
+
+void FuncDecorator::visit(ExprNode &node)
+{
+    Visitor::visit<ExprDecorator>(node.expr.get(), c);
 }

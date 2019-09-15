@@ -9,6 +9,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
+#include "nodes/ExprNode.h"
 
 #include "syms/Sym.h"
 
@@ -124,6 +125,14 @@ void AstPrinter::visit(VarNode &node)
 void AstPrinter::visit(IntLiteralNode &node)
 {
     tab() << "int literal " << node.value << details(node) << "\n";
+}
+
+void AstPrinter::visit(ExprNode &node)
+{
+    tab() << "expr\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

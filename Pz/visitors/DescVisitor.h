@@ -21,6 +21,7 @@ public:
     virtual void visit(ClassNode &node) override;
     virtual void visit(VarNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
+    virtual void visit(ExprNode &node) override;
 
 private:
     std::string r;

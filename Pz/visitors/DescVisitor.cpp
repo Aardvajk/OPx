@@ -9,6 +9,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
+#include "nodes/ExprNode.h"
 
 #include <pcx/join_str.h>
 
@@ -87,7 +88,6 @@ void DescVisitor::visit(ClassNode &node)
     node.name->accept(*this);
 }
 
-
 void DescVisitor::visit(VarNode &node)
 {
     node.name->accept(*this);
@@ -97,6 +97,11 @@ void DescVisitor::visit(VarNode &node)
         r += ":";
         node.type->accept(*this);
     }
+}
+
+void DescVisitor::visit(ExprNode &node)
+{
+    node.expr->accept(*this);
 }
 
 void DescVisitor::visit(IntLiteralNode &node)

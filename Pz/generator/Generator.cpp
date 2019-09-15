@@ -9,6 +9,8 @@
 
 #include "types/Type.h"
 
+#include "generator/LocalsGenerator.h"
+
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -34,6 +36,14 @@ void Generator::visit(FuncNode &node)
 
         os << "func \"" << sym->fullname() << type->text() << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
         os << "{\n";
+
+        for(auto &a: node.args)
+        {
+            os << "    arg \"" << a->property<Sym*>("sym")->fullname() << "\":" << Type::assertSize(a->location(), a->property<Type*>("type")) << ";\n";
+        }
+
+        Visitor::visit<LocalsGenerator>(node.body.get(), c, os);
+
         os << "}\n";
     }
 }
