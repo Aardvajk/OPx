@@ -22,6 +22,8 @@ NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
     {
         tok = Operators::scan(c, true);
         name = tok.text();
+
+        c.scanner.next(true);
     }
     else if((tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete) && extensions)
     {

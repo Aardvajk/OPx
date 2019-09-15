@@ -10,11 +10,9 @@ Token Operators::scan(Context &c, bool get)
 
     if(tok.type() == Token::Type::LeftParen)
     {
-        c.scanner.consume(Token::Type::RightParen, true);
+        c.scanner.match(Token::Type::RightParen, true);
         return Token(Token::Type::CallOp, tok.location(), "()");
     }
-
-    c.scanner.next(true);
 
     switch(tok.type())
     {
