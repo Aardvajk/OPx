@@ -28,7 +28,7 @@ void VarDecorator::visit(VarNode &node)
 
     if(node.value)
     {
-        Visitor::visit<ExprDecorator>(node.value.get(), c);
+        node.value = ExprDecorator::decorate(c, node.value);
         if(!type)
         {
             type = Visitor::query<TypeVisitor, Type*>(node.value.get());

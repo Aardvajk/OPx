@@ -3,7 +3,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
-TypeCache::TypeCache()
+TypeCache::TypeCache(Context &c) : c(c)
 {
 }
 
@@ -11,7 +11,7 @@ TypeCache::~TypeCache()
 {
 }
 
-Type *TypeCache::insert(Context &c, const Type &type)
+Type *TypeCache::insert(const Type &type)
 {
     for(std::size_t i = 0; i < v.size(); ++i)
     {

@@ -15,6 +15,16 @@ using TypeNodePtr = pcx::scoped_ptr<TypeNode>;
 
 TypeNodePtr outer(Context &c, bool get);
 
+void arg(Context &c, NodeList &container, bool get)
+{
+    container.push_back(outer(c, get).release());
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        arg(c, container, true);
+    }
+}
+
 TypeNodePtr primary(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -23,7 +33,18 @@ TypeNodePtr primary(Context &c, bool get)
 
     if(tok.type() == Token::Type::LeftParen)
     {
-        throw Error("internal - function types not implemented");
+        c.scanner.next(true);
+        if(c.scanner.token().type() != Token::Type::RightParen)
+        {
+            arg(c, n->args, false);
+        }
+
+        c.scanner.consume(Token::Type::RightParen, false);
+
+        if(c.scanner.token().type() == Token::Type::Colon)
+        {
+            n->returnType = NodePtr(outer(c, true).release());
+        }
     }
     else
     {

@@ -9,10 +9,10 @@ class Type;
 class TypeCache
 {
 public:
-    TypeCache();
+    TypeCache(Context &c);
     ~TypeCache();
 
-    Type *insert(Context &c, const Type &type);
+    Type *insert(const Type &type);
 
     Type *nullType();
     Type *intType();
@@ -21,6 +21,7 @@ public:
     pcx::ptr_vector<Type>::iterator end(){ return v.end(); }
 
 private:
+    Context &c;
     pcx::ptr_vector<Type> v;
 };
 

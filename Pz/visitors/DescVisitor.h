@@ -23,6 +23,7 @@ public:
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(ExprNode &node) override;
     virtual void visit(CallNode &node) override;
+    virtual void visit(ConstructNode &node) override;
 
 private:
     std::string r;

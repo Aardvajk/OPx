@@ -47,3 +47,7 @@ void Visitor::visit(ExprNode &node)
 void Visitor::visit(CallNode &node)
 {
 }
+
+void Visitor::visit(ConstructNode &node)
+{
+}

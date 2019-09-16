@@ -14,7 +14,7 @@ Sym *createPrimitive(Context &c, const std::string &name, std::size_t size)
     pcx::scoped_ptr<Sym> s = new Sym(Sym::Type::Class, { }, name);
 
     s->setProperty("size", size);
-    s->setProperty("type", c.types.insert(c, Type::makePrimary(s.get())));
+    s->setProperty("type", c.types.insert(Type::makePrimary(s.get())));
 
     return s.release();
 }

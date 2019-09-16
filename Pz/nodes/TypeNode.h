@@ -17,6 +17,9 @@ public:
     std::size_t ptr;
 
     NodePtr name;
+
+    NodeList args;
+    NodePtr returnType;
 };
 
 #endif // TYPENODE_H

@@ -118,7 +118,7 @@ void Decorator::visit(FuncNode &node)
         t.args.push_back(Visitor::query<TypeVisitor, Type*>(a.get()));
     }
 
-    auto type = c.types.insert(c, t);
+    auto type = c.types.insert(t);
 
     auto sym = searchFunc(c, node.name.get(), type);
     if(sym)
@@ -175,7 +175,11 @@ void Decorator::visit(ClassNode &node)
         sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), n));
     }
 
+    auto type = c.types.insert(Type::makePrimary(sym));
+    sym->setProperty("type", type);
+
     node.setProperty("sym", sym);
+    node.setProperty("type", type);
 
     if(node.body)
     {

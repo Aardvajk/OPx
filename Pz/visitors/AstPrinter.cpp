@@ -11,6 +11,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 
 #include "syms/Sym.h"
 
@@ -42,7 +43,7 @@ std::string details(Node &node)
     if(auto t = node.findProperty("type"))
     {
         auto type = t.to<Type*>();
-        r += pcx::str(" ", type->text());
+        r += pcx::str(" -> ", type->text());
     }
 
     return r;
@@ -145,10 +146,20 @@ void AstPrinter::visit(ExprNode &node)
 
 void AstPrinter::visit(CallNode &node)
 {
-    tab() << "call\n";
+    tab() << "call" << details(node) << "\n";
 
     auto g = pcx::scoped_counter(tc);
     node.target->accept(*this);
+
+    for(auto &p: node.params)
+    {
+        p->accept(*this);
+    }
+}
+
+void AstPrinter::visit(ConstructNode &node)
+{
+    tab() << "construct " << node.type->text() << details(node) << "\n";
 
     for(auto &p: node.params)
     {

@@ -38,5 +38,5 @@ void FuncDecorator::visit(VarNode &node)
 
 void FuncDecorator::visit(ExprNode &node)
 {
-    Visitor::visit<ExprDecorator>(node.expr.get(), c);
+    node.expr = ExprDecorator::decorate(c, node.expr);
 }

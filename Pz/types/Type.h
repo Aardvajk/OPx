@@ -13,6 +13,8 @@ class Sym;
 class Type
 {
 public:
+    Type();
+
     std::string text() const;
 
     pcx::optional<std::size_t> size() const;
@@ -33,9 +35,6 @@ public:
     static Type makeFunction(Type *returnType);
 
     static std::size_t assertSize(Location location, const Type *type);
-
-private:
-    Type();
 };
 
 #endif // TYPE_H

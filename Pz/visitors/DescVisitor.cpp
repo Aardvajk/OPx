@@ -11,6 +11,9 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
+
+#include "types/Type.h"
 
 #include <pcx/join_str.h>
 
@@ -56,7 +59,21 @@ void DescVisitor::visit(TypeNode &node)
         r += "ptr ";
     }
 
-    node.name->accept(*this);
+    if(node.name)
+    {
+        node.name->accept(*this);
+    }
+
+    if(!node.args.empty())
+    {
+        r += "(" + pcx::join_str(node.args, ", ", [](const NodePtr &n){ return n->description(); }) + ")";
+    }
+
+    if(node.returnType)
+    {
+        r += ":";
+        node.returnType->accept(*this);
+    }
 }
 
 void DescVisitor::visit(FuncNode &node)
@@ -113,6 +130,15 @@ void DescVisitor::visit(IntLiteralNode &node)
 void DescVisitor::visit(CallNode &node)
 {
     node.target->accept(*this);
+
+    r += "(";
+    r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
+    r += ")";
+}
+
+void DescVisitor::visit(ConstructNode &node)
+{
+    r += node.type->text();
 
     r += "(";
     r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });

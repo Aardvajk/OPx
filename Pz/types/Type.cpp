@@ -57,6 +57,10 @@ std::string toString(const Type *type)
 
 }
 
+Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr), method(false), constMethod(false)
+{
+}
+
 Type Type::makePrimary(Sym *sym)
 {
     Type t;
@@ -80,7 +84,7 @@ std::string Type::text() const
 
 pcx::optional<std::size_t> Type::size() const
 {
-    if(ptr)
+    if(ptr || returnType)
     {
         return sizeof(std::size_t);
     }
@@ -104,9 +108,5 @@ std::size_t Type::assertSize(Location location, const Type *type)
     }
 
     throw Error(location, "use of forward-declared type - ", type->text());
-}
-
-Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr), method(false), constMethod(false)
-{
 }
 

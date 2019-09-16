@@ -33,6 +33,7 @@ SOURCES += \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
+        nodes/ConstructNode.cpp \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
@@ -62,6 +63,7 @@ SOURCES += \
         visitors/AstPrinter.cpp \
         visitors/DescVisitor.cpp \
         visitors/NameVisitors.cpp \
+        visitors/QueryVisitors.cpp \
         visitors/SymFinder.cpp \
         visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
@@ -79,6 +81,7 @@ HEADERS += \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
+    nodes/ConstructNode.h \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
@@ -108,6 +111,7 @@ HEADERS += \
     visitors/AstPrinter.h \
     visitors/DescVisitor.h \
     visitors/NameVisitors.h \
+    visitors/QueryVisitors.h \
     visitors/SymFinder.h \
     visitors/TypeVisitor.h \
     visitors/Visitor.h

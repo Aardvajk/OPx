@@ -14,19 +14,32 @@ TypeBuilder::TypeBuilder(Context &c) : c(c), r(nullptr)
 
 void TypeBuilder::visit(TypeNode &node)
 {
-    std::vector<Sym*> sv;
-    SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), node.name.get(), sv);
+    Type t;
 
-    if(sv.empty() || sv.front()->type() != Sym::Type::Class)
+    if(node.returnType)
     {
-        throw Error(node.name->location(), "type expected - ", node.name->description());
+        t = Type::makeFunction(node.returnType ? Visitor::query<TypeBuilder, Type*>(node.returnType.get(), c) : c.types.nullType());
+        for(auto &a: node.args)
+        {
+            t.args.push_back(Visitor::query<TypeBuilder, Type*>(a.get(), c));
+        }
     }
+    else
+    {
+        std::vector<Sym*> sv;
+        SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), node.name.get(), sv);
 
-    auto t = Type::makePrimary(sv.front());
+        if(sv.empty() || sv.front()->type() != Sym::Type::Class)
+        {
+            throw Error(node.name->location(), "type expected - ", node.name->description());
+        }
+
+        t = Type::makePrimary(sv.front());
+    }
 
     t.constant = node.constant;
     t.ref = node.ref;
     t.ptr = node.ptr;
 
-    r = c.types.insert(c, t);
+    r = c.types.insert(t);
 }
