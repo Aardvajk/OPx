@@ -26,6 +26,7 @@ SOURCES += \
         decorator/FuncDecorator.cpp \
         decorator/TypeDecorator.cpp \
         decorator/VarDecorator.cpp \
+        finaliser/Finaliser.cpp \
         generator/Generator.cpp \
         generator/LocalsGenerator.cpp \
         info/FuncInfo.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
     decorator/FuncDecorator.h \
     decorator/TypeDecorator.h \
     decorator/VarDecorator.h \
+    finaliser/Finaliser.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     info/FuncInfo.h \

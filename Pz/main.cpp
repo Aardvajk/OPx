@@ -7,6 +7,8 @@
 
 #include "decorator/Decorator.h"
 
+#include "finaliser/Finaliser.h"
+
 #include "generator/Generator.h"
 
 #include "visitors/AstPrinter.h"
@@ -61,6 +63,14 @@ int main(int argc, char *argv[])
             Visitor::visit<AstPrinter>(n.get(), std::cout);
 
             std::cout << banner("lowered symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
+        }
+
+        Visitor::visit<Finaliser>(n.get(), c);
+
+        if(!quiet)
+        {
+            std::cout << banner("finalised symbols");
             SymPrinter::print(c.tree.root(), std::cout);
         }
 

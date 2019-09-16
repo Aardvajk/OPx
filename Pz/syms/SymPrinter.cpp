@@ -25,6 +25,11 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
     os << ts << Sym::toString(sym->type()) << " " << sym->fullname() << " [" << sym << "]";
 
+    if(auto s = sym->findProperty("size"))
+    {
+        os << " size(" << s.to<std::size_t>() << ")";
+    }
+
     if(auto t = sym->findProperty("type"))
     {
         os << " -> " << t.to<Type*>()->text();
