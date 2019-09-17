@@ -16,6 +16,7 @@ public:
     Type();
 
     std::string text() const;
+    bool function() const;
 
     pcx::optional<std::size_t> size() const;
 

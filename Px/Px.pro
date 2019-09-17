@@ -27,6 +27,7 @@ SOURCES += \
     framework/Error.cpp \
     framework/InputStream.cpp \
     framework/LoadBinaryFile.cpp \
+    framework/Trace.cpp \
     scanner/Lexer.cpp \
     scanner/Scanner.cpp \
     scanner/Source.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     framework/InputStream.h \
     framework/LoadBinaryFile.h \
     framework/PropertyMap.h \
+    framework/Trace.h \
     scanner/Lexer.h \
     scanner/Location.h \
     scanner/Scanner.h \

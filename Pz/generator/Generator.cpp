@@ -1,5 +1,7 @@
 #include "Generator.h"
 
+#include "application/Context.h"
+
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/FuncNode.h"
@@ -25,6 +27,8 @@ void Generator::visit(BlockNode &node)
 
 void Generator::visit(NamespaceNode &node)
 {
+    auto sg = c.tree.open(node.property<Sym*>("sym"));
+    node.body->accept(*this);
 }
 
 void Generator::visit(FuncNode &node)
@@ -50,4 +54,9 @@ void Generator::visit(FuncNode &node)
 
 void Generator::visit(ClassNode &node)
 {
+    if(node.body)
+    {
+        auto sg = c.tree.open(node.property<Sym*>("sym"));
+        node.body->accept(*this);
+    }
 }

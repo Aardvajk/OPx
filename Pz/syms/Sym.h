@@ -65,7 +65,7 @@ template<typename T> T Sym::property(const std::string &key) const
     auto i = pm.find(key);
     if(i == pm.end())
     {
-        throw Error("bad property read on ", toString(type()), " sym ", fullname(), " - ", key);
+        throw Error(location(), "bad property read on ", toString(type()), " sym ", fullname(), " - ", key);
     }
 
     return i->second.to<T>();

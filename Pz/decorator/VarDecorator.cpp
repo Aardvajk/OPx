@@ -23,7 +23,7 @@ void VarDecorator::visit(VarNode &node)
     if(node.type)
     {
         Visitor::visit<TypeDecorator>(node.type.get(), c);
-        type = Visitor::query<TypeVisitor, Type*>(node.type.get());
+        type = TypeVisitor::assertType(c, node.type.get());
     }
 
     if(node.value)
@@ -31,7 +31,7 @@ void VarDecorator::visit(VarNode &node)
         node.value = ExprDecorator::decorate(c, node.value);
         if(!type)
         {
-            type = Visitor::query<TypeVisitor, Type*>(node.value.get());
+            type = TypeVisitor::assertType(c, node.value.get());
         }
     }
 

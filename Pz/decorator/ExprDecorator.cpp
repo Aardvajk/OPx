@@ -20,12 +20,17 @@ ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c)
 
 void ExprDecorator::visit(IdNode &node)
 {
+    if(node.parent)
+    {
+        node.parent = ExprDecorator::decorate(c, node.parent);
+    }
+
     std::vector<Sym*> sv;
     SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
 
     if(sv.size() > 1)
     {
-        if(expectedType && expectedType->returnType)
+        if(expectedType && expectedType->function())
         {
             std::vector<Sym*> r;
 
@@ -53,7 +58,11 @@ void ExprDecorator::visit(IdNode &node)
     }
 
     node.setProperty("sym", sv.front());
-    node.setProperty("type", sv.front()->property<Type*>("type"));
+
+    if(auto t = sv.front()->findProperty("type"))
+    {
+        node.setProperty("type", t.to<Type*>());
+    }
 }
 
 void ExprDecorator::visit(IntLiteralNode &node)
@@ -70,19 +79,19 @@ void ExprDecorator::visit(CallNode &node)
         for(std::size_t i = 0; i < node.params.size(); ++i)
         {
             node.params[i] = ExprDecorator::decorate(c, node.params[i]);
-            t.args.push_back(Visitor::query<TypeVisitor, Type*>(node.params[i].get()));
+            t.args.push_back(TypeVisitor::assertType(c, node.params[i].get()));
         }
     }
 
     node.target = ExprDecorator::decorate(c, node.target, &t);
-    node.setProperty("type", Visitor::query<TypeVisitor, Type*>(node.target.get()));
+    node.setProperty("type", TypeVisitor::assertType(c, node.target.get()));
 
     if(auto type = Visitor::query<QueryVisitors::DirectType, Type*>(node.target.get()))
     {
         rn = new ConstructNode(node.location(), type, node.params);
         rn->setProperty("type", type);
     }
-    else if(!Visitor::query<TypeVisitor, Type*>(node.target.get())->returnType)
+    else if(!TypeVisitor::assertType(c, node.target.get())->returnType)
     {
         NodePtr id(new IdNode(node.location(), { }, "operator()"));
 

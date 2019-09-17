@@ -82,6 +82,11 @@ std::string Type::text() const
     return toString(this);
 }
 
+bool Type::function() const
+{
+    return returnType;
+}
+
 pcx::optional<std::size_t> Type::size() const
 {
     if(ptr || returnType)
