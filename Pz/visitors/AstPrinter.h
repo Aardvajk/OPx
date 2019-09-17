@@ -22,6 +22,7 @@ public:
     virtual void visit(ExprNode &node) override;
     virtual void visit(CallNode &node) override;
     virtual void visit(ConstructNode &node) override;
+    virtual void visit(PragmaNode &node) override;
 
 private:
     std::ostream &tab() const;

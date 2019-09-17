@@ -12,6 +12,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
+#include "nodes/PragmaNode.h"
 
 #include "syms/Sym.h"
 
@@ -165,6 +166,11 @@ void AstPrinter::visit(ConstructNode &node)
     {
         p->accept(*this);
     }
+}
+
+void AstPrinter::visit(PragmaNode &node)
+{
+    tab() << node.description() << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

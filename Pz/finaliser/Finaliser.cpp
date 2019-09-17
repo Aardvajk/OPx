@@ -1,6 +1,7 @@
 #include "Finaliser.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -50,4 +51,9 @@ void Finaliser::visit(ClassNode &node)
 
         sym->setProperty("size", sz);
     }
+}
+
+void Finaliser::visit(PragmaNode &node)
+{
+    Pragmas::execute(c, node);
 }

@@ -21,6 +21,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
+        application/Pragmas.cpp \
         decorator/Decorator.cpp \
         decorator/ExprDecorator.cpp \
         decorator/FuncDecorator.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
         nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/PragmaNode.cpp \
         nodes/ScopeNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
@@ -50,6 +52,7 @@ SOURCES += \
         parser/ExprParser.cpp \
         parser/FuncParser.cpp \
         parser/Parser.cpp \
+        parser/PragmaParser.cpp \
         parser/TypeParser.cpp \
         syms/Sym.cpp \
         syms/SymGuard.cpp \
@@ -71,6 +74,7 @@ SOURCES += \
 
 HEADERS += \
     application/Context.h \
+    application/Pragmas.h \
     decorator/Decorator.h \
     decorator/ExprDecorator.h \
     decorator/FuncDecorator.h \
@@ -90,6 +94,7 @@ HEADERS += \
     nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/PragmaNode.h \
     nodes/ScopeNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
@@ -99,6 +104,7 @@ HEADERS += \
     parser/ExprParser.h \
     parser/FuncParser.h \
     parser/Parser.h \
+    parser/PragmaParser.h \
     parser/TypeParser.h \
     syms/Sym.h \
     syms/SymGuard.h \

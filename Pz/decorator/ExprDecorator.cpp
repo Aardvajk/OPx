@@ -28,13 +28,13 @@ void ExprDecorator::visit(IdNode &node)
     std::vector<Sym*> sv;
     SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
 
-    if(sv.size() > 1)
+    if(expectedType && expectedType->function())
     {
-        if(expectedType && expectedType->function())
-        {
-            std::vector<Sym*> r;
+        std::vector<Sym*> r;
 
-            for(auto s: sv)
+        for(auto s: sv)
+        {
+            if(s->type() == Sym::Type::Func)
             {
                 auto type = s->property<Type*>("type");
 
@@ -43,9 +43,13 @@ void ExprDecorator::visit(IdNode &node)
                     r.push_back(s);
                 }
             }
-
-            sv = r;
+            else
+            {
+                r.push_back(s);
+            }
         }
+
+        sv = r;
     }
 
     if(sv.empty())
@@ -79,8 +83,12 @@ void ExprDecorator::visit(CallNode &node)
         for(std::size_t i = 0; i < node.params.size(); ++i)
         {
             node.params[i] = ExprDecorator::decorate(c, node.params[i]);
-            t.args.push_back(TypeVisitor::assertType(c, node.params[i].get()));
         }
+    }
+
+    for(auto &p: node.params)
+    {
+        t.args.push_back(TypeVisitor::assertType(c, p.get()));
     }
 
     node.target = ExprDecorator::decorate(c, node.target, &t);

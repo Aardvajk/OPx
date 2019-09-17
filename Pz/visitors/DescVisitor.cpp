@@ -1,5 +1,7 @@
 #include "DescVisitor.h"
 
+#include "scanner/Lexer.h"
+
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
@@ -12,6 +14,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
+#include "nodes/PragmaNode.h"
 
 #include "types/Type.h"
 
@@ -145,3 +148,15 @@ void DescVisitor::visit(ConstructNode &node)
     r += ")";
 }
 
+void DescVisitor::visit(PragmaNode &node)
+{
+    r += "pragma(";
+    r += Pragmas::toString(node.type);
+
+    if(!node.arg.empty())
+    {
+        r += pcx::str(", \"", Lexer::encodeString(node.arg), "\"");
+    }
+
+    r += ")";
+}

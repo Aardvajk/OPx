@@ -1,6 +1,7 @@
 #include "Generator.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -59,4 +60,9 @@ void Generator::visit(ClassNode &node)
         auto sg = c.tree.open(node.property<Sym*>("sym"));
         node.body->accept(*this);
     }
+}
+
+void Generator::visit(PragmaNode &node)
+{
+    Pragmas::execute(c, node);
 }

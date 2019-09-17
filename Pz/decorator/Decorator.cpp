@@ -3,6 +3,7 @@
 #include "framework/Error.h"
 
 #include "application/Context.h"
+#include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
@@ -198,4 +199,9 @@ void Decorator::visit(ClassNode &node)
 void Decorator::visit(VarNode &node)
 {
     Visitor::visit<VarDecorator>(&node, c);
+}
+
+void Decorator::visit(PragmaNode &node)
+{
+    Pragmas::execute(c, node);
 }

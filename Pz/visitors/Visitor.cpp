@@ -51,3 +51,7 @@ void Visitor::visit(CallNode &node)
 void Visitor::visit(ConstructNode &node)
 {
 }
+
+void Visitor::visit(PragmaNode &node)
+{
+}
