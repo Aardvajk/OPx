@@ -17,3 +17,12 @@ void QueryVisitors::DirectType::visit(IdNode &node)
         r = node.property<Type*>("type");
     }
 }
+
+QueryVisitors::GetParent::GetParent()
+{
+}
+
+void QueryVisitors::GetParent::visit(IdNode &node)
+{
+    r = node.parent;
+}

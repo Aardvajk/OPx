@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
 
     try
     {
-        auto quiet = c.option("q");
-
         if(files.size() < 1)
         {
             throw Error("no source specified");
@@ -38,7 +36,7 @@ int main(int argc, char *argv[])
 
         auto n = Parser::build(c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("nodes");
             Visitor::visit<AstPrinter>(n.get(), std::cout);
@@ -46,7 +44,7 @@ int main(int argc, char *argv[])
 
         Visitor::visit<Decorator>(n.get(), c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("decorated nodes");
             Visitor::visit<AstPrinter>(n.get(), std::cout);
@@ -57,7 +55,7 @@ int main(int argc, char *argv[])
 
         LowerTypes::lower(c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("lowered nodes");
             Visitor::visit<AstPrinter>(n.get(), std::cout);
@@ -68,19 +66,19 @@ int main(int argc, char *argv[])
 
         Visitor::visit<Finaliser>(n.get(), c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("finalised symbols");
             SymPrinter::print(c.tree.root(), std::cout);
         }
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("generated");
             Visitor::visit<Generator>(n.get(), c, std::cout);
         }
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner();
         }

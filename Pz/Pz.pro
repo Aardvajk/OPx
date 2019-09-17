@@ -28,6 +28,8 @@ SOURCES += \
         decorator/TypeDecorator.cpp \
         decorator/VarDecorator.cpp \
         finaliser/Finaliser.cpp \
+        generator/ExprGenerator.cpp \
+        generator/FuncGenerator.cpp \
         generator/Generator.cpp \
         generator/LocalsGenerator.cpp \
         info/FuncInfo.cpp \
@@ -69,6 +71,7 @@ SOURCES += \
         visitors/NameVisitors.cpp \
         visitors/QueryVisitors.cpp \
         visitors/SymFinder.cpp \
+        visitors/SymScopeVisitor.cpp \
         visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
@@ -81,6 +84,8 @@ HEADERS += \
     decorator/TypeDecorator.h \
     decorator/VarDecorator.h \
     finaliser/Finaliser.h \
+    generator/ExprGenerator.h \
+    generator/FuncGenerator.h \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     info/FuncInfo.h \
@@ -121,6 +126,7 @@ HEADERS += \
     visitors/NameVisitors.h \
     visitors/QueryVisitors.h \
     visitors/SymFinder.h \
+    visitors/SymScopeVisitor.h \
     visitors/TypeVisitor.h \
     visitors/Visitor.h
 

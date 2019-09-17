@@ -38,7 +38,7 @@ void ExprDecorator::visit(IdNode &node)
             {
                 auto type = s->property<Type*>("type");
 
-                if(TypeCompare(c).compatibleArgs(type, expectedType))
+                if(TypeCompare(c).compatibleArgs(type, expectedType) && type->constMethod == expectedType->constMethod)
                 {
                     r.push_back(s);
                 }
@@ -54,7 +54,7 @@ void ExprDecorator::visit(IdNode &node)
 
     if(sv.empty())
     {
-        throw Error(node.location(), "not found - ", node.description());
+        throw Error(node.location(), "not found - ", node.description(), (expectedType ? expectedType->text() : ""));
     }
     else if(sv.size() > 1)
     {
@@ -78,7 +78,7 @@ void ExprDecorator::visit(CallNode &node)
 {
     auto t = Type::makeFunction(c.types.nullType());
 
-    if(!(flags & Flag::SkipParams))
+    if(!flags[Flag::SkipParams])
     {
         for(std::size_t i = 0; i < node.params.size(); ++i)
         {
@@ -94,25 +94,47 @@ void ExprDecorator::visit(CallNode &node)
     node.target = ExprDecorator::decorate(c, node.target, &t);
     node.setProperty("type", TypeVisitor::assertType(c, node.target.get()));
 
-    if(auto type = Visitor::query<QueryVisitors::DirectType, Type*>(node.target.get()))
-    {
-        rn = new ConstructNode(node.location(), type, node.params);
-        rn->setProperty("type", type);
-    }
-    else if(!TypeVisitor::assertType(c, node.target.get())->returnType)
-    {
-        NodePtr id(new IdNode(node.location(), { }, "operator()"));
+    auto type = TypeVisitor::assertType(c, node.target.get());
 
-        auto cn = new CallNode(node.location(), id);
-        rn = cn;
-
-        cn->params.push_back(node.target);
-        for(auto &p: node.params)
+    if(type->method)
+    {
+        auto n = Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get());
+        if(!n)
         {
-            cn->params.push_back(p);
+            throw Error(node.target->location(), "cannot call method without parent - ", node.target->description());
         }
 
-        rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
+        if(TypeVisitor::assertType(c, n.get())->constant)
+        {
+            t.constMethod = true;
+
+            node.target = ExprDecorator::decorate(c, node.target, &t);
+            node.setProperty("type", TypeVisitor::assertType(c, node.target.get()));
+        }
+    }
+
+    if(auto dt = Visitor::query<QueryVisitors::DirectType, Type*>(node.target.get()))
+    {
+        rn = new ConstructNode(node.location(), dt, node.params);
+        rn->setProperty("type", dt);
+    }
+    else
+    {
+        if(!type->returnType)
+        {
+            NodePtr id(new IdNode(node.location(), { }, "operator()"));
+
+            auto cn = new CallNode(node.location(), id);
+            rn = cn;
+
+            cn->params.push_back(node.target);
+            for(auto &p: node.params)
+            {
+                cn->params.push_back(p);
+            }
+
+            rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
+        }
     }
 }
 

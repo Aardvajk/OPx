@@ -13,6 +13,7 @@
 #include "types/Type.h"
 
 #include "generator/LocalsGenerator.h"
+#include "generator/FuncGenerator.h"
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -48,6 +49,7 @@ void Generator::visit(FuncNode &node)
         }
 
         Visitor::visit<LocalsGenerator>(node.body.get(), c, os);
+        Visitor::visit<FuncGenerator>(node.body.get(), c, os);
 
         os << "}\n";
     }

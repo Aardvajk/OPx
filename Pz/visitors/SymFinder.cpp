@@ -1,6 +1,9 @@
 #include "SymFinder.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/CallNode.h"
+
+#include "visitors/SymScopeVisitor.h"
 
 #include "syms/Sym.h"
 
@@ -49,12 +52,22 @@ void SymFinder::visit(IdNode &node)
 {
     if(node.parent)
     {
-        std::vector<Sym*> sc;
-        SymFinder::find(c, type, curr, node.parent.get(), sc);
+        SymScopeVisitor sv(c, curr);
+        node.parent->accept(sv);
 
-        if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
+        std::vector<Sym*> sc;
+        if(sv.result() == curr)
         {
-            sc = { sc.front()->property<::Type*>("type")->sym };
+            SymFinder::find(c, type, curr, node.parent.get(), sc);
+
+            if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
+            {
+                sc = { sc.front()->property<::Type*>("type")->sym };
+            }
+        }
+        else
+        {
+            sc = { sv.result() };
         }
 
         for(auto s: sc)
@@ -66,6 +79,11 @@ void SymFinder::visit(IdNode &node)
     {
         search(type, curr, node.name, r);
     }
+}
+
+void SymFinder::visit(CallNode &node)
+{
+    node.target->accept(*this);
 }
 
 void SymFinder::find(Context &c, Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
