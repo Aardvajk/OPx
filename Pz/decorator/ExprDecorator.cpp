@@ -14,6 +14,28 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
+namespace
+{
+
+std::vector<Sym*> pruneResult(const std::vector<Sym*> &sv, const Type *expectedType)
+{
+    std::vector<Sym*> r;
+
+    for(auto s: sv)
+    {
+        auto type = s->property<Type*>("type");
+
+        if(type->constMethod == expectedType->constMethod)
+        {
+            r.push_back(s);
+        }
+    }
+
+    return r;
+}
+
+}
+
 ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c), expectedType(expectedType), flags(flags)
 {
 }
@@ -38,7 +60,7 @@ void ExprDecorator::visit(IdNode &node)
             {
                 auto type = s->property<Type*>("type");
 
-                if(TypeCompare(c).compatibleArgs(type, expectedType) && type->constMethod == expectedType->constMethod)
+                if(TypeCompare(c).compatibleArgs(type, expectedType) && (!expectedType->constMethod || type->constMethod))
                 {
                     r.push_back(s);
                 }
@@ -50,6 +72,11 @@ void ExprDecorator::visit(IdNode &node)
         }
 
         sv = r;
+    }
+
+    if(sv.size() > 1 && expectedType)
+    {
+        sv = pruneResult(sv, expectedType);
     }
 
     if(sv.empty())
@@ -101,7 +128,7 @@ void ExprDecorator::visit(CallNode &node)
         auto n = Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get());
         if(!n)
         {
-            throw Error(node.target->location(), "cannot call method without parent - ", node.target->description());
+            throw Error(node.target->location(), "cannot call method without object - ", node.target->description());
         }
 
         if(TypeVisitor::assertType(c, n.get())->constant)
