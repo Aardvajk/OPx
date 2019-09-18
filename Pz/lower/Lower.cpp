@@ -32,7 +32,7 @@ void Lower::visit(FuncNode &node)
 {
     if(node.body)
     {
-        Visitor::visit<FuncLower>(&node, c);
+        Visitor::visit<FuncLower>(node.body.get(), c);
     }
 }
 

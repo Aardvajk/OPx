@@ -55,3 +55,7 @@ void Visitor::visit(ConstructNode &node)
 void Visitor::visit(PragmaNode &node)
 {
 }
+
+void Visitor::visit(AddrOfNode &node)
+{
+}

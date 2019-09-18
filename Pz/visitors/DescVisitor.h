@@ -25,6 +25,7 @@ public:
     virtual void visit(CallNode &node) override;
     virtual void visit(ConstructNode &node) override;
     virtual void visit(PragmaNode &node) override;
+    virtual void visit(AddrOfNode &node) override;
 
 private:
     std::string r;

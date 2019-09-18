@@ -7,6 +7,9 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
+
+#include "generator/AddrGenerator.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -26,6 +29,11 @@ void ExprGenerator::visit(IdNode &node)
     {
         os << "    push &\"" << sym->funcname() << "\";\n";
         sz = sizeof(std::size_t);
+    }
+    else
+    {
+        os << "    push \"" << sym->fullname() << "\";\n";
+        sz = Type::assertSize(node.location(), sym->property<Type*>("type"));
     }
 }
 
@@ -51,6 +59,12 @@ void ExprGenerator::visit(CallNode &node)
     os << "    call;\n";
 
     sz = size;
+}
+
+void ExprGenerator::visit(AddrOfNode &node)
+{
+    AddrGenerator::generate(c, os, node.expr.get());
+    sz = sizeof(std::size_t);
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

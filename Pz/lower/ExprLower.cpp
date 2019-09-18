@@ -2,13 +2,49 @@
 
 #include "application/Context.h"
 
-ExprLower::ExprLower(Context &c, NodePtr &cn) : c(c), cn(cn)
+#include "nodes/IdNode.h"
+#include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
+
+#include "visitors/TypeVisitor.h"
+
+#include "types/Type.h"
+
+ExprLower::ExprLower(Context &c, NodePtr &cn, Type *expectedType) : c(c), cn(cn), expectedType(expectedType)
 {
 }
 
-NodePtr ExprLower::lower(Context &c, NodePtr &node)
+void ExprLower::visit(IdNode &node)
 {
-    ExprLower el(c, node);
+    if(node.parent)
+    {
+        node.parent = ExprLower::lower(c, node.parent);
+    }
+
+    auto type = TypeVisitor::assertType(c, &node);
+    if(!type->ref)
+    {
+        if(expectedType && expectedType->ref)
+        {
+            rn = new AddrOfNode(node.location(), cn);
+            rn->setProperty("type", c.types.insert(type->addPointer()));
+        }
+    }
+}
+
+void ExprLower::visit(CallNode &node)
+{
+    auto type = TypeVisitor::assertType(c, node.target.get());
+
+    for(std::size_t i = 0; i < node.params.size(); ++i)
+    {
+        node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
+    }
+}
+
+NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)
+{
+    ExprLower el(c, node, expectedType);
     node->accept(el);
 
     return el.result() ? el.result() : node;

@@ -61,6 +61,14 @@ Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nul
 {
 }
 
+Type Type::addPointer() const
+{
+    auto t = *this;
+    ++t.ptr;
+
+    return t;
+}
+
 Type Type::makePrimary(Sym *sym)
 {
     Type t;

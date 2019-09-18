@@ -20,6 +20,7 @@ public:
     virtual void visit(IdNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(CallNode &node) override;
+    virtual void visit(AddrOfNode &node) override;
 
     static std::size_t generate(Context &c, std::ostream &os, Node *node);
 

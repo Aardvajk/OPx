@@ -13,6 +13,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/PragmaNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "syms/Sym.h"
 
@@ -184,6 +185,14 @@ void AstPrinter::visit(ConstructNode &node)
 void AstPrinter::visit(PragmaNode &node)
 {
     tab() << node.description() << "\n";
+}
+
+void AstPrinter::visit(AddrOfNode &node)
+{
+    tab() << "addrof" << details(node) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

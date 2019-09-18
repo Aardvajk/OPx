@@ -15,6 +15,8 @@ class Type
 public:
     Type();
 
+    Type addPointer() const;
+
     std::string text() const;
     bool function() const;
 

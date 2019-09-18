@@ -10,6 +10,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "syms/Sym.h"
 
@@ -48,6 +49,11 @@ void TypeVisitor::visit(CallNode &node)
 void TypeVisitor::visit(ConstructNode &node)
 {
     r = node.type;
+}
+
+void TypeVisitor::visit(AddrOfNode &node)
+{
+    r = node.property<Type*>("type");
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

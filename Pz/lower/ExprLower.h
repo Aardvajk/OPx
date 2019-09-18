@@ -6,19 +6,24 @@
 #include "visitors/Visitor.h"
 
 class Context;
+class Type;
 
 class ExprLower : public Visitor
 {
 public:
-    explicit ExprLower(Context &c, NodePtr &cn);
+    explicit ExprLower(Context &c, NodePtr &cn, Type *expectedType);
 
     NodePtr result(){ return rn; }
 
-    static NodePtr lower(Context &c, NodePtr &node);
+    virtual void visit(IdNode &node) override;
+    virtual void visit(CallNode &node) override;
+
+    static NodePtr lower(Context &c, NodePtr &node, Type *expectedType = nullptr);
 
 private:
     Context &c;
     NodePtr &cn;
+    Type *expectedType;
 
     NodePtr rn;
 };
