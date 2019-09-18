@@ -9,6 +9,16 @@
 namespace
 {
 
+std::string type(const Sym *sym)
+{
+    if(sym->type() == Sym::Type::Var && sym->parent()->type() == Sym::Type::Func)
+    {
+        return "arg";
+    }
+
+    return Sym::toString(sym->type());
+}
+
 bool hasScope(const Sym *sym)
 {
     if(sym->type() == Sym::Type::Func || sym->type() == Sym::Type::Class)
@@ -23,7 +33,7 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 {
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
-    os << ts << Sym::toString(sym->type()) << " " << sym->fullname() << " [" << sym << "]";
+    os << ts << type(sym) << " " << sym->fullname() << " [" << sym << "]";
 
     if(auto s = sym->findProperty("size"))
     {

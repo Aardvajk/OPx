@@ -45,7 +45,8 @@ void Generator::visit(FuncNode &node)
 
         for(auto &a: node.args)
         {
-            os << "    arg \"" << a->property<Sym*>("sym")->fullname() << "\":" << Type::assertSize(a->location(), a->property<Type*>("type")) << ";\n";
+            auto s = a->property<Sym*>("sym");
+            os << "    arg \"" << s->fullname() << "\":" << Type::assertSize(a->location(), s->property<Type*>("type")) << ";\n";
         }
 
         Visitor::visit<LocalsGenerator>(node.body.get(), c, os);

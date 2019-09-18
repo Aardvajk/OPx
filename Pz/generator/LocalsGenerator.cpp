@@ -28,5 +28,6 @@ void LocalsGenerator::visit(ScopeNode &node)
 
 void LocalsGenerator::visit(VarNode &node)
 {
-    os << "    var \"" << node.property<Sym*>("sym")->fullname() << "\":" << Type::assertSize(node.location(), node.property<Type*>("type")) << ";\n";
+    auto s = node.property<Sym*>("sym");
+    os << "    var \"" << s->fullname() << "\":" << Type::assertSize(node.location(), s->property<Type*>("type")) << ";\n";
 }

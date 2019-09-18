@@ -33,6 +33,9 @@ SOURCES += \
         generator/Generator.cpp \
         generator/LocalsGenerator.cpp \
         info/FuncInfo.cpp \
+        lower/ExprLower.cpp \
+        lower/FuncLower.cpp \
+        lower/Lower.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
@@ -60,6 +63,9 @@ SOURCES += \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
+        transform/ExprTransform.cpp \
+        transform/FuncTransform.cpp \
+        transform/Transform.cpp \
         types/DefaultTypes.cpp \
         types/LowerTypes.cpp \
         types/Type.cpp \
@@ -89,6 +95,9 @@ HEADERS += \
     generator/Generator.h \
     generator/LocalsGenerator.h \
     info/FuncInfo.h \
+    lower/ExprLower.h \
+    lower/FuncLower.h \
+    lower/Lower.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
@@ -115,6 +124,9 @@ HEADERS += \
     syms/SymGuard.h \
     syms/SymPrinter.h \
     syms/SymTree.h \
+    transform/ExprTransform.h \
+    transform/FuncTransform.h \
+    transform/Transform.h \
     types/DefaultTypes.h \
     types/LowerTypes.h \
     types/Type.h \
@@ -131,4 +143,4 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
-    script.pz
+    ../workspace/script.pz

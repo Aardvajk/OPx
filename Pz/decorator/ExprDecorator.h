@@ -25,7 +25,6 @@ public:
     NodePtr result(){ return rn; }
 
     virtual void visit(IdNode &node) override;
-    virtual void visit(IntLiteralNode &node) override;
     virtual void visit(CallNode &node) override;
 
     static NodePtr decorate(Context &c, NodePtr &node, Type *expectedType = nullptr, Flags flags = { });

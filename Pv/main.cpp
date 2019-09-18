@@ -41,6 +41,10 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<char>();
         std::cout << i;
     }
+    else if(code == 13)
+    {
+        std::cout << "\n";
+    }
     else if(code == 999)
     {
         throw SilentAbort();

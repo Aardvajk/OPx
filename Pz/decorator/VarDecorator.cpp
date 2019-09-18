@@ -49,6 +49,5 @@ void VarDecorator::visit(VarNode &node)
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.location(), name));
     sym->setProperty("type", type);
 
-    node.setProperty("type", type);
     node.setProperty("sym", sym);
 }

@@ -142,7 +142,6 @@ void Decorator::visit(FuncNode &node)
         throw Error(node.location(), "cannot be const - ", node.name->description());
     }
 
-    node.setProperty("type", type);
     node.setProperty("sym", sym);
 
     if(node.body)
@@ -180,7 +179,6 @@ void Decorator::visit(ClassNode &node)
     sym->setProperty("type", type);
 
     node.setProperty("sym", sym);
-    node.setProperty("type", type);
 
     if(node.body)
     {

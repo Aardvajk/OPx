@@ -4,7 +4,15 @@
 
 #include "application/Context.h"
 
+#include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
+#include "nodes/CallNode.h"
+
+#include "visitors/TypeVisitor.h"
+
+#include "types/Type.h"
+
+#include <pcx/indexed_range.h>
 
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -12,6 +20,13 @@ ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 
 void ExprGenerator::visit(IdNode &node)
 {
+    auto sym = node.property<Sym*>("sym");
+
+    if(sym->type() == Sym::Type::Func)
+    {
+        os << "    push &\"" << sym->funcname() << "\";\n";
+        sz = sizeof(std::size_t);
+    }
 }
 
 void ExprGenerator::visit(IntLiteralNode &node)
@@ -22,6 +37,20 @@ void ExprGenerator::visit(IntLiteralNode &node)
 
 void ExprGenerator::visit(CallNode &node)
 {
+    auto type = TypeVisitor::assertType(c, node.target.get());
+    auto size = Type::assertSize(node.location(), type->returnType);
+
+    os << "    allocs " << size << ";\n";
+
+    for(auto &p: node.params)
+    {
+        ExprGenerator::generate(c, os, p.get());
+    }
+
+    ExprGenerator::generate(c, os, node.target.get());
+    os << "    call;\n";
+
+    sz = size;
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

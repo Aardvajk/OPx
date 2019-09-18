@@ -29,5 +29,12 @@ void FuncGenerator::visit(ScopeNode &node)
 void FuncGenerator::visit(ExprNode &node)
 {
     auto sz = ExprGenerator::generate(c, os, node.expr.get());
+
+    if(sz == 4)
+    {
+        os << "    svc 1;\n";
+        os << "    svc 13;\n";
+    }
+
     os << "    pop " << sz << ";\n";
 }

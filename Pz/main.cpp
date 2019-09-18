@@ -7,6 +7,10 @@
 
 #include "decorator/Decorator.h"
 
+#include "transform/Transform.h"
+
+#include "lower/Lower.h"
+
 #include "finaliser/Finaliser.h"
 
 #include "generator/Generator.h"
@@ -19,6 +23,7 @@
 #include "types/LowerTypes.h"
 
 #include <iostream>
+#include <fstream>
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +35,11 @@ int main(int argc, char *argv[])
         if(files.size() < 1)
         {
             throw Error("no source specified");
+        }
+
+        if(files.size() < 2)
+        {
+            throw Error("no output specified");
         }
 
         c.open(files[0]);
@@ -53,7 +63,17 @@ int main(int argc, char *argv[])
             SymPrinter::print(c.tree.root(), std::cout);
         }
 
+        Visitor::visit<Transform>(n.get(), c);
+
+        if(!c.option("q"))
+        {
+            std::cout << banner("transformed nodes");
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
+        }
+
         LowerTypes::lower(c);
+
+        Visitor::visit<Lower>(n.get(), c);
 
         if(!c.option("q"))
         {
@@ -78,7 +98,24 @@ int main(int argc, char *argv[])
             Visitor::visit<Generator>(n.get(), c, std::cout);
         }
 
-        if(!c.option("q"))
+        if(true)
+        {
+            std::ofstream os(files[1], std::ios::binary);
+            if(!os.is_open())
+            {
+                throw Error("unable to create - ", files[1]);
+            }
+
+            Visitor::visit<Generator>(n.get(), c, os);
+        }
+
+        if(c.args.back().contains("test"))
+        {
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po ../lib/stdios.po").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pv/release/pv script.pv").c_str())) return -1;
+        }
+        else if(!c.option("q"))
         {
             std::cout << banner();
         }

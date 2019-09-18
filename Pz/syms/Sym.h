@@ -27,6 +27,8 @@ public:
     ~Sym();
 
     Sym *add(Sym *sym);
+    Sym *insert(std::size_t pos, Sym *sym);
+
     Sym *child(const std::string &name);
     Sym *container();
 
@@ -38,6 +40,7 @@ public:
     std::string name() const { return s; }
 
     std::string fullname() const;
+    std::string funcname() const;
 
     Sym *parent(){ return ps; }
     const Sym *parent() const { return ps; }

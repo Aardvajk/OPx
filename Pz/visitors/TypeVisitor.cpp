@@ -2,12 +2,16 @@
 
 #include "framework/Error.h"
 
+#include "application/Context.h"
+
 #include "nodes/IdNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
+
+#include "syms/Sym.h"
 
 #include "types/Type.h"
 
@@ -17,7 +21,7 @@ TypeVisitor::TypeVisitor(Context &c) : c(c), r(nullptr)
 
 void TypeVisitor::visit(IdNode &node)
 {
-    r = node.property<Type*>("type");
+    r = node.property<Sym*>("sym")->property<Type*>("type");
 }
 
 void TypeVisitor::visit(TypeNode &node)
@@ -32,12 +36,13 @@ void TypeVisitor::visit(VarNode &node)
 
 void TypeVisitor::visit(IntLiteralNode &node)
 {
-    r = node.property<Type*>("type");
+    r = c.types.intType();
 }
 
 void TypeVisitor::visit(CallNode &node)
 {
-    r = node.property<Type*>("type")->returnType;
+    auto t = Visitor::query<TypeVisitor, Type*>(node.target.get(), c);
+    r = t->returnType;
 }
 
 void TypeVisitor::visit(ConstructNode &node)

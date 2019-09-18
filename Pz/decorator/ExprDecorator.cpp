@@ -3,7 +3,6 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
-#include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 
@@ -89,16 +88,6 @@ void ExprDecorator::visit(IdNode &node)
     }
 
     node.setProperty("sym", sv.front());
-
-    if(auto t = sv.front()->findProperty("type"))
-    {
-        node.setProperty("type", t.to<Type*>());
-    }
-}
-
-void ExprDecorator::visit(IntLiteralNode &node)
-{
-    node.setProperty("type", c.types.intType());
 }
 
 void ExprDecorator::visit(CallNode &node)
@@ -119,7 +108,6 @@ void ExprDecorator::visit(CallNode &node)
     }
 
     node.target = ExprDecorator::decorate(c, node.target, &t);
-    node.setProperty("type", TypeVisitor::assertType(c, node.target.get()));
 
     auto type = TypeVisitor::assertType(c, node.target.get());
 
@@ -136,14 +124,12 @@ void ExprDecorator::visit(CallNode &node)
             t.constMethod = true;
 
             node.target = ExprDecorator::decorate(c, node.target, &t);
-            node.setProperty("type", TypeVisitor::assertType(c, node.target.get()));
         }
     }
 
     if(auto dt = Visitor::query<QueryVisitors::DirectType, Type*>(node.target.get()))
     {
         rn = new ConstructNode(node.location(), dt, node.params);
-        rn->setProperty("type", dt);
     }
     else
     {
