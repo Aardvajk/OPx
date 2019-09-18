@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
             Visitor::visit<AstPrinter>(n.get(), std::cout);
         }
 
-        LowerTypes::lower(c);
-
+        LowerTypes::convertRefsToPtrs(c);
         Visitor::visit<Lower>(n.get(), c);
+        LowerTypes::removeRefs(c);
 
         if(!c.option("q"))
         {

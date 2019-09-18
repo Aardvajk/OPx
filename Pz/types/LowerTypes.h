@@ -6,7 +6,8 @@ class Context;
 namespace LowerTypes
 {
 
-void lower(Context &c);
+void convertRefsToPtrs(Context &c);
+void removeRefs(Context &c);
 
 }
 

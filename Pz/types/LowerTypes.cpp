@@ -4,7 +4,7 @@
 
 #include "types/Type.h"
 
-void LowerTypes::lower(Context &c)
+void LowerTypes::convertRefsToPtrs(Context &c)
 {
     for(auto &t: c.types)
     {
@@ -12,5 +12,13 @@ void LowerTypes::lower(Context &c)
         {
             ++t.ptr;
         }
+    }
+}
+
+void LowerTypes::removeRefs(Context &c)
+{
+    for(auto &t: c.types)
+    {
+        t.ref = false;
     }
 }
