@@ -48,7 +48,7 @@ template<typename T> T Node::property(const std::string &key) const
     auto i = pm.find(key);
     if(i == pm.end())
     {
-        throw Error(location(), "bad property read on ", classname(), " node ", description(), " - ", key);
+        throw Error(location(), "bad property read on ", classname(), "node ", description(), " - ", key);
     }
 
     return i->second.to<T>();

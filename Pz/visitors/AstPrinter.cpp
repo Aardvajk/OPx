@@ -149,12 +149,25 @@ void AstPrinter::visit(CallNode &node)
 {
     tab() << "call" << details(node) << "\n";
 
-    auto g = pcx::scoped_counter(tc);
-    node.target->accept(*this);
-
-    for(auto &p: node.params)
+    if(true)
     {
-        p->accept(*this);
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "target\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        node.target->accept(*this);
+    }
+
+    if(!node.params.empty())
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "params\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        for(auto &p: node.params)
+        {
+            p->accept(*this);
+        }
     }
 }
 
