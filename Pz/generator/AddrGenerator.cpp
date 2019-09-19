@@ -4,6 +4,8 @@
 
 #include "nodes/IdNode.h"
 
+#include "application/Context.h"
+
 #include "syms/Sym.h"
 
 AddrGenerator::AddrGenerator(Context &c, std::ostream &os) : c(c), os(os), ok(false)
@@ -14,7 +16,26 @@ void AddrGenerator::visit(IdNode &node)
 {
     auto sym = node.property<Sym*>("sym");
 
-    if(sym->type() == Sym::Type::Var)
+    if(node.parent)
+    {
+        node.parent->accept(*this);
+
+        auto o = sym->property<std::size_t>("offset");
+
+        if(!c.option("O", "elide_no_effect_ops") || o)
+        {
+            os << "    push size(" << o << ");\n";
+            os << "    add size;\n";
+        }
+
+        ok = true;
+    }
+    else if(sym->type() == Sym::Type::Func)
+    {
+        os << "    push &\"" << sym->funcname() << "\";\n";
+        ok = true;
+    }
+    else if(sym->type() == Sym::Type::Var)
     {
         os << "    push &\"" << sym->fullname() << "\";\n";
         ok = true;

@@ -10,6 +10,7 @@
 #include "transform/Transform.h"
 
 #include "lower/Lower.h"
+#include "lower/LowerTypes.h"
 
 #include "finaliser/Finaliser.h"
 
@@ -20,7 +21,6 @@
 #include "syms/SymPrinter.h"
 
 #include "types/Type.h"
-#include "types/LowerTypes.h"
 
 #include <iostream>
 #include <fstream>

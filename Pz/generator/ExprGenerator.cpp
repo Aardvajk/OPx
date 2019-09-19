@@ -30,6 +30,21 @@ void ExprGenerator::visit(IdNode &node)
         os << "    push &\"" << sym->funcname() << "\";\n";
         sz = sizeof(std::size_t);
     }
+    else if(sym->findProperty("member").value<bool>())
+    {
+        AddrGenerator::generate(c, os, node.parent.get());
+
+        auto o = sym->property<std::size_t>("offset");
+
+        if(!c.option("O", "elide_no_effect_ops") || o)
+        {
+            os << "    push size(" << o << ");\n";
+            os << "    add size;\n";
+        }
+
+        sz = Type::assertSize(node.location(), sym->property<Type*>("type"));
+        os << "    load " << *sz << ";\n";
+    }
     else
     {
         os << "    push \"" << sym->fullname() << "\";\n";
@@ -48,7 +63,10 @@ void ExprGenerator::visit(CallNode &node)
     auto type = TypeVisitor::assertType(c, node.target.get());
     auto size = Type::assertSize(node.location(), type->returnType);
 
-    os << "    allocs " << size << ";\n";
+    if(!c.option("O", "elide_no_effect_ops") || size)
+    {
+        os << "    allocs " << size << ";\n";
+    }
 
     for(auto &p: node.params)
     {

@@ -15,6 +15,11 @@ ExprTransform::ExprTransform(Context &c) : c(c)
 
 void ExprTransform::visit(CallNode &node)
 {
+    for(std::size_t i = 0; i < node.params.size(); ++i)
+    {
+        node.params[i] = ExprTransform::transform(c, node.params[i]);
+    }
+
     auto type = TypeVisitor::assertType(c, node.target.get());
 
     if(type->method)

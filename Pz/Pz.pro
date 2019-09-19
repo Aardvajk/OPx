@@ -58,6 +58,7 @@ SOURCES += \
         parser/DeclarationParser.cpp \
         parser/ExprParser.cpp \
         parser/FuncParser.cpp \
+        parser/IncludeParser.cpp \
         parser/Parser.cpp \
         parser/PragmaParser.cpp \
         parser/TypeParser.cpp \
@@ -69,7 +70,7 @@ SOURCES += \
         transform/FuncTransform.cpp \
         transform/Transform.cpp \
         types/DefaultTypes.cpp \
-        types/LowerTypes.cpp \
+        lower/LowerTypes.cpp \
         types/Type.cpp \
         types/TypeBuilder.cpp \
         types/TypeCache.cpp \
@@ -121,6 +122,7 @@ HEADERS += \
     parser/DeclarationParser.h \
     parser/ExprParser.h \
     parser/FuncParser.h \
+    parser/IncludeParser.h \
     parser/Parser.h \
     parser/PragmaParser.h \
     parser/TypeParser.h \
@@ -132,7 +134,7 @@ HEADERS += \
     transform/FuncTransform.h \
     transform/Transform.h \
     types/DefaultTypes.h \
-    types/LowerTypes.h \
+    lower/LowerTypes.h \
     types/Type.h \
     types/TypeBuilder.h \
     types/TypeCache.h \

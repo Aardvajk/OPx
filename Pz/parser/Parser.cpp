@@ -8,6 +8,7 @@
 
 #include "parser/CommonParser.h"
 #include "parser/PragmaParser.h"
+#include "parser/IncludeParser.h"
 #include "parser/DeclarationParser.h"
 #include "parser/FuncParser.h"
 
@@ -19,6 +20,7 @@ void Parser::construct(Context &c, BlockNode *block, bool get)
     switch(tok.type())
     {
         case Token::Type::RwPragma: PragmaParser::build(c, block, true); break;
+        case Token::Type::RwInclude: IncludeParser::build(c, block, true); break;
 
         case Token::Type::RwNamespace:
         case Token::Type::RwFunc:

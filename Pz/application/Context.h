@@ -12,6 +12,8 @@
 
 #include <pcx/args.h>
 
+class FuncNode;
+
 class Context
 {
 public:
@@ -34,6 +36,9 @@ public:
 
     std::vector<Sym::Type> containers;
     std::vector<FuncInfo> functions;
+
+    std::size_t classDepth;
+    std::vector<FuncNode*> deferredMethods;
 };
 
 #endif // CONTEXT_H

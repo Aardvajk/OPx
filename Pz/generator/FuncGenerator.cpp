@@ -36,5 +36,8 @@ void FuncGenerator::visit(ExprNode &node)
         os << "    svc 13;\n";
     }
 
-    os << "    pop " << sz << ";\n";
+    if(!c.option("O", "elide_no_effect_ops") || sz)
+    {
+        os << "    pop " << sz << ";\n";
+    }
 }

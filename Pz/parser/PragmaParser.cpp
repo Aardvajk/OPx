@@ -37,4 +37,6 @@ void PragmaParser::build(Context &c, BlockNode *block, bool get)
 
     c.scanner.consume(Token::Type::RightParen, false);
     c.scanner.consume(Token::Type::Semicolon, false);
+
+    Pragmas::execute(c, *n);
 }

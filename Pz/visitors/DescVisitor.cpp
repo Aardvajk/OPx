@@ -17,6 +17,8 @@
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
 
+#include "syms/Sym.h"
+
 #include "types/Type.h"
 
 #include <pcx/join_str.h>
@@ -118,6 +120,10 @@ void DescVisitor::visit(VarNode &node)
     {
         r += ":";
         node.type->accept(*this);
+    }
+    else if(auto s = node.findProperty("sym"))
+    {
+        r += ":" + s.to<Sym*>()->property<Type*>("type")->text();
     }
 }
 

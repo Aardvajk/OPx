@@ -24,6 +24,7 @@
 #include "decorator/FuncDecorator.h"
 
 #include <pcx/scoped_push.h>
+#include <pcx/scoped_counter.h>
 
 namespace
 {
@@ -66,6 +67,26 @@ Sym *searchFunc(Context &c, Node *node, const Type *type)
     }
 
     return nullptr;
+}
+
+void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
+{
+    if(sym->findProperty("defined").value<bool>())
+    {
+        throw Error(node.location(), "already defined - ", sym->fullname());
+    }
+
+    sym->setProperty("defined", true);
+
+    auto fg = pcx::scoped_push(c.functions, { });
+    auto sg = c.tree.open(sym);
+
+    for(auto &a: node.args)
+    {
+        Visitor::visit<VarDecorator>(a.get(), c);
+    }
+
+    Visitor::visit<FuncDecorator>(node.body.get(), c);
 }
 
 }
@@ -146,23 +167,14 @@ void Decorator::visit(FuncNode &node)
 
     if(node.body)
     {
-        if(sym->findProperty("defined").value<bool>())
+        if(t.method && c.classDepth)
         {
-            throw Error(node.location(), "already defined - ", sym->fullname());
+            c.deferredMethods.push_back(&node);
         }
-
-        sym->setProperty("defined", true);
-
-        auto fg = pcx::scoped_push(c.functions, { });
-
-        auto sg = c.tree.open(sym);
-
-        for(auto &a: node.args)
+        else
         {
-            Visitor::visit<VarDecorator>(a.get(), c);
+            decorateFunctionBody(c, node, sym);
         }
-
-        Visitor::visit<FuncDecorator>(node.body.get(), c);
     }
 }
 
@@ -190,7 +202,19 @@ void Decorator::visit(ClassNode &node)
         sym->setProperty("defined", true);
 
         auto sg = c.tree.open(sym);
+        auto dg = pcx::scoped_counter(c.classDepth);
+
         node.body->accept(*this);
+    }
+
+    if(!c.classDepth)
+    {
+        for(auto d: c.deferredMethods)
+        {
+            decorateFunctionBody(c, *d, d->property<Sym*>("sym"));
+        }
+
+        c.deferredMethods.clear();
     }
 }
 
