@@ -5,6 +5,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -22,12 +23,21 @@ void ExprLower::visit(IdNode &node)
     }
 
     auto type = TypeVisitor::assertType(c, &node);
+
     if(!type->ref)
     {
         if(expectedType && expectedType->ref)
         {
             rn = new AddrOfNode(node.location(), cn);
             rn->setProperty("type", c.types.insert(type->addPointer()));
+        }
+    }
+    else
+    {
+        if(!expectedType || !expectedType->ref)
+        {
+            rn = new DerefNode(node.location(), cn);
+            rn->setProperty("type", c.types.insert(type->removePointer()));
         }
     }
 }
@@ -45,6 +55,17 @@ void ExprLower::visit(CallNode &node)
 void ExprLower::visit(AddrOfNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
+}
+
+void ExprLower::visit(DerefNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+
+    if(expectedType && expectedType->ref)
+    {
+        rn = new AddrOfNode(node.location(), cn);
+        rn->setProperty("type", c.types.insert(TypeVisitor::assertType(c, &node)->addPointer()));
+    }
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)

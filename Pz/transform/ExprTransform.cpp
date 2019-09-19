@@ -4,6 +4,7 @@
 
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "types/Type.h"
 
@@ -36,6 +37,11 @@ void ExprTransform::visit(CallNode &node)
 }
 
 void ExprTransform::visit(AddrOfNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
+}
+
+void ExprTransform::visit(DerefNode &node)
 {
     node.expr = ExprTransform::transform(c, node.expr);
 }

@@ -9,15 +9,20 @@
 
 #include "transform/ExprTransform.h"
 
-FuncTransform::FuncTransform(Context &c) : c(c)
+#include "visitors/TypeVisitor.h"
+
+#include "types/Type.h"
+
+FuncTransform::FuncTransform(Context &c) : c(c), index(0)
 {
 }
 
 void FuncTransform::visit(BlockNode &node)
 {
-    for(auto &n: node.nodes)
+    for(std::size_t i = 0; i < node.nodes.size(); ++i)
     {
-        n->accept(*this);
+        index = i;
+        node.nodes[i]->accept(*this);
     }
 }
 
@@ -29,6 +34,10 @@ void FuncTransform::visit(ScopeNode &node)
 
 void FuncTransform::visit(VarNode &node)
 {
+    if(node.value)
+    {
+        node.value = ExprTransform::transform(c, node.value);
+    }
 }
 
 void FuncTransform::visit(ExprNode &node)

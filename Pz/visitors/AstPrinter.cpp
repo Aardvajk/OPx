@@ -14,6 +14,7 @@
 #include "nodes/ConstructNode.h"
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "syms/Sym.h"
 
@@ -190,6 +191,14 @@ void AstPrinter::visit(PragmaNode &node)
 void AstPrinter::visit(AddrOfNode &node)
 {
     tab() << "addrof" << details(node) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(DerefNode &node)
+{
+    tab() << "deref" << details(node) << "\n";
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);

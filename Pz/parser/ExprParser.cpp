@@ -10,6 +10,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -45,9 +46,19 @@ NodePtr id(Context &c, bool get)
     return n;
 }
 
-NodePtr addrOf(Context &c, bool get)
+NodePtr parentheses(Context &c, bool get)
 {
-    auto n = new AddrOfNode(c.scanner.token().location());
+    auto tok = c.scanner.match(Token::Type::LeftParen, get);
+
+    auto n = expression(c, true);
+
+    c.scanner.consume(Token::Type::RightParen, false);
+    return n;
+}
+
+template<typename N> NodePtr exprNode(Context &c, bool get)
+{
+    auto n = new N(c.scanner.token().location());
     NodePtr nn(n);
 
     n->expr = entity(c, get);
@@ -67,7 +78,10 @@ NodePtr primary(Context &c, bool get)
 
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
 
-        case Token::Type::Amp: return addrOf(c, true);
+        case Token::Type::LeftParen: return parentheses(c, false);
+
+        case Token::Type::Amp: return exprNode<AddrOfNode>(c, true);
+        case Token::Type::Star: return exprNode<DerefNode>(c, true);
 
         default: throw Error(tok.location(), "primary expected - ", tok.text());
     }

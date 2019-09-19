@@ -2,6 +2,8 @@
 
 #include "framework/Error.h"
 
+#include "common/Primitive.h"
+
 #include "application/Context.h"
 #include "application/Pragmas.h"
 
@@ -188,7 +190,9 @@ void Decorator::visit(ClassNode &node)
     }
 
     auto type = c.types.insert(Type::makePrimary(sym));
+
     sym->setProperty("type", type);
+    sym->setProperty("primitive", Primitive::Type::Invalid);
 
     node.setProperty("sym", sym);
 

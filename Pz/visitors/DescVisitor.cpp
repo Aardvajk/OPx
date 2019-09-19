@@ -16,6 +16,7 @@
 #include "nodes/ConstructNode.h"
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "syms/Sym.h"
 
@@ -116,14 +117,14 @@ void DescVisitor::visit(VarNode &node)
 {
     node.name->accept(*this);
 
-    if(node.type)
+    if(auto s = node.findProperty("sym"))
+    {
+        r += ":" + s.to<Sym*>()->property<Type*>("type")->text();
+    }
+    else if(node.type)
     {
         r += ":";
         node.type->accept(*this);
-    }
-    else if(auto s = node.findProperty("sym"))
-    {
-        r += ":" + s.to<Sym*>()->property<Type*>("type")->text();
     }
 }
 
@@ -171,5 +172,11 @@ void DescVisitor::visit(PragmaNode &node)
 void DescVisitor::visit(AddrOfNode &node)
 {
     r += "&";
+    node.expr->accept(*this);
+}
+
+void DescVisitor::visit(DerefNode &node)
+{
+    r += "*";
     node.expr->accept(*this);
 }

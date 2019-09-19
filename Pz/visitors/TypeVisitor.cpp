@@ -11,6 +11,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "syms/Sym.h"
 
@@ -22,7 +23,10 @@ TypeVisitor::TypeVisitor(Context &c) : c(c), r(nullptr)
 
 void TypeVisitor::visit(IdNode &node)
 {
-    r = node.property<Sym*>("sym")->property<Type*>("type");
+    if(auto t = node.property<Sym*>("sym")->findProperty("type"))
+    {
+        r = t.to<Type*>();
+    }
 }
 
 void TypeVisitor::visit(TypeNode &node)
@@ -32,7 +36,14 @@ void TypeVisitor::visit(TypeNode &node)
 
 void TypeVisitor::visit(VarNode &node)
 {
-    r = node.type->property<Type*>("type");
+    if(node.type)
+    {
+        r = node.type->property<Type*>("type");
+    }
+    else
+    {
+        r = node.property<Sym*>("sym")->property<Type*>("type");
+    }
 }
 
 void TypeVisitor::visit(IntLiteralNode &node)
@@ -52,6 +63,11 @@ void TypeVisitor::visit(ConstructNode &node)
 }
 
 void TypeVisitor::visit(AddrOfNode &node)
+{
+    r = node.property<Type*>("type");
+}
+
+void TypeVisitor::visit(DerefNode &node)
 {
     r = node.property<Type*>("type");
 }

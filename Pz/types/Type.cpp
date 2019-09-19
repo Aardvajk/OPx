@@ -2,6 +2,8 @@
 
 #include "framework/Error.h"
 
+#include "common/Primitive.h"
+
 #include "syms/Sym.h"
 
 #include <pcx/join_str.h>
@@ -69,6 +71,14 @@ Type Type::addPointer() const
     return t;
 }
 
+Type Type::removePointer() const
+{
+    auto t = *this;
+    --t.ptr;
+
+    return t;
+}
+
 Type Type::makePrimary(Sym *sym)
 {
     Type t;
@@ -93,6 +103,11 @@ std::string Type::text() const
 bool Type::function() const
 {
     return returnType;
+}
+
+bool Type::primitive() const
+{
+    return ptr || ref || function() || (sym && sym->findProperty("primitive").value<Primitive::Type>() != Primitive::Type::Invalid);
 }
 
 pcx::optional<std::size_t> Type::size() const

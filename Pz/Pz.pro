@@ -43,6 +43,7 @@ SOURCES += \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
         nodes/ConstructNode.cpp \
+        nodes/DerefNode.cpp \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
@@ -107,6 +108,7 @@ HEADERS += \
     nodes/CallNode.h \
     nodes/ClassNode.h \
     nodes/ConstructNode.h \
+    nodes/DerefNode.h \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \

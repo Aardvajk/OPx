@@ -88,6 +88,9 @@ int main(int argc, char *argv[])
 
         if(!c.option("q"))
         {
+            std::cout << banner("finalised nodes");
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
+
             std::cout << banner("finalised symbols");
             SymPrinter::print(c.tree.root(), std::cout);
         }

@@ -2,15 +2,16 @@
 
 #include "framework/Error.h"
 
-#include "nodes/IdNode.h"
-
 #include "application/Context.h"
+
+#include "nodes/IdNode.h"
+#include "nodes/DerefNode.h"
 
 #include "syms/Sym.h"
 
-#include "visitors/TypeVisitor.h"
-
 #include "types/Type.h"
+
+#include "generator/ExprGenerator.h"
 
 AddrGenerator::AddrGenerator(Context &c, std::ostream &os) : c(c), os(os), ok(false)
 {
@@ -22,11 +23,6 @@ void AddrGenerator::visit(IdNode &node)
 
     if(node.parent)
     {
-        if(TypeVisitor::assertType(c, node.parent.get())->ptr)
-        {
-            throw Error(node.parent->location(), "cannot access via pointer - ", node.description());
-        }
-
         AddrGenerator::generate(c, os, node.parent.get());
 
         auto o = sym->property<std::size_t>("offset");
@@ -49,6 +45,12 @@ void AddrGenerator::visit(IdNode &node)
         os << "    push &\"" << sym->fullname() << "\";\n";
         ok = true;
     }
+}
+
+void AddrGenerator::visit(DerefNode &node)
+{
+    ExprGenerator::generate(c, os, node.expr.get());
+    ok = true;
 }
 
 void AddrGenerator::generate(Context &c, std::ostream &os, Node *node)

@@ -6,6 +6,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -45,6 +46,12 @@ void ExprDecorator::visit(IdNode &node)
     if(node.parent)
     {
         node.parent = ExprDecorator::decorate(c, node.parent);
+
+        auto t = TypeVisitor::queryType(c, node.parent.get());
+        if(t && t->ptr)
+        {
+            throw Error(node.location(), "cannot access via pointer - ", node.description());
+        }
     }
 
     std::vector<Sym*> sv;
@@ -156,6 +163,18 @@ void ExprDecorator::visit(AddrOfNode &node)
 {
     node.expr = ExprDecorator::decorate(c, node.expr);
     node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->addPointer()));
+}
+
+void ExprDecorator::visit(DerefNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+
+    if(!TypeVisitor::assertType(c, node.expr.get())->ptr)
+    {
+        throw Error(node.location(), "cannot deref a non-pointer - ", node.description());
+    }
+
+    node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->removePointer()));
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)

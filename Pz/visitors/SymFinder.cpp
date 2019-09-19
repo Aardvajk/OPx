@@ -2,6 +2,8 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "visitors/SymScopeVisitor.h"
 
@@ -86,9 +88,18 @@ void SymFinder::visit(CallNode &node)
     node.target->accept(*this);
 }
 
+void SymFinder::visit(AddrOfNode &node)
+{
+    node.expr->accept(*this);
+}
+
+void SymFinder::visit(DerefNode &node)
+{
+    node.expr->accept(*this);
+}
+
 void SymFinder::find(Context &c, Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
 {
     SymFinder sf(c, type, curr, result);
     node->accept(sf);
 }
-

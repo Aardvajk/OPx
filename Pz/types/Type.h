@@ -16,9 +16,12 @@ public:
     Type();
 
     Type addPointer() const;
+    Type removePointer() const;
 
     std::string text() const;
+
     bool function() const;
+    bool primitive() const;
 
     pcx::optional<std::size_t> size() const;
 

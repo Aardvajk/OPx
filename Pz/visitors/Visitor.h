@@ -17,6 +17,7 @@ class CallNode;
 class ConstructNode;
 class PragmaNode;
 class AddrOfNode;
+class DerefNode;
 
 class Visitor
 {
@@ -37,6 +38,7 @@ public:
     virtual void visit(ConstructNode &node);
     virtual void visit(PragmaNode &node);
     virtual void visit(AddrOfNode &node);
+    virtual void visit(DerefNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

@@ -8,6 +8,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
+#include "nodes/DerefNode.h"
 
 #include "generator/AddrGenerator.h"
 
@@ -32,11 +33,6 @@ void ExprGenerator::visit(IdNode &node)
     }
     else if(sym->findProperty("member").value<bool>() && node.parent)
     {
-        if(TypeVisitor::assertType(c, node.parent.get())->ptr)
-        {
-            throw Error(node.parent->location(), "cannot access via pointer - ", node.description());
-        }
-
         AddrGenerator::generate(c, os, node.parent.get());
 
         auto o = sym->property<std::size_t>("offset");
@@ -88,6 +84,14 @@ void ExprGenerator::visit(AddrOfNode &node)
 {
     AddrGenerator::generate(c, os, node.expr.get());
     sz = sizeof(std::size_t);
+}
+
+void ExprGenerator::visit(DerefNode &node)
+{
+    sz = Type::assertSize(node.expr->location(), TypeVisitor::assertType(c, &node));
+
+    ExprGenerator::generate(c, os, node.expr.get());
+    os << "    load " << *sz << ";\n";
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

@@ -59,3 +59,7 @@ void Visitor::visit(PragmaNode &node)
 void Visitor::visit(AddrOfNode &node)
 {
 }
+
+void Visitor::visit(DerefNode &node)
+{
+}
