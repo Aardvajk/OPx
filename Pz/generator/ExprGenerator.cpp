@@ -30,8 +30,13 @@ void ExprGenerator::visit(IdNode &node)
         os << "    push &\"" << sym->funcname() << "\";\n";
         sz = sizeof(std::size_t);
     }
-    else if(sym->findProperty("member").value<bool>())
+    else if(sym->findProperty("member").value<bool>() && node.parent)
     {
+        if(TypeVisitor::assertType(c, node.parent.get())->ptr)
+        {
+            throw Error(node.parent->location(), "cannot access via pointer - ", node.description());
+        }
+
         AddrGenerator::generate(c, os, node.parent.get());
 
         auto o = sym->property<std::size_t>("offset");

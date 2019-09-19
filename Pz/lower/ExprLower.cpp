@@ -42,6 +42,11 @@ void ExprLower::visit(CallNode &node)
     }
 }
 
+void ExprLower::visit(AddrOfNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+}
+
 NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)
 {
     ExprLower el(c, node, expectedType);

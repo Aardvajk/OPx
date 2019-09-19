@@ -5,6 +5,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -149,6 +150,12 @@ void ExprDecorator::visit(CallNode &node)
             rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
         }
     }
+}
+
+void ExprDecorator::visit(AddrOfNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+    node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->addPointer()));
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)

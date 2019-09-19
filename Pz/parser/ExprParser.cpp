@@ -9,12 +9,14 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include <pcx/lexical_cast.h>
 
 namespace
 {
 
+NodePtr entity(Context &c, bool get);
 NodePtr expression(Context &c, bool get);
 
 std::string convertId(Context &c, const Token &tok)
@@ -43,6 +45,16 @@ NodePtr id(Context &c, bool get)
     return n;
 }
 
+NodePtr addrOf(Context &c, bool get)
+{
+    auto n = new AddrOfNode(c.scanner.token().location());
+    NodePtr nn(n);
+
+    n->expr = entity(c, get);
+
+    return nn;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -54,6 +66,8 @@ NodePtr primary(Context &c, bool get)
         case Token::Type::RwOperator: return id(c, false);
 
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
+
+        case Token::Type::Amp: return addrOf(c, true);
 
         default: throw Error(tok.location(), "primary expected - ", tok.text());
     }

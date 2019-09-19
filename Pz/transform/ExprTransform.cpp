@@ -3,6 +3,7 @@
 #include "application/Context.h"
 
 #include "nodes/CallNode.h"
+#include "nodes/AddrOfNode.h"
 
 #include "types/Type.h"
 
@@ -32,6 +33,11 @@ void ExprTransform::visit(CallNode &node)
 
         node.params.insert(node.params.begin(), n);
     }
+}
+
+void ExprTransform::visit(AddrOfNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node)

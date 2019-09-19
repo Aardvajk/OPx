@@ -15,6 +15,7 @@ public:
     NodePtr result(){ return rn; }
 
     virtual void visit(CallNode &node) override;
+    virtual void visit(AddrOfNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr &node);
 
