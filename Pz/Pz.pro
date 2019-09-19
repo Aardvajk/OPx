@@ -52,6 +52,7 @@ SOURCES += \
         nodes/Node.cpp \
         nodes/PragmaNode.cpp \
         nodes/ScopeNode.cpp \
+        nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
         operators/Operators.cpp \
@@ -117,6 +118,7 @@ HEADERS += \
     nodes/Node.h \
     nodes/PragmaNode.h \
     nodes/ScopeNode.h \
+    nodes/ThisNode.h \
     nodes/TypeNode.h \
     nodes/VarNode.h \
     operators/Operators.h \

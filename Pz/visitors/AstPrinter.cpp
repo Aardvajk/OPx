@@ -15,6 +15,7 @@
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
@@ -208,6 +209,11 @@ void AstPrinter::visit(DerefNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
+}
+
+void AstPrinter::visit(ThisNode &node)
+{
+    tab() << "this" << details(node) << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

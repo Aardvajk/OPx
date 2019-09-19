@@ -54,8 +54,12 @@ void Transform::visit(FuncNode &node)
 
         auto tp = c.types.insert(t);
 
-        auto s = sym->insert(0, new Sym(Sym::Type::Var, node.location(), "this"));
-        s->setProperty("type", tp);
+        Sym *s = sym->child("this");
+        if(!s)
+        {
+            s = sym->insert(0, new Sym(Sym::Type::Var, node.location(), "this"));
+            s->setProperty("type", tp);
+        }
 
         vn->setProperty("sym", s);
 

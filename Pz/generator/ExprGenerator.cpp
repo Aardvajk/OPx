@@ -9,6 +9,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include "generator/AddrGenerator.h"
 
@@ -92,6 +93,12 @@ void ExprGenerator::visit(DerefNode &node)
 
     ExprGenerator::generate(c, os, node.expr.get());
     os << "    load " << *sz << ";\n";
+}
+
+void ExprGenerator::visit(ThisNode &node)
+{
+    os << "    push &\"" << c.tree.current()->container()->fullname() << ".this\";\n";
+    sz = sizeof(std::size_t);
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

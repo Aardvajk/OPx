@@ -12,6 +12,7 @@
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
@@ -68,6 +69,11 @@ void TypeVisitor::visit(AddrOfNode &node)
 }
 
 void TypeVisitor::visit(DerefNode &node)
+{
+    r = node.property<Type*>("type");
+}
+
+void TypeVisitor::visit(ThisNode &node)
 {
     r = node.property<Type*>("type");
 }

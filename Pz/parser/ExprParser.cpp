@@ -11,6 +11,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -75,6 +76,8 @@ NodePtr primary(Context &c, bool get)
     {
         case Token::Type::Id:
         case Token::Type::RwOperator: return id(c, false);
+
+        case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
 
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
 

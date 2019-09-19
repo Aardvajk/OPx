@@ -22,6 +22,7 @@ public:
     virtual void visit(ConstructNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(DerefNode &node) override;
+    virtual void visit(ThisNode &node) override;
 
     static Type *queryType(Context &c, Node *node);
     static Type *assertType(Context &c, Node *node);

@@ -17,6 +17,7 @@
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
@@ -179,4 +180,9 @@ void DescVisitor::visit(DerefNode &node)
 {
     r += "*";
     node.expr->accept(*this);
+}
+
+void DescVisitor::visit(ThisNode &node)
+{
+    r += "this";
 }

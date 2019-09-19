@@ -6,6 +6,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
@@ -50,6 +51,12 @@ void AddrGenerator::visit(IdNode &node)
 void AddrGenerator::visit(DerefNode &node)
 {
     ExprGenerator::generate(c, os, node.expr.get());
+    ok = true;
+}
+
+void AddrGenerator::visit(ThisNode &node)
+{
+    os << "    push \"" << c.tree.current()->container()->fullname() << ".this\";\n";
     ok = true;
 }
 

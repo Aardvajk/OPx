@@ -63,3 +63,7 @@ void Visitor::visit(AddrOfNode &node)
 void Visitor::visit(DerefNode &node)
 {
 }
+
+void Visitor::visit(ThisNode &node)
+{
+}

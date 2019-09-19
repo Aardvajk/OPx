@@ -1,6 +1,7 @@
 #include "SymScopeVisitor.h"
 
 #include "nodes/CallNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
@@ -19,4 +20,9 @@ void SymScopeVisitor::visit(CallNode &node)
     {
         curr = t->returnType->sym;
     }
+}
+
+void SymScopeVisitor::visit(ThisNode &node)
+{
+    curr = curr->container()->parent();
 }

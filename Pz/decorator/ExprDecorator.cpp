@@ -7,6 +7,7 @@
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/ThisNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -175,6 +176,23 @@ void ExprDecorator::visit(DerefNode &node)
     }
 
     node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->removePointer()));
+}
+
+void ExprDecorator::visit(ThisNode &node)
+{
+    auto s = c.tree.current()->container();
+
+    if(s->parent()->type() != Sym::Type::Class)
+    {
+        throw Error(node.location(), "this outside method");
+    }
+
+    auto t = Type::makePrimary(s->parent());
+
+    t.ref = true;
+    t.constant = s->property<Type*>("type")->constMethod;
+
+    node.setProperty("type", c.types.insert(t));
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)
