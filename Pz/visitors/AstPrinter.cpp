@@ -35,6 +35,12 @@ std::string details(Node &node)
     {
         auto sym = s.to<Sym*>();
         r += pcx::str(" -> ", sym->fullname(), " [", sym, "]");
+
+        if(auto t = sym->findProperty("type"))
+        {
+            auto type = t.to<Type*>();
+            r += pcx::str(" -> ", type->text());
+        }
     }
 
     if(auto s = node.findProperty("syms"))
