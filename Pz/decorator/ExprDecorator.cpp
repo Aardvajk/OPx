@@ -3,11 +3,13 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -97,6 +99,14 @@ void ExprDecorator::visit(IdNode &node)
     }
 
     node.setProperty("sym", sv.front());
+}
+
+void ExprDecorator::visit(StringLiteralNode &node)
+{
+    auto name = pcx::str("#global.", c.globals.size());
+
+    c.globals[name] = &node;
+    node.setProperty("global", name);
 }
 
 void ExprDecorator::visit(CallNode &node)
@@ -193,6 +203,12 @@ void ExprDecorator::visit(ThisNode &node)
     t.constant = s->property<Type*>("type")->constMethod;
 
     node.setProperty("type", c.types.insert(t));
+}
+
+void ExprDecorator::visit(AssignNode &node)
+{
+    node.target = ExprDecorator::decorate(c, node.target);
+    node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)

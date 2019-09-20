@@ -29,9 +29,11 @@ SOURCES += \
         decorator/VarDecorator.cpp \
         finaliser/Finaliser.cpp \
         generator/AddrGenerator.cpp \
+        generator/ByteListGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/FuncGenerator.cpp \
         generator/Generator.cpp \
+        generator/GlobalsGenerator.cpp \
         generator/LocalsGenerator.cpp \
         info/FuncInfo.cpp \
         lower/ExprLower.cpp \
@@ -39,6 +41,7 @@ SOURCES += \
         lower/Lower.cpp \
         main.cpp \
         nodes/AddrOfNode.cpp \
+        nodes/AssignNode.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
@@ -96,15 +99,18 @@ HEADERS += \
     decorator/VarDecorator.h \
     finaliser/Finaliser.h \
     generator/AddrGenerator.h \
+    generator/ByteListGenerator.h \
     generator/ExprGenerator.h \
     generator/FuncGenerator.h \
     generator/Generator.h \
+    generator/GlobalsGenerator.h \
     generator/LocalsGenerator.h \
     info/FuncInfo.h \
     lower/ExprLower.h \
     lower/FuncLower.h \
     lower/Lower.h \
     nodes/AddrOfNode.h \
+    nodes/AssignNode.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \

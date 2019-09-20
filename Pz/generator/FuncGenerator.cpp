@@ -47,12 +47,6 @@ void FuncGenerator::visit(ExprNode &node)
 {
     auto sz = ExprGenerator::generate(c, os, node.expr.get());
 
-    if(sz == 4)
-    {
-        os << "    svc 1;\n";
-        os << "    svc 13;\n";
-    }
-
     if(!c.option("O", "elide_no_effect_ops") || sz)
     {
         os << "    pop " << sz << ";\n";

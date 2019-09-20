@@ -14,6 +14,8 @@
 #include "parser/TypeParser.h"
 #include "parser/ExprParser.h"
 
+#include "visitors/NameVisitors.h"
+
 #include <pcx/scoped_push.h>
 
 namespace
@@ -70,6 +72,8 @@ void buildFunc(Context &c, BlockNode *block, bool get)
         throw Error(name->location(), "invalid function - ", name->description());
     }
 
+    auto special = Visitor::query<NameVisitors::SpecialName, Token::Type>(name.get());
+
     auto n = new FuncNode(name->location(), name);
     block->push_back(n);
 
@@ -79,10 +83,20 @@ void buildFunc(Context &c, BlockNode *block, bool get)
         buildArgs(c, n->args, false);
     }
 
+    if(special == Token::Type::RwDelete && !n->args.empty())
+    {
+        throw Error(name->location(), "delete method cannot have parameters - ", name->description());
+    }
+
     c.scanner.consume(Token::Type::RightParen, false);
 
     if(c.scanner.token().type() == Token::Type::Colon)
     {
+        if(special != Token::Type::Invalid)
+        {
+            throw Error(name->location(), "cannot return a value - ", name->description());
+        }
+
         n->type = TypeParser::build(c, true);
     }
 

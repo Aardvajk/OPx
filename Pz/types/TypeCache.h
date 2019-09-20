@@ -15,7 +15,10 @@ public:
     Type *insert(const Type &type);
 
     Type *nullType();
+    Type *charType();
     Type *intType();
+    Type *sizeType();
+    Type *boolType();
 
     pcx::ptr_vector<Type>::iterator begin(){ return v.begin(); }
     pcx::ptr_vector<Type>::iterator end(){ return v.end(); }

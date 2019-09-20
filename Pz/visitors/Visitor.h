@@ -12,6 +12,8 @@ class ScopeNode;
 class ClassNode;
 class VarNode;
 class IntLiteralNode;
+class BoolLiteralNode;
+class StringLiteralNode;
 class ExprNode;
 class CallNode;
 class ConstructNode;
@@ -19,6 +21,7 @@ class PragmaNode;
 class AddrOfNode;
 class DerefNode;
 class ThisNode;
+class AssignNode;
 
 class Visitor
 {
@@ -34,6 +37,8 @@ public:
     virtual void visit(ClassNode &node);
     virtual void visit(VarNode &node);
     virtual void visit(IntLiteralNode &node);
+    virtual void visit(BoolLiteralNode &node);
+    virtual void visit(StringLiteralNode &node);
     virtual void visit(ExprNode &node);
     virtual void visit(CallNode &node);
     virtual void visit(ConstructNode &node);
@@ -41,6 +46,7 @@ public:
     virtual void visit(AddrOfNode &node);
     virtual void visit(DerefNode &node);
     virtual void visit(ThisNode &node);
+    virtual void visit(AssignNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

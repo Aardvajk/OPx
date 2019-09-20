@@ -29,6 +29,15 @@ void NameVisitors::LastIdOfName::visit(IdNode &node)
     r = node.name;
 }
 
+NameVisitors::SpecialName::SpecialName() : r(Token::Type::Invalid)
+{
+}
+
+void NameVisitors::SpecialName::visit(IdNode &node)
+{
+    r = node.special;
+}
+
 std::string NameVisitors::assertSimpleName(Context &c, Node *node)
 {
     if(!Visitor::query<IsNameSimple, bool>(node))

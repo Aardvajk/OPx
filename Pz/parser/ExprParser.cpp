@@ -12,6 +12,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -80,6 +81,10 @@ NodePtr primary(Context &c, bool get)
         case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
 
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
+        case Token::Type::StringLiteral: n = new StringLiteralNode(tok.location(), Lexer::decodeString(tok.text())); c.scanner.next(true); return n;
+
+        case Token::Type::RwTrue: n = new BoolLiteralNode(tok.location(), true); c.scanner.next(true); return n;
+        case Token::Type::RwFalse: n = new BoolLiteralNode(tok.location(), false); c.scanner.next(true); return n;
 
         case Token::Type::LeftParen: return parentheses(c, false);
 
@@ -144,9 +149,24 @@ NodePtr entity(Context &c, bool get)
     }
 }
 
+NodePtr assign(Context &c, bool get)
+{
+    auto n = entity(c, get);
+
+    while(c.scanner.token().type() == Token::Type::Assign)
+    {
+        auto an = new AssignNode(c.scanner.token().location(), n);
+        n = an;
+
+        an->expr = expression(c, true);
+    }
+
+    return n;
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return entity(c, get);
+    return assign(c, get);
 }
 
 }

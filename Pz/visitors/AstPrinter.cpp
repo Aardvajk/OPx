@@ -16,6 +16,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 
 #include "syms/Sym.h"
 
@@ -143,7 +144,17 @@ void AstPrinter::visit(VarNode &node)
 
 void AstPrinter::visit(IntLiteralNode &node)
 {
-    tab() << "int literal " << node.value << details(node) << "\n";
+    tab() << "int literal " << node.description() << details(node) << "\n";
+}
+
+void AstPrinter::visit(BoolLiteralNode &node)
+{
+    tab() << "bool literal " << node.description() << details(node) << "\n";
+}
+
+void AstPrinter::visit(StringLiteralNode &node)
+{
+    tab() << "string literal " << node.description() << details(node) << "\n";
 }
 
 void AstPrinter::visit(ExprNode &node)
@@ -214,6 +225,29 @@ void AstPrinter::visit(DerefNode &node)
 void AstPrinter::visit(ThisNode &node)
 {
     tab() << "this" << details(node) << "\n";
+}
+
+void AstPrinter::visit(AssignNode &node)
+{
+    tab() << "assign\n";
+
+    if(true)
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "target\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        node.target->accept(*this);
+    }
+
+    if(true)
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "expr\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        node.expr->accept(*this);
+    }
 }
 
 std::ostream &AstPrinter::tab() const

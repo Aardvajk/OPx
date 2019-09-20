@@ -15,6 +15,7 @@ namespace
 NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
 {
     std::string name;
+    Token::Type special = Token::Type::Invalid;
 
     auto tok = c.scanner.next(get);
 
@@ -28,6 +29,8 @@ NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
     else if((tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete) && extensions)
     {
         name = tok.text();
+        special = tok.type();
+
         c.scanner.next(true);
     }
     else
@@ -40,6 +43,8 @@ NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
 
     auto n = new IdNode(tok.location(), parent, name);
     NodePtr nn(n);
+
+    n->special = special;
 
     while(c.scanner.token().type() == Token::Type::Dot)
     {

@@ -18,6 +18,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 
 #include "syms/Sym.h"
 
@@ -139,6 +140,16 @@ void DescVisitor::visit(IntLiteralNode &node)
     r += pcx::str(node.value);
 }
 
+void DescVisitor::visit(BoolLiteralNode &node)
+{
+    r += node.value ? "true" : "false";
+}
+
+void DescVisitor::visit(StringLiteralNode &node)
+{
+    r += pcx::str("\"", Lexer::encodeString(node.value), "\"");
+}
+
 void DescVisitor::visit(CallNode &node)
 {
     node.target->accept(*this);
@@ -185,4 +196,11 @@ void DescVisitor::visit(DerefNode &node)
 void DescVisitor::visit(ThisNode &node)
 {
     r += "this";
+}
+
+void DescVisitor::visit(AssignNode &node)
+{
+    node.target->accept(*this);
+    r += " = ";
+    node.expr->accept(*this);
 }

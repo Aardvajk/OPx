@@ -6,6 +6,7 @@
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -66,6 +67,12 @@ void ExprLower::visit(DerefNode &node)
         rn = new AddrOfNode(node.location(), cn);
         rn->setProperty("type", c.types.insert(TypeVisitor::assertType(c, &node)->addPointer()));
     }
+}
+
+void ExprLower::visit(AssignNode &node)
+{
+    node.target = ExprLower::lower(c, node.target);
+    node.expr = ExprLower::lower(c, node.expr);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)

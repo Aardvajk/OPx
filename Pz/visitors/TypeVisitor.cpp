@@ -13,6 +13,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 
 #include "syms/Sym.h"
 
@@ -52,6 +53,16 @@ void TypeVisitor::visit(IntLiteralNode &node)
     r = c.types.intType();
 }
 
+void TypeVisitor::visit(BoolLiteralNode &node)
+{
+    r = c.types.boolType();
+}
+
+void TypeVisitor::visit(StringLiteralNode &node)
+{
+    r = c.types.insert(c.types.charType()->addPointer());
+}
+
 void TypeVisitor::visit(CallNode &node)
 {
     auto t = Visitor::query<TypeVisitor, Type*>(node.target.get(), c);
@@ -76,6 +87,11 @@ void TypeVisitor::visit(DerefNode &node)
 void TypeVisitor::visit(ThisNode &node)
 {
     r = node.property<Type*>("type");
+}
+
+void TypeVisitor::visit(AssignNode &node)
+{
+    node.target->accept(*this);
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

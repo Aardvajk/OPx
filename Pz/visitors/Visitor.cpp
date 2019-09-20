@@ -40,6 +40,14 @@ void Visitor::visit(IntLiteralNode &node)
 {
 }
 
+void Visitor::visit(BoolLiteralNode &node)
+{
+}
+
+void Visitor::visit(StringLiteralNode &node)
+{
+}
+
 void Visitor::visit(ExprNode &node)
 {
 }
@@ -65,5 +73,9 @@ void Visitor::visit(DerefNode &node)
 }
 
 void Visitor::visit(ThisNode &node)
+{
+}
+
+void Visitor::visit(AssignNode &node)
 {
 }

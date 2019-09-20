@@ -29,5 +29,8 @@ void DefaultTypes::create(Context &c)
     auto ns = c.tree.root()->add(new Sym(Sym::Type::Namespace, { }, "std"));
 
     ns->add(createPrimitive(c, "null", Primitive::Type::Null, 0));
+    ns->add(createPrimitive(c, "char", Primitive::Type::Char, 1));
     ns->add(createPrimitive(c, "int", Primitive::Type::Int, 4));
+    ns->add(createPrimitive(c, "size", Primitive::Type::Size, 8));
+    ns->add(createPrimitive(c, "bool", Primitive::Type::Char, 1));
 }

@@ -10,6 +10,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 
 #include "generator/AddrGenerator.h"
 
@@ -60,6 +61,18 @@ void ExprGenerator::visit(IntLiteralNode &node)
     sz = c.tree.root()->child("std")->child("int")->property<std::size_t>("size");
 }
 
+void ExprGenerator::visit(BoolLiteralNode &node)
+{
+    os << "    push char(" << (node.value ? 1 : 0) << ");\n";
+    sz = c.tree.root()->child("std")->child("bool")->property<std::size_t>("size");
+}
+
+void ExprGenerator::visit(StringLiteralNode &node)
+{
+    os << "    push &\"" << node.property<std::string>("global") << "\";\n";
+    sz = sizeof(std::size_t);
+}
+
 void ExprGenerator::visit(CallNode &node)
 {
     auto type = TypeVisitor::assertType(c, node.target.get());
@@ -97,8 +110,19 @@ void ExprGenerator::visit(DerefNode &node)
 
 void ExprGenerator::visit(ThisNode &node)
 {
-    os << "    push &\"" << c.tree.current()->container()->fullname() << ".this\";\n";
+    os << "    push \"" << c.tree.current()->container()->fullname() << ".this\";\n";
     sz = sizeof(std::size_t);
+}
+
+void ExprGenerator::visit(AssignNode &node)
+{
+    if(TypeVisitor::assertType(c, &node)->primitive())
+    {
+        sz = ExprGenerator::generate(c, os, node.expr.get());
+
+        AddrGenerator::generate(c, os, node.target.get());
+        os << "    store " << *sz << ";\n";
+    }
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

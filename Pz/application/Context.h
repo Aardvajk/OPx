@@ -12,6 +12,9 @@
 
 #include <pcx/args.h>
 
+#include <unordered_map>
+
+class Node;
 class FuncNode;
 
 class Context
@@ -39,6 +42,8 @@ public:
 
     std::size_t classDepth;
     std::vector<FuncNode*> deferredMethods;
+
+    std::unordered_map<std::string, Node*> globals;
 };
 
 #endif // CONTEXT_H
