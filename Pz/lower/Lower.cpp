@@ -7,8 +7,10 @@
 #include "nodes/NamespaceNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/VarNode.h"
 
 #include "lower/FuncLower.h"
+#include "lower/ExprLower.h"
 
 Lower::Lower(Context &c) : c(c)
 {
@@ -45,6 +47,13 @@ void Lower::visit(ClassNode &node)
     }
 }
 
+void Lower::visit(VarNode &node)
+{
+    if(node.value)
+    {
+        node.value = ExprLower::lower(c, node.value);
+    }
+}
 void Lower::visit(PragmaNode &node)
 {
     Pragmas::execute(c, node);

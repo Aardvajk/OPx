@@ -11,6 +11,7 @@
 #include "nodes/VarNode.h"
 
 #include "transform/FuncTransform.h"
+#include "transform/ExprTransform.h"
 
 #include "types/Type.h"
 
@@ -87,6 +88,14 @@ void Transform::visit(ClassNode &node)
     {
         auto sg = c.tree.open(node.property<Sym*>("sym"));
         node.body->accept(*this);
+    }
+}
+
+void Transform::visit(VarNode &node)
+{
+    if(node.value)
+    {
+        node.value = ExprTransform::transform(c, node.value);
     }
 }
 

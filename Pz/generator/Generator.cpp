@@ -7,6 +7,7 @@
 #include "nodes/NamespaceNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/VarNode.h"
 
 #include "syms/Sym.h"
 
@@ -14,6 +15,7 @@
 
 #include "generator/LocalsGenerator.h"
 #include "generator/FuncGenerator.h"
+#include "generator/ByteListGenerator.h"
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -63,6 +65,25 @@ void Generator::visit(ClassNode &node)
         auto sg = c.tree.open(node.property<Sym*>("sym"));
         node.body->accept(*this);
     }
+}
+
+void Generator::visit(VarNode &node)
+{
+    auto sym = node.property<Sym*>("sym");
+
+    os << "var \"" << sym->fullname() << "\":" << Type::assertSize(node.location(), sym->property<Type*>("type"));
+
+    if(node.value)
+    {
+        os << " = ";
+
+        if(!Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os))
+        {
+            throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
+        }
+    }
+
+    os << ";\n";
 }
 
 void Generator::visit(PragmaNode &node)
