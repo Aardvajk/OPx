@@ -33,6 +33,8 @@ TypeNodePtr primary(Context &c, bool get)
 
     if(tok.type() == Token::Type::LeftParen)
     {
+        n->function = true;
+
         c.scanner.next(true);
         if(c.scanner.token().type() != Token::Type::RightParen)
         {

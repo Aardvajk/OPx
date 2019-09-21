@@ -5,7 +5,8 @@ CONFIG -= qt
 
 DEFINES -= UNICODE
 
-QMAKE_CXXFLAGS += -std=gnu++11
+QMAKE_CXXFLAGS += -std=gnu++11 \
+                  -include "framework/Trace.h"
 
 QMAKE_LFLAGS += -Wl,--exclude-all-symbols
 

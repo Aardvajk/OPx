@@ -16,6 +16,8 @@
 
 #include "visitors/TypeVisitor.h"
 
+#include "framework/Trace.h"
+
 FuncDecorator::FuncDecorator(Context &c) : c(c)
 {
 }
@@ -53,7 +55,7 @@ void FuncDecorator::visit(ReturnNode &node)
 
     if(node.expr)
     {
-        node.expr = ExprDecorator::decorate(c, node.expr);
+        node.expr = ExprDecorator::decorate(c, node.expr, t);
 
         if(!TypeCompare(c).compatible(t, TypeVisitor::assertType(c, node.expr.get())))
         {

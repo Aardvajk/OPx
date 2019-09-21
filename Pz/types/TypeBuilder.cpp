@@ -16,7 +16,7 @@ void TypeBuilder::visit(TypeNode &node)
 {
     Type t;
 
-    if(node.returnType)
+    if(node.function)
     {
         t = Type::makeFunction(node.returnType ? Visitor::query<TypeBuilder, Type*>(node.returnType.get(), c) : c.types.nullType());
         for(auto &a: node.args)
