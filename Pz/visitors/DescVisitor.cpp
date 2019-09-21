@@ -54,35 +54,42 @@ void DescVisitor::visit(NamespaceNode &node)
 
 void DescVisitor::visit(TypeNode &node)
 {
-    if(node.constant)
+    if(auto t = node.findProperty("type"))
     {
-        r += "const ";
+        r = t.to<Type*>()->text();
     }
-
-    if(node.ref)
+    else
     {
-        r += "ref ";
-    }
+        if(node.constant)
+        {
+            r += "const ";
+        }
 
-    for(std::size_t i = 0; i < node.ptr; ++i)
-    {
-        r += "ptr ";
-    }
+        if(node.ref)
+        {
+            r += "ref ";
+        }
 
-    if(node.name)
-    {
-        node.name->accept(*this);
-    }
+        for(std::size_t i = 0; i < node.ptr; ++i)
+        {
+            r += "ptr ";
+        }
 
-    if(!node.args.empty())
-    {
-        r += "(" + pcx::join_str(node.args, ", ", [](const NodePtr &n){ return n->description(); }) + ")";
-    }
+        if(node.name)
+        {
+            node.name->accept(*this);
+        }
 
-    if(node.returnType)
-    {
-        r += ":";
-        node.returnType->accept(*this);
+        if(!node.args.empty())
+        {
+            r += "(" + pcx::join_str(node.args, ", ", [](const NodePtr &n){ return n->description(); }) + ")";
+        }
+
+        if(node.returnType)
+        {
+            r += ":";
+            node.returnType->accept(*this);
+        }
     }
 }
 
