@@ -3,9 +3,11 @@
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/ScopeNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 
+#include "parser/CommonParser.h"
 #include "parser/ExprParser.h"
 
 namespace
@@ -23,6 +25,16 @@ void buildReturn(Context &c, BlockNode *block, bool get)
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);
+}
+
+void buildScope(Context &c, BlockNode *block, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::LeftBrace, get);
+
+    auto n = new ScopeNode(tok.location());
+    block->push_back(n);
+
+    n->body = CommonParser::blockContents(c, tok.location(), false);
 }
 
 void buildExpr(Context &c, BlockNode *block, bool get)
@@ -49,6 +61,7 @@ void FuncParser::build(Context &c, BlockNode *block, bool get)
     switch(tok.type())
     {
         case Token::Type::RwReturn: buildReturn(c, block, true); break;
+        case Token::Type::LeftBrace: buildScope(c, block, false); break;
 
         default: buildExpr(c, block, false);
     }
