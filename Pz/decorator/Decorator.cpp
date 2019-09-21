@@ -89,6 +89,12 @@ void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
     }
 
     Visitor::visit<FuncDecorator>(node.body.get(), c);
+
+    auto t = sym->property<Type*>("type")->returnType;
+    if(!TypeCompare(c).compatible(t, c.types.nullType()) && !sym->findProperty("returned").value<bool>())
+    {
+        throw Error(node.location(), "function must return ", t->text());
+    }
 }
 
 }

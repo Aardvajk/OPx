@@ -56,4 +56,15 @@ void FuncGenerator::visit(ExprNode &node)
 
 void FuncGenerator::visit(ReturnNode &node)
 {
+    if(node.expr)
+    {
+        if(TypeVisitor::assertType(c, node.expr.get())->primitive())
+        {
+            auto sz = ExprGenerator::generate(c, os, node.expr.get());
+
+            os << "    push &\"@ret\";\n";
+            os << "    store " << sz << ";\n";
+            os << "    pop " << sz << ";\n";
+        }
+    }
 }
