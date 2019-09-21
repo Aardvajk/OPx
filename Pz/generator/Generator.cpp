@@ -17,6 +17,8 @@
 #include "generator/FuncGenerator.h"
 #include "generator/ByteListGenerator.h"
 
+#include "visitors/TypeVisitor.h"
+
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -75,12 +77,13 @@ void Generator::visit(VarNode &node)
 
     if(node.value)
     {
-        os << " = ";
-
-        if(!Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os))
+        if(!TypeVisitor::assertType(c, node.value.get())->primitive())
         {
             throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
         }
+
+        os << " = ";
+        Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os);
     }
 
     os << ";\n";

@@ -23,6 +23,8 @@
 
 #include "types/Type.h"
 
+#include <pcx/textfile.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -131,12 +133,36 @@ int main(int argc, char *argv[])
     catch(const Error &error)
     {
         std::cerr << "pz error";
+
+        std::string source;
+        unsigned col = 0;
+
         if(auto n = error.location())
         {
+            std::vector<std::string> v;
+
+            if(c.option("descriptive_errors"))
+            {
+                pcx::textfile::read(c.sources.path(n.id()), v);
+            }
+
             std::cerr << " " << c.sources.path(n.id()) << " " << n.line() << "," << n.column();
+
+            if(n.line() - 1 < v.size())
+            {
+                source = v[n.line() - 1];
+                col = n.column();
+            }
         }
 
         std::cerr << ": " << error.what() << "\n";
+
+        if(!source.empty())
+        {
+            std::cerr << source << "\n";
+            std::cerr << std::string(col - 1, ' ') << "^\n";
+        }
+
         return -1;
     }
 }

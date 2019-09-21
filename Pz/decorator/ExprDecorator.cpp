@@ -208,6 +208,12 @@ void ExprDecorator::visit(ThisNode &node)
 void ExprDecorator::visit(AssignNode &node)
 {
     node.target = ExprDecorator::decorate(c, node.target);
+
+    if(TypeVisitor::assertType(c, node.target.get())->constant)
+    {
+        throw Error(node.target->location(), "cannot assign to const - ", node.target->description());
+    }
+
     node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
 }
 
