@@ -19,6 +19,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -203,4 +204,11 @@ void DescVisitor::visit(AssignNode &node)
     node.target->accept(*this);
     r += " = ";
     node.expr->accept(*this);
+}
+
+void DescVisitor::visit(BinaryNode &node)
+{
+    node.left->accept(*this);
+    r += pcx::str(' ', node.type.text(), ' ');
+    node.right->accept(*this);
 }

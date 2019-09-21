@@ -7,7 +7,7 @@ void CallNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *CallNode::classname() const
+std::string CallNode::classname() const
 {
     return "call";
 }

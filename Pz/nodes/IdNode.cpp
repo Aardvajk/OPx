@@ -7,7 +7,7 @@ void IdNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *IdNode::classname() const
+std::string IdNode::classname() const
 {
     return "id";
 }

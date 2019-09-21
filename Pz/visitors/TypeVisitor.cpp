@@ -14,6 +14,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -92,6 +93,12 @@ void TypeVisitor::visit(ThisNode &node)
 void TypeVisitor::visit(AssignNode &node)
 {
     node.target->accept(*this);
+}
+
+void TypeVisitor::visit(BinaryNode &node)
+{
+//TODO this won't be all
+    r = c.types.boolType();
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

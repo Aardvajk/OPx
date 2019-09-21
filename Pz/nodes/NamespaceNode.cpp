@@ -7,7 +7,7 @@ void NamespaceNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *NamespaceNode::classname() const
+std::string NamespaceNode::classname() const
 {
     return "namespace";
 }

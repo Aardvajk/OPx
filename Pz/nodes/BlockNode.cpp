@@ -7,7 +7,7 @@ void BlockNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *BlockNode::classname() const
+std::string BlockNode::classname() const
 {
     return "block";
 }

@@ -6,6 +6,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "types/Type.h"
 
@@ -51,6 +52,12 @@ void ExprTransform::visit(AssignNode &node)
 {
     node.target = ExprTransform::transform(c, node.target);
     node.expr = ExprTransform::transform(c, node.expr);
+}
+
+void ExprTransform::visit(BinaryNode &node)
+{
+    node.left = ExprTransform::transform(c, node.left);
+    node.right = ExprTransform::transform(c, node.right);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node)

@@ -42,6 +42,7 @@ SOURCES += \
         main.cpp \
         nodes/AddrOfNode.cpp \
         nodes/AssignNode.cpp \
+        nodes/BinaryNode.cpp \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
@@ -111,6 +112,7 @@ HEADERS += \
     lower/Lower.h \
     nodes/AddrOfNode.h \
     nodes/AssignNode.h \
+    nodes/BinaryNode.h \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \

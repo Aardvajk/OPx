@@ -9,7 +9,7 @@ public:
     FuncNode(Location location, NodePtr name) : Node(location), name(name), constMethod(false) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     NodePtr name;
     NodeList args;

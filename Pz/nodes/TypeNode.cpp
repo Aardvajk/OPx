@@ -7,7 +7,7 @@ void TypeNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *TypeNode::classname() const
+std::string TypeNode::classname() const
 {
     return "TypeNode";
 }

@@ -7,6 +7,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -73,6 +74,12 @@ void ExprLower::visit(AssignNode &node)
 {
     node.target = ExprLower::lower(c, node.target);
     node.expr = ExprLower::lower(c, node.expr);
+}
+
+void ExprLower::visit(BinaryNode &node)
+{
+    node.left = ExprLower::lower(c, node.left);
+    node.right = ExprLower::lower(c, node.right);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)

@@ -9,7 +9,7 @@ public:
     explicit BlockNode(Location location) : Node(location) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     void push_back(Node *node);
     void push_back(NodePtr &node);

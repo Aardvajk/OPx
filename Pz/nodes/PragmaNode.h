@@ -11,7 +11,7 @@ public:
     PragmaNode(Location location, Pragmas::Type type) : Node(location), type(type) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     Pragmas::Type type;
     std::string arg;

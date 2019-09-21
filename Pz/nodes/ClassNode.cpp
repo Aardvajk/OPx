@@ -7,7 +7,7 @@ void ClassNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *ClassNode::classname() const
+std::string ClassNode::classname() const
 {
     return "class";
 }

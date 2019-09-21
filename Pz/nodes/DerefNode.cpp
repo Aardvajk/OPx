@@ -7,7 +7,7 @@ void DerefNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *DerefNode::classname() const
+std::string DerefNode::classname() const
 {
     return "deref";
 }

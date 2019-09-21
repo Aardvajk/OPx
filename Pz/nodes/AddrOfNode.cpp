@@ -7,7 +7,7 @@ void AddrOfNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *AddrOfNode::classname() const
+std::string AddrOfNode::classname() const
 {
     return "addrof";
 }

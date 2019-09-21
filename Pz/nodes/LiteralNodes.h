@@ -9,7 +9,7 @@ public:
     IntLiteralNode(Location location, int value) : Node(location), value(value) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     int value;
 };
@@ -20,7 +20,7 @@ public:
     BoolLiteralNode(Location location, bool value) : Node(location), value(value) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     bool value;
 };
@@ -31,7 +31,7 @@ public:
     StringLiteralNode(Location location, std::string value) : Node(location), value(std::move(value)) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     std::string value;
 };

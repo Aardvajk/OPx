@@ -11,6 +11,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "generator/AddrGenerator.h"
 
@@ -123,6 +124,10 @@ void ExprGenerator::visit(AssignNode &node)
         AddrGenerator::generate(c, os, node.target.get());
         os << "    store " << *sz << ";\n";
     }
+}
+
+void ExprGenerator::visit(BinaryNode &node)
+{
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

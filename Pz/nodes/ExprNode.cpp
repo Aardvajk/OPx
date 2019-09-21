@@ -7,7 +7,7 @@ void ExprNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *ExprNode::classname() const
+std::string ExprNode::classname() const
 {
     return "expr";
 }

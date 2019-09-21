@@ -22,7 +22,7 @@ public:
     virtual ~Node();
 
     virtual void accept(Visitor &v) = 0;
-    virtual const char *classname() const = 0;
+    virtual std::string classname() const = 0;
 
     void setProperty(const std::string &key, const pcx::any &value);
     pcx::any findProperty(const std::string &key) const;

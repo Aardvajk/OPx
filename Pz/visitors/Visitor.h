@@ -22,6 +22,7 @@ class AddrOfNode;
 class DerefNode;
 class ThisNode;
 class AssignNode;
+class BinaryNode;
 
 class Visitor
 {
@@ -47,6 +48,7 @@ public:
     virtual void visit(DerefNode &node);
     virtual void visit(ThisNode &node);
     virtual void visit(AssignNode &node);
+    virtual void visit(BinaryNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

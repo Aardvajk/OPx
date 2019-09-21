@@ -7,7 +7,7 @@ void ConstructNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *ConstructNode::classname() const
+std::string ConstructNode::classname() const
 {
     return "construct";
 }

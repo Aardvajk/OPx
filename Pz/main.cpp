@@ -118,6 +118,11 @@ int main(int argc, char *argv[])
             Visitor::visit<Generator>(n.get(), c, os);
         }
 
+        if(c.option("test_error"))
+        {
+            throw Error("error expected - ", c.args.back()["test_error"].front());
+        }
+
         if(c.option("test"))
         {
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
@@ -132,6 +137,11 @@ int main(int argc, char *argv[])
 
     catch(const Error &error)
     {
+        if(c.option("test_error", error.what()))
+        {
+            return 100;
+        }
+
         std::cerr << "pz error";
 
         std::string source;

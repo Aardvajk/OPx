@@ -9,7 +9,7 @@ public:
     explicit AddrOfNode(Location location, NodePtr expr = { }) : Node(location), expr(expr) { }
 
     virtual void accept(Visitor &v) override;
-    virtual const char *classname() const override;
+    virtual std::string classname() const override;
 
     NodePtr expr;
 };

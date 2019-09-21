@@ -7,7 +7,7 @@ void ScopeNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *ScopeNode::classname() const
+std::string ScopeNode::classname() const
 {
     return "scope";
 }

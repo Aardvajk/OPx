@@ -13,6 +13,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -164,9 +165,28 @@ NodePtr assign(Context &c, bool get)
     return n;
 }
 
+NodePtr comparisons(Context &c, bool get)
+{
+    auto n = assign(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+
+        auto tok = c.scanner.token();
+        switch(tok.type())
+        {
+            case Token::Type::Eq:
+            case Token::Type::Neq: n = new BinaryNode(loc, tok, n, assign(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return assign(c, get);
+    return comparisons(c, get);
 }
 
 }

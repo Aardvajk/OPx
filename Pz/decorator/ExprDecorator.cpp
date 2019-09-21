@@ -10,6 +10,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -215,6 +216,12 @@ void ExprDecorator::visit(AssignNode &node)
     }
 
     node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
+}
+
+void ExprDecorator::visit(BinaryNode &node)
+{
+    node.left = ExprDecorator::decorate(c, node.left);
+    node.right = ExprDecorator::decorate(c, node.right);
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)

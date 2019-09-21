@@ -7,7 +7,7 @@ void AssignNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *AssignNode::classname() const
+std::string AssignNode::classname() const
 {
     return "assign";
 }

@@ -7,7 +7,7 @@ void PragmaNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *PragmaNode::classname() const
+std::string PragmaNode::classname() const
 {
     return "pragma";
 }

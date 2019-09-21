@@ -7,7 +7,7 @@ void VarNode::accept(Visitor &v)
     v.visit(*this);
 }
 
-const char *VarNode::classname() const
+std::string VarNode::classname() const
 {
     return "var";
 }
