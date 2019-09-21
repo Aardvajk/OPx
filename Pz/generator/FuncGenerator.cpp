@@ -6,6 +6,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "generator/ExprGenerator.h"
 
@@ -51,4 +52,8 @@ void FuncGenerator::visit(ExprNode &node)
     {
         os << "    pop " << sz << ";\n";
     }
+}
+
+void FuncGenerator::visit(ReturnNode &node)
+{
 }

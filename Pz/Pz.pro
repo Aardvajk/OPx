@@ -55,6 +55,7 @@ SOURCES += \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
         nodes/PragmaNode.cpp \
+        nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
@@ -126,6 +127,7 @@ HEADERS += \
     nodes/NamespaceNode.h \
     nodes/Node.h \
     nodes/PragmaNode.h \
+    nodes/ReturnNode.h \
     nodes/ScopeNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \

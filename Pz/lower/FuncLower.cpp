@@ -6,6 +6,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "lower/ExprLower.h"
 
@@ -38,4 +39,12 @@ void FuncLower::visit(VarNode &node)
 void FuncLower::visit(ExprNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
+}
+
+void FuncLower::visit(ReturnNode &node)
+{
+    if(node.expr)
+    {
+        node.expr = ExprLower::lower(c, node.expr);
+    }
 }

@@ -18,6 +18,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "syms/Sym.h"
 
@@ -258,6 +259,17 @@ void AstPrinter::visit(BinaryNode &node)
     auto g = pcx::scoped_counter(tc);
     node.left->accept(*this);
     node.right->accept(*this);
+}
+
+void AstPrinter::visit(ReturnNode &node)
+{
+    tab() << "return\n";
+
+    if(node.expr)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.expr->accept(*this);
+    }
 }
 
 std::ostream &AstPrinter::tab() const

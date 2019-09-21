@@ -6,6 +6,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "transform/ExprTransform.h"
 
@@ -43,4 +44,12 @@ void FuncTransform::visit(VarNode &node)
 void FuncTransform::visit(ExprNode &node)
 {
     node.expr = ExprTransform::transform(c, node.expr);
+}
+
+void FuncTransform::visit(ReturnNode &node)
+{
+    if(node.expr)
+    {
+        node.expr = ExprTransform::transform(c, node.expr);
+    }
 }

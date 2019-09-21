@@ -6,6 +6,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
+#include "nodes/ReturnNode.h"
 
 #include "decorator/VarDecorator.h"
 #include "decorator/ExprDecorator.h"
@@ -39,4 +40,12 @@ void FuncDecorator::visit(VarNode &node)
 void FuncDecorator::visit(ExprNode &node)
 {
     node.expr = ExprDecorator::decorate(c, node.expr);
+}
+
+void FuncDecorator::visit(ReturnNode &node)
+{
+    if(node.expr)
+    {
+        node.expr = ExprDecorator::decorate(c, node.expr);
+    }
 }

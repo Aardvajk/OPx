@@ -83,3 +83,7 @@ void Visitor::visit(AssignNode &node)
 void Visitor::visit(BinaryNode &node)
 {
 }
+
+void Visitor::visit(ReturnNode &node)
+{
+}
