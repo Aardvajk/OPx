@@ -253,7 +253,7 @@ void AstPrinter::visit(AssignNode &node)
 
 void AstPrinter::visit(BinaryNode &node)
 {
-    tab() << "binary" << node.type.text() << details(node) << "\n";
+    tab() << "binary" << node.token.text() << details(node) << "\n";
 
     auto g = pcx::scoped_counter(tc);
     node.left->accept(*this);

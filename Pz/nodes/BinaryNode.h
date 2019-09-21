@@ -8,12 +8,12 @@
 class BinaryNode : public Node
 {
 public:
-    BinaryNode(Location location, const Token &type, NodePtr left, NodePtr right) : Node(location), type(type), left(left), right(right) { }
+    BinaryNode(Location location, const Token &token, NodePtr left, NodePtr right) : Node(location), token(token), left(left), right(right) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
 
-    Token type;
+    Token token;
     NodePtr left;
     NodePtr right;
 };

@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
         if(c.option("test"))
         {
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
-            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po ../lib/stdtest.po").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po ../lib/stdtest.po ../lib/stdios.po").c_str())) return -1;
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pv/release/pv script.pv").c_str())) return -1;
         }
         else if(!c.option("q"))

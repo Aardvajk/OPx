@@ -19,6 +19,8 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
+#include <unordered_set>
+
 namespace
 {
 
@@ -58,8 +60,26 @@ void ExprDecorator::visit(IdNode &node)
         }
     }
 
+    std::unordered_set<Sym*> search;
+
+    if(expectedType)
+    {
+        for(auto &a: expectedType->args)
+        {
+            if(a->sym && a->sym->parent() != c.tree.root())
+            {
+                search.insert(a->sym->parent());
+            }
+        }
+    }
+
     std::vector<Sym*> sv;
     SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
+
+    for(auto s: search)
+    {
+        SymFinder::find(c, SymFinder::Type::Local, s, &node, sv);
+    }
 
     if(expectedType && expectedType->function())
     {
@@ -222,6 +242,22 @@ void ExprDecorator::visit(BinaryNode &node)
 {
     node.left = ExprDecorator::decorate(c, node.left);
     node.right = ExprDecorator::decorate(c, node.right);
+
+    auto lt = TypeVisitor::assertType(c, node.left.get());
+    auto rt = TypeVisitor::assertType(c, node.right.get());
+
+    if(!lt->primitive() || !rt->primitive())
+    {
+        NodePtr id(new IdNode(node.location(), { }, pcx::str("operator", node.token.text())));
+
+        auto cn = new CallNode(node.location(), id);
+        rn = cn;
+
+        cn->params.push_back(node.left);
+        cn->params.push_back(node.right);
+
+        rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
+    }
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)

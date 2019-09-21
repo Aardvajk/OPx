@@ -1,0 +1,274 @@
+func[autogen] "std.ostream.new(ptr std.ostream):std.null <method>":0
+{
+    arg "std.ostream.new.this":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.ostream.new.#scope0";
+    jmp "#end_function";
+"#no_return_exit_std.ostream.new.#scope0":
+"#end_function":
+}
+func[autogen] "std.ostream.new(ptr std.ostream,const ptr std.ostream):std.null <method>":0
+{
+    arg "std.ostream.new.this":8;
+    arg "std.ostream.new.#tempcopy":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.ostream.new.#scope1";
+    jmp "#end_function";
+"#no_return_exit_std.ostream.new.#scope1":
+"#end_function":
+}
+func[autogen] "std.ostream.delete(ptr std.ostream):std.null <method>":0
+{
+    arg "std.ostream.delete.this":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.ostream.delete.#scope2";
+    jmp "#end_function";
+"#no_return_exit_std.ostream.delete.#scope2":
+"#end_function":
+}
+func[autogen] "std.ostream.operator=(ptr std.ostream,const ptr std.ostream):const ptr std.ostream <method>":8
+{
+    arg "std.ostream.operator=.this":8;
+    arg "std.ostream.operator=.#tempcopy":8;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.ostream.operator=.this";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.ostream.operator=.#scope3";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.ostream.operator=.#scope3";
+    jmp "#end_function";
+"#no_return_exit_std.ostream.operator=.#scope3":
+"#end_function":
+}
+func[autogen] "std.prefix.new(ptr std.prefix):std.null <method>":0
+{
+    arg "std.prefix.new.this":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.prefix.new.#scope4";
+    jmp "#end_function";
+"#no_return_exit_std.prefix.new.#scope4":
+"#end_function":
+}
+func[autogen] "std.prefix.new(ptr std.prefix,const ptr std.prefix):std.null <method>":0
+{
+    arg "std.prefix.new.this":8;
+    arg "std.prefix.new.#tempcopy":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.prefix.new.#scope5";
+    jmp "#end_function";
+"#no_return_exit_std.prefix.new.#scope5":
+"#end_function":
+}
+func[autogen] "std.prefix.delete(ptr std.prefix):std.null <method>":0
+{
+    arg "std.prefix.delete.this":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.prefix.delete.#scope6";
+    jmp "#end_function";
+"#no_return_exit_std.prefix.delete.#scope6":
+"#end_function":
+}
+func[autogen] "std.prefix.operator=(ptr std.prefix,const ptr std.prefix):const ptr std.prefix <method>":8
+{
+    arg "std.prefix.operator=.this":8;
+    arg "std.prefix.operator=.#tempcopy":8;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.prefix.operator=.this";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.prefix.operator=.#scope7";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.prefix.operator=.#scope7";
+    jmp "#end_function";
+"#no_return_exit_std.prefix.operator=.#scope7":
+"#end_function":
+}
+func[autogen] "std.postfix.new(ptr std.postfix):std.null <method>":0
+{
+    arg "std.postfix.new.this":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.postfix.new.#scope8";
+    jmp "#end_function";
+"#no_return_exit_std.postfix.new.#scope8":
+"#end_function":
+}
+func[autogen] "std.postfix.new(ptr std.postfix,const ptr std.postfix):std.null <method>":0
+{
+    arg "std.postfix.new.this":8;
+    arg "std.postfix.new.#tempcopy":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.postfix.new.#scope9";
+    jmp "#end_function";
+"#no_return_exit_std.postfix.new.#scope9":
+"#end_function":
+}
+func[autogen] "std.postfix.delete(ptr std.postfix):std.null <method>":0
+{
+    arg "std.postfix.delete.this":8;
+    var "@rf":1;
+    clrf "@rf";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.postfix.delete.#scope10";
+    jmp "#end_function";
+"#no_return_exit_std.postfix.delete.#scope10":
+"#end_function":
+}
+func[autogen] "std.postfix.operator=(ptr std.postfix,const ptr std.postfix):const ptr std.postfix <method>":8
+{
+    arg "std.postfix.operator=.this":8;
+    arg "std.postfix.operator=.#tempcopy":8;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.postfix.operator=.this";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.postfix.operator=.#scope11";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.postfix.operator=.#scope11";
+    jmp "#end_function";
+"#no_return_exit_std.postfix.operator=.#scope11":
+"#end_function":
+}
+func "std.operator<<(ptr std.ostream,std.int):ptr std.ostream":8
+{
+    arg "std.operator<<.o":8;
+    arg "std.operator<<.v":4;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.operator<<.v";
+    push &"std.print(std.int):std.null";
+    call;
+    push "std.operator<<.o";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.operator<<.#scope0";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.operator<<.#scope0";
+    jmp "#end_function";
+"#no_return_exit_std.operator<<.#scope0":
+"#end_function":
+}
+func "std.operator<<(ptr std.ostream,std.char):ptr std.ostream":8
+{
+    arg "std.operator<<.o":8;
+    arg "std.operator<<.v":1;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.operator<<.v";
+    push &"std.print(std.char):std.null";
+    call;
+    push "std.operator<<.o";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.operator<<.#scope0";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.operator<<.#scope0";
+    jmp "#end_function";
+"#no_return_exit_std.operator<<.#scope0":
+"#end_function":
+}
+func "std.operator<<(ptr std.ostream,std.bool):ptr std.ostream":8
+{
+    arg "std.operator<<.o":8;
+    arg "std.operator<<.v":1;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.operator<<.v";
+    push &"std.print(std.bool):std.null";
+    call;
+    push "std.operator<<.o";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.operator<<.#scope0";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.operator<<.#scope0";
+    jmp "#end_function";
+"#no_return_exit_std.operator<<.#scope0":
+"#end_function":
+}
+func "std.operator<<(ptr std.ostream,ptr std.char):ptr std.ostream":8
+{
+    arg "std.operator<<.o":8;
+    arg "std.operator<<.v":8;
+    var "@rf":1;
+    clrf "@rf";
+    push "std.operator<<.v";
+    push &"std.print(ptr std.char):std.null";
+    call;
+    push "std.operator<<.o";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.operator<<.#scope0";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.operator<<.#scope0";
+    jmp "#end_function";
+"#no_return_exit_std.operator<<.#scope0":
+"#end_function":
+}
+var "instance":0;
+func "std.out():ptr std.ostream":8
+{
+    var "@rf":1;
+    clrf "@rf";
+    push &"instance";
+    push &"@ret";
+    store 8;
+    pop 8;
+    setf "@rf";
+    jmp "#no_return_exit_std.out.#scope0";
+    push &"@rf";
+    load 1;
+    jmp ifz "#no_return_exit_std.out.#scope0";
+    jmp "#end_function";
+"#no_return_exit_std.out.#scope0":
+"#end_function":
+}

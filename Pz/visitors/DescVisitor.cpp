@@ -209,6 +209,6 @@ void DescVisitor::visit(AssignNode &node)
 void DescVisitor::visit(BinaryNode &node)
 {
     node.left->accept(*this);
-    r += pcx::str(' ', node.type.text(), ' ');
+    r += pcx::str(' ', node.token.text(), ' ');
     node.right->accept(*this);
 }

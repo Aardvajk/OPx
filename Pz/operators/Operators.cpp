@@ -16,7 +16,9 @@ Token Operators::scan(Context &c, bool get)
 
     switch(tok.type())
     {
-        case Token::Type::Assign: return tok;
+        case Token::Type::Assign:
+
+        case Token::Type::LeftShift: return tok;
 
         default: throw Error(tok.location(), "operator expected - ", tok.text());
     }

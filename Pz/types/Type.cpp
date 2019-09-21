@@ -2,8 +2,6 @@
 
 #include "framework/Error.h"
 
-#include "common/Primitive.h"
-
 #include "syms/Sym.h"
 
 #include <pcx/join_str.h>
@@ -107,7 +105,22 @@ bool Type::function() const
 
 bool Type::primitive() const
 {
-    return ptr || ref || function() || (sym && sym->findProperty("primitive").value<Primitive::Type>() != Primitive::Type::Invalid);
+    return ptr || function() || (sym && sym->findProperty("primitive").value<Primitive::Type>() != Primitive::Type::Invalid);
+}
+
+Primitive::Type Type::primitiveType() const
+{
+    if(ptr || returnType)
+    {
+        return Primitive::Type::Size;
+    }
+
+    if(auto t = sym->findProperty("primitive"))
+    {
+        return t.to<Primitive::Type>();
+    }
+
+    return Primitive::Type::Invalid;
 }
 
 pcx::optional<std::size_t> Type::size() const

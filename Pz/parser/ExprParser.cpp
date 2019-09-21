@@ -150,9 +150,27 @@ NodePtr entity(Context &c, bool get)
     }
 }
 
-NodePtr assign(Context &c, bool get)
+NodePtr shifts(Context &c, bool get)
 {
     auto n = entity(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+
+        auto tok = c.scanner.token();
+        switch(tok.type())
+        {
+            case Token::Type::LeftShift: n = new BinaryNode(loc, tok, n, entity(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
+NodePtr assign(Context &c, bool get)
+{
+    auto n = shifts(c, get);
 
     while(c.scanner.token().type() == Token::Type::Assign)
     {

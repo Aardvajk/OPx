@@ -1,6 +1,8 @@
 #ifndef TYPE_H
 #define TYPE_H
 
+#include "common/Primitive.h"
+
 #include "scanner/Location.h"
 
 #include <string>
@@ -22,6 +24,8 @@ public:
 
     bool function() const;
     bool primitive() const;
+
+    Primitive::Type primitiveType() const;
 
     pcx::optional<std::size_t> size() const;
 

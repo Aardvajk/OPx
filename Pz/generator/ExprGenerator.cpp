@@ -15,6 +15,8 @@
 
 #include "generator/AddrGenerator.h"
 
+#include "operators/CompareOperators.h"
+
 #include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
@@ -128,6 +130,13 @@ void ExprGenerator::visit(AssignNode &node)
 
 void ExprGenerator::visit(BinaryNode &node)
 {
+    switch(node.token.type())
+    {
+        case Token::Type::Eq:
+        case Token::Type::Neq: sz = CompareOperators::generate(c, os, node); break;
+
+        default: break;
+    }
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

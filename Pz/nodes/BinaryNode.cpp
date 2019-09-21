@@ -11,5 +11,5 @@ void BinaryNode::accept(Visitor &v)
 
 std::string BinaryNode::classname() const
 {
-    return pcx::str("binary", type.text());
+    return pcx::str("binary", token.text());
 }
