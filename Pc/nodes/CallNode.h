@@ -9,6 +9,7 @@ public:
     CallNode(Location location, NodePtr target) : Node(location), target(target) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     NodePtr target;
     NodeList params;

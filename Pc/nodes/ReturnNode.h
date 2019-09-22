@@ -6,9 +6,10 @@
 class ReturnNode : public Node
 {
 public:
-    explicit ReturnNode(Location location) : Node(location) { }
+    explicit ReturnNode(Location location, NodePtr expr = { }) : Node(location), expr(expr) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     NodePtr expr;
 };

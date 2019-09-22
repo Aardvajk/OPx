@@ -6,3 +6,8 @@ void ReturnNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+std::string ReturnNode::classname() const
+{
+    return "return";
+}

@@ -14,9 +14,9 @@ public:
 
     virtual void visit(BlockNode &node) override;
     virtual void visit(NamespaceNode &node) override;
+    virtual void visit(FuncNode &node) override;
     virtual void visit(ClassNode &node) override;
     virtual void visit(VarNode &node) override;
-    virtual void visit(FuncNode &node) override;
     virtual void visit(PragmaNode &node) override;
 
 private:

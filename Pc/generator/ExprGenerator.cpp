@@ -2,37 +2,24 @@
 
 #include "framework/Error.h"
 
-#include "common/Primitive.h"
-
 #include "application/Context.h"
 
-#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
-#include "nodes/AssignNode.h"
-#include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
-#include "nodes/UnaryNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
-#include "nodes/PrimitiveCastNode.h"
-#include "nodes/LogicalNode.h"
-#include "nodes/IncDecNode.h"
 
-#include "visitors/TypeVisitor.h"
-#include "visitors/NameVisitors.h"
-
-#include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
 
-#include "operators/MathOperators.h"
 #include "operators/CompareOperators.h"
 
-#include "types/Type.h"
-#include "types/TypeLookup.h"
+#include "visitors/TypeVisitor.h"
 
-#include "generator/FuncGenerator.h"
+#include "types/Type.h"
 
 #include <pcx/indexed_range.h>
 
@@ -40,70 +27,35 @@ ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
 
-void ExprGenerator::visit(BlockNode &node)
-{
-    for(auto &n: node.nodes)
-    {
-        FuncGenerator fg(c, os);
-        n->accept(fg);
-    }
-
-    sz = 0;
-}
-
 void ExprGenerator::visit(IdNode &node)
 {
-    auto s = node.property<const Sym*>("sym");
-    auto t = s->property<const Type*>("type");
+    auto sym = node.property<Sym*>("sym");
 
-    if(s->type() == Sym::Type::Func)
+    if(sym->type() == Sym::Type::Func)
     {
-        os << "    push &\"" << s->fullname() << t->text() << "\";\n";
+        os << "    push &\"" << sym->funcname() << "\";\n";
+        sz = sizeof(std::size_t);
     }
-    else if(s->type() == Sym::Type::Class)
+    else if(sym->findProperty("member").value<bool>())
     {
-        throw Error(node.location(), "invalid syntax - ", s->fullname());
+        AddrGenerator::generate(c, os, node.parent.get());
+
+        auto o = sym->property<std::size_t>("offset");
+
+        if(!c.option("O", "elide_no_effect_ops") || o)
+        {
+            os << "    push size(" << o << ");\n";
+            os << "    add size;\n";
+        }
+
+        sz = Type::assertSize(node.location(), sym->property<Type*>("type"));
+        os << "    load " << *sz << ";\n";
     }
     else
     {
-        if(s->getProperty("member").value<bool>() && node.parent)
-        {
-            if(TypeVisitor::type(c, node.parent.get())->ptr)
-            {
-                throw Error(node.parent->location(), "cannot access member via pointer - ", NameVisitors::prettyName(node.parent.get()));
-            }
-
-            AddrGenerator::generate(c, os, *node.parent);
-
-            auto o = s->property<std::size_t>("offset");
-
-            if(!c.option("O", "ellide_zero_ops") || o)
-            {
-                os << "    push size(" << o << ");\n";
-                os << "    add size;\n";
-            }
-
-            os << "    load " << c.assertSize(node.location(), t) << ";\n";
-        }
-        else
-        {
-            if(t->sub)
-            {
-                os << "    push &\"" << s->fullname() << "\";\n";
-            }
-            else
-            {
-                os << "    push \"" << s->fullname() << "\";\n";
-            }
-        }
+        os << "    push \"" << sym->fullname() << "\";\n";
+        sz = Type::assertSize(node.location(), sym->property<Type*>("type"));
     }
-
-    sz = c.assertSize(node.location(), t);
-}
-
-void ExprGenerator::visit(NullLiteralNode &node)
-{
-    sz = 0;
 }
 
 void ExprGenerator::visit(CharLiteralNode &node)
@@ -124,12 +76,6 @@ void ExprGenerator::visit(BoolLiteralNode &node)
     sz = c.tree.root()->child("std")->child("bool")->property<std::size_t>("size");
 }
 
-void ExprGenerator::visit(SizeLiteralNode &node)
-{
-    os << "    push size(" << node.value << ");\n";
-    sz = c.tree.root()->child("std")->child("size")->property<std::size_t>("size");
-}
-
 void ExprGenerator::visit(StringLiteralNode &node)
 {
     os << "    push &\"" << node.property<std::string>("global") << "\";\n";
@@ -138,79 +84,37 @@ void ExprGenerator::visit(StringLiteralNode &node)
 
 void ExprGenerator::visit(CallNode &node)
 {
-    auto t = TypeVisitor::type(c, node.target.get());
+    auto type = TypeVisitor::assertType(c, node.target.get());
+    auto size = Type::assertSize(node.location(), type->returnType);
 
-    if(t->function())
+    if(!c.option("O", "elide_no_effect_ops") || size)
     {
-        auto r = t->returnType;
-        auto rs = c.assertSize(node.location(), r);
-
-        if(r->primitive() || r->ref)
-        {
-            if(!c.option("O", "ellide_zero_ops") || rs)
-            {
-                os << "    allocs " << rs << ";\n";
-            }
-
-            sz = rs;
-        }
-        else
-        {
-            auto temp = node.property<std::string>("temp");
-
-            os << "    push &\"" << temp << "\";\n";
-
-            c.tempDestructs.push_back(std::make_pair(temp, r));
-            sz = sizeof(std::size_t);
-        }
-
-        for(auto p: pcx::indexed_range(node.params))
-        {
-            CommonGenerator::generateParameter(c, os, *p.value, t->args[p.index]);
-        }
-
-        ExprGenerator::generate(c, os, *node.target);
-
-        os << "    call;\n";
+        os << "    allocs " << size << ";\n";
     }
-    else
+
+    for(auto &p: node.params)
     {
-        auto temp = node.property<std::string>("temp");
-
-        auto fn = node.target->property<Sym*>("newmethod");
-
-        os << "    push &\"" << temp << "\";\n";
-
-        for(auto p: pcx::indexed_range(node.params))
-        {
-            CommonGenerator::generateParameter(c, os, *p.value, fn->property<Type*>("type")->args[p.index + 1]);
-        }
-
-        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
-        os << "    call;\n";
-
-        os << "    push &\"" << temp << "\";\n";
-
-        c.tempDestructs.push_back(std::make_pair(temp, t));
-
-        sz = sizeof(std::size_t);
+        ExprGenerator::generate(c, os, p.get());
     }
+
+    ExprGenerator::generate(c, os, node.target.get());
+    os << "    call;\n";
+
+    sz = size;
 }
 
 void ExprGenerator::visit(AddrOfNode &node)
 {
-    AddrGenerator::generate(c, os, *node.expr);
+    AddrGenerator::generate(c, os, node.expr.get());
     sz = sizeof(std::size_t);
 }
 
-void ExprGenerator::visit(AssignNode &node)
+void ExprGenerator::visit(DerefNode &node)
 {
-    auto s = ExprGenerator::generate(c, os, *node.expr);
+    sz = Type::assertSize(node.expr->location(), TypeVisitor::assertType(c, &node));
 
-    AddrGenerator::generate(c, os, *node.target);
-
-    os << "    store " << s << ";\n";
-    sz = s;
+    ExprGenerator::generate(c, os, node.expr.get());
+    os << "    load " << *sz << ";\n";
 }
 
 void ExprGenerator::visit(ThisNode &node)
@@ -219,157 +123,35 @@ void ExprGenerator::visit(ThisNode &node)
     sz = sizeof(std::size_t);
 }
 
-void ExprGenerator::visit(DerefNode &node)
+void ExprGenerator::visit(AssignNode &node)
 {
-    auto s = c.assertSize(node.expr->location(), TypeVisitor::type(c, &node));
-
-    ExprGenerator::generate(c, os, *node.expr);
-    os << "    load " << s << ";\n";
-
-    sz = s;
-}
-
-void ExprGenerator::visit(UnaryNode &node)
-{
-    switch(node.op)
+    if(TypeVisitor::assertType(c, &node)->primitive())
     {
-        case Operators::Type::Not:
-        case Operators::Type::Neg: sz = MathOperators::generateNotNeg(c, os, node); break;
+        sz = ExprGenerator::generate(c, os, node.expr.get());
 
-        default: break;
+        AddrGenerator::generate(c, os, node.target.get());
+        os << "    store " << *sz << ";\n";
     }
 }
 
 void ExprGenerator::visit(BinaryNode &node)
 {
-    switch(node.op)
+    switch(node.token.type())
     {
-        case Operators::Type::Add: sz = MathOperators::generateAdd(c, os, node); break;
-        case Operators::Type::Sub: sz = MathOperators::generateSub(c, os, node); break;
-
-        case Operators::Type::Mul:
-        case Operators::Type::Div:
-        case Operators::Type::Mod: sz = MathOperators::generateMulDivMod(c, os, node); break;
-
-        case Operators::Type::Eq:
-        case Operators::Type::Neq:
-        case Operators::Type::Lt:
-        case Operators::Type::LtEq:
-        case Operators::Type::Gt:
-        case Operators::Type::GtEq: sz = CompareOperators::generate(c, os, node); break;
+        case Token::Type::Eq:
+        case Token::Type::Neq: sz = CompareOperators::generate(c, os, node); break;
 
         default: break;
     }
 }
 
-void ExprGenerator::visit(PrimitiveCastNode &node)
+std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)
 {
-    std::string pt = Primitive::toString(node.type->primitiveType());
-
-    if(node.expr)
+    auto r = Visitor::query<ExprGenerator, pcx::optional<std::size_t> >(node, c, os);
+    if(!r)
     {
-        ExprGenerator::generate(c, os, *node.expr);
-
-        os << "    convert " << Primitive::toString(TypeVisitor::type(c, node.expr.get())->primitiveType()) << " " << pt << ";\n";
-    }
-    else
-    {
-        os << "    push " << pt << "(0);\n";
+        throw Error(node->location(), "ExprGenerator failed for ", node->classname(), "node ", node->description());
     }
 
-    sz = c.assertSize(node.location(), node.type);
-}
-
-void ExprGenerator::visit(LogicalNode &node)
-{
-    if(node.op == Operators::Type::And)
-    {
-        auto l0 = c.nextLabelQuoted();
-        auto l1 = c.nextLabelQuoted();
-
-        CommonGenerator::generateBooleanExpression(c, os, *node.left);
-        os << "    jmp ifz " << l0 << ";\n";
-
-        CommonGenerator::generateBooleanExpression(c, os, *node.right);
-        os << "    jmp ifz " << l0 << ";\n";
-
-        os << "    push char(1);\n";
-        os << "    jmp " << l1 << ";\n";
-
-        os << l0 << ":\n";
-        os << "    push char(0);\n";
-        os << l1 << ":\n";
-    }
-    else
-    {
-        auto l0 = c.nextLabelQuoted();
-        auto l1 = c.nextLabelQuoted();
-        auto l2 = c.nextLabelQuoted();
-
-        CommonGenerator::generateBooleanExpression(c, os, *node.left);
-        os << "    not char;\n";
-        os << "    jmp ifz " << l0 << ";\n";
-
-        CommonGenerator::generateBooleanExpression(c, os, *node.right);
-        os << "    jmp ifz " << l1 << ";\n";
-
-        os << l0 << ":\n";
-        os << "    push char(1);\n";
-        os << "    jmp " << l2 << ";\n";
-
-        os << l1 << ":\n";
-        os << "    push char(0);\n";
-
-        os << l2 << ":\n";
-    }
-
-    sz = c.types.boolType()->size();
-}
-
-void ExprGenerator::visit(IncDecNode &node)
-{
-    auto t = TypeVisitor::type(c, node.target.get());
-    auto pr = Primitive::toString(t->primitiveType());
-
-    auto s = c.assertSize(node.location(), t);
-
-    if(node.op == Operators::Type::PostInc || node.op == Operators::Type::PostDec)
-    {
-        ExprGenerator::generate(c, os, *node.target);
-    }
-
-    ExprGenerator::generate(c, os, *node.target);
-    os << "    push " << pr << "(1);\n";
-
-    if(node.op == Operators::Type::PreInc || node.op == Operators::Type::PostInc)
-    {
-        os << "    add " << pr << ";\n";
-    }
-    else
-    {
-        os << "    sub " << pr << ";\n";
-    }
-
-    AddrGenerator::generate(c, os, *node.target);
-    os << "    store " << s << ";\n";
-
-    if(node.op == Operators::Type::PostInc || node.op == Operators::Type::PostDec)
-    {
-        os << "    pop " << s << ";\n";
-    }
-
-    sz = s;
-}
-
-std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node &node)
-{
-    ExprGenerator eg(c, os);
-    node.accept(eg);
-
-    if(!eg.size())
-    {
-        throw Error(node.location(), "expr failed");
-    }
-
-    return *(eg.size());
+    return *r;
 }

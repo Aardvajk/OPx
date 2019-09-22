@@ -5,7 +5,8 @@ CONFIG -= qt
 
 DEFINES -= UNICODE
 
-QMAKE_CXXFLAGS += -std=gnu++11
+QMAKE_CXXFLAGS += -std=gnu++11 \
+                  -include "framework/Trace.h"
 
 QMAKE_LFLAGS += -Wl,--exclude-all-symbols
 
@@ -22,28 +23,20 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         application/Pragmas.cpp \
-        compiler/CommonConstructs.cpp \
-        compiler/Compiler.cpp \
-        compiler/DeclarationConstructs.cpp \
-        compiler/ExprConstructs.cpp \
-        compiler/FuncConstructs.cpp \
-        compiler/IncludeConstructs.cpp \
-        compiler/PragmaConstructs.cpp \
-        compiler/TypeConstructs.cpp \
-        decorator/ClassDecorator.cpp \
-        decorator/ClassMethodDecorator.cpp \
-        decorator/CommonDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/ExprDecorator.cpp \
         decorator/FuncDecorator.cpp \
+        decorator/TypeDecorator.cpp \
+        decorator/VarDecorator.cpp \
+        finaliser/Finaliser.cpp \
         generator/AddrGenerator.cpp \
         generator/ByteListGenerator.cpp \
-        generator/CommonGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/FuncGenerator.cpp \
         generator/Generator.cpp \
         generator/GlobalsGenerator.cpp \
         generator/LocalsGenerator.cpp \
+        info/FuncInfo.cpp \
         lower/ExprLower.cpp \
         lower/FuncLower.cpp \
         lower/Lower.cpp \
@@ -52,86 +45,71 @@ SOURCES += \
         nodes/AssignNode.cpp \
         nodes/BinaryNode.cpp \
         nodes/BlockNode.cpp \
-        nodes/BreakNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
+        nodes/ConstructNode.cpp \
         nodes/DerefNode.cpp \
         nodes/ExprNode.cpp \
-        nodes/ForNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
-        nodes/IfNode.cpp \
-        nodes/IncDecNode.cpp \
-        nodes/InitNode.cpp \
         nodes/LiteralNodes.cpp \
-        nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
-        nodes/OpEqNode.cpp \
         nodes/PragmaNode.cpp \
-        nodes/PrimitiveCastNode.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
-        nodes/SubscriptNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
-        nodes/UnaryNode.cpp \
         nodes/VarNode.cpp \
-        nodes/WhileNode.cpp \
         operators/CompareOperators.cpp \
-        operators/MathOperators.cpp \
         operators/Operators.cpp \
-        optimise/EllideConstructorCopies.cpp \
+        parser/CommonParser.cpp \
+        parser/DeclarationParser.cpp \
+        parser/ExprParser.cpp \
+        parser/FuncParser.cpp \
+        parser/IncludeParser.cpp \
+        parser/Parser.cpp \
+        parser/PragmaParser.cpp \
+        parser/TypeParser.cpp \
         syms/Sym.cpp \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
-        transform/ExprTransformer.cpp \
-        transform/FuncTransformer.cpp \
-        transform/InitMapBuilder.cpp \
-        transform/ThisCallTransformer.cpp \
-        transform/Transformer.cpp \
+        transform/ExprTransform.cpp \
+        transform/FuncTransform.cpp \
+        transform/Transform.cpp \
+        types/DefaultTypes.cpp \
+        lower/LowerTypes.cpp \
         types/Type.cpp \
+        types/TypeBuilder.cpp \
         types/TypeCache.cpp \
         types/TypeCompare.cpp \
-        types/TypeLookup.cpp \
-        visitors/ArraySizeVisitor.cpp \
         visitors/AstPrinter.cpp \
-        visitors/CheckMutable.cpp \
-        visitors/HasParent.cpp \
+        visitors/DescVisitor.cpp \
         visitors/NameVisitors.cpp \
+        visitors/QueryVisitors.cpp \
         visitors/SymFinder.cpp \
-        types/TypeBuilder.cpp \
         visitors/SymScopeVisitor.cpp \
-        visitors/TakesAddrVisitor.cpp \
         visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
     application/Pragmas.h \
-    compiler/CommonConstructs.h \
-    compiler/Compiler.h \
-    compiler/DeclarationConstructs.h \
-    compiler/ExprConstructs.h \
-    compiler/FuncConstructs.h \
-    compiler/IncludeConstructs.h \
-    compiler/PragmaConstructs.h \
-    compiler/TypeConstructs.h \
-    decorator/ClassDecorator.h \
-    decorator/ClassMethodDecorator.h \
-    decorator/CommonDecorator.h \
     decorator/Decorator.h \
     decorator/ExprDecorator.h \
     decorator/FuncDecorator.h \
+    decorator/TypeDecorator.h \
+    decorator/VarDecorator.h \
+    finaliser/Finaliser.h \
     generator/AddrGenerator.h \
     generator/ByteListGenerator.h \
-    generator/CommonGenerator.h \
     generator/ExprGenerator.h \
     generator/FuncGenerator.h \
     generator/Generator.h \
     generator/GlobalsGenerator.h \
     generator/LocalsGenerator.h \
+    info/FuncInfo.h \
     lower/ExprLower.h \
     lower/FuncLower.h \
     lower/Lower.h \
@@ -139,65 +117,53 @@ HEADERS += \
     nodes/AssignNode.h \
     nodes/BinaryNode.h \
     nodes/BlockNode.h \
-    nodes/BreakNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
+    nodes/ConstructNode.h \
     nodes/DerefNode.h \
     nodes/ExprNode.h \
-    nodes/ForNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
-    nodes/IfNode.h \
-    nodes/IncDecNode.h \
-    nodes/InitNode.h \
     nodes/LiteralNodes.h \
-    nodes/LogicalNode.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
-    nodes/OpEqNode.h \
     nodes/PragmaNode.h \
-    nodes/PrimitiveCastNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
-    nodes/SubscriptNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
-    nodes/UnaryNode.h \
     nodes/VarNode.h \
-    nodes/WhileNode.h \
     operators/CompareOperators.h \
-    operators/MathOperators.h \
     operators/Operators.h \
-    optimise/EllideConstructorCopies.h \
+    parser/CommonParser.h \
+    parser/DeclarationParser.h \
+    parser/ExprParser.h \
+    parser/FuncParser.h \
+    parser/IncludeParser.h \
+    parser/Parser.h \
+    parser/PragmaParser.h \
+    parser/TypeParser.h \
     syms/Sym.h \
     syms/SymGuard.h \
     syms/SymPrinter.h \
     syms/SymTree.h \
-    transform/ExprTransformer.h \
-    transform/FuncTransformer.h \
-    transform/InitMapBuilder.h \
-    transform/ThisCallTransformer.h \
-    transform/Transformer.h \
+    transform/ExprTransform.h \
+    transform/FuncTransform.h \
+    transform/Transform.h \
+    types/DefaultTypes.h \
+    lower/LowerTypes.h \
     types/Type.h \
+    types/TypeBuilder.h \
     types/TypeCache.h \
     types/TypeCompare.h \
-    types/TypeLookup.h \
-    visitors/ArraySizeVisitor.h \
     visitors/AstPrinter.h \
-    visitors/CheckMutable.h \
-    visitors/HasParent.h \
+    visitors/DescVisitor.h \
     visitors/NameVisitors.h \
+    visitors/QueryVisitors.h \
     visitors/SymFinder.h \
-    types/TypeBuilder.h \
     visitors/SymScopeVisitor.h \
-    visitors/TakesAddrVisitor.h \
     visitors/TypeVisitor.h \
     visitors/Visitor.h
 
 DISTFILES += \
-    ../workspace/notes.txt \
-    ../workspace/script.pc \
-    ../workspace/script.pi \
-    ../workspace/store.pc \
-    ../workspace/string.pc \
-    ../workspace/string.ph
+    ../workspace/script.pc

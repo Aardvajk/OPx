@@ -3,20 +3,13 @@
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/AddrOfNode.h"
-#include "nodes/BinaryNode.h"
-#include "nodes/ThisNode.h"
 #include "nodes/DerefNode.h"
-#include "nodes/SubscriptNode.h"
-#include "nodes/IncDecNode.h"
-#include "nodes/OpEqNode.h"
-
-#include "syms/Sym.h"
 
 #include "visitors/SymScopeVisitor.h"
 
-#include "types/Type.h"
+#include "syms/Sym.h"
 
-#include <pcx/scoped_push.h>
+#include "types/Type.h"
 
 namespace
 {
@@ -71,7 +64,6 @@ void SymFinder::visit(IdNode &node)
 
             if(!sc.empty() && sc.front()->type() == Sym::Type::Var)
             {
-                node.parent->setProperty("sym", sc.front());
                 sc = { sc.front()->property<::Type*>("type")->sym };
             }
         }
@@ -88,21 +80,12 @@ void SymFinder::visit(IdNode &node)
     else
     {
         search(type, curr, node.name, r);
-        if(!r.empty() && r.front()->type() == Sym::Type::Var)
-        {
-            node.setProperty("sym", r.front());
-        }
     }
 }
 
 void SymFinder::visit(CallNode &node)
 {
     node.target->accept(*this);
-}
-
-void SymFinder::visit(BinaryNode &node)
-{
-    node.left->accept(*this);
 }
 
 void SymFinder::visit(AddrOfNode &node)
@@ -115,24 +98,8 @@ void SymFinder::visit(DerefNode &node)
     node.expr->accept(*this);
 }
 
-void SymFinder::visit(SubscriptNode &node)
-{
-    node.target->accept(*this);
-}
-
-void SymFinder::visit(IncDecNode &node)
-{
-    node.target->accept(*this);
-}
-
-void SymFinder::visit(OpEqNode &node)
-{
-    node.target->accept(*this);
-}
-
 void SymFinder::find(Context &c, Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
 {
     SymFinder sf(c, type, curr, result);
     node->accept(sf);
 }
-

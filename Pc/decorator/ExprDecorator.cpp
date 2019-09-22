@@ -1,181 +1,274 @@
 #include "ExprDecorator.h"
 
-#include "framework/Error.h"
-
 #include "application/Context.h"
 
-#include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
+#include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
-#include "nodes/AssignNode.h"
 #include "nodes/DerefNode.h"
-#include "nodes/UnaryNode.h"
+#include "nodes/ThisNode.h"
+#include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
-#include "nodes/SubscriptNode.h"
-#include "nodes/LogicalNode.h"
-#include "nodes/IncDecNode.h"
-#include "nodes/OpEqNode.h"
 
 #include "visitors/SymFinder.h"
-#include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
-#include "visitors/CheckMutable.h"
-#include "visitors/HasParent.h"
+#include "visitors/QueryVisitors.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
-#include "decorator/Decorator.h"
-#include "decorator/CommonDecorator.h"
+#include <unordered_set>
 
-ExprDecorator::ExprDecorator(Context &c, const Type *expectedType) : c(c), expectedType(expectedType)
+namespace
 {
+
+std::vector<Sym*> pruneResult(const std::vector<Sym*> &sv, const Type *expectedType)
+{
+    std::vector<Sym*> r;
+
+    for(auto s: sv)
+    {
+        auto type = s->property<Type*>("type");
+
+        if(type->constMethod == expectedType->constMethod)
+        {
+            r.push_back(s);
+        }
+    }
+
+    return r;
 }
 
-void ExprDecorator::visit(BlockNode &node)
+}
+
+ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c), expectedType(expectedType), flags(flags)
 {
-    for(auto &n: node.nodes)
-    {
-        Decorator d(c);
-        n->accept(d);
-    }
 }
 
 void ExprDecorator::visit(IdNode &node)
 {
     if(node.parent)
     {
-        ExprDecorator::decorate(c, nullptr, *node.parent);
-    }
+        node.parent = ExprDecorator::decorate(c, node.parent);
 
-    if(expectedType && expectedType->function())
-    {
-        if(!node.getProperty("newmethod"))
+        auto t = TypeVisitor::queryType(c, node.parent.get());
+        if(t && t->ptr)
         {
-            node.setProperty("sym", CommonDecorator::searchCallableByType(c, node, expectedType));
+            throw Error(node.location(), "cannot access via pointer - ", node.description());
         }
     }
-    else
-    {
-        std::vector<Sym*> sv;
-        SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
 
-        if(sv.empty())
+    std::unordered_set<Sym*> search;
+
+    if(expectedType)
+    {
+        for(auto &a: expectedType->args)
         {
-            throw Error(node.location(), "not found - ", NameVisitors::prettyName(&node));
-        }
-
-        if(sv.size() > 1)
-        {
-            throw Error(node.location(), "ambigious reference - ", NameVisitors::prettyName(&node));
-        }
-
-        node.setProperty("sym", sv.front());
-    }
-}
-
-void ExprDecorator::visit(CallNode &node)
-{
-    for(auto &p: node.params)
-    {
-        p->accept(*this);
-    }
-
-    auto t = Type::makeFunction(0, c.types.nullType());
-    for(auto &p: node.params)
-    {
-        t.args.push_back(TypeVisitor::type(c, p.get()));
-    }
-
-    ExprDecorator ed(c, c.types.insert(t));
-    node.target->accept(ed);
-
-    CheckMutable cm(c);
-    node.target->accept(cm);
-
-    bool isConst = !cm.result();
-
-    if(cm.result())
-    {
-        if(TypeVisitor::type(c, node.target.get())->method)
-        {
-            HasParent hp;
-            node.target->accept(hp);
-
-            if(!hp.result())
+            if(a->sym && a->sym->parent() != c.tree.root())
             {
-                isConst = c.tree.current()->container()->property<const Type*>("type")->constMethod;
+                search.insert(a->sym->parent());
             }
         }
     }
 
-    if(isConst)
+    std::vector<Sym*> sv;
+    SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
+
+    for(auto s: search)
     {
-        t.constMethod = true;
+        SymFinder::find(c, SymFinder::Type::Local, s, &node, sv);
+    }
 
-        ExprDecorator ed(c, c.types.insert(t));
-        node.target->accept(ed);
+    if(expectedType && expectedType->function())
+    {
+        std::vector<Sym*> r;
 
-        if(!TypeVisitor::type(c, node.target.get())->constMethod)
+        for(auto s: sv)
         {
-            throw Error(node.location(), "cannot call mutable method on const object - ", NameVisitors::prettyName(node.target.get()));
+            if(s->type() == Sym::Type::Func)
+            {
+                auto type = s->property<Type*>("type");
+
+                if(TypeCompare(c).compatibleArgs(type, expectedType) && (!expectedType->constMethod || type->constMethod))
+                {
+                    r.push_back(s);
+                }
+            }
+            else
+            {
+                r.push_back(s);
+            }
+        }
+
+        sv = r;
+    }
+
+    if(sv.size() > 1 && expectedType)
+    {
+        sv = pruneResult(sv, expectedType);
+    }
+
+    if(sv.empty())
+    {
+        throw Error(node.location(), "not found - ", node.description(), (expectedType ? expectedType->text() : ""));
+    }
+    else if(sv.size() > 1)
+    {
+        throw Error(node.location(), "ambigous - ", node.description());
+    }
+
+    node.setProperty("sym", sv.front());
+}
+
+void ExprDecorator::visit(StringLiteralNode &node)
+{
+    auto name = pcx::str("#global.", c.globals.size());
+
+    c.globals[name] = &node;
+    node.setProperty("global", name);
+}
+
+void ExprDecorator::visit(CallNode &node)
+{
+    auto t = Type::makeFunction(c.types.nullType());
+
+    if(!flags[Flag::SkipParams])
+    {
+        for(std::size_t i = 0; i < node.params.size(); ++i)
+        {
+            node.params[i] = ExprDecorator::decorate(c, node.params[i]);
+        }
+    }
+
+    for(auto &p: node.params)
+    {
+        t.args.push_back(TypeVisitor::assertType(c, p.get()));
+    }
+
+    node.target = ExprDecorator::decorate(c, node.target, &t);
+
+    auto type = TypeVisitor::assertType(c, node.target.get());
+
+    if(type->method)
+    {
+        bool constant = false;
+
+        auto n = Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get());
+        if(n)
+        {
+            constant = TypeVisitor::assertType(c, n.get())->constant;
+        }
+        else
+        {
+            constant = c.tree.current()->container()->property<Type*>("type")->constMethod;
+        }
+
+        if(constant)
+        {
+            t.constMethod = true;
+            node.target = ExprDecorator::decorate(c, node.target, &t);
+        }
+    }
+
+    if(auto dt = Visitor::query<QueryVisitors::DirectType, Type*>(node.target.get()))
+    {
+        rn = new ConstructNode(node.location(), dt, node.params);
+    }
+    else
+    {
+        if(!type->returnType)
+        {
+            NodePtr id(new IdNode(node.location(), { }, "operator()"));
+
+            auto cn = new CallNode(node.location(), id);
+            rn = cn;
+
+            cn->params.push_back(node.target);
+            for(auto &p: node.params)
+            {
+                cn->params.push_back(p);
+            }
+
+            rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
         }
     }
 }
 
 void ExprDecorator::visit(AddrOfNode &node)
 {
-    node.expr->accept(*this);
-}
-
-void ExprDecorator::visit(AssignNode &node)
-{
-    node.target->accept(*this);
-    node.expr->accept(*this);
+    node.expr = ExprDecorator::decorate(c, node.expr);
+    node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->addPointer()));
 }
 
 void ExprDecorator::visit(DerefNode &node)
 {
-    node.expr->accept(*this);
+    node.expr = ExprDecorator::decorate(c, node.expr);
+
+    if(!TypeVisitor::assertType(c, node.expr.get())->ptr)
+    {
+        throw Error(node.location(), "cannot deref a non-pointer - ", node.description());
+    }
+
+    node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->removePointer()));
 }
 
-void ExprDecorator::visit(UnaryNode &node)
+void ExprDecorator::visit(ThisNode &node)
 {
-    node.expr->accept(*this);
+    auto s = c.tree.current()->container();
+
+    if(s->parent()->type() != Sym::Type::Class)
+    {
+        throw Error(node.location(), "this outside method");
+    }
+
+    auto t = Type::makePrimary(s->parent());
+
+    t.ref = true;
+    t.constant = s->property<Type*>("type")->constMethod;
+
+    node.setProperty("type", c.types.insert(t));
+}
+
+void ExprDecorator::visit(AssignNode &node)
+{
+    node.target = ExprDecorator::decorate(c, node.target);
+
+    if(TypeVisitor::assertType(c, node.target.get())->constant)
+    {
+        throw Error(node.target->location(), "cannot assign to const - ", node.target->description());
+    }
+
+    node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
 }
 
 void ExprDecorator::visit(BinaryNode &node)
 {
-    node.left->accept(*this);
-    node.right->accept(*this);
+    node.left = ExprDecorator::decorate(c, node.left);
+    node.right = ExprDecorator::decorate(c, node.right);
+
+    auto lt = TypeVisitor::assertType(c, node.left.get());
+    auto rt = TypeVisitor::assertType(c, node.right.get());
+
+    if(!lt->primitive() || !rt->primitive())
+    {
+        NodePtr id(new IdNode(node.location(), { }, pcx::str("operator", node.token.text())));
+
+        auto cn = new CallNode(node.location(), id);
+        rn = cn;
+
+        cn->params.push_back(node.left);
+        cn->params.push_back(node.right);
+
+        rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
+    }
 }
 
-void ExprDecorator::visit(SubscriptNode &node)
+NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)
 {
-    node.target->accept(*this);
-    node.expr->accept(*this);
-}
+    ExprDecorator ed(c, expectedType, flags);
+    node->accept(ed);
 
-void ExprDecorator::visit(LogicalNode &node)
-{
-    node.left->accept(*this);
-    node.right->accept(*this);
-}
-
-void ExprDecorator::visit(IncDecNode &node)
-{
-    node.target->accept(*this);
-}
-
-void ExprDecorator::visit(OpEqNode &node)
-{
-    node.target->accept(*this);
-    node.expr->accept(*this);
-}
-
-void ExprDecorator::decorate(Context &c, const Type *expectedType, Node &node)
-{
-    ExprDecorator ed(c, expectedType);
-    node.accept(ed);
+    return ed.result() ? ed.result() : node;
 }

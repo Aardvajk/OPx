@@ -3,20 +3,13 @@
 
 #include "nodes/Node.h"
 
-class NullLiteralNode : public Node
-{
-public:
-    explicit NullLiteralNode(Location location) : Node(location) { }
-
-    virtual void accept(Visitor &v) override;
-};
-
 class CharLiteralNode : public Node
 {
 public:
     CharLiteralNode(Location location, char value) : Node(location), value(value) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     char value;
 };
@@ -27,6 +20,7 @@ public:
     IntLiteralNode(Location location, int value) : Node(location), value(value) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     int value;
 };
@@ -37,18 +31,9 @@ public:
     BoolLiteralNode(Location location, bool value) : Node(location), value(value) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     bool value;
-};
-
-class SizeLiteralNode : public Node
-{
-public:
-    SizeLiteralNode(Location location, std::size_t value) : Node(location), value(value) { }
-
-    virtual void accept(Visitor &v) override;
-
-    std::size_t value;
 };
 
 class StringLiteralNode : public Node
@@ -57,6 +42,7 @@ public:
     StringLiteralNode(Location location, std::string value) : Node(location), value(std::move(value)) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     std::string value;
 };

@@ -2,57 +2,16 @@
 
 #include "framework/Error.h"
 
-#include "common/Primitive.h"
-
-#include "types/Type.h"
-#include "types/TypeCompare.h"
-
-#include "nodes/Node.h"
-
-#include "visitors/NameVisitors.h"
-#include "visitors/CheckMutable.h"
-
-#include <pcx/scoped_ptr.h>
+#include "types/DefaultTypes.h"
 
 #include <fstream>
 #include <algorithm>
 
-namespace
-{
-
-Sym *primitive(const std::string &name, Primitive::Type type, std::size_t size)
-{
-    auto s = new Sym(Sym::Type::Class, {  }, name);
-
-    s->setProperty("size", size);
-    s->setProperty("primitive", true);
-    s->setProperty("primitiveType", type);
-
-    return s;
-}
-
-void addPrimitive(Context &c, const std::string &name, Primitive::Type type, std::size_t size)
-{
-    auto s = c.tree.root()->child("std")->add(primitive(name, type, size));
-    auto t = c.types.insert(Type::makePrimary(0, s));
-
-    s->setProperty("type", t);
-}
-
-}
-
-Context::Context(int argc, char *argv[], std::vector<std::string> &files)
-    : scanner(Lexer::Mode::Pc), classDepth(0), labels(0), scopes(0), refsLowered(false), pragmaPushes(0)
+Context::Context(int argc, char *argv[], std::vector<std::string> &files) : scanner(Lexer::Mode::Pc), types(*this), classDepth(0)
 {
     args.push_back({ argc, argv, files });
 
-    tree.current()->add(new Sym(Sym::Type::Namespace, { }, "std"));
-
-    addPrimitive(*this, "null", Primitive::Type::Null, 0);
-    addPrimitive(*this, "char", Primitive::Type::Char, 1);
-    addPrimitive(*this, "int", Primitive::Type::Int, 4);
-    addPrimitive(*this, "bool", Primitive::Type::Char, 1);
-    addPrimitive(*this, "size", Primitive::Type::Size, 8);
+    DefaultTypes::create(*this);
 }
 
 void Context::open(const std::string &path)
@@ -66,96 +25,9 @@ void Context::open(const std::string &path)
     scanner.push(new Source(sources.id(path), is.release()));
 }
 
-void Context::assertUnique(Location location, const std::string &name)
+bool Context::option(const std::string &key) const
 {
-    if(!name.empty())
-    {
-        for(auto s: tree.current()->children())
-        {
-            if(s->name() == name)
-            {
-                throw Error(location, "already defined - ", name);
-            }
-        }
-    }
-}
-
-void Context::assertMutable(Node *node)
-{
-    CheckMutable cm(*this);
-    node->accept(cm);
-
-    if(!cm.result())
-    {
-        throw Error(node->location(), "cannot mutate a constant - ", NameVisitors::prettyName(node));
-    }
-}
-
-std::string Context::assertSimpleName(Node *node)
-{
-    if(!NameVisitors::isNameSimple(node))
-    {
-        throw Error(node->location(), "simple name expected - ", NameVisitors::prettyName(node));
-    }
-
-    return NameVisitors::lastIdOfName(node);
-}
-
-std::string Context::assertSimpleNameUnique(Node *node)
-{
-    auto name = assertSimpleName(node);
-    assertUnique(node->location(), name);
-
-    return name;
-}
-
-std::size_t Context::assertSize(Location location, const Type *type)
-{
-    auto sz = type->size();
-    if(!sz)
-    {
-        throw Error(location, "undefined type used - ", type->text());
-    }
-
-    return *sz;
-}
-
-std::size_t Context::assertInitSize(Location location, const Type *type)
-{
-    auto sz = type->initSize();
-    if(!sz)
-    {
-        throw Error(location, "undefined type used - ", type->text());
-    }
-
-    return *sz;
-}
-
-Sym *Context::assertChainedSym(Location location, Sym *start, const std::vector<std::string> &names)
-{
-    Sym *cs = start;
-    for(std::size_t i = 0; i < names.size(); ++i)
-    {
-        auto s = cs->child(names[i]);
-        if(!s)
-        {
-            throw Error(location, "not found - ", names[i]);
-        }
-
-        cs = s;
-    }
-
-    return cs;
-}
-
-std::string Context::nextLabel()
-{
-    return pcx::str("#label_", labels++);
-}
-
-std::string Context::nextLabelQuoted()
-{
-    return pcx::str("\"", nextLabel(), "\"");
+    return args.back().contains(key);
 }
 
 bool Context::option(const std::string &key, const std::string &value) const

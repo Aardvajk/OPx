@@ -5,12 +5,12 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
-#include "nodes/ClassNode.h"
 #include "nodes/FuncNode.h"
-
-#include "types/Type.h"
+#include "nodes/ClassNode.h"
+#include "nodes/VarNode.h"
 
 #include "lower/FuncLower.h"
+#include "lower/ExprLower.h"
 
 Lower::Lower(Context &c) : c(c)
 {
@@ -26,55 +26,34 @@ void Lower::visit(BlockNode &node)
 
 void Lower::visit(NamespaceNode &node)
 {
-    auto g = c.tree.open(node.property<Sym*>("sym"));
+    auto sg = c.tree.open(node.property<Sym*>("sym"));
     node.body->accept(*this);
-}
-
-void Lower::visit(ClassNode &node)
-{
-    if(node.body)
-    {
-        auto sym = node.property<Sym*>("sym");
-
-        auto g = c.tree.open(sym);
-        node.body->accept(*this);
-
-        std::size_t sz = 0;
-        for(auto s: sym->children())
-        {
-            if(s->type() == Sym::Type::Var)
-            {
-                s->setProperty("offset", sz);
-                sz += c.assertInitSize(node.location(), s->property<const Type*>("type"));
-            }
-        }
-
-        sym->setProperty("size", sz);
-    }
 }
 
 void Lower::visit(FuncNode &node)
 {
     if(node.body)
     {
-        auto g = c.tree.open(node.property<Sym*>("sym"));
-
-        FuncLower fl(c);
-
-        for(auto &a: node.args)
-        {
-            a->accept(fl);
-        }
-
-        if(node.initialisers)
-        {
-            node.initialisers->accept(fl);
-        }
-
-        node.body->accept(fl);
+        Visitor::visit<FuncLower>(node.body.get(), c);
     }
 }
 
+void Lower::visit(ClassNode &node)
+{
+    if(node.body)
+    {
+        auto sg = c.tree.open(node.property<Sym*>("sym"));
+        node.body->accept(*this);
+    }
+}
+
+void Lower::visit(VarNode &node)
+{
+    if(node.value)
+    {
+        node.value = ExprLower::lower(c, node.value);
+    }
+}
 void Lower::visit(PragmaNode &node)
 {
     Pragmas::execute(c, node);

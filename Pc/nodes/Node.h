@@ -1,6 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "framework/Error.h"
 #include "framework/PropertyMap.h"
 
 #include "scanner/Location.h"
@@ -9,7 +10,6 @@
 #include <pcx/any.h>
 
 #include <vector>
-#include <string>
 #include <unordered_map>
 
 class Visitor;
@@ -18,26 +18,41 @@ class BlockNode;
 class Node
 {
 public:
-    explicit Node(Location location);
+    Node(Location location);
     virtual ~Node();
 
     virtual void accept(Visitor &v) = 0;
+    virtual std::string classname() const = 0;
 
-    void setProperty(const std::string &name, pcx::any value){ pm.set(name, value); }
-    pcx::any getProperty(const std::string &name){ return pm[name]; }
+    void setProperty(const std::string &key, const pcx::any &value);
+    pcx::any findProperty(const std::string &key) const;
+
+    std::string description() const;
 
     Location location() const { return n; }
     BlockNode *block() const { return bn; }
 
-    template<typename T> T property(const std::string &name) const { return pm.get<T>(name); }
+    template<typename T> T property(const std::string &key) const;
 
 private:
     friend class BlockNode;
 
     Location n;
     BlockNode *bn;
-    PropertyMap pm;
+
+    std::unordered_map<std::string, pcx::any> pm;
 };
+
+template<typename T> T Node::property(const std::string &key) const
+{
+    auto i = pm.find(key);
+    if(i == pm.end())
+    {
+        throw Error(location(), "bad property read on ", classname(), "node ", description(), " - ", key);
+    }
+
+    return i->second.to<T>();
+}
 
 using NodePtr = pcx::shared_ptr<Node>;
 using NodeList = std::vector<pcx::shared_ptr<Node> >;

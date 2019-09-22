@@ -12,9 +12,7 @@ void GlobalsGenerator::generate(Context &c, std::ostream &os)
 {
     for(auto i: c.globals)
     {
-        auto sz = c.assertInitSize({ }, TypeVisitor::type(c, i.second));
-
-        os << "var \"" << i.first << "\":" << sz << " = ";
+        os << "var \"" << i.first << "\" = ";
 
         ByteListGenerator bg(c, os);
         i.second->accept(bg);

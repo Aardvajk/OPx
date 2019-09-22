@@ -18,10 +18,8 @@ enum class Type
     Invalid
 };
 
-const char *toString(Type v);
+std::string toString(Type v);
 Type fromString(const std::string &v);
-
-bool takesArgument(Type v);
 
 void execute(Context &c, PragmaNode &node);
 

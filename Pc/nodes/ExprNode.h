@@ -6,9 +6,10 @@
 class ExprNode : public Node
 {
 public:
-    ExprNode(Location location, NodePtr expr) : Node(location), expr(expr) { }
+    explicit ExprNode(Location location, NodePtr expr = { }) : Node(location), expr(expr) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
     NodePtr expr;
 };

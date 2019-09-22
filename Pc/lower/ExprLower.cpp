@@ -1,35 +1,20 @@
 #include "ExprLower.h"
 
-#include "nodes/BlockNode.h"
+#include "application/Context.h"
+
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
-#include "nodes/AssignNode.h"
-#include "nodes/BinaryNode.h"
-#include "nodes/ThisNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
-#include "nodes/IncDecNode.h"
+#include "nodes/AssignNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/TypeVisitor.h"
 
-#include "syms/Sym.h"
-
 #include "types/Type.h"
-#include "types/TypeLookup.h"
 
-#include "lower/FuncLower.h"
-
-ExprLower::ExprLower(Context &c, NodePtr &cn, const Type *type, Flags flags) : c(c), cn(cn), type(type), flags(flags)
+ExprLower::ExprLower(Context &c, NodePtr &cn, Type *expectedType) : c(c), cn(cn), expectedType(expectedType)
 {
-}
-
-void ExprLower::visit(BlockNode &node)
-{
-    for(std::size_t i = 0; i < node.nodes.size(); ++i)
-    {
-        FuncLower fl(c);
-        node.nodes[i]->accept(fl);
-    }
 }
 
 void ExprLower::visit(IdNode &node)
@@ -39,75 +24,56 @@ void ExprLower::visit(IdNode &node)
         node.parent = ExprLower::lower(c, node.parent);
     }
 
-    if(!(flags & Flag::NoTopLevel))
+    auto type = TypeVisitor::assertType(c, &node);
+
+    if(!type->ref)
     {
-        if(TypeVisitor::type(c, &node)->ref)
+        if(expectedType && expectedType->ref)
         {
-            if(!type || !type->ref)
-            {
-                auto dn = new DerefNode(node.location(), cn);
-                rn = dn;
-
-                dn->setProperty("lower_generated", true);
-            }
+            rn = new AddrOfNode(node.location(), cn);
+            rn->setProperty("type", c.types.insert(type->addPointer()));
         }
-        else if(type && type->ref)
+    }
+    else
+    {
+        if(!expectedType || !expectedType->ref)
         {
-            auto an = new AddrOfNode(node.location(), cn);
-            rn = an;
-
-            an->setProperty("lower_generated", true);
+            rn = new DerefNode(node.location(), cn);
+            rn->setProperty("type", c.types.insert(type->removePointer()));
         }
     }
 }
 
 void ExprLower::visit(CallNode &node)
 {
-    auto t = TypeVisitor::type(c, node.target.get());
-    if(!t->function())
-    {
-        t = node.target->property<Sym*>("newmethod")->property<Type*>("type");
-    }
-
-    std::size_t off = t->args.size() > node.params.size() ? 1 : 0;
+    auto type = TypeVisitor::assertType(c, node.target.get());
 
     for(std::size_t i = 0; i < node.params.size(); ++i)
     {
-        node.params[i] = ExprLower::lower(c, node.params[i], t->args[i + off], Flag::NoThisDeref);
+        node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
     }
+}
 
-    if(!(flags & Flag::NoTopLevel))
+void ExprLower::visit(AddrOfNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+}
+
+void ExprLower::visit(DerefNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+
+    if(expectedType && expectedType->ref)
     {
-        if(t->returnType && t->returnType->ref && (!type || !type->ref))
-        {
-            auto dn = new DerefNode(node.location(), cn);
-            rn = dn;
-
-            dn->setProperty("lower_generated", true);
-        }
+        rn = new AddrOfNode(node.location(), cn);
+        rn->setProperty("type", c.types.insert(TypeVisitor::assertType(c, &node)->addPointer()));
     }
 }
 
 void ExprLower::visit(AssignNode &node)
 {
-    if(node.getProperty("constructor").value<bool>())
-    {
-        node.target = ExprLower::lower(c, node.target, nullptr, Flag::NoTopLevel);
-        node.expr = ExprLower::lower(c, node.expr, nullptr, Flag::NoTopLevel);
-
-        if(TypeVisitor::type(c, node.target.get())->ref && !TypeVisitor::type(c, node.expr.get())->ref)
-        {
-            auto an = new AddrOfNode(node.expr->location(), node.expr);
-            node.expr = an;
-
-            an->setProperty("lower_generated", true);
-        }
-    }
-    else
-    {
-        node.target = ExprLower::lower(c, node.target, nullptr);
-        node.expr = ExprLower::lower(c, node.expr, nullptr);
-    }
+    node.target = ExprLower::lower(c, node.target);
+    node.expr = ExprLower::lower(c, node.expr);
 }
 
 void ExprLower::visit(BinaryNode &node)
@@ -116,44 +82,9 @@ void ExprLower::visit(BinaryNode &node)
     node.right = ExprLower::lower(c, node.right);
 }
 
-void ExprLower::visit(ThisNode &node)
+NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)
 {
-    if(!(flags & Flag::NoThisDeref))
-    {
-        if(!type || !type->ref)
-        {
-            auto dn = new DerefNode(node.location(), cn);
-            rn = dn;
-
-            dn->setProperty("lower_generated", true);
-        }
-    }
-}
-
-void ExprLower::visit(AddrOfNode &node)
-{
-    if(!node.getProperty("lower_generated").value<bool>())
-    {
-        node.expr = ExprLower::lower(c, node.expr);
-    }
-}
-
-void ExprLower::visit(DerefNode &node)
-{
-    if(!node.getProperty("lower_generated").value<bool>())
-    {
-        node.expr = ExprLower::lower(c, node.expr);
-    }
-}
-
-void ExprLower::visit(IncDecNode &node)
-{
-    node.target = ExprLower::lower(c, node.target);
-}
-
-NodePtr ExprLower::lower(Context &c, NodePtr &node, const Type *type, Flags flags)
-{
-    ExprLower el(c, node, type, flags);
+    ExprLower el(c, node, expectedType);
     node->accept(el);
 
     return el.result() ? el.result() : node;

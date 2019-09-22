@@ -6,3 +6,8 @@ void FuncNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+std::string FuncNode::classname() const
+{
+    return "func";
+}

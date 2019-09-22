@@ -6,23 +6,22 @@
 class TypeNode : public Node
 {
 public:
-    explicit TypeNode(Location location) : Node(location), constant(false), ref(false), constMethod(false), ptr(0), function(false) { }
+    explicit TypeNode(Location location) : Node(location), function(false), constant(false), ref(false), ptr(0) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
+
+    bool function;
 
     bool constant;
     bool ref;
-    bool constMethod;
 
-    unsigned ptr;
-    bool function;
+    std::size_t ptr;
 
     NodePtr name;
 
     NodeList args;
     NodePtr returnType;
-
-    NodePtr sub;
 };
 
 #endif // TYPENODE_H

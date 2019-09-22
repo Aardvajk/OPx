@@ -1,8 +1,9 @@
 #include "Type.h"
 
+#include "framework/Error.h"
+
 #include "syms/Sym.h"
 
-#include <pcx/str.h>
 #include <pcx/join_str.h>
 
 namespace
@@ -22,7 +23,7 @@ std::string toString(const Type *type)
         s += "ref ";
     }
 
-    for(unsigned i = 0; i < type->ptr; ++i)
+    for(std::size_t i = 0; i < type->ptr; ++i)
     {
         s += "ptr ";
     }
@@ -41,14 +42,14 @@ std::string toString(const Type *type)
         s += ":" + toString(type->returnType);
     }
 
-    if(type->sub)
+    if(type->constMethod)
     {
-        s += pcx::str("[", type->sub, "]");
+        s += " const";
     }
 
     if(type->method)
     {
-        s += (type->constMethod ? " <const method>" : " <method>");
+        s += " [method]";
     }
 
     return s;
@@ -56,45 +57,24 @@ std::string toString(const Type *type)
 
 }
 
-pcx::optional<std::size_t> Type::size() const
+Type::Type() : constant(false), ref(false), ptr(0), sym(nullptr), returnType(nullptr), method(false), constMethod(false)
 {
-    if(ptr || returnType)
-    {
-        return sizeof(std::size_t);
-    }
-
-    if(sym)
-    {
-        if(auto p = sym->getProperty("size"))
-        {
-            return p.to<std::size_t>();
-        }
-    }
-
-    return { };
 }
 
-pcx::optional<std::size_t> Type::initSize() const
+Type Type::addPointer() const
 {
-    if(sub)
-    {
-        auto dt = *this;
-        --dt.ptr;
+    auto t = *this;
+    ++t.ptr;
 
-        if(auto s = dt.size())
-        {
-            return (*s) * sub;
-        }
+    return t;
+}
 
-        return { };
-    }
+Type Type::removePointer() const
+{
+    auto t = *this;
+    --t.ptr;
 
-    if(auto s = size())
-    {
-        return (*s) * (sub ? sub : 1);
-    }
-
-    return { };
+    return t;
 }
 
 std::string Type::text() const
@@ -109,7 +89,17 @@ bool Type::function() const
 
 bool Type::primitive() const
 {
-    return returnType || ptr || (sym && sym->getProperty("primitive").value<bool>());
+    return ptr || function() || (sym && sym->findProperty("primitive").value<Primitive::Type>() != Primitive::Type::Invalid);
+}
+
+bool Type::primitiveOrRef() const
+{
+    return ref || primitive();
+}
+
+bool Type::requiresConstruction() const
+{
+    return !primitiveOrRef();
 }
 
 Primitive::Type Type::primitiveType() const
@@ -119,50 +109,66 @@ Primitive::Type Type::primitiveType() const
         return Primitive::Type::Size;
     }
 
-    if(primitive())
+    if(auto t = sym->findProperty("primitive"))
     {
-        return sym->property<Primitive::Type>("primitiveType");
+        return t.to<Primitive::Type>();
     }
 
     return Primitive::Type::Invalid;
 }
 
-Type Type::refToPtr() const
+pcx::optional<std::size_t> Type::size() const
 {
-    auto t = *this;
-    ++t.ptr;
+    if(ptr || returnType)
+    {
+        return sizeof(std::size_t);
+    }
 
-    return t;
+    if(sym)
+    {
+        if(auto sz = sym->findProperty("size"))
+        {
+            return sz.to<std::size_t>();
+        }
+    }
+
+    return { };
 }
 
-Type Type::makePrimary(unsigned ptr, Sym *sym)
+Type Type::makePrimary(Sym *sym)
 {
     Type t;
-
-    t.ptr = ptr;
     t.sym = sym;
 
     return t;
 }
 
-Type Type::makeFunction(unsigned ptr, Type *returnType)
+Type Type::makePrimary(bool constant, bool ref, Sym *sym)
 {
     Type t;
-
-    t.ptr = ptr;
-    t.returnType = returnType;
+    t.constant = constant;
+    t.ref = ref;
+    t.sym = sym;
 
     return t;
 }
 
-Type Type::removeSub(const Type &type)
+Type Type::makeFunction(Type *returnType, const std::vector<Type*> &args)
 {
-    auto r = type;
-    r.sub = 0;
+    Type t;
+    t.returnType = returnType;
+    t.args = args;
 
-    return r;
+    return t;
 }
 
-Type::Type() : constant(false), ref(false), constMethod(false), ptr(0), sym(nullptr), returnType(nullptr), sub(0), method(false)
+std::size_t Type::assertSize(Location location, const Type *type)
 {
+    if(auto s = type->size())
+    {
+        return *s;
+    }
+
+    throw Error(location, "use of forward-declared type - ", type->text());
 }
+

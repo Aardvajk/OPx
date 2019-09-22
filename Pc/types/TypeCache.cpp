@@ -3,9 +3,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
-#include <iostream>
-
-TypeCache::TypeCache()
+TypeCache::TypeCache(Context &c) : c(c)
 {
 }
 
@@ -17,7 +15,7 @@ Type *TypeCache::insert(const Type &type)
 {
     for(std::size_t i = 0; i < v.size(); ++i)
     {
-        if(TypeCompare::exact(v.ptr(i), &type) && v.ptr(i)->sub == type.sub)
+        if(TypeCompare(c).exact(v.ptr(i), &type))
         {
             return v.ptr(i);
         }
@@ -42,12 +40,12 @@ Type *TypeCache::intType()
     return v.ptr(2);
 }
 
-Type *TypeCache::boolType()
+Type *TypeCache::sizeType()
 {
     return v.ptr(3);
 }
 
-Type *TypeCache::sizeType()
+Type *TypeCache::boolType()
 {
     return v.ptr(4);
 }

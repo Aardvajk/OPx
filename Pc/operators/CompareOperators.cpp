@@ -31,56 +31,27 @@ void generateNeq(Context &c, std::ostream &os, Primitive::Type &pt)
     os << "    sub " << pt << ";\n";
 }
 
-void generateLt(Context &c, std::ostream &os, Primitive::Type &pt)
-{
-    os << "    lt " << pt << ";\n";
-    pt = Primitive::Type::Char;
-}
-
-void generateLtEq(Context &c, std::ostream &os, Primitive::Type &pt)
-{
-    os << "    lteq " << pt << ";\n";
-    pt = Primitive::Type::Char;
-}
-
-void generateGt(Context &c, std::ostream &os, Primitive::Type &pt)
-{
-    generateLtEq(c, os, pt);
-    os << "    not char;\n";
-}
-
-void generateGtEq(Context &c, std::ostream &os, Primitive::Type &pt)
-{
-    generateLt(c, os, pt);
-    os << "    not char;\n";
-}
-
 }
 
 std::size_t CompareOperators::generate(Context &c, std::ostream &os, BinaryNode &node)
 {
-    auto lt = TypeVisitor::type(c, node.left.get());
-    auto rt = TypeVisitor::type(c, node.right.get());
+    auto lt = TypeVisitor::assertType(c, node.left.get());
+    auto rt = TypeVisitor::assertType(c, node.right.get());
 
-    if(!TypeCompare::compatible(lt, rt))
+    if(!TypeCompare(c).compatible(lt, rt))
     {
-        throw Error(node.location(), "invalid comparison - ", lt->text(), " and ", rt->text());
+        throw Error(node.location(), "invalid comparison - ", node.left->description(), " and ", node.right->description());
     }
 
-    ExprGenerator::generate(c, os, *node.left);
-    ExprGenerator::generate(c, os, *node.right);
+    ExprGenerator::generate(c, os, node.left.get());
+    ExprGenerator::generate(c, os, node.right.get());
 
     auto pt = lt->primitiveType();
 
-    switch(node.op)
+    switch(node.token.type())
     {
-        case Operators::Type::Eq: generateEq(c, os, pt); break;
-        case Operators::Type::Neq: generateNeq(c, os, pt); break;
-
-        case Operators::Type::Lt: generateLt(c, os, pt); break;
-        case Operators::Type::LtEq: generateLtEq(c, os, pt); break;
-        case Operators::Type::Gt: generateGt(c, os, pt); break;
-        case Operators::Type::GtEq: generateGtEq(c, os, pt); break;
+        case Token::Type::Eq: generateEq(c, os, pt); break;
+        case Token::Type::Neq: generateNeq(c, os, pt); break;
 
         default: break;
     }

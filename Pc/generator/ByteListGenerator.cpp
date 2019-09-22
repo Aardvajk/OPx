@@ -10,7 +10,7 @@ ByteListGenerator::ByteListGenerator(Context &c, std::ostream &os) : c(c), os(os
 
 void ByteListGenerator::visit(CharLiteralNode &node)
 {
-    os << "char(" << static_cast<unsigned>(node.value) << ")";
+    os << "char(" << static_cast<unsigned int>(node.value) << ")";
     ok = true;
 }
 
@@ -23,12 +23,6 @@ void ByteListGenerator::visit(IntLiteralNode &node)
 void ByteListGenerator::visit(BoolLiteralNode &node)
 {
     os << "char(" << (node.value ? "1" : "0") << ")";
-    ok = true;
-}
-
-void ByteListGenerator::visit(SizeLiteralNode &node)
-{
-    os << "size(" << node.value << ")";
     ok = true;
 }
 

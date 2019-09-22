@@ -2,14 +2,14 @@
 
 #include "visitors/Visitor.h"
 
-void NullLiteralNode::accept(Visitor &v)
+void CharLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
 
-void CharLiteralNode::accept(Visitor &v)
+std::string CharLiteralNode::classname() const
 {
-    v.visit(*this);
+    return "charliteral";
 }
 
 void IntLiteralNode::accept(Visitor &v)
@@ -17,17 +17,27 @@ void IntLiteralNode::accept(Visitor &v)
     v.visit(*this);
 }
 
+std::string IntLiteralNode::classname() const
+{
+    return "intliteral";
+}
+
 void BoolLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
 
-void SizeLiteralNode::accept(Visitor &v)
+std::string BoolLiteralNode::classname() const
 {
-    v.visit(*this);
+    return "boolliteral";
 }
 
 void StringLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);
+}
+
+std::string StringLiteralNode::classname() const
+{
+    return "stringliteral";
 }

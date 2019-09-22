@@ -2,45 +2,45 @@
 
 #include "framework/Error.h"
 
+#include "common/Primitive.h"
+
 #include "application/Context.h"
 #include "application/Pragmas.h"
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
+#include "nodes/FuncNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
-#include "nodes/FuncNode.h"
 
-#include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
+#include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
-#include "visitors/TakesAddrVisitor.h"
 
 #include "types/Type.h"
-#include "types/TypeBuilder.h"
 #include "types/TypeCompare.h"
+#include "types/TypeBuilder.h"
 
+#include "decorator/TypeDecorator.h"
+#include "decorator/VarDecorator.h"
 #include "decorator/FuncDecorator.h"
-#include "decorator/ExprDecorator.h"
-#include "decorator/ClassDecorator.h"
-#include "decorator/CommonDecorator.h"
-#include "decorator/ClassMethodDecorator.h"
 
+#include <pcx/scoped_push.h>
 #include <pcx/scoped_counter.h>
 
 namespace
 {
 
-Sym *searchNamespace(Context &c, NamespaceNode &node)
+Sym *search(Context &c, Sym::Type type, Node *node)
 {
     std::vector<Sym*> sv;
-    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node, sv);
 
     for(auto s: sv)
     {
-        if(s->type() != Sym::Type::Namespace)
+        if(s->type() != type)
         {
-            throw Error(node.location(), "namespace expected - ", s->fullname());
+            throw Error(node->location(), Sym::toString(type), " expected - ", s->fullname());
         }
 
         return s;
@@ -49,19 +49,23 @@ Sym *searchNamespace(Context &c, NamespaceNode &node)
     return nullptr;
 }
 
-Sym *searchClass(Context &c, ClassNode &node)
+Sym *searchFunc(Context &c, Node *node, const Type *type)
 {
     std::vector<Sym*> sv;
-    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node.name.get(), sv);
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node, sv);
 
     for(auto s: sv)
     {
-        if(s->type() != Sym::Type::Class)
+        if(s->type() != Sym::Type::Func)
         {
-            throw Error(node.location(), "class expected - ", s->fullname());
+            throw Error(node->location(), "function expected - ", s->fullname());
         }
 
-        return s;
+        auto t = s->property<Type*>("type");
+        if(TypeCompare(c).exactArgs(type, t) && type->constMethod == t->constMethod)
+        {
+            return s;
+        }
     }
 
     return nullptr;
@@ -69,29 +73,28 @@ Sym *searchClass(Context &c, ClassNode &node)
 
 void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
 {
-    if(sym->getProperty("defined").value<bool>())
+    if(sym->findProperty("defined").value<bool>())
     {
         throw Error(node.location(), "already defined - ", sym->fullname());
     }
 
     sym->setProperty("defined", true);
 
-    auto g = c.tree.open(sym);
+    auto fg = pcx::scoped_push(c.functions, { });
+    auto sg = c.tree.open(sym);
 
     for(auto &a: node.args)
     {
-        Decorator d(c);
-        a->accept(d);
+        Visitor::visit<VarDecorator>(a.get(), c);
     }
 
-    FuncDecorator fd(c);
+    Visitor::visit<FuncDecorator>(node.body.get(), c);
 
-    for(auto &i: node.inits)
+    auto t = sym->property<Type*>("type")->returnType;
+    if(!TypeCompare(c).compatible(t, c.types.nullType()) && !sym->findProperty("returned").value<bool>())
     {
-        i->accept(fd);
+        throw Error(node.location(), "function must return ", t->text());
     }
-
-    node.body->accept(fd);
 }
 
 }
@@ -110,52 +113,110 @@ void Decorator::visit(BlockNode &node)
 
 void Decorator::visit(NamespaceNode &node)
 {
-    auto sym = searchNamespace(c, node);
+    auto sym = search(c, Sym::Type::Namespace, node.name.get());
     if(!sym)
     {
-        auto name = c.assertSimpleNameUnique(node.name.get());
-        sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), name));
+        auto n = NameVisitors::assertSimpleUniqueName(c, node.name.get());
+        sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), n));
     }
 
     node.setProperty("sym", sym);
 
-    auto g = c.tree.open(sym);
+    auto sg = c.tree.open(sym);
     node.body->accept(*this);
 }
 
-void Decorator::visit(ClassNode &node)
+void Decorator::visit(FuncNode &node)
 {
-    auto sym = searchClass(c, node);
-    if(!sym)
+    for(auto &a: node.args)
     {
-        auto name = c.assertSimpleNameUnique(node.name.get());
-        sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), name));
+        Visitor::visit<TypeDecorator>(a.get(), c);
     }
 
-    sym->setProperty("type", c.types.insert(Type::makePrimary(0, sym)));
+    if(node.type)
+    {
+        Visitor::visit<TypeDecorator>(node.type.get(), c);
+    }
+
+    auto t = Type::makeFunction(node.type ? TypeVisitor::assertType(c, node.type.get()) : c.types.nullType());
+
+    t.method = c.tree.current()->type() == Sym::Type::Class;
+    t.constMethod = node.constMethod;
+
+    for(auto &a: node.args)
+    {
+        t.args.push_back(TypeVisitor::assertType(c, a.get()));
+    }
+
+    auto type = c.types.insert(t);
+
+    auto sym = searchFunc(c, node.name.get(), type);
+    if(sym)
+    {
+        if(!TypeCompare(c).exact(sym->property<Type*>("type")->returnType, type->returnType))
+        {
+            throw Error(node.location(), "mismatched return type - ", node.name->description());
+        }
+    }
+    else
+    {
+        auto n = NameVisitors::assertSimpleName(c, node.name.get());
+
+        sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), n));
+        sym->setProperty("type", type);
+    }
+
+    sym->setProperty("method", t.method);
+
+    if(t.constMethod && sym->parent()->type() != Sym::Type::Class)
+    {
+        throw Error(node.location(), "cannot be const - ", node.name->description());
+    }
 
     node.setProperty("sym", sym);
 
     if(node.body)
     {
-        auto dg = pcx::scoped_counter(c.classDepth);
+        if(t.method && c.classDepth)
+        {
+            c.deferredMethods.push_back(&node);
+        }
+        else
+        {
+            decorateFunctionBody(c, node, sym);
+        }
+    }
+}
 
-        if(sym->getProperty("defined").value<bool>())
+void Decorator::visit(ClassNode &node)
+{
+    auto sym = search(c, Sym::Type::Class, node.name.get());
+    if(!sym)
+    {
+        auto n = NameVisitors::assertSimpleUniqueName(c, node.name.get());
+        sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), n));
+    }
+
+    auto type = c.types.insert(Type::makePrimary(sym));
+
+    sym->setProperty("type", type);
+    sym->setProperty("primitive", Primitive::Type::Invalid);
+
+    node.setProperty("sym", sym);
+
+    if(node.body)
+    {
+        if(sym->findProperty("defined").value<bool>())
         {
             throw Error(node.location(), "already defined - ", sym->fullname());
         }
 
         sym->setProperty("defined", true);
 
-        auto g = c.tree.open(sym);
+        auto sg = c.tree.open(sym);
+        auto dg = pcx::scoped_counter(c.classDepth);
 
-        sym->setProperty("size", std::size_t(0));
-
-        ClassDecorator cd(c);
-        node.body->accept(cd);
-
-        ClassMethodDecorator md(c, sym);
-        node.body->accept(md);
+        node.body->accept(*this);
     }
 
     if(!c.classDepth)
@@ -171,85 +232,7 @@ void Decorator::visit(ClassNode &node)
 
 void Decorator::visit(VarNode &node)
 {
-    Type *type = nullptr;
-
-    if(node.type)
-    {
-        type = TypeBuilder::type(c, node.type.get());
-    }
-
-    for(auto &p: node.params)
-    {
-        ExprDecorator ed(c, type);
-        p->accept(ed);
-    }
-
-    if(node.value)
-    {
-        ExprDecorator ed(c, type);
-        node.value->accept(ed);
-
-        auto valueType = TypeVisitor::type(c, node.value.get());
-
-        if(!type)
-        {
-            type = valueType;
-            if(type->sub && c.tree.current()->container()->type() == Sym::Type::Func)
-            {
-                type = c.types.insert(Type::removeSub(*type));
-            }
-
-            if(!type->ref && type->constant)
-            {
-                auto t = *type;
-                t.constant = false;
-
-                type = c.types.insert(t);
-            }
-
-            if(type->ref && TakesAddrVisitor::examine(*node.value))
-            {
-                auto t = *type;
-                t.ref = false;
-
-                type = c.types.insert(t);
-            }
-        }
-
-        if(type && !type->constant && valueType->constant)
-        {
-            throw Error(node.location(), "cannot assign const to mutable - ",  NameVisitors::prettyName(node.name.get()));
-        }
-    }
-
-    if(!type)
-    {
-        throw Error(node.location(), "type missing - ", NameVisitors::prettyName(node.name.get()));
-    }
-
-    if(type->ref && type->sub)
-    {
-        throw Error(node.location(), "arrays of references not supported - ", NameVisitors::prettyName(node.name.get()));
-    }
-
-    auto name = c.assertSimpleNameUnique(node.name.get());
-
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.name->location(), name));
-    sym->setProperty("type", type);
-
-    node.setProperty("sym", sym);
-}
-
-void Decorator::visit(FuncNode &node)
-{
-    auto sym = CommonDecorator::decorateFuncSignature(c, node);
-    node.setProperty("sym", sym);
-
-    if(node.body)
-    {
-        c.scopes = 0;
-        decorateFunctionBody(c, node, sym);
-    }
+    Visitor::visit<VarDecorator>(&node, c);
 }
 
 void Decorator::visit(PragmaNode &node)

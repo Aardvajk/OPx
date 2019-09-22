@@ -3,46 +3,53 @@
 
 #include "common/Primitive.h"
 
-#include <pcx/optional.h>
+#include "scanner/Location.h"
 
-#include <vector>
 #include <string>
+#include <vector>
+
+#include <pcx/optional.h>
+#include <pcx/flags.h>
 
 class Sym;
 
 class Type
 {
 public:
-    pcx::optional<std::size_t> size() const;
-    pcx::optional<std::size_t> initSize() const;
+    Type();
+
+    Type addPointer() const;
+    Type removePointer() const;
 
     std::string text() const;
+
     bool function() const;
     bool primitive() const;
+    bool primitiveOrRef() const;
+
+    bool requiresConstruction() const;
+
     Primitive::Type primitiveType() const;
 
-    Type refToPtr() const;
+    pcx::optional<std::size_t> size() const;
 
-    static Type makePrimary(unsigned ptr, Sym *sym);
-    static Type makeFunction(unsigned ptr, Type *returnType);
-    static Type removeSub(const Type &type);
+    static Type makePrimary(Sym *sym);
+    static Type makePrimary(bool constant, bool ref, Sym *sym);
+    static Type makeFunction(Type *returnType, const std::vector<Type*> &args = { });
+
+    static std::size_t assertSize(Location location, const Type *type);
 
     bool constant;
     bool ref;
-    bool constMethod;
+    std::size_t ptr;
 
-    unsigned ptr;
     Sym *sym;
 
     std::vector<Type*> args;
     Type *returnType;
 
-    std::size_t sub;
-
     bool method;
-
-private:
-    Type();
+    bool constMethod;
 };
 
 #endif // TYPE_H

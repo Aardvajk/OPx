@@ -8,11 +8,12 @@
 class PragmaNode : public Node
 {
 public:
-    PragmaNode(Location location, Pragmas::Type cmd) : Node(location), cmd(cmd) { }
+    PragmaNode(Location location, Pragmas::Type type) : Node(location), type(type) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
-    Pragmas::Type cmd;
+    Pragmas::Type type;
     std::string arg;
 };
 

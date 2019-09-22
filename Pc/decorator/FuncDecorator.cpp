@@ -7,19 +7,16 @@
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
-#include "nodes/WhileNode.h"
-#include "nodes/IfNode.h"
-#include "nodes/InitNode.h"
-#include "nodes/ForNode.h"
 
-#include "visitors/TypeVisitor.h"
-#include "visitors/NameVisitors.h"
-
-#include "decorator/Decorator.h"
+#include "decorator/VarDecorator.h"
 #include "decorator/ExprDecorator.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+
+#include "visitors/TypeVisitor.h"
+
+#include "framework/Trace.h"
 
 FuncDecorator::FuncDecorator(Context &c) : c(c)
 {
@@ -35,89 +32,52 @@ void FuncDecorator::visit(BlockNode &node)
 
 void FuncDecorator::visit(ScopeNode &node)
 {
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", c.scopes++)));
+    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", c.func().scopes++)));
     node.setProperty("sym", sym);
 
-    sym->setProperty("loop", node.loop);
-
-    auto g = c.tree.open(sym);
+    auto sg = c.tree.open(sym);
     node.body->accept(*this);
 }
 
 void FuncDecorator::visit(VarNode &node)
 {
-    Decorator d(c);
-    node.accept(d);
+    Visitor::visit<VarDecorator>(&node, c);
 }
 
 void FuncDecorator::visit(ExprNode &node)
 {
-    ExprDecorator::decorate(c, nullptr, *node.expr);
+    node.expr = ExprDecorator::decorate(c, node.expr);
 }
 
 void FuncDecorator::visit(ReturnNode &node)
 {
-    auto rt = c.tree.current()->container()->property<const Type*>("type")->returnType;
+    auto t = c.tree.current()->container()->property<Type*>("type")->returnType;
 
-    ExprDecorator::decorate(c, rt, *node.expr);
-
-    if(!TypeCompare::compatible(TypeVisitor::type(c, node.expr.get()), rt))
+    if(node.expr)
     {
-        throw Error(node.expr->location(), rt->text(), " expected - ", NameVisitors::prettyName(node.expr.get()));
+        node.expr = ExprDecorator::decorate(c, node.expr, t);
+
+        if(!TypeCompare(c).compatible(t, TypeVisitor::assertType(c, node.expr.get())))
+        {
+            throw Error(node.expr->location(), t->text(), " expected - ", node.expr->description());
+        }
     }
-}
-
-void FuncDecorator::visit(WhileNode &node)
-{
-    ExprDecorator::decorate(c, nullptr, *node.expr);
-    node.body->accept(*this);
-}
-
-void FuncDecorator::visit(IfNode &node)
-{
-    ExprDecorator::decorate(c, nullptr, *node.expr);
-    node.body->accept(*this);
-
-    if(node.elseBody)
+    else if(!TypeCompare(c).compatible(t, c.types.nullType()))
     {
-        node.elseBody->accept(*this);
-    }
-}
-
-void FuncDecorator::visit(InitNode &node)
-{
-    auto p = c.tree.current()->container()->parent();
-
-    auto sym = p->child(node.name);
-    if(!sym)
-    {
-        throw Error(node.location(), "no member found - ", node.name);
+        throw Error(node.location(), "function must return ", t->text());
     }
 
-    node.setProperty("sym", sym);
+    auto s = c.tree.current();
+    std::size_t n = 0;
 
-    for(auto &p: node.params)
+    while(s && s != c.tree.current()->container())
     {
-        ExprDecorator::decorate(c, sym->property<const Type*>("type"), *p);
-    }
-}
-
-void FuncDecorator::visit(ForNode &node)
-{
-    if(node.init)
-    {
-        ExprDecorator::decorate(c, nullptr, *node.init);
+        s = s->parent();
+        ++n;
     }
 
-    if(node.cond)
+    if(n == 1)
     {
-        ExprDecorator::decorate(c, nullptr, *node.cond);
+        c.tree.current()->container()->setProperty("returned", true);
     }
-
-    if(node.post)
-    {
-        ExprDecorator::decorate(c, nullptr, *node.post);
-    }
-
-    node.body->accept(*this);
 }

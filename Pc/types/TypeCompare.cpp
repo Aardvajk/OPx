@@ -2,30 +2,11 @@
 
 #include "types/Type.h"
 
-namespace
+TypeCompare::TypeCompare(Context &c) : c(c)
 {
-
-bool args(const Type *a, const Type *b, bool(*cmp)(const Type*, const Type*))
-{
-    if(a->args.size() != b->args.size())
-    {
-        return false;
-    }
-
-    for(std::size_t i = 0; i < a->args.size(); ++i)
-    {
-        if(!cmp(a->args[i], b->args[i]))
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
-}
-
-bool TypeCompare::compatible(const Type *a, const Type *b)
+bool TypeCompare::compatible(const Type *a, const Type *b) const
 {
     if(!a && !b)
     {
@@ -37,12 +18,12 @@ bool TypeCompare::compatible(const Type *a, const Type *b)
         return false;
     }
 
-    if(a->sym != b->sym || a->ptr != b->ptr)
+    if(a->ptr != b->ptr)
     {
         return false;
     }
 
-    if(a->method != b->method)
+    if(a->sym != b->sym)
     {
         return false;
     }
@@ -52,38 +33,84 @@ bool TypeCompare::compatible(const Type *a, const Type *b)
         return false;
     }
 
-    return exactArgs(a, b);
-}
-
-bool TypeCompare::compatibleArgs(const Type *a, const Type *b)
-{
-    return args(a, b, compatible);
-}
-
-bool TypeCompare::exact(const Type *a, const Type *b)
-{
-    if(a && b)
+    if(!exactArgs(a, b))
     {
-        if(a->ref != b->ref)
-        {
-            return false;
-        }
+        return false;
+    }
 
-        if(a->constant != b->constant)
-        {
-            return false;
-        }
+    if(a->method != b->method)
+    {
+        return false;
+    }
 
-        if(a->constMethod != b->constMethod)
+    if(a->constMethod != b->constMethod)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool TypeCompare::compatibleArgs(const Type *a, const Type *b) const
+{
+    if(a->args.size() != b->args.size())
+    {
+        return false;
+    }
+
+    for(std::size_t i = 0; i < a->args.size(); ++i)
+    {
+        if(!compatible(a->args[i], b->args[i]))
         {
             return false;
         }
     }
 
-    return compatible(a, b);
+    return true;
 }
 
-bool TypeCompare::exactArgs(const Type *a, const Type *b)
+bool TypeCompare::exact(const Type *a, const Type *b) const
 {
-    return args(a, b, exact);
+    if(!compatible(a, b))
+    {
+        return false;
+    }
+
+    if(a && b)
+    {
+        if(a->constant != b->constant)
+        {
+            return false;
+        }
+
+        if(a->ref != b->ref)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool TypeCompare::exactArgs(const Type *a, const Type *b) const
+{
+    if(a->args.size() != b->args.size())
+    {
+        return false;
+    }
+
+    for(std::size_t i = 0; i < a->args.size(); ++i)
+    {
+        if(!exact(a->args[i], b->args[i]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool TypeCompare::convertsTo(const Type *from, const Type *to) const
+{
+    return compatible(from, to);
 }

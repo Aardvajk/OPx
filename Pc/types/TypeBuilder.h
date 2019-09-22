@@ -5,18 +5,15 @@
 
 class Context;
 class Type;
-class Node;
 
 class TypeBuilder : public Visitor
 {
 public:
-    TypeBuilder(Context &c);
+    explicit TypeBuilder(Context &c);
 
-    Type *result(){ return r; }
+    Type *result() const { return r; }
 
     virtual void visit(TypeNode &node) override;
-
-    static Type *type(Context &c, Node *node);
 
 private:
     Context &c;

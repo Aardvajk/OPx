@@ -1,8 +1,10 @@
 #include "Sym.h"
 
+#include "types/Type.h"
+
 #include <pcx/join_str.h>
 
-Sym::Sym(Type type, Location location, std::string name) : t(type), n(location), s(std::move(name)), ps(nullptr)
+Sym::Sym(Type type, Location location, std::string name) : t(type), n(location), s(name), ps(nullptr)
 {
 }
 
@@ -17,6 +19,14 @@ Sym::~Sym()
 Sym *Sym::add(Sym *sym)
 {
     cs.push_back(sym);
+    sym->ps = this;
+
+    return sym;
+}
+
+Sym *Sym::insert(std::size_t pos, Sym *sym)
+{
+    cs.insert(cs.begin() + static_cast<long long>(pos), sym);
     sym->ps = this;
 
     return sym;
@@ -54,6 +64,17 @@ Sym *Sym::container()
     return nullptr;
 }
 
+void Sym::setProperty(const std::string &key, const pcx::any &value)
+{
+    pm[key] = value;
+}
+
+pcx::any Sym::findProperty(const std::string &key) const
+{
+    auto i = pm.find(key);
+    return i == pm.end() ? pcx::any() : i->second;
+}
+
 std::string Sym::fullname() const
 {
     if(!ps) return name();
@@ -70,9 +91,13 @@ std::string Sym::fullname() const
     return pcx::join_str(v, ".");
 }
 
+std::string Sym::funcname() const
+{
+    return pcx::str(fullname(), property<::Type*>("type")->text());
+}
+
 const char *Sym::toString(Type v)
 {
-    static const char *s[] = { "namespace", "class", "var", "func", "scope" };
-
+    static const char *s[] = { "namespace", "class", "scope", "func", "var" };
     return s[static_cast<int>(v)];
 }

@@ -4,39 +4,30 @@
 
 #include "nodes/PragmaNode.h"
 
+#include <vector>
+#include <algorithm>
+
 namespace
 {
 
-static const char *strings[] = { "push", "pop", "set", "" };
+static const std::vector<std::string> strings = { "push", "pop", "set" };
 
 }
 
-const char *Pragmas::toString(Type v)
+std::string Pragmas::toString(Type v)
 {
-    return strings[static_cast<int>(v)];
+    return strings[static_cast<std::size_t>(v)];
 }
 
 Pragmas::Type Pragmas::fromString(const std::string &v)
 {
-    for(int i = 0; strings[i][0]; ++i)
-    {
-        if(strings[i] == v)
-        {
-            return static_cast<Type>(i);
-        }
-    }
-
-    return Type::Invalid;
-}
-
-bool Pragmas::takesArgument(Type v)
-{
-    return v == Type::Set;
+    auto i = std::find(strings.begin(), strings.end(), v);
+    return i == strings.end() ? Type::Invalid : static_cast<Type>(i - strings.begin());
 }
 
 void Pragmas::execute(Context &c, PragmaNode &node)
 {
-    switch(node.cmd)
+    switch(node.type)
     {
         case Type::Push: c.args.push_back(c.args.back()); break;
         case Type::Pop: c.args.pop_back(); break;

@@ -22,12 +22,8 @@ public:
 
     virtual void visit(IdNode &node) override;
     virtual void visit(CallNode &node) override;
-    virtual void visit(BinaryNode &node) override;
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(DerefNode &node) override;
-    virtual void visit(SubscriptNode &node) override;
-    virtual void visit(IncDecNode &node) override;
-    virtual void visit(OpEqNode &node) override;
 
     static void find(Context &c, Type type, Sym *curr, Node *node, std::vector<Sym*> &result);
 

@@ -1,6 +1,0 @@
-pragma(set, "test_error+=not found - a");
-
-func main()
-{
-    a;
-}

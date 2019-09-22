@@ -9,6 +9,7 @@ public:
     explicit ThisNode(Location location) : Node(location) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 };
 
 #endif // THISNODE_H

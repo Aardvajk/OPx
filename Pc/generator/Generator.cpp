@@ -5,23 +5,19 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
+#include "nodes/FuncNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
-#include "nodes/FuncNode.h"
 
 #include "syms/Sym.h"
 
 #include "types/Type.h"
-#include "types/TypeCompare.h"
-#include "types/TypeLookup.h"
-
-#include "visitors/NameVisitors.h"
 
 #include "generator/LocalsGenerator.h"
 #include "generator/FuncGenerator.h"
 #include "generator/ByteListGenerator.h"
 
-#include <pcx/range_reverse.h>
+#include "visitors/TypeVisitor.h"
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -37,142 +33,60 @@ void Generator::visit(BlockNode &node)
 
 void Generator::visit(NamespaceNode &node)
 {
-    auto g = c.tree.open(node.property<Sym*>("sym"));
+    auto sg = c.tree.open(node.property<Sym*>("sym"));
     node.body->accept(*this);
-}
-
-void Generator::visit(ClassNode &node)
-{
-    if(node.body)
-    {
-        auto g = c.tree.open(node.property<Sym*>("sym"));
-        node.body->accept(*this);
-    }
-}
-
-void Generator::visit(VarNode &node)
-{
-    auto sym = node.property<const Sym*>("sym");
-
-    if(!sym->getProperty("member").value<bool>())
-    {
-        os << "var \"" << sym->fullname() << "\":" << c.assertInitSize(node.location(), sym->property<const Type*>("type"));
-
-        if(node.value)
-        {
-            os << " = ";
-
-            ByteListGenerator bg(c, os);
-            node.value->accept(bg);
-
-            if(!bg.result())
-            {
-                throw Error(node.value->location(), "invalid static initialiser - ", NameVisitors::prettyName(node.value.get()));
-            }
-        }
-
-        os << ";\n";
-    }
 }
 
 void Generator::visit(FuncNode &node)
 {
     if(node.body)
     {
-        auto sym = node.property<const Sym*>("sym");
-        auto type = sym->property<const Type*>("type");
+        auto sym = node.property<Sym*>("sym");
+        auto type = sym->property<Type*>("type");
 
-        os << "func";
-
-        auto flags = sym->getProperty("flags").value<Object::Entity::Flags>();
-        if(flags & Object::Entity::Flag::AutoGen)
-        {
-            os << "[autogen]";
-        }
-
-        os << " \"" << sym->fullname() << type->text() << "\":" << c.assertSize(node.location(), type->returnType);
-
-        os << "\n{\n";
+        os << "func \"" << sym->fullname() << type->text() << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
+        os << "{\n";
 
         for(auto &a: node.args)
         {
-            auto sym = a->property<const Sym*>("sym");
-            os << "    arg \"" << sym->fullname() << "\":" << c.assertSize(a->location(), sym->property<const Type*>("type")) << ";\n";
+            auto s = a->property<Sym*>("sym");
+            os << "    arg \"" << s->fullname() << "\":" << Type::assertSize(a->location(), s->property<Type*>("type")) << ";\n";
         }
 
-        auto g = c.tree.open(node.property<Sym*>("sym"));
-
-        c.labels = 0;
-
-        os << "    var \"@rf\":1;\n";
-
-        LocalsGenerator lg(c, os);
-        node.body->accept(lg);
-
-        for(auto &t: c.temps[sym])
-        {
-            os << "    var \"" << t.first << "\":" << c.assertSize(node.location(), t.second) << ";\n";
-        }
-
-        os << "    clrf \"@rf\";\n";
-
-        FuncGenerator fg(c, os);
-
-        if(node.initialisers)
-        {
-            node.initialisers->accept(fg);
-        }
-
-        node.body->accept(fg);
-
-        if(!TypeCompare::exact(type->returnType, c.types.nullType()) && !sym->getProperty("returned").value<bool>())
-        {
-            throw Error(node.location(), sym->fullname(), " must return a value - ", type->returnType->text());
-        }
-
-        os << "\"#end_function\":\n";
-
-        if(sym->name() == "delete")
-        {
-            auto cs = sym->parent()->children();
-
-            for(auto s: pcx::range_reverse(cs))
-            {
-                if(s->type() == Sym::Type::Var)
-                {
-                    auto t = s->property<Type*>("type");
-                    if(!t->primitive() && !t->ref)
-                    {
-                        auto fn = TypeLookup::assertDeleteMethod(c, node.location(), t);
-
-                        os << "    push \"" << sym->fullname() << ".this\";\n";
-                        os << "    push size(" << s->property<std::size_t>("offset") << ");\n";
-                        os << "    add size;\n";
-
-                        os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
-                        os << "    call;\n";
-                    }
-                }
-            }
-        }
-
-        for(auto a: pcx::range_reverse(node.args))
-        {
-            auto s = a->property<const Sym*>("sym");
-            auto t = s->property<Type*>("type");
-
-            if(!t->primitive() && !t->ref)
-            {
-                auto fn = TypeLookup::assertDeleteMethod(c, a->location(), t);
-
-                os << "    push &\"" << s->fullname() << "\";\n";
-                os << "    push &\"" << fn->fullname() << fn->property<const Type*>("type")->text() << "\";\n";
-                os << "    call;\n";
-            }
-        }
+        Visitor::visit<LocalsGenerator>(node.body.get(), c, os);
+        Visitor::visit<FuncGenerator>(node.body.get(), c, os);
 
         os << "}\n";
     }
+}
+
+void Generator::visit(ClassNode &node)
+{
+    if(node.body)
+    {
+        auto sg = c.tree.open(node.property<Sym*>("sym"));
+        node.body->accept(*this);
+    }
+}
+
+void Generator::visit(VarNode &node)
+{
+    auto sym = node.property<Sym*>("sym");
+
+    os << "var \"" << sym->fullname() << "\":" << Type::assertSize(node.location(), sym->property<Type*>("type"));
+
+    if(node.value)
+    {
+        if(!TypeVisitor::assertType(c, node.value.get())->primitive())
+        {
+            throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
+        }
+
+        os << " = ";
+        Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os);
+    }
+
+    os << ";\n";
 }
 
 void Generator::visit(PragmaNode &node)

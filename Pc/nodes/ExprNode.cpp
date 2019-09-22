@@ -6,3 +6,8 @@ void ExprNode::accept(Visitor &v)
 {
     v.visit(*this);
 }
+
+std::string ExprNode::classname() const
+{
+    return "expr";
+}

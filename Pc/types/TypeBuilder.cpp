@@ -1,16 +1,12 @@
 #include "TypeBuilder.h"
 
-#include "framework/Error.h"
-
 #include "application/Context.h"
 
 #include "nodes/TypeNode.h"
 
 #include "types/Type.h"
 
-#include "visitors/NameVisitors.h"
 #include "visitors/SymFinder.h"
-#include "visitors/ArraySizeVisitor.h"
 
 TypeBuilder::TypeBuilder(Context &c) : c(c), r(nullptr)
 {
@@ -18,24 +14,15 @@ TypeBuilder::TypeBuilder(Context &c) : c(c), r(nullptr)
 
 void TypeBuilder::visit(TypeNode &node)
 {
+    Type t;
+
     if(node.function)
     {
-        auto t = Type::makeFunction(node.ptr, node.returnType ? type(c, node.returnType.get()) : c.types.nullType());
+        t = Type::makeFunction(node.returnType ? Visitor::query<TypeBuilder, Type*>(node.returnType.get(), c) : c.types.nullType());
         for(auto &a: node.args)
         {
-            t.args.push_back(type(c, a.get()));
+            t.args.push_back(Visitor::query<TypeBuilder, Type*>(a.get(), c));
         }
-
-        t.constant = node.constant;
-        t.ref = node.ref;
-
-        if(node.sub)
-        {
-            t.sub = ArraySizeVisitor::value(*node.sub);
-            t.ptr = 1;
-        }
-
-        r = c.types.insert(t);
     }
     else
     {
@@ -44,28 +31,15 @@ void TypeBuilder::visit(TypeNode &node)
 
         if(sv.empty() || sv.front()->type() != Sym::Type::Class)
         {
-            throw Error(node.name->location(), "type expected - ", NameVisitors::prettyName(node.name.get()));
+            throw Error(node.name->location(), "type expected - ", node.name->description());
         }
 
-        auto t = Type::makePrimary(node.ptr, sv.front());
-
-        t.constant = node.constant;
-        t.ref = node.ref;
-
-        if(node.sub)
-        {
-            t.sub = ArraySizeVisitor::value(*node.sub);
-            ++t.ptr;
-        }
-
-        r = c.types.insert(t);
+        t = Type::makePrimary(sv.front());
     }
-}
 
-Type *TypeBuilder::type(Context &c, Node *node)
-{
-    TypeBuilder tb(c);
-    node->accept(tb);
+    t.constant = node.constant;
+    t.ref = node.ref;
+    t.ptr = node.ptr;
 
-    return tb.result();
+    r = c.types.insert(t);
 }

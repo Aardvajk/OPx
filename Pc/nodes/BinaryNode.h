@@ -1,19 +1,19 @@
 #ifndef BINARYNODE_H
 #define BINARYNODE_H
 
-#include "nodes/Node.h"
+#include "scanner/Token.h"
 
-#include "operators/Operators.h"
+#include "nodes/Node.h"
 
 class BinaryNode : public Node
 {
 public:
-    BinaryNode(Location location, Operators::Type op, NodePtr left, NodePtr right) : Node(location), op(op), left(left), right(right) { }
+    BinaryNode(Location location, const Token &token, NodePtr left, NodePtr right) : Node(location), token(token), left(left), right(right) { }
 
     virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
 
-    Operators::Type op;
-
+    Token token;
     NodePtr left;
     NodePtr right;
 };

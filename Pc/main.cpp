@@ -3,39 +3,30 @@
 
 #include "application/Context.h"
 
-#include "compiler/Compiler.h"
-
-#include "visitors/AstPrinter.h"
-#include "visitors/TypeVisitor.h"
-
-#include "transform/Transformer.h"
+#include "parser/Parser.h"
 
 #include "decorator/Decorator.h"
 
+#include "transform/Transform.h"
+
 #include "lower/Lower.h"
+#include "lower/LowerTypes.h"
+
+#include "finaliser/Finaliser.h"
 
 #include "generator/Generator.h"
 #include "generator/GlobalsGenerator.h"
+
+#include "visitors/AstPrinter.h"
 
 #include "syms/SymPrinter.h"
 
 #include "types/Type.h"
 
-#include <pcx/args.h>
+#include <pcx/textfile.h>
 
+#include <iostream>
 #include <fstream>
-
-template<typename T, typename... Args> void visit(NodePtr &node, Args&&... args)
-{
-    T v(std::forward<Args>(args)...);
-    node->accept(v);
-}
-
-void generate(Context &c, std::ostream &os, NodePtr &n)
-{
-    GlobalsGenerator::generate(c, os);
-    visit<Generator>(n, c, os);
-}
 
 int main(int argc, char *argv[])
 {
@@ -44,8 +35,6 @@ int main(int argc, char *argv[])
 
     try
     {
-        bool quiet = c.args.back().contains("q");
-
         if(files.size() < 1)
         {
             throw Error("no source specified");
@@ -58,81 +47,91 @@ int main(int argc, char *argv[])
 
         c.open(files[0]);
 
-        auto n = Compiler::compile(c);
+        auto n = Parser::build(c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("nodes");
-            visit<AstPrinter>(n, std::cout);
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
         }
 
-        visit<Decorator>(n, c);
+        Visitor::visit<Decorator>(n.get(), c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("decorated nodes");
-            visit<AstPrinter>(n, std::cout);
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
 
             std::cout << banner("symbols");
             SymPrinter::print(c.tree.root(), std::cout);
         }
 
-        visit<Transformer>(n, c);
+        Visitor::visit<Transform>(n.get(), c);
 
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("transformed nodes");
-            visit<AstPrinter>(n, std::cout);
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
         }
 
-        for(auto &t: c.types)
-        {
-            if(t.ref)
-            {
-                ++t.ptr;
-            }
-        }
+        LowerTypes::convertRefsToPtrs(c);
+        Visitor::visit<Lower>(n.get(), c);
+        LowerTypes::removeRefs(c);
 
-        c.refsLowered = true;
-
-        visit<Lower>(n, c);
-
-        if(!quiet)
+        if(!c.option("q"))
         {
             std::cout << banner("lowered nodes");
-            visit<AstPrinter>(n, std::cout);
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
 
             std::cout << banner("lowered symbols");
             SymPrinter::print(c.tree.root(), std::cout);
         }
 
-        if(!quiet)
+        Visitor::visit<Finaliser>(n.get(), c);
+
+        if(!c.option("q"))
         {
-            std::cout << banner("generate");
-            generate(c, std::cout, n);
+            std::cout << banner("finalised nodes");
+            Visitor::visit<AstPrinter>(n.get(), std::cout);
+
+            std::cout << banner("finalised symbols");
+            SymPrinter::print(c.tree.root(), std::cout);
+        }
+
+        if(!c.option("q"))
+        {
+            std::cout << banner("generated");
+
+            GlobalsGenerator::generate(c, std::cout);
+            Visitor::visit<Generator>(n.get(), c, std::cout);
         }
 
         if(true)
         {
-            std::ofstream os(files[1]);
+            std::ofstream os(files[1], std::ios::binary);
             if(!os.is_open())
             {
                 throw Error("unable to create - ", files[1]);
             }
 
-            generate(c, os, n);
+            GlobalsGenerator::generate(c, os);
+            Visitor::visit<Generator>(n.get(), c, os);
         }
 
-        if(!c.args.back()["test_error"].empty())
+        if(c.option("test_error"))
         {
             throw Error("error expected - ", c.args.back()["test_error"].front());
         }
 
-        if(c.args.back().contains("test"))
+        if(c.option("test"))
         {
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
-            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po foo.po ../lib/stdlib.po ../lib/stdios.po").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po ../lib/stdtest.po ../lib/stdios.po").c_str())) return -1;
             if(std::system(pcx::str("C:/Projects/Px/Px/build-pv/release/pv script.pv").c_str())) return -1;
+        }
+        else if(!c.option("q"))
+        {
+            std::cout << banner();
         }
     }
 
@@ -144,12 +143,36 @@ int main(int argc, char *argv[])
         }
 
         std::cerr << "pc error";
+
+        std::string source;
+        unsigned col = 0;
+
         if(auto n = error.location())
         {
+            std::vector<std::string> v;
+
+            if(c.option("descriptive_errors"))
+            {
+                pcx::textfile::read(c.sources.path(n.id()), v);
+            }
+
             std::cerr << " " << c.sources.path(n.id()) << " " << n.line() << "," << n.column();
+
+            if(n.line() - 1 < v.size())
+            {
+                source = v[n.line() - 1];
+                col = n.column();
+            }
         }
 
         std::cerr << ": " << error.what() << "\n";
+
+        if(!source.empty())
+        {
+            std::cerr << source << "\n";
+            std::cerr << std::string(col - 1, ' ') << "^\n";
+        }
+
         return -1;
     }
 }

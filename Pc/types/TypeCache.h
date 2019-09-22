@@ -3,12 +3,13 @@
 
 #include <pcx/ptr_vector.h>
 
+class Context;
 class Type;
 
 class TypeCache
 {
 public:
-    TypeCache();
+    TypeCache(Context &c);
     ~TypeCache();
 
     Type *insert(const Type &type);
@@ -16,13 +17,14 @@ public:
     Type *nullType();
     Type *charType();
     Type *intType();
-    Type *boolType();
     Type *sizeType();
+    Type *boolType();
 
     pcx::ptr_vector<Type>::iterator begin(){ return v.begin(); }
     pcx::ptr_vector<Type>::iterator end(){ return v.end(); }
 
 private:
+    Context &c;
     pcx::ptr_vector<Type> v;
 };
 
