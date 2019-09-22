@@ -8,6 +8,12 @@ ByteListGenerator::ByteListGenerator(Context &c, std::ostream &os) : c(c), os(os
 {
 }
 
+void ByteListGenerator::visit(CharLiteralNode &node)
+{
+    os << "char(" << static_cast<unsigned int>(node.value) << ")";
+    ok = true;
+}
+
 void ByteListGenerator::visit(IntLiteralNode &node)
 {
     os << "int(" << node.value << ")";

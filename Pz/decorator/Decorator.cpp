@@ -166,6 +166,8 @@ void Decorator::visit(FuncNode &node)
         sym->setProperty("type", type);
     }
 
+    sym->setProperty("method", t.method);
+
     if(t.constMethod && sym->parent()->type() != Sym::Type::Class)
     {
         throw Error(node.location(), "cannot be const - ", node.name->description());

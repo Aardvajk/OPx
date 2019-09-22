@@ -2,6 +2,16 @@
 
 #include "visitors/Visitor.h"
 
+void CharLiteralNode::accept(Visitor &v)
+{
+    v.visit(*this);
+}
+
+std::string CharLiteralNode::classname() const
+{
+    return "charliteral";
+}
+
 void IntLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);

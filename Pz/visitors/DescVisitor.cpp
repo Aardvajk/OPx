@@ -143,6 +143,11 @@ void DescVisitor::visit(ExprNode &node)
     node.expr->accept(*this);
 }
 
+void DescVisitor::visit(CharLiteralNode &node)
+{
+    r += pcx::str('\'', Lexer::encodeString(std::string(1, node.value)), '\'');
+}
+
 void DescVisitor::visit(IntLiteralNode &node)
 {
     r += pcx::str(node.value);

@@ -153,16 +153,21 @@ void ExprDecorator::visit(CallNode &node)
 
     if(type->method)
     {
+        bool constant = false;
+
         auto n = Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get());
-        if(!n)
+        if(n)
         {
-            throw Error(node.target->location(), "cannot call method without object - ", node.target->description());
+            constant = TypeVisitor::assertType(c, n.get())->constant;
+        }
+        else
+        {
+            constant = c.tree.current()->container()->property<Type*>("type")->constMethod;
         }
 
-        if(TypeVisitor::assertType(c, n.get())->constant)
+        if(constant)
         {
             t.constMethod = true;
-
             node.target = ExprDecorator::decorate(c, node.target, &t);
         }
     }

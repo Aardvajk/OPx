@@ -18,6 +18,9 @@ Token Operators::scan(Context &c, bool get)
     {
         case Token::Type::Assign:
 
+        case Token::Type::Eq:
+        case Token::Type::Neq:
+
         case Token::Type::LeftShift: return tok;
 
         default: throw Error(tok.location(), "operator expected - ", tok.text());

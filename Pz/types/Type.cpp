@@ -77,22 +77,6 @@ Type Type::removePointer() const
     return t;
 }
 
-Type Type::makePrimary(Sym *sym)
-{
-    Type t;
-    t.sym = sym;
-
-    return t;
-}
-
-Type Type::makeFunction(Type *returnType)
-{
-    Type t;
-    t.returnType = returnType;
-
-    return t;
-}
-
 std::string Type::text() const
 {
     return toString(this);
@@ -106,6 +90,16 @@ bool Type::function() const
 bool Type::primitive() const
 {
     return ptr || function() || (sym && sym->findProperty("primitive").value<Primitive::Type>() != Primitive::Type::Invalid);
+}
+
+bool Type::primitiveOrRef() const
+{
+    return ref || primitive();
+}
+
+bool Type::requiresConstruction() const
+{
+    return !primitiveOrRef();
 }
 
 Primitive::Type Type::primitiveType() const
@@ -139,6 +133,33 @@ pcx::optional<std::size_t> Type::size() const
     }
 
     return { };
+}
+
+Type Type::makePrimary(Sym *sym)
+{
+    Type t;
+    t.sym = sym;
+
+    return t;
+}
+
+Type Type::makePrimary(bool constant, bool ref, Sym *sym)
+{
+    Type t;
+    t.constant = constant;
+    t.ref = ref;
+    t.sym = sym;
+
+    return t;
+}
+
+Type Type::makeFunction(Type *returnType, const std::vector<Type*> &args)
+{
+    Type t;
+    t.returnType = returnType;
+    t.args = args;
+
+    return t;
 }
 
 std::size_t Type::assertSize(Location location, const Type *type)

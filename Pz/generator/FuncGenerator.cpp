@@ -13,6 +13,7 @@
 #include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 FuncGenerator::FuncGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -34,8 +35,14 @@ void FuncGenerator::visit(ScopeNode &node)
 
 void FuncGenerator::visit(VarNode &node)
 {
-    if(node.value && TypeVisitor::assertType(c, &node)->primitive())
+    auto type = TypeVisitor::assertType(c, &node);
+    if(node.value && type->primitive())
     {
+        if(!TypeCompare(c).compatible(type, TypeVisitor::assertType(c, node.value.get())))
+        {
+            throw Error(node.value->location(), type->text(), " expected - ", node.value->description());
+        }
+
         auto sz = ExprGenerator::generate(c, os, node.value.get());
 
         os << "    push &\"" << node.property<Sym*>("sym")->fullname() << "\";\n";

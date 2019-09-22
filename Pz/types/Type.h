@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <pcx/optional.h>
+#include <pcx/flags.h>
 
 class Sym;
 
@@ -24,10 +25,19 @@ public:
 
     bool function() const;
     bool primitive() const;
+    bool primitiveOrRef() const;
+
+    bool requiresConstruction() const;
 
     Primitive::Type primitiveType() const;
 
     pcx::optional<std::size_t> size() const;
+
+    static Type makePrimary(Sym *sym);
+    static Type makePrimary(bool constant, bool ref, Sym *sym);
+    static Type makeFunction(Type *returnType, const std::vector<Type*> &args = { });
+
+    static std::size_t assertSize(Location location, const Type *type);
 
     bool constant;
     bool ref;
@@ -40,11 +50,6 @@ public:
 
     bool method;
     bool constMethod;
-
-    static Type makePrimary(Sym *sym);
-    static Type makeFunction(Type *returnType);
-
-    static std::size_t assertSize(Location location, const Type *type);
 };
 
 #endif // TYPE_H

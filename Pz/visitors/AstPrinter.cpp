@@ -144,6 +144,11 @@ void AstPrinter::visit(VarNode &node)
     }
 }
 
+void AstPrinter::visit(CharLiteralNode &node)
+{
+    tab() << "char literal " << node.description() << details(node) << "\n";
+}
+
 void AstPrinter::visit(IntLiteralNode &node)
 {
     tab() << "int literal " << node.description() << details(node) << "\n";

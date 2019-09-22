@@ -36,6 +36,10 @@ void Visitor::visit(VarNode &node)
 {
 }
 
+void Visitor::visit(CharLiteralNode &node)
+{
+}
+
 void Visitor::visit(IntLiteralNode &node)
 {
 }

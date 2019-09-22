@@ -49,6 +49,11 @@ void TypeVisitor::visit(VarNode &node)
     }
 }
 
+void TypeVisitor::visit(CharLiteralNode &node)
+{
+    r = c.types.charType();
+}
+
 void TypeVisitor::visit(IntLiteralNode &node)
 {
     r = c.types.intType();

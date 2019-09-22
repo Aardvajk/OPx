@@ -18,6 +18,7 @@ public:
     virtual void visit(ScopeNode &node) override;
     virtual void visit(ClassNode &node) override;
     virtual void visit(VarNode &node) override;
+    virtual void visit(CharLiteralNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
     virtual void visit(BoolLiteralNode &node) override;
     virtual void visit(StringLiteralNode &node) override;

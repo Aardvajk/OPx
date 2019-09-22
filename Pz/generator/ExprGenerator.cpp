@@ -36,7 +36,7 @@ void ExprGenerator::visit(IdNode &node)
         os << "    push &\"" << sym->funcname() << "\";\n";
         sz = sizeof(std::size_t);
     }
-    else if(sym->findProperty("member").value<bool>() && node.parent)
+    else if(sym->findProperty("member").value<bool>())
     {
         AddrGenerator::generate(c, os, node.parent.get());
 
@@ -56,6 +56,12 @@ void ExprGenerator::visit(IdNode &node)
         os << "    push \"" << sym->fullname() << "\";\n";
         sz = Type::assertSize(node.location(), sym->property<Type*>("type"));
     }
+}
+
+void ExprGenerator::visit(CharLiteralNode &node)
+{
+    os << "    push char(" << static_cast<unsigned int>(node.value) << ");\n";
+    sz = c.tree.root()->child("std")->child("char")->property<std::size_t>("size");
 }
 
 void ExprGenerator::visit(IntLiteralNode &node)

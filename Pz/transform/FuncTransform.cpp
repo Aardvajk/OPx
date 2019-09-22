@@ -3,10 +3,14 @@
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/IdNode.h"
 #include "nodes/ScopeNode.h"
+#include "nodes/CallNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+
+#include "decorator/ExprDecorator.h"
 
 #include "transform/ExprTransform.h"
 
@@ -38,6 +42,21 @@ void FuncTransform::visit(VarNode &node)
     if(node.value)
     {
         node.value = ExprTransform::transform(c, node.value);
+    }
+
+    auto type = TypeVisitor::assertType(c, &node);
+    if(type->requiresConstruction())
+    {
+        auto en = new ExprNode(node.location());
+        node.block()->insert(index + 1, en);
+
+        auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(false, true, type->sym)) });
+
+        NodePtr target(new IdNode(node.location(), node.name, "new"));
+        target = ExprDecorator::decorate(c, target, c.types.insert(t));
+
+        auto cn = new CallNode(node.location(), target);
+        en->expr = cn;
     }
 }
 

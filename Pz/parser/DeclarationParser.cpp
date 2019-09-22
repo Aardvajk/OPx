@@ -102,6 +102,11 @@ void buildFunc(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::RwConst)
     {
+        if(special != Token::Type::Invalid)
+        {
+            throw Error(name->location(), "cannot be const - ", name->description());
+        }
+
         n->constMethod = true;
         c.scanner.next(true);
     }
