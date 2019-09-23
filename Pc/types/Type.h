@@ -27,8 +27,6 @@ public:
     bool primitive() const;
     bool primitiveOrRef() const;
 
-    bool requiresConstruction() const;
-
     Primitive::Type primitiveType() const;
 
     pcx::optional<std::size_t> size() const;

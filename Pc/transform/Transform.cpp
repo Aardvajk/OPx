@@ -17,6 +17,8 @@
 
 #include "visitors/TypeVisitor.h"
 
+#include <pcx/scoped_push.h>
+
 Transform::Transform(Context &c) : c(c)
 {
 }
@@ -78,6 +80,9 @@ void Transform::visit(FuncNode &node)
 
     if(node.body)
     {
+        auto fg = pcx::scoped_push(c.functions, { });
+        auto sg = c.tree.open(node.property<Sym*>("sym"));
+
         Visitor::visit<FuncTransform>(node.body.get(), c);
     }
 }

@@ -45,7 +45,7 @@ void FuncTransform::visit(VarNode &node)
     }
 
     auto type = TypeVisitor::assertType(c, &node);
-    if(type->requiresConstruction())
+    if(!type->primitiveOrRef())
     {
         auto en = new ExprNode(node.location());
         node.block()->insert(index + 1, en);

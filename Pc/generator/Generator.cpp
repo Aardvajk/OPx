@@ -19,6 +19,8 @@
 
 #include "visitors/TypeVisitor.h"
 
+#include <pcx/scoped_push.h>
+
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -53,9 +55,18 @@ void Generator::visit(FuncNode &node)
             os << "    arg \"" << s->fullname() << "\":" << Type::assertSize(a->location(), s->property<Type*>("type")) << ";\n";
         }
 
+        auto fg = pcx::scoped_push(c.functions, { });
+        auto sg = c.tree.open(sym);
+
+        os << "    var \"@rf\":1;\n";
+
         Visitor::visit<LocalsGenerator>(node.body.get(), c, os);
+
+        os << "    clrf \"@rf\";\n";
+
         Visitor::visit<FuncGenerator>(node.body.get(), c, os);
 
+        os << "\"#end_function\":\n";
         os << "}\n";
     }
 }

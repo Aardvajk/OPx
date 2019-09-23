@@ -21,7 +21,7 @@ bool runTest(const std::string &dir, const std::string &path)
 
     std::cout << test << "\n";
 
-    auto r = std::system(pcx::str(exePath("pz"), " -q -I+=../lib ", file, ".pc unittest.pi").c_str());
+    auto r = std::system(pcx::str(exePath("pc"), " -q -I+=../lib -descriptive_errors ", file, ".pc unittest.pi").c_str());
     if(r)
     {
         return r == 100;

@@ -97,11 +97,6 @@ bool Type::primitiveOrRef() const
     return ref || primitive();
 }
 
-bool Type::requiresConstruction() const
-{
-    return !primitiveOrRef();
-}
-
 Primitive::Type Type::primitiveType() const
 {
     if(ptr || returnType)

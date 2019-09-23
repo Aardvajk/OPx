@@ -32,6 +32,14 @@ void VarDecorator::visit(VarNode &node)
         if(!type)
         {
             type = TypeVisitor::assertType(c, node.value.get());
+
+            if(type->ref)
+            {
+                auto t = *type;
+                t.ref = false;
+
+                type = c.types.insert(t);
+            }
         }
     }
 

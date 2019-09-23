@@ -57,6 +57,7 @@ void ExprLower::visit(CallNode &node)
 void ExprLower::visit(AddrOfNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
+    node.setProperty("type", c.types.insert(TypeVisitor::assertType(c, node.expr.get())->addPointer()));
 }
 
 void ExprLower::visit(DerefNode &node)
