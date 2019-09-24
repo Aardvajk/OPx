@@ -36,20 +36,7 @@ void BlockNode::insert(std::size_t index, NodePtr &node)
     node->bn = this;
 }
 
-std::size_t BlockNode::indexOf(Node *node) const
+bool BlockNode::isLast(Node *node) const
 {
-    for(std::size_t i = 0; i < nodes.size(); ++i)
-    {
-        if(nodes[i].get() == node)
-        {
-            return i;
-        }
-    }
-
-    return { };
-}
-
-std::size_t BlockNode::size() const
-{
-    return nodes.size();
+    return !nodes.empty() && nodes.back().get() == node;
 }

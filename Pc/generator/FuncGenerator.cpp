@@ -33,7 +33,7 @@ void exitScope(Context &c, std::ostream &os, Node &node)
     }
     else
     {
-        if(c.tree.scopeDepth() > 1 || node.block()->indexOf(&node) < node.block()->size() - 1 || !c.option("O", "elide_unused_targets"))
+        if(c.tree.scopeDepth() > 1 || !node.block()->isLast(&node) || !c.option("O", "elide_unused_targets"))
         {
             os << "    jmp \"#end_function\";\n";
             c.tree.current()->container()->setProperty("endFunctionRef", true);
