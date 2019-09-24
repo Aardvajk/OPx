@@ -58,11 +58,13 @@ void Generator::visit(FuncNode &node)
         auto fg = pcx::scoped_push(c.functions, { });
         auto sg = c.tree.open(sym);
 
-        os << "    var \"@rf\":1;\n";
-
         Visitor::visit<LocalsGenerator>(node.body.get(), c, os);
 
-        os << "    clrf \"@rf\";\n";
+        if(!c.option("O", "elide_unneeded_complex_returns") || sym->findProperty("complexReturns").value<bool>())
+        {
+            os << "    var \"@rf\":1;\n";
+            os << "    clrf \"@rf\";\n";
+        }
 
         Visitor::visit<FuncGenerator>(node.body.get(), c, os);
 

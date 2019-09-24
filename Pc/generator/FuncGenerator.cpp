@@ -27,9 +27,13 @@ void exitScope(Context &c, std::ostream &os, Node &node)
     {
         os << "    jmp \"#destroy_" << c.func().destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
     }
-    else
+    else if(!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>())
     {
         os << "    jmp \"#no_return_exit_" << c.tree.current()->fullname() << "\";\n";
+    }
+    else
+    {
+        os << "    jmp \"#end_function\";\n";
     }
 }
 
@@ -68,20 +72,23 @@ void FuncGenerator::visit(ScopeNode &node)
 
     c.func().destructs.pop_back();
 
-    os << "    push &\"@rf\";\n";
-    os << "    load 1;\n";
-    os << "    jmp ifz \"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\";\n";
-
-    if(c.func().destructs.empty() || c.func().destructs.back().empty())
+    if(!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>())
     {
-        os << "    jmp \"#end_function\";\n";
-    }
-    else
-    {
-        os << "    jmp \"#destroy_" << c.func().destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
-    }
+        os << "    push &\"@rf\";\n";
+        os << "    load 1;\n";
+        os << "    jmp ifz \"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\";\n";
 
-    os << "\"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\":\n";
+        if(c.func().destructs.empty() || c.func().destructs.back().empty())
+        {
+            os << "    jmp \"#end_function\";\n";
+        }
+        else
+        {
+            os << "    jmp \"#destroy_" << c.func().destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
+        }
+
+        os << "\"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\":\n";
+    }
 }
 
 void FuncGenerator::visit(VarNode &node)
@@ -131,6 +138,10 @@ void FuncGenerator::visit(ReturnNode &node)
         }
     }
 
-    os << "    setf \"@rf\";\n";
+    if(!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>())
+    {
+        os << "    setf \"@rf\";\n";
+    }
+
     exitScope(c, os, node);
 }

@@ -80,4 +80,8 @@ void FuncDecorator::visit(ReturnNode &node)
     {
         c.tree.current()->container()->setProperty("returned", true);
     }
+    else
+    {
+        c.tree.current()->container()->setProperty("complexReturns", true);
+    }
 }

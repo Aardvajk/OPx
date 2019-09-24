@@ -35,6 +35,14 @@ int main(int argc, char *argv[])
 
     try
     {
+        if(c.option("config"))
+        {
+            if(!c.args.back().readFromFile(c.values("config").front()))
+            {
+                throw Error("unable to open config - ", c.values("config").front());
+            }
+        }
+
         if(files.size() < 1)
         {
             throw Error("no source specified");
@@ -120,7 +128,7 @@ int main(int argc, char *argv[])
 
         if(c.option("test_error"))
         {
-            throw Error("error expected - ", c.args.back()["test_error"].front());
+            throw Error("error expected - ", c.values("test_error").front());
         }
 
         if(c.option("test"))

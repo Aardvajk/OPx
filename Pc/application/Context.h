@@ -27,6 +27,8 @@ public:
     bool option(const std::string &key) const;
     bool option(const std::string &key, const std::string &value) const;
 
+    std::vector<std::string> values(const std::string &key) const;
+
     FuncInfo &func(){ return functions.back(); }
 
     std::vector<pcx::args> args;

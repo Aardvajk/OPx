@@ -43,3 +43,8 @@ bool Context::option(const std::string &key, const std::string &value) const
 
     return false;
 }
+
+std::vector<std::string> Context::values(const std::string &key) const
+{
+    return args.back()[key];
+}

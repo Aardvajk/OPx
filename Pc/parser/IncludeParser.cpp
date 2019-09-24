@@ -36,7 +36,7 @@ void process(Context &c, BlockNode *block, bool get)
     }
     else
     {
-        if(!searchAndOpen(c, c.args.back()["I"], path.text()))
+        if(!searchAndOpen(c, c.values("I"), path.text()))
         {
             throw Error(path.location(), "unable to locate - \"", path.text(), "\"");
         }
