@@ -131,11 +131,9 @@ int main(int argc, char *argv[])
             throw Error("error expected - ", c.values("test_error").front());
         }
 
-        if(c.option("test"))
+        if(c.option("pb"))
         {
-            if(std::system(pcx::str("C:/Projects/Px/Px/build-pi/release/pi -q script.pi script.po").c_str())) return -1;
-            if(std::system(pcx::str("C:/Projects/Px/Px/build-pl/release/pl -q script.pv script.po ../lib/stdlib.po ../lib/stdtest.po ../lib/stdios.po").c_str())) return -1;
-            if(std::system(pcx::str("C:/Projects/Px/Px/build-pv/release/pv script.pv").c_str())) return -1;
+            if(std::system(pcx::str("C:/Projects/Px/Px/build-pb/release/pb ", c.values("pb").front()).c_str())) return -1;
         }
         else if(!c.option("q"))
         {
