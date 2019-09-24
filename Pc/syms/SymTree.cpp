@@ -11,3 +11,17 @@ SymGuard SymTree::open(Sym *sym)
 
     return g;
 }
+
+std::size_t SymTree::scopeDepth()
+{
+    auto s = current();
+    std::size_t n = 0;
+
+    while(s && s != current()->container())
+    {
+        s = s->parent();
+        ++n;
+    }
+
+    return n;
+}

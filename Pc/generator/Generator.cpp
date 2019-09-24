@@ -68,7 +68,11 @@ void Generator::visit(FuncNode &node)
 
         Visitor::visit<FuncGenerator>(node.body.get(), c, os);
 
-        os << "\"#end_function\":\n";
+        if(sym->findProperty("endFunctionRef").value<bool>() || !c.option("O", "elide_unused_targets"))
+        {
+            os << "\"#end_function\":\n";
+        }
+
         os << "}\n";
     }
 }

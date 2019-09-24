@@ -33,7 +33,11 @@ void exitScope(Context &c, std::ostream &os, Node &node)
     }
     else
     {
-        os << "    jmp \"#end_function\";\n";
+        if(c.tree.scopeDepth() > 1 || node.block()->indexOf(&node) < node.block()->size() - 1 || !c.option("O", "elide_unused_targets"))
+        {
+            os << "    jmp \"#end_function\";\n";
+            c.tree.current()->container()->setProperty("endFunctionRef", true);
+        }
     }
 }
 
@@ -81,6 +85,7 @@ void FuncGenerator::visit(ScopeNode &node)
         if(c.func().destructs.empty() || c.func().destructs.back().empty())
         {
             os << "    jmp \"#end_function\";\n";
+            c.tree.current()->container()->setProperty("endFunctionRef", true);
         }
         else
         {

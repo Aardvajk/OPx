@@ -12,9 +12,10 @@ QueryVisitors::DirectType::DirectType() : r(nullptr)
 
 void QueryVisitors::DirectType::visit(IdNode &node)
 {
-    if(node.property<Sym*>("sym")->type() == Sym::Type::Class)
+    auto sym = node.property<Sym*>("sym");
+    if(sym->type() == Sym::Type::Class)
     {
-        r = node.property<Type*>("type");
+        r = sym->property<Type*>("type");
     }
 }
 

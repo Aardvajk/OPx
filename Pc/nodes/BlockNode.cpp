@@ -35,3 +35,21 @@ void BlockNode::insert(std::size_t index, NodePtr &node)
     nodes.insert(nodes.begin() + static_cast<long long>(index), node);
     node->bn = this;
 }
+
+std::size_t BlockNode::indexOf(Node *node) const
+{
+    for(std::size_t i = 0; i < nodes.size(); ++i)
+    {
+        if(nodes[i].get() == node)
+        {
+            return i;
+        }
+    }
+
+    return { };
+}
+
+std::size_t BlockNode::size() const
+{
+    return nodes.size();
+}

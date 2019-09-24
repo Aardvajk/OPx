@@ -13,6 +13,8 @@ public:
 
     SymGuard open(Sym *sym);
 
+    std::size_t scopeDepth();
+
     Sym *root(){ return rs.get(); }
     Sym *current(){ return cs; }
 

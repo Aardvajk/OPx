@@ -67,16 +67,7 @@ void FuncDecorator::visit(ReturnNode &node)
         throw Error(node.location(), "function must return ", t->text());
     }
 
-    auto s = c.tree.current();
-    std::size_t n = 0;
-
-    while(s && s != c.tree.current()->container())
-    {
-        s = s->parent();
-        ++n;
-    }
-
-    if(n == 1)
+    if(c.tree.scopeDepth() == 1)
     {
         c.tree.current()->container()->setProperty("returned", true);
     }

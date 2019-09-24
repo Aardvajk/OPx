@@ -17,6 +17,9 @@ public:
     void insert(std::size_t index, Node *node);
     void insert(std::size_t index, NodePtr &node);
 
+    std::size_t indexOf(Node *node) const;
+    std::size_t size() const;
+
     NodeList nodes;
 };
 

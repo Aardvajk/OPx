@@ -7,6 +7,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
@@ -101,6 +102,39 @@ void ExprGenerator::visit(CallNode &node)
     os << "    call;\n";
 
     sz = size;
+}
+
+void ExprGenerator::visit(ConstructNode &node)
+{
+    if(node.type->primitive())
+    {
+        if(node.params.size() > 1)
+        {
+            throw Error(node.location(), "too many parameters - ", node.description());
+        }
+
+        auto pt = node.type->primitiveType();
+
+        if(node.params.empty())
+        {
+            os << "    push " << Primitive::toString(pt) << "(0);\n";
+        }
+        else
+        {
+            auto et = TypeVisitor::assertType(c, node.params.front().get());
+            if(et->primitive())
+            {
+                ExprGenerator::generate(c, os, node.params.front().get());
+                os << "    convert " << Primitive::toString(et->primitiveType()) << " " << Primitive::toString(pt) << ";\n";
+            }
+            else
+            {
+                throw Error(node.location(), "non-primitive conversions not supported - ", node.description());
+            }
+        }
+
+        sz = Type::assertSize(node.location(), node.type);
+    }
 }
 
 void ExprGenerator::visit(AddrOfNode &node)
