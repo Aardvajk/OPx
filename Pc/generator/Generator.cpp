@@ -19,8 +19,6 @@
 
 #include "visitors/TypeVisitor.h"
 
-#include <pcx/scoped_push.h>
-
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -55,10 +53,15 @@ void Generator::visit(FuncNode &node)
             os << "    arg \"" << s->fullname() << "\":" << Type::assertSize(a->location(), s->property<Type*>("type")) << ";\n";
         }
 
-        auto fg = pcx::scoped_push(c.functions, { });
         auto sg = c.tree.open(sym);
 
         Visitor::visit<LocalsGenerator>(node.body.get(), c, os);
+
+        auto info = sym->property<FuncInfo*>("info");
+        for(auto &t: info->temps)
+        {
+            os << "    var \"" << t.first << "\":" << Type::assertSize(node.location(), t.second) << ";\n";
+        }
 
         if(!c.option("O", "elide_unneeded_complex_returns") || sym->findProperty("complexReturns").value<bool>())
         {

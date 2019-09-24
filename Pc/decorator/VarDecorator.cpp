@@ -51,7 +51,8 @@ void VarDecorator::visit(VarNode &node)
     auto name = NameVisitors::assertSimpleUniqueName(c, node.name.get());
     if(name.empty())
     {
-        name = pcx::str("#unnamed", c.func().labels++);
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+        name = pcx::str("#unnamed", info->labels++);
     }
 
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.location(), name));

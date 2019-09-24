@@ -32,7 +32,9 @@ void FuncDecorator::visit(BlockNode &node)
 
 void FuncDecorator::visit(ScopeNode &node)
 {
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", c.func().scopes++)));
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", info->scopes++)));
     node.setProperty("sym", sym);
 
     auto sg = c.tree.open(sym);

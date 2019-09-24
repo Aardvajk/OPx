@@ -25,7 +25,6 @@
 #include "decorator/VarDecorator.h"
 #include "decorator/FuncDecorator.h"
 
-#include <pcx/scoped_push.h>
 #include <pcx/scoped_counter.h>
 
 namespace
@@ -80,7 +79,9 @@ void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
 
     sym->setProperty("defined", true);
 
-    auto fg = pcx::scoped_push(c.functions, { });
+    c.funcInfos.push_back(new FuncInfo());
+    sym->setProperty("info", c.funcInfos.back_ptr());
+
     auto sg = c.tree.open(sym);
 
     for(auto &a: node.args)

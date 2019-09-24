@@ -11,6 +11,7 @@
 #include "info/FuncInfo.h"
 
 #include <pcx/args.h>
+#include <pcx/ptr_vector.h>
 
 #include <unordered_map>
 
@@ -29,8 +30,6 @@ public:
 
     std::vector<std::string> values(const std::string &key) const;
 
-    FuncInfo &func(){ return functions.back(); }
-
     std::vector<pcx::args> args;
 
     SourceList sources;
@@ -40,7 +39,7 @@ public:
     TypeCache types;
 
     std::vector<Sym::Type> containers;
-    std::vector<FuncInfo> functions;
+    pcx::ptr_vector<FuncInfo> funcInfos;
 
     std::size_t classDepth;
     std::vector<FuncNode*> deferredMethods;

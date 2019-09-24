@@ -23,9 +23,11 @@ namespace
 
 void exitScope(Context &c, std::ostream &os, Node &node)
 {
-    if(!c.func().destructs.empty() && !c.func().destructs.back().empty())
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    if(!info->destructs.empty() && !info->destructs.back().empty())
     {
-        os << "    jmp \"#destroy_" << c.func().destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
+        os << "    jmp \"#destroy_" << info->destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
     }
     else if(!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>())
     {
@@ -57,12 +59,14 @@ void FuncGenerator::visit(BlockNode &node)
 
 void FuncGenerator::visit(ScopeNode &node)
 {
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
     auto sg = c.tree.open(node.property<Sym*>("sym"));
-    c.func().destructs.push_back({ });
+    info->destructs.push_back({ });
 
     node.body->accept(*this);
 
-    for(auto np: pcx::range_reverse(c.func().destructs.back()))
+    for(auto np: pcx::range_reverse(info->destructs.back()))
     {
         auto sym = np->property<Sym*>("sym");
         auto dm = TypeLookup::assertDeleteMethod(np->location(), sym->property<Type*>("type"));
@@ -74,7 +78,7 @@ void FuncGenerator::visit(ScopeNode &node)
         os << "    call;\n";
     }
 
-    c.func().destructs.pop_back();
+    info->destructs.pop_back();
 
     if(!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>())
     {
@@ -82,14 +86,14 @@ void FuncGenerator::visit(ScopeNode &node)
         os << "    load 1;\n";
         os << "    jmp ifz \"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\";\n";
 
-        if(c.func().destructs.empty() || c.func().destructs.back().empty())
+        if(info->destructs.empty() || info->destructs.back().empty())
         {
             os << "    jmp \"#end_function\";\n";
             c.tree.current()->container()->setProperty("endFunctionRef", true);
         }
         else
         {
-            os << "    jmp \"#destroy_" << c.func().destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
+            os << "    jmp \"#destroy_" << info->destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
         }
 
         os << "\"#no_return_exit_" << node.property<Sym*>("sym")->fullname() << "\":\n";
@@ -115,7 +119,8 @@ void FuncGenerator::visit(VarNode &node)
 
     if(!type->primitive())
     {
-        c.func().destructs.back().push_back(&node);
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+        info->destructs.back().push_back(&node);
     }
 }
 
