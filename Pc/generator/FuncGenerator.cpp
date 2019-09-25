@@ -37,7 +37,7 @@ void processTempDestructs(Context &c, std::ostream &os, Location location)
     info->tempDestructs.clear();
 }
 
-void exitScope(Context &c, std::ostream &os, Node &node)
+void exitScope(Context &c, std::ostream &os, Node &node, bool returning)
 {
     processTempDestructs(c, os, node.location());
 
@@ -47,7 +47,7 @@ void exitScope(Context &c, std::ostream &os, Node &node)
     {
         os << "    jmp \"#destroy_" << info->destructs.back().back()->property<Sym*>("sym")->fullname() << "\";\n";
     }
-    else if(!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>())
+    else if(!returning && (!c.option("O", "elide_unneeded_complex_returns") || c.tree.current()->container()->findProperty("complexReturns").value<bool>()))
     {
         os << "    jmp \"#no_return_exit_" << c.tree.current()->fullname() << "\";\n";
     }
@@ -172,5 +172,5 @@ void FuncGenerator::visit(ReturnNode &node)
         os << "    setf \"@rf\";\n";
     }
 
-    exitScope(c, os, node);
+    exitScope(c, os, node, true);
 }
