@@ -20,6 +20,7 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 #include "types/TypeBuilder.h"
+#include "types/TypeLookup.h"
 
 #include "decorator/TypeDecorator.h"
 #include "decorator/VarDecorator.h"
@@ -218,6 +219,9 @@ void Decorator::visit(ClassNode &node)
         auto dg = pcx::scoped_counter(c.classDepth);
 
         node.body->accept(*this);
+
+        sym->setProperty("cachedCopyMethod", TypeLookup::findCopyMethod(c, type));
+        sym->setProperty("cachedDeleteMethod", TypeLookup::findDeleteMethod(c, type));
     }
 
     if(!c.classDepth)

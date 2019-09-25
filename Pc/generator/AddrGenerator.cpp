@@ -5,6 +5,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 
@@ -46,6 +47,12 @@ void AddrGenerator::visit(IdNode &node)
         os << "    push &\"" << sym->fullname() << "\";\n";
         ok = true;
     }
+}
+
+void AddrGenerator::visit(ConstructNode &node)
+{
+    ExprGenerator::generate(c, os, &node);
+    ok = true;
 }
 
 void AddrGenerator::visit(DerefNode &node)

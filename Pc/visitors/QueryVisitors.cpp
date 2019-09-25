@@ -27,3 +27,12 @@ void QueryVisitors::GetParent::visit(IdNode &node)
 {
     r = node.parent;
 }
+
+QueryVisitors::GetConstructNode::GetConstructNode() : r(nullptr)
+{
+}
+
+void QueryVisitors::GetConstructNode::visit(ConstructNode &node)
+{
+    r = &node;
+}

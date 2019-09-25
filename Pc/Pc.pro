@@ -31,6 +31,7 @@ SOURCES += \
         finaliser/Finaliser.cpp \
         generator/AddrGenerator.cpp \
         generator/ByteListGenerator.cpp \
+        generator/CommonGenerator.cpp \
         generator/ExprGenerator.cpp \
         generator/FuncGenerator.cpp \
         generator/Generator.cpp \
@@ -105,6 +106,7 @@ HEADERS += \
     finaliser/Finaliser.h \
     generator/AddrGenerator.h \
     generator/ByteListGenerator.h \
+    generator/CommonGenerator.h \
     generator/ExprGenerator.h \
     generator/FuncGenerator.h \
     generator/Generator.h \

@@ -1,6 +1,7 @@
 #include "SymScopeVisitor.h"
 
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
@@ -19,6 +20,14 @@ void SymScopeVisitor::visit(CallNode &node)
     if(t->returnType && t->returnType->sym)
     {
         curr = t->returnType->sym;
+    }
+}
+
+void SymScopeVisitor::visit(ConstructNode &node)
+{
+    if(node.type->sym)
+    {
+        curr = node.type->sym;
     }
 }
 

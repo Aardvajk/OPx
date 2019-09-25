@@ -2,6 +2,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 
@@ -86,6 +87,14 @@ void SymFinder::visit(IdNode &node)
 void SymFinder::visit(CallNode &node)
 {
     node.target->accept(*this);
+}
+
+void SymFinder::visit(ConstructNode &node)
+{
+    if(node.target)
+    {
+        node.target->accept(*this);
+    }
 }
 
 void SymFinder::visit(AddrOfNode &node)

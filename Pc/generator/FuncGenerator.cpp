@@ -21,8 +21,26 @@
 namespace
 {
 
+void processTempDestructs(Context &c, std::ostream &os, Location location)
+{
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    for(auto &t: info->tempDestructs)
+    {
+        auto fn = TypeLookup::assertDeleteMethod(c, location, t.second);
+
+        os << "    push &\"" << t.first << "\";\n";
+        os << "    push &\"" << fn->funcname() << "\";\n";
+        os << "    call;\n";
+    }
+
+    info->tempDestructs.clear();
+}
+
 void exitScope(Context &c, std::ostream &os, Node &node)
 {
+    processTempDestructs(c, os, node.location());
+
     auto info = c.tree.current()->container()->property<FuncInfo*>("info");
 
     if(!info->destructs.empty() && !info->destructs.back().empty())
@@ -54,6 +72,7 @@ void FuncGenerator::visit(BlockNode &node)
     for(auto &n: node.nodes)
     {
         n->accept(*this);
+        processTempDestructs(c, os, node.location());
     }
 }
 
@@ -69,12 +88,12 @@ void FuncGenerator::visit(ScopeNode &node)
     for(auto np: pcx::range_reverse(info->destructs.back()))
     {
         auto sym = np->property<Sym*>("sym");
-        auto dm = TypeLookup::assertDeleteMethod(np->location(), sym->property<Type*>("type"));
+        auto dm = TypeLookup::assertDeleteMethod(c, np->location(), sym->property<Type*>("type"));
 
         os << "\"#destroy_" << sym->fullname() << "\":\n";
 
         os << "    push &\"" << sym->fullname() << "\";\n";
-        os << "    push &\"" << dm->fullname() << dm->property<const Type*>("type")->text() << "\";\n";
+        os << "    push &\"" << dm->funcname() << "\";\n";
         os << "    call;\n";
     }
 

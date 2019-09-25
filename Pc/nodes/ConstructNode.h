@@ -15,6 +15,7 @@ public:
 
     Type *type;
     NodeList params;
+    NodePtr target;
 };
 
 #endif // CONSTRUCTNODE_H

@@ -20,6 +20,7 @@ public:
 
     Type addPointer() const;
     Type removePointer() const;
+    Type addReference() const;
 
     std::string text() const;
 

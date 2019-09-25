@@ -36,6 +36,19 @@ private:
     NodePtr r;
 };
 
+class GetConstructNode : public Visitor
+{
+public:
+    GetConstructNode();
+
+    ConstructNode *result() const { return r; }
+
+    virtual void visit(ConstructNode &node) override;
+
+private:
+    ConstructNode *r;
+};
+
 }
 
 #endif // QUERYVISITORS_H

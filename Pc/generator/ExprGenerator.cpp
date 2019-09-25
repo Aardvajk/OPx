@@ -14,6 +14,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
 
+#include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
 
 #include "operators/CompareOperators.h"
@@ -93,9 +94,9 @@ void ExprGenerator::visit(CallNode &node)
         os << "    allocs " << size << ";\n";
     }
 
-    for(auto &p: node.params)
+    for(auto p: pcx::indexed_range(node.params))
     {
-        ExprGenerator::generate(c, os, p.get());
+        CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
     }
 
     ExprGenerator::generate(c, os, node.target.get());
@@ -134,6 +135,29 @@ void ExprGenerator::visit(ConstructNode &node)
         }
 
         sz = Type::assertSize(node.location(), node.type);
+    }
+    else
+    {
+        auto temp = node.property<std::string>("temp");
+
+        os << "    push &\"" << temp << "\";\n";
+
+        auto type = TypeVisitor::assertType(c, node.target.get());
+
+        for(auto p: pcx::indexed_range(node.params))
+        {
+            CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
+        }
+
+        ExprGenerator::generate(c, os, node.target.get());
+        os << "    call;\n";
+
+        os << "    push &\"" << temp << "\";\n";
+
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+        info->tempDestructs.push_back(std::make_pair(temp, node.type));
+
+        sz = sizeof(std::size_t);
     }
 }
 

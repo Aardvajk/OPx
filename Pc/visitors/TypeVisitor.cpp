@@ -77,7 +77,7 @@ void TypeVisitor::visit(CallNode &node)
 
 void TypeVisitor::visit(ConstructNode &node)
 {
-    r = node.type;
+    r = node.property<Type*>("type");
 }
 
 void TypeVisitor::visit(AddrOfNode &node)

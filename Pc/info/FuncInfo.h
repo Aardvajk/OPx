@@ -19,6 +19,8 @@ public:
 
     std::vector<std::vector<Node*> > destructs;
     std::vector<std::pair<std::string, Type*> > temps;
+
+    std::vector<std::pair<std::string, Type*> > tempDestructs;
 };
 
 #endif // FUNCINFO_H

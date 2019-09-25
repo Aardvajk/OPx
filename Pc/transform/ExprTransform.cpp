@@ -4,6 +4,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
@@ -13,6 +14,8 @@
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+
+#include "decorator/ExprDecorator.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/QueryVisitors.h"
@@ -63,6 +66,34 @@ void ExprTransform::visit(CallNode &node)
     if(type->method)
     {
         node.params.insert(node.params.begin(), Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get()));
+    }
+}
+
+void ExprTransform::visit(ConstructNode &node)
+{
+    for(std::size_t i = 0; i < node.params.size(); ++i)
+    {
+        node.params[i] = ExprTransform::transform(c, node.params[i]);
+    }
+
+    if(!node.type->primitive())
+    {
+        auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(false, true, node.type->sym)) });
+        for(auto &p: node.params)
+        {
+            t.args.push_back(TypeVisitor::assertType(c, p.get()));
+        }
+
+        NodePtr name(new IdNode(node.location(), { }, node.type->sym->name()));
+        node.target = new IdNode(node.location(), name, "new");
+
+        node.target = ExprDecorator::decorate(c, node.target, c.types.insert(t));
+
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+        auto temp = pcx::str("temp", info->labels++);
+
+        info->temps.push_back(std::make_pair(temp, node.type));
+        node.setProperty("temp", temp);
     }
 }
 

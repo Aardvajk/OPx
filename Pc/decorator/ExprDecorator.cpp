@@ -175,6 +175,7 @@ void ExprDecorator::visit(CallNode &node)
     if(auto dt = Visitor::query<QueryVisitors::DirectType, Type*>(node.target.get()))
     {
         rn = new ConstructNode(node.location(), dt, node.params);
+        rn->setProperty("type", dt->primitive() ? dt : c.types.insert(dt->addReference()));
     }
     else
     {

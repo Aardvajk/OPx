@@ -77,6 +77,14 @@ Type Type::removePointer() const
     return t;
 }
 
+Type Type::addReference() const
+{
+    auto t = *this;
+    t.ref = true;
+
+    return t;
+}
+
 std::string Type::text() const
 {
     return toString(this);
