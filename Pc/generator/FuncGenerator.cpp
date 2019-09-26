@@ -9,6 +9,7 @@
 #include "nodes/ReturnNode.h"
 
 #include "generator/ExprGenerator.h"
+#include "generator/AddrGenerator.h"
 
 #include "visitors/TypeVisitor.h"
 

@@ -7,6 +7,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/InitNode.h"
 
 #include "lower/ExprLower.h"
 
@@ -46,5 +47,15 @@ void FuncLower::visit(ReturnNode &node)
     if(node.expr)
     {
         node.expr = ExprLower::lower(c, node.expr);
+    }
+}
+
+void FuncLower::visit(InitNode &node)
+{
+    node.target = ExprLower::lower(c, node.target);
+
+    for(auto &p: node.params)
+    {
+        p = ExprLower::lower(c, p);
     }
 }

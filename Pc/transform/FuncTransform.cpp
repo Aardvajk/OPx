@@ -10,6 +10,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/InitNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -97,5 +98,15 @@ void FuncTransform::visit(ReturnNode &node)
     if(node.expr)
     {
         node.expr = ExprTransform::transform(c, node.expr);
+    }
+}
+
+void FuncTransform::visit(InitNode &node)
+{
+    node.target = ExprTransform::transform(c, node.target);
+
+    for(auto &p: node.params)
+    {
+        p = ExprTransform::transform(c, p);
     }
 }

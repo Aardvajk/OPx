@@ -3,6 +3,7 @@
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/IdNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
@@ -91,6 +92,9 @@ void FuncDecorator::visit(InitNode &node)
     }
 
     node.setProperty("sym", sym);
+
+    node.target = new IdNode(node.location(), { }, sym->name());
+    node.target = ExprDecorator::decorate(c, node.target);
 
     for(auto &p: node.params)
     {

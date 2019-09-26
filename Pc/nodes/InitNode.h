@@ -12,6 +12,8 @@ public:
     virtual std::string classname() const override;
 
     std::string name;
+
+    NodePtr target;
     NodeList params;
 };
 

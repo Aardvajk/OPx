@@ -39,7 +39,7 @@ std::string details(Node &node)
     if(auto s = node.findProperty("sym"))
     {
         auto sym = s.to<Sym*>();
-        r += pcx::str(" -> ", sym->fullname(), " [", sym, "]");
+        r += pcx::str(" -> ", sym->fullname());
 
         if(auto t = sym->findProperty("type"))
         {
@@ -114,10 +114,9 @@ void AstPrinter::visit(FuncNode &node)
 
     if(!node.inits.empty())
     {
-        auto g1 = pcx::scoped_counter(tc);
         tab() << "inits\n";
 
-        auto g2 = pcx::scoped_counter(tc);
+        auto g = pcx::scoped_counter(tc);
         for(auto &i: node.inits)
         {
             i->accept(*this);
@@ -126,10 +125,6 @@ void AstPrinter::visit(FuncNode &node)
 
     if(node.body)
     {
-        auto g1 = pcx::scoped_counter(tc);
-        tab() << "body\n";
-
-        auto g2 = pcx::scoped_counter(tc);
         node.body->accept(*this);
     }
 }
@@ -314,10 +309,25 @@ void AstPrinter::visit(InitNode &node)
 {
     tab() << "init " << node.name << details(node) << "\n";
 
-    auto g = pcx::scoped_counter(tc);
-    for(auto &p: node.params)
+    if(node.target)
     {
-        p->accept(*this);
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "target\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        node.target->accept(*this);
+    }
+
+    if(!node.params.empty())
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "params\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        for(auto &p: node.params)
+        {
+            p->accept(*this);
+        }
     }
 }
 

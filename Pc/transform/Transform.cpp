@@ -67,6 +67,8 @@ void generateInitialisers(Context &c, FuncNode &node, Sym *sym)
             }
         }
     }
+
+    node.inits.clear();
 }
 
 }

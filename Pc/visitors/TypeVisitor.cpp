@@ -15,6 +15,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/InitNode.h"
 
 #include "syms/Sym.h"
 
@@ -102,8 +103,12 @@ void TypeVisitor::visit(AssignNode &node)
 
 void TypeVisitor::visit(BinaryNode &node)
 {
-//TODO this won't be all
     r = c.types.boolType();
+}
+
+void TypeVisitor::visit(InitNode &node)
+{
+    r = node.property<Sym*>("sym")->property<Type*>("type");
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)
