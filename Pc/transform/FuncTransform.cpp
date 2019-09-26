@@ -26,10 +26,10 @@
 namespace
 {
 
-void createComplexConstruct(Context &c, Type *type, Node &node, NodePtr &name, NodeList &params, std::size_t index)
+NodePtr createComplexConstruct(Context &c, Type *type, Node &node, NodePtr &name, NodeList &params)
 {
     auto en = new ExprNode(node.location());
-    node.block()->insert(index + 1, en);
+    NodePtr rn(en);
 
     auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(false, true, type->sym)) });
 
@@ -48,6 +48,8 @@ void createComplexConstruct(Context &c, Type *type, Node &node, NodePtr &name, N
     {
         cn->params.push_back(p);
     }
+
+    return rn;
 }
 
 }
@@ -61,7 +63,7 @@ void FuncTransform::visit(BlockNode &node)
     for(std::size_t i = 0; i < node.nodes.size(); ++i)
     {
         index = i;
-        node.nodes[i]->accept(*this);
+        node.nodes[i] = FuncTransform::transform(c, node.nodes[i]);
     }
 }
 
@@ -95,7 +97,7 @@ void FuncTransform::visit(VarNode &node)
             }
         }
 
-        createComplexConstruct(c, type, node, node.name, params, index);
+        node.block()->insert(index + 1, createComplexConstruct(c, type, node, node.name, params));
     }
 }
 
@@ -135,15 +137,26 @@ void FuncTransform::visit(InitNode &node)
         }
 
         auto en = new ExprNode(node.location());
-        node.block()->insert(index + 1, en);
+        rn = en;
 
         auto an = new AssignNode(node.location(), node.target);
         en->expr = an;
 
         an->expr = new ConstructNode(node.location(), type, node.params);
+
+        rn = FuncTransform::transform(c, rn);
     }
     else
     {
-        createComplexConstruct(c, type, node, node.target, node.params, index);
+        rn = createComplexConstruct(c, type, node, node.target, node.params);
+        rn = FuncTransform::transform(c, rn);
     }
+}
+
+NodePtr FuncTransform::transform(Context &c, NodePtr &node)
+{
+    FuncTransform ft(c);
+    node->accept(ft);
+
+    return ft.result() ? ft.result() : node;
 }

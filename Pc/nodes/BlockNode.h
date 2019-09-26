@@ -12,10 +12,10 @@ public:
     virtual std::string classname() const override;
 
     void push_back(Node *node);
-    void push_back(NodePtr &node);
+    void push_back(NodePtr node);
 
     void insert(std::size_t index, Node *node);
-    void insert(std::size_t index, NodePtr &node);
+    void insert(std::size_t index, NodePtr node);
 
     bool isLast(Node *node) const;
 
