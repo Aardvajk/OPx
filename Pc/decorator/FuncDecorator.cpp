@@ -7,6 +7,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
+#include "nodes/InitNode.h"
 
 #include "decorator/VarDecorator.h"
 #include "decorator/ExprDecorator.h"
@@ -76,5 +77,23 @@ void FuncDecorator::visit(ReturnNode &node)
     else
     {
         c.tree.current()->container()->setProperty("complexReturns", true);
+    }
+}
+
+void FuncDecorator::visit(InitNode &node)
+{
+    auto p = c.tree.current()->container()->parent();
+
+    auto sym = p->child(node.name);
+    if(!sym)
+    {
+        throw Error(node.location(), "no member found - ", node.name);
+    }
+
+    node.setProperty("sym", sym);
+
+    for(auto &p: node.params)
+    {
+        p = ExprDecorator::decorate(c, p, sym->property<Type*>("type"));
     }
 }

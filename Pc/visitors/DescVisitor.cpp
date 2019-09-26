@@ -112,12 +112,6 @@ void DescVisitor::visit(FuncNode &node)
     {
         r += " const";
     }
-
-    if(!node.inits.empty())
-    {
-        r += " ... ";
-        r += pcx::join_str(node.inits, ", ", [](const NodePtr &n){ return n->description(); });
-    }
 }
 
 void DescVisitor::visit(ScopeNode &node)

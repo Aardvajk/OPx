@@ -112,8 +112,24 @@ void AstPrinter::visit(FuncNode &node)
 {
     tab() << "func " << node.description() << details(node) << "\n";
 
+    if(!node.inits.empty())
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "inits\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        for(auto &i: node.inits)
+        {
+            i->accept(*this);
+        }
+    }
+
     if(node.body)
     {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "body\n";
+
+        auto g2 = pcx::scoped_counter(tc);
         node.body->accept(*this);
     }
 }
@@ -296,7 +312,7 @@ void AstPrinter::visit(ReturnNode &node)
 
 void AstPrinter::visit(InitNode &node)
 {
-    tab() << "init " << node.name << "\n";
+    tab() << "init " << node.name << details(node) << "\n";
 
     auto g = pcx::scoped_counter(tc);
     for(auto &p: node.params)

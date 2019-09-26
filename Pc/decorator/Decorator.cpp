@@ -90,6 +90,11 @@ void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
         Visitor::visit<VarDecorator>(a.get(), c);
     }
 
+    for(auto &i: node.inits)
+    {
+        Visitor::visit<FuncDecorator>(i.get(), c);
+    }
+
     Visitor::visit<FuncDecorator>(node.body.get(), c);
 
     auto t = sym->property<Type*>("type")->returnType;

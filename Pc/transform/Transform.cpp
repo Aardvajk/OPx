@@ -9,6 +9,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/InitNode.h"
 
 #include "transform/FuncTransform.h"
 #include "transform/ExprTransform.h"
@@ -16,6 +17,59 @@
 #include "types/Type.h"
 
 #include "visitors/TypeVisitor.h"
+#include "visitors/QueryVisitors.h"
+
+namespace
+{
+
+void generateInitialisers(Context &c, FuncNode &node, Sym *sym)
+{
+    std::unordered_map<std::string, NodePtr> map;
+    for(auto &i: node.inits)
+    {
+        Visitor::visit<QueryVisitors::InitNodeMap>(i.get(), map, i);
+    }
+
+    auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(&node);
+    std::size_t insert = 0;
+
+    for(auto s: sym->children())
+    {
+        if(s->type() == Sym::Type::Var)
+        {
+            NodePtr n;
+
+            auto i = map.find(s->name());
+            if(i != map.end())
+            {
+                n = i->second;
+            }
+
+            if(!n)
+            {
+                auto t = s->property<Type*>("type");
+
+                if(t->ref)
+                {
+                    throw Error(node.location(), "reference must be initialised - ", s->fullname());
+                }
+
+                if(!t->primitive())
+                {
+                    n = new InitNode(node.location(), s->name());
+                    n->setProperty("sym", s);
+                }
+            }
+
+            if(n)
+            {
+                block->insert(insert++, n);
+            }
+        }
+    }
+}
+
+}
 
 Transform::Transform(Context &c) : c(c)
 {
@@ -73,6 +127,11 @@ void Transform::visit(FuncNode &node)
 
             sym->setProperty("type", p);
             sym->setProperty("thistransformed", true);
+        }
+
+        if(sym->name() == "new")
+        {
+            generateInitialisers(c, node, sym->parent());
         }
     }
 

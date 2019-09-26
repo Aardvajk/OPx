@@ -136,9 +136,9 @@ void ExprDecorator::visit(CallNode &node)
 
     if(!flags[Flag::SkipParams])
     {
-        for(std::size_t i = 0; i < node.params.size(); ++i)
+        for(auto &p: node.params)
         {
-            node.params[i] = ExprDecorator::decorate(c, node.params[i]);
+            p = ExprDecorator::decorate(c, p);
         }
     }
 

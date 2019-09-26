@@ -56,9 +56,9 @@ void ExprTransform::visit(CallNode &node)
 {
     node.target = ExprTransform::transform(c, node.target);
 
-    for(std::size_t i = 0; i < node.params.size(); ++i)
+    for(auto &p: node.params)
     {
-        node.params[i] = ExprTransform::transform(c, node.params[i]);
+        p = ExprTransform::transform(c, p);
     }
 
     auto type = TypeVisitor::assertType(c, node.target.get());
@@ -71,9 +71,9 @@ void ExprTransform::visit(CallNode &node)
 
 void ExprTransform::visit(ConstructNode &node)
 {
-    for(std::size_t i = 0; i < node.params.size(); ++i)
+    for(auto &p: node.params)
     {
-        node.params[i] = ExprTransform::transform(c, node.params[i]);
+        p = ExprTransform::transform(c, p);
     }
 
     if(!node.type->primitive())
