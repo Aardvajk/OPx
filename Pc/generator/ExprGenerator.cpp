@@ -126,7 +126,11 @@ void ExprGenerator::visit(ConstructNode &node)
             if(et->primitive())
             {
                 ExprGenerator::generate(c, os, node.params.front().get());
-                os << "    convert " << Primitive::toString(et->primitiveType()) << " " << Primitive::toString(pt) << ";\n";
+
+                if(et->primitiveType() != pt)
+                {
+                    os << "    convert " << Primitive::toString(et->primitiveType()) << " " << Primitive::toString(pt) << ";\n";
+                }
             }
             else
             {

@@ -11,6 +11,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/AssignNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -21,6 +22,35 @@
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+
+namespace
+{
+
+void createComplexConstruct(Context &c, Type *type, Node &node, NodePtr &name, NodeList &params, std::size_t index)
+{
+    auto en = new ExprNode(node.location());
+    node.block()->insert(index + 1, en);
+
+    auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(false, true, type->sym)) });
+
+    for(auto &p: params)
+    {
+        t.args.push_back(TypeVisitor::assertType(c, p.get()));
+    }
+
+    NodePtr target(new IdNode(node.location(), name, "new"));
+    target = ExprDecorator::decorate(c, target, c.types.insert(t));
+
+    auto cn = new CallNode(node.location(), target);
+    en->expr = cn;
+
+    for(auto &p: params)
+    {
+        cn->params.push_back(p);
+    }
+}
+
+}
 
 FuncTransform::FuncTransform(Context &c) : c(c), index(0)
 {
@@ -51,9 +81,6 @@ void FuncTransform::visit(VarNode &node)
     auto type = TypeVisitor::assertType(c, &node);
     if(!type->primitiveOrRef())
     {
-        auto en = new ExprNode(node.location());
-        node.block()->insert(index + 1, en);
-
         NodeList params;
         if(node.value)
         {
@@ -68,23 +95,7 @@ void FuncTransform::visit(VarNode &node)
             }
         }
 
-        auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(false, true, type->sym)) });
-
-        for(auto &p: params)
-        {
-            t.args.push_back(TypeVisitor::assertType(c, p.get()));
-        }
-
-        NodePtr target(new IdNode(node.location(), node.name, "new"));
-        target = ExprDecorator::decorate(c, target, c.types.insert(t));
-
-        auto cn = new CallNode(node.location(), target);
-        en->expr = cn;
-
-        for(auto &p: params)
-        {
-            cn->params.push_back(p);
-        }
+        createComplexConstruct(c, type, node, node.name, params, index);
     }
 }
 
@@ -108,5 +119,31 @@ void FuncTransform::visit(InitNode &node)
     for(auto &p: node.params)
     {
         p = ExprTransform::transform(c, p);
+    }
+
+    auto type = TypeVisitor::assertType(c, &node);
+    if(type->primitiveOrRef())
+    {
+        if(node.params.size() > 1)
+        {
+            throw Error(node.location(), "too many parameters - ", node.description());
+        }
+
+        if(type->ref && node.params.empty())
+        {
+            throw Error(node.location(), "reference must be initialised - ", node.description());
+        }
+
+        auto en = new ExprNode(node.location());
+        node.block()->insert(index + 1, en);
+
+        auto an = new AssignNode(node.location(), node.target);
+        en->expr = an;
+
+        an->expr = new ConstructNode(node.location(), type, node.params);
+    }
+    else
+    {
+        createComplexConstruct(c, type, node, node.target, node.params, index);
     }
 }

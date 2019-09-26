@@ -4,10 +4,14 @@ func foo(a:ref std.int, b:std.int)
 {
     test.assert(a == 123);
     test.assert(b == 123);
+
+    a = 321;
 }
 
 func main()
 {
     var a = 123;
     foo(a, a);
+
+    test.assert(a == 321);
 }
