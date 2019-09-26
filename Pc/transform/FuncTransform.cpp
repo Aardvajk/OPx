@@ -152,7 +152,7 @@ void FuncTransform::visit(InitNode &node)
     rn = FuncTransform::transform(c, rn);
 }
 
-NodePtr FuncTransform::transform(Context &c, NodePtr &node)
+NodePtr FuncTransform::transform(Context &c, NodePtr node)
 {
     FuncTransform ft(c);
     node->accept(ft);

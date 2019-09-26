@@ -4,6 +4,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
@@ -54,6 +55,26 @@ void ExprLower::visit(CallNode &node)
     }
 }
 
+void ExprLower::visit(ConstructNode &node)
+{
+    if(node.type->primitive())
+    {
+        for(std::size_t i = 0; i < node.params.size(); ++i)
+        {
+            node.params[i] = ExprLower::lower(c, node.params[i]);
+        }
+    }
+    else
+    {
+        auto type = TypeVisitor::assertType(c, node.target.get());
+
+        for(std::size_t i = 0; i < node.params.size(); ++i)
+        {
+            node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
+        }
+    }
+}
+
 void ExprLower::visit(AddrOfNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
@@ -83,7 +104,7 @@ void ExprLower::visit(BinaryNode &node)
     node.right = ExprLower::lower(c, node.right);
 }
 
-NodePtr ExprLower::lower(Context &c, NodePtr &node, Type *expectedType)
+NodePtr ExprLower::lower(Context &c, NodePtr node, Type *expectedType)
 {
     ExprLower el(c, node, expectedType);
     node->accept(el);

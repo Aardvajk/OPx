@@ -48,12 +48,6 @@ std::string details(Node &node)
         }
     }
 
-    if(auto s = node.findProperty("syms"))
-    {
-        auto syms = s.to<std::vector<Sym*> >();
-        r += pcx::str(" -> ", pcx::join_str(syms, ", ", [](const Sym *s){ return s->fullname(); }));
-    }
-
     if(auto t = node.findProperty("type"))
     {
         auto type = t.to<Type*>();

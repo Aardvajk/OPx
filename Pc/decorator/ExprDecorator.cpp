@@ -266,7 +266,7 @@ void ExprDecorator::visit(BinaryNode &node)
     }
 }
 
-NodePtr ExprDecorator::decorate(Context &c, NodePtr &node, Type *expectedType, Flags flags)
+NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)
 {
     ExprDecorator ed(c, expectedType, flags);
     node->accept(ed);

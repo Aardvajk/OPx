@@ -23,7 +23,7 @@ public:
     virtual void visit(ReturnNode &node) override;
     virtual void visit(InitNode &node) override;
 
-    static NodePtr transform(Context &c, NodePtr &node);
+    static NodePtr transform(Context &c, NodePtr node);
 
 private:
     Context &c;

@@ -31,6 +31,8 @@ void Finaliser::visit(ClassNode &node)
 {
     if(node.body)
     {
+        node.body->accept(*this);
+
         auto sym = node.property<Sym*>("sym");
 
         if(true)

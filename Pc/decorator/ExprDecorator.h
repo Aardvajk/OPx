@@ -33,7 +33,7 @@ public:
     virtual void visit(AssignNode &node) override;
     virtual void visit(BinaryNode &node) override;
 
-    static NodePtr decorate(Context &c, NodePtr &node, Type *expectedType = nullptr, Flags flags = { });
+    static NodePtr decorate(Context &c, NodePtr node, Type *expectedType = nullptr, Flags flags = { });
 
 private:
     Context &c;

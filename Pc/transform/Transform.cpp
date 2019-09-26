@@ -59,8 +59,6 @@ void generateInitialisers(Context &c, FuncNode &node, Sym *sym)
                 if(!t->primitive())
                 {
                     n = new InitNode(node.location(), s->name());
-                    n->setProperty("sym", s);
-
                     Visitor::visit<FuncDecorator>(n.get(), c);
                 }
             }
