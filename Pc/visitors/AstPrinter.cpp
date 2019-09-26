@@ -60,6 +60,11 @@ std::string details(Node &node)
         r += pcx::str(" -> ", type->text());
     }
 
+    if(auto o = node.findProperty("offset"))
+    {
+        r += pcx::str(" #", o.to<std::size_t>());
+    }
+
     return r;
 }
 

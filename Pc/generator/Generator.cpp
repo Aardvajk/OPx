@@ -47,7 +47,8 @@ void Generator::visit(FuncNode &node)
         auto sym = node.property<Sym*>("sym");
         auto type = sym->property<Type*>("type");
 
-        os << "func \"" << sym->fullname() << type->text() << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
+        os << "func" << (node.autoGen ? "[autogen]" : "");
+        os << " \"" << sym->fullname() << type->text() << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
         os << "{\n";
 
         for(auto &a: node.args)
@@ -77,6 +78,36 @@ void Generator::visit(FuncNode &node)
         if(sym->findProperty("endFunctionRef").value<bool>() || !c.option("O", "elide_unused_targets"))
         {
             os << "\"#end_function\":\n";
+        }
+
+        if(sym->name() == "delete")
+        {
+            auto cs = sym->parent()->children();
+
+            for(auto s: pcx::range_reverse(cs))
+            {
+                if(s->type() == Sym::Type::Var)
+                {
+                    auto t = s->property<Type*>("type");
+                    if(!t->primitive())
+                    {
+                        auto dm = TypeLookup::assertDeleteMethod(c, node.location(), t);
+
+                        os << "    push \"" << sym->fullname() << ".this\";\n";
+
+                        auto o = s->property<std::size_t>("offset");
+
+                        if(!c.option("O", "elide_no_effect_ops") || o)
+                        {
+                            os << "    push size(" << o << ");\n";
+                            os << "    add size;\n";
+                        }
+
+                        os << "    push &\"" << dm->funcname()<< "\";\n";
+                        os << "    call;\n";
+                    }
+                }
+            }
         }
 
         for(auto a: pcx::range_reverse(node.args))
@@ -111,20 +142,23 @@ void Generator::visit(VarNode &node)
 {
     auto sym = node.property<Sym*>("sym");
 
-    os << "var \"" << sym->fullname() << "\":" << Type::assertSize(node.location(), sym->property<Type*>("type"));
-
-    if(node.value)
+    if(!sym->findProperty("member").value<bool>())
     {
-        if(!TypeVisitor::assertType(c, node.value.get())->primitive())
+        os << "var \"" << sym->fullname() << "\":" << Type::assertSize(node.location(), sym->property<Type*>("type"));
+
+        if(node.value)
         {
-            throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
+            if(!TypeVisitor::assertType(c, node.value.get())->primitive())
+            {
+                throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
+            }
+
+            os << " = ";
+            Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os);
         }
 
-        os << " = ";
-        Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os);
+        os << ";\n";
     }
-
-    os << ";\n";
 }
 
 void Generator::visit(PragmaNode &node)

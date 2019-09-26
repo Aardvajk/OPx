@@ -25,6 +25,7 @@
 #include "decorator/TypeDecorator.h"
 #include "decorator/VarDecorator.h"
 #include "decorator/FuncDecorator.h"
+#include "decorator/DefaultMethods.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -150,6 +151,11 @@ void Decorator::visit(FuncNode &node)
     t.method = c.tree.current()->type() == Sym::Type::Class;
     t.constMethod = node.constMethod;
 
+    if(!t.method && Visitor::query<NameVisitors::SpecialName, Token::Type>(node.name.get()) != Token::Type::Invalid)
+    {
+        throw Error(node.name->location(), "invalid function name - ", node.name->description());
+    }
+
     for(auto &a: node.args)
     {
         t.args.push_back(TypeVisitor::assertType(c, a.get()));
@@ -224,6 +230,8 @@ void Decorator::visit(ClassNode &node)
         auto dg = pcx::scoped_counter(c.classDepth);
 
         node.body->accept(*this);
+
+        DefaultMethods::generate(c, node, sym);
 
         sym->setProperty("cachedCopyMethod", TypeLookup::findCopyMethod(c, type));
         sym->setProperty("cachedDeleteMethod", TypeLookup::findDeleteMethod(c, type));

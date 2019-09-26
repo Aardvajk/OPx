@@ -48,6 +48,7 @@ public:
     virtual void visit(BlockNode &node) override;
     virtual void visit(FuncNode &node) override;
     virtual void visit(ScopeNode &node) override;
+    virtual void visit(ClassNode &node) override;
 
 private:
     BlockNode *r;

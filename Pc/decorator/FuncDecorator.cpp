@@ -83,7 +83,11 @@ void FuncDecorator::visit(ReturnNode &node)
 
 void FuncDecorator::visit(InitNode &node)
 {
-    auto p = c.tree.current()->container()->parent();
+    auto p = c.tree.current()->container();
+    if(p->type() != Sym::Type::Class)
+    {
+        p = p->parent();
+    }
 
     auto sym = p->child(node.name);
     if(!sym)

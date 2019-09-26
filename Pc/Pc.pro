@@ -24,6 +24,7 @@ SOURCES += \
         application/Context.cpp \
         application/Pragmas.cpp \
         decorator/Decorator.cpp \
+        decorator/DefaultMethods.cpp \
         decorator/ExprDecorator.cpp \
         decorator/FuncDecorator.cpp \
         decorator/TypeDecorator.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
     application/Context.h \
     application/Pragmas.h \
     decorator/Decorator.h \
+    decorator/DefaultMethods.h \
     decorator/ExprDecorator.h \
     decorator/FuncDecorator.h \
     decorator/TypeDecorator.h \

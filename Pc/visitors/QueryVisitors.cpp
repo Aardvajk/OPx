@@ -3,6 +3,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/InitNode.h"
 
 #include "syms/Sym.h"
@@ -49,6 +50,11 @@ void QueryVisitors::GetBlockNode::visit(FuncNode &node)
 }
 
 void QueryVisitors::GetBlockNode::visit(ScopeNode &node)
+{
+    node.body->accept(*this);
+}
+
+void QueryVisitors::GetBlockNode::visit(ClassNode &node)
 {
     node.body->accept(*this);
 }

@@ -143,14 +143,13 @@ void FuncTransform::visit(InitNode &node)
         en->expr = an;
 
         an->expr = new ConstructNode(node.location(), type, node.params);
-
-        rn = FuncTransform::transform(c, rn);
     }
     else
     {
         rn = createComplexConstruct(c, type, node, node.target, node.params);
-        rn = FuncTransform::transform(c, rn);
     }
+
+    rn = FuncTransform::transform(c, rn);
 }
 
 NodePtr FuncTransform::transform(Context &c, NodePtr &node)

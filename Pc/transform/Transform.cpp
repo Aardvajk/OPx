@@ -11,6 +11,8 @@
 #include "nodes/VarNode.h"
 #include "nodes/InitNode.h"
 
+#include "decorator/FuncDecorator.h"
+
 #include "transform/FuncTransform.h"
 #include "transform/ExprTransform.h"
 
@@ -58,6 +60,8 @@ void generateInitialisers(Context &c, FuncNode &node, Sym *sym)
                 {
                     n = new InitNode(node.location(), s->name());
                     n->setProperty("sym", s);
+
+                    Visitor::visit<FuncDecorator>(n.get(), c);
                 }
             }
 
