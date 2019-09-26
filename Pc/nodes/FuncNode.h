@@ -13,6 +13,7 @@ public:
 
     NodePtr name;
     NodeList args;
+    NodeList inits;
     NodePtr type;
     NodePtr body;
     bool constMethod;

@@ -32,6 +32,7 @@ public:
     virtual void visit(AssignNode &node) override;
     virtual void visit(BinaryNode &node) override;
     virtual void visit(ReturnNode &node) override;
+    virtual void visit(InitNode &node) override;
 
 private:
     std::ostream &tab() const;

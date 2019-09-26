@@ -20,6 +20,7 @@
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/InitNode.h"
 
 #include "syms/Sym.h"
 
@@ -110,6 +111,12 @@ void DescVisitor::visit(FuncNode &node)
     if(node.constMethod)
     {
         r += " const";
+    }
+
+    if(!node.inits.empty())
+    {
+        r += " ... ";
+        r += pcx::join_str(node.inits, ", ", [](const NodePtr &n){ return n->description(); });
     }
 }
 
@@ -223,4 +230,11 @@ void DescVisitor::visit(BinaryNode &node)
     node.left->accept(*this);
     r += pcx::str(' ', node.token.text(), ' ');
     node.right->accept(*this);
+}
+
+void DescVisitor::visit(InitNode &node)
+{
+    r += pcx::str(node.name, "(");
+    r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
+    r += ")";
 }

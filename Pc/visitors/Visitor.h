@@ -25,6 +25,7 @@ class ThisNode;
 class AssignNode;
 class BinaryNode;
 class ReturnNode;
+class InitNode;
 
 class Visitor
 {
@@ -53,6 +54,7 @@ public:
     virtual void visit(AssignNode &node);
     virtual void visit(BinaryNode &node);
     virtual void visit(ReturnNode &node);
+    virtual void visit(InitNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

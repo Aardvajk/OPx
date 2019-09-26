@@ -9,6 +9,7 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/InitNode.h"
 
 #include "parser/CommonParser.h"
 #include "parser/TypeParser.h"
@@ -63,6 +64,36 @@ void buildArgs(Context &c, NodeList &container, bool get)
     }
 }
 
+void buildParams(Context &c, NodeList &container, bool get)
+{
+    container.push_back(ExprParser::build(c, get));
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        buildParams(c, container, true);
+    }
+}
+
+void buildInits(Context &c, NodeList &container, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Id, get);
+
+    auto n = new InitNode(tok.location(), tok.text());
+    container.push_back(n);
+
+    c.scanner.consume(Token::Type::LeftParen, true);
+    if(c.scanner.token().type() != Token::Type::RightParen)
+    {
+        buildParams(c, n->params, false);
+    }
+
+    c.scanner.consume(Token::Type::RightParen, false);
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        buildInits(c, container, true);
+    }
+}
+
 void buildFunc(Context &c, BlockNode *block, bool get)
 {
     auto name = CommonParser::extendedName(c, get);
@@ -109,6 +140,11 @@ void buildFunc(Context &c, BlockNode *block, bool get)
 
         n->constMethod = true;
         c.scanner.next(true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Ellipsis && special == Token::Type::RwNew)
+    {
+        buildInits(c, n->inits, true);
     }
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)

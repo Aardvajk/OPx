@@ -53,6 +53,7 @@ SOURCES += \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
+        nodes/InitNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
@@ -127,6 +128,7 @@ HEADERS += \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
+    nodes/InitNode.h \
     nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \

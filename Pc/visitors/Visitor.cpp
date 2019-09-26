@@ -91,3 +91,7 @@ void Visitor::visit(BinaryNode &node)
 void Visitor::visit(ReturnNode &node)
 {
 }
+
+void Visitor::visit(InitNode &node)
+{
+}
