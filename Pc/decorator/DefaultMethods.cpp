@@ -9,7 +9,11 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/ExprNode.h"
+#include "nodes/AssignNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/ReturnNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
@@ -42,13 +46,13 @@ FuncNode *createBasicFunction(Sym *sym, BlockNode *block, const std::string &nam
     return fn;
 }
 
-bool hasCopyMethod(Context &c, Sym *sym)
+bool hasCopyMethod(Context &c, const std::string &name, Sym *sym)
 {
     auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(sym)) });
 
     for(auto s: sym->children())
     {
-        if(s->name() == "new")
+        if(s->name() == name)
         {
             if(TypeCompare(c).compatibleArgs(s->property<Type*>("type"), &t))
             {
@@ -58,6 +62,47 @@ bool hasCopyMethod(Context &c, Sym *sym)
     }
 
     return false;
+}
+
+bool anyConstOrRefMembers(Sym *sym)
+{
+    for(auto s: sym->children())
+    {
+        if(s->type() == Sym::Type::Var)
+        {
+            auto t = s->property<Type*>("type");
+            if(t->constant || t->ref)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+NodePtr makeType(Node &node, bool constant, Sym *sym)
+{
+    auto tn = new TypeNode(node.location());
+    NodePtr n(tn);
+
+    tn->name = new IdNode(node.location(), { }, sym->name());
+    tn->constant = constant;
+    tn->ref = true;
+
+    return n;
+}
+
+NodePtr makeParam(Node &node, FuncNode *fn, Sym *sym)
+{
+    NodePtr pn = new IdNode(node.location(), { }, "#tempcopy");
+
+    auto vn = new VarNode(node.location(), pn);
+    fn->args.push_back(vn);
+
+    vn->type = makeType(node, true, sym);
+
+    return pn;
 }
 
 }
@@ -71,21 +116,10 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
         Visitor::visit<Decorator>(createBasicFunction(sym, block, "new"), c);
     }
 
-    if(!hasCopyMethod(c, sym))
+    if(!hasCopyMethod(c, "new", sym))
     {
         FuncNode *fn = createBasicFunction(sym, block, "new");
-
-        NodePtr pn = new IdNode(node.location(), { }, "#tempcopy");
-
-        auto vn = new VarNode(node.location(), pn);
-        fn->args.push_back(vn);
-
-        auto tn = new TypeNode(node.location());
-        vn->type = tn;
-
-        tn->name = new IdNode(node.location(), { }, sym->name());
-        tn->constant = true;
-        tn->ref = true;
+        auto pn = makeParam(node, fn, sym);
 
         for(auto s: sym->children())
         {
@@ -104,5 +138,38 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
     if(!sym->child("delete"))
     {
         Visitor::visit<Decorator>(createBasicFunction(sym, block, "delete"), c);
+    }
+
+    if(!hasCopyMethod(c, "operator=", sym) && !anyConstOrRefMembers(sym))
+    {
+        FuncNode *fn = createBasicFunction(sym, block, "operator=");
+        fn->type = makeType(node, false, sym);
+
+        auto pn = makeParam(node, fn, sym);
+
+        auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(fn);
+
+        for(auto s: sym->children())
+        {
+            if(s->type() == Sym::Type::Var)
+            {
+                auto en = new ExprNode(node.location());
+                block->push_back(en);
+
+                NodePtr tn(new IdNode(node.location(), { }, s->name()));
+
+                auto an = new AssignNode(node.location(), tn);
+                en->expr = an;
+
+                an->expr = new IdNode(node.location(), pn, s->name());
+            }
+        }
+
+        auto rn = new ReturnNode(node.location());
+        block->push_back(rn);
+
+        rn->expr = new ThisNode(node.location());
+
+        Visitor::visit<Decorator>(fn, c);
     }
 }

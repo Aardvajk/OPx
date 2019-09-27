@@ -1,0 +1,16 @@
+include("stdtest.ph");
+
+pragma(set, "test_error=cannot assign to const - a");
+
+func x(a:const ref std.int)
+{
+    a = 321;
+}
+
+func main()
+{
+    var a = 123;
+    var r:ref std.int = a;
+
+    x(r);
+}

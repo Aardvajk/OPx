@@ -54,7 +54,7 @@ NodePtr createComplexConstruct(Context &c, Type *type, Node &node, NodePtr &name
 
 }
 
-FuncTransform::FuncTransform(Context &c) : c(c), index(0)
+FuncTransform::FuncTransform(Context &c, std::size_t index) : c(c), index(index)
 {
 }
 
@@ -62,8 +62,7 @@ void FuncTransform::visit(BlockNode &node)
 {
     for(std::size_t i = 0; i < node.nodes.size(); ++i)
     {
-        index = i;
-        node.nodes[i] = FuncTransform::transform(c, node.nodes[i]);
+        node.nodes[i] = FuncTransform::transform(c, node.nodes[i], i);
     }
 }
 
@@ -152,9 +151,9 @@ void FuncTransform::visit(InitNode &node)
     rn = FuncTransform::transform(c, rn);
 }
 
-NodePtr FuncTransform::transform(Context &c, NodePtr node)
+NodePtr FuncTransform::transform(Context &c, NodePtr node, std::size_t index)
 {
-    FuncTransform ft(c);
+    FuncTransform ft(c, index);
     node->accept(ft);
 
     return ft.result() ? ft.result() : node;

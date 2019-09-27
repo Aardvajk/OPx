@@ -12,7 +12,7 @@ class Context;
 class FuncTransform : public Visitor
 {
 public:
-    explicit FuncTransform(Context &c);
+    explicit FuncTransform(Context &c, std::size_t index = 0);
 
     NodePtr result(){ return rn; }
 
@@ -23,7 +23,7 @@ public:
     virtual void visit(ReturnNode &node) override;
     virtual void visit(InitNode &node) override;
 
-    static NodePtr transform(Context &c, NodePtr node);
+    static NodePtr transform(Context &c, NodePtr node, std::size_t index = 0);
 
 private:
     Context &c;

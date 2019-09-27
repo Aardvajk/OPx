@@ -42,6 +42,7 @@ DISTFILES += \
     ../unittests/complex_ref_members.pc \
     ../unittests/const_method.pc \
     ../unittests/const_overload.pc \
+    ../unittests/const_ref.pc \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
     ../unittests/destructors.pc \
@@ -68,6 +69,8 @@ DISTFILES += \
     ../unittests/ref_return_access.pc \
     ../unittests/ref_tests.pc \
     ../unittests/ref_to_ref_param.pc \
+    ../unittests/ref_to_ref_param.pc \
+    ../unittests/ref_to_value_param.pc \
     ../unittests/return_by_value.pc \
     ../unittests/return_ref.pc \
     ../unittests/simple_error_test.pc \
