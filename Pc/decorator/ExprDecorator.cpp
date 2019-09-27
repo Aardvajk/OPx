@@ -17,31 +17,10 @@
 #include "visitors/QueryVisitors.h"
 
 #include "types/Type.h"
-#include "types/TypeCompare.h"
 
-#include <unordered_set>
+#include "decorator/CommonDecorator.h"
 
-namespace
-{
-
-std::vector<Sym*> pruneResult(const std::vector<Sym*> &sv, const Type *expectedType)
-{
-    std::vector<Sym*> r;
-
-    for(auto s: sv)
-    {
-        auto type = s->property<Type*>("type");
-
-        if(type->constMethod == expectedType->constMethod)
-        {
-            r.push_back(s);
-        }
-    }
-
-    return r;
-}
-
-}
+#include "operators/OperatorCallDecorate.h"
 
 ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c), expectedType(expectedType), flags(flags)
 {
@@ -60,54 +39,14 @@ void ExprDecorator::visit(IdNode &node)
         }
     }
 
-    std::unordered_set<Sym*> search;
-
-    if(expectedType)
-    {
-        for(auto &a: expectedType->args)
-        {
-            if(a->sym && a->sym->parent() != c.tree.root())
-            {
-                search.insert(a->sym->parent());
-            }
-        }
-    }
-
     std::vector<Sym*> sv;
-    SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
-
-    for(auto s: search)
-    {
-        SymFinder::find(c, SymFinder::Type::Local, s, &node, sv);
-    }
-
     if(expectedType && expectedType->function())
     {
-        std::vector<Sym*> r;
-
-        for(auto s: sv)
-        {
-            if(s->type() == Sym::Type::Func)
-            {
-                auto type = s->property<Type*>("type");
-
-                if(TypeCompare(c).compatibleArgs(type, expectedType) && (!expectedType->constMethod || type->constMethod))
-                {
-                    r.push_back(s);
-                }
-            }
-            else
-            {
-                r.push_back(s);
-            }
-        }
-
-        sv = r;
+        sv = CommonDecorator::searchCallable(c, &node, expectedType);
     }
-
-    if(sv.size() > 1 && expectedType)
+    else
     {
-        sv = pruneResult(sv, expectedType);
+        SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
     }
 
     if(sv.empty())
@@ -116,7 +55,7 @@ void ExprDecorator::visit(IdNode &node)
     }
     else if(sv.size() > 1)
     {
-        throw Error(node.location(), "ambigous - ", node.description());
+        throw Error(node.location(), "ambiguous - ", node.description());
     }
 
     node.setProperty("sym", sv.front());
@@ -181,18 +120,7 @@ void ExprDecorator::visit(CallNode &node)
     {
         if(!type->returnType)
         {
-            NodePtr id(new IdNode(node.location(), { }, "operator()"));
-
-            auto cn = new CallNode(node.location(), id);
-            rn = cn;
-
-            cn->params.push_back(node.target);
-            for(auto &p: node.params)
-            {
-                cn->params.push_back(p);
-            }
-
-            rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
+            rn = OperatorCallDecorate::generate(c, node, node.target, node.params, "()");
         }
     }
 }
@@ -242,6 +170,12 @@ void ExprDecorator::visit(AssignNode &node)
     }
 
     node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
+
+    if(!TypeVisitor::assertType(c, node.target.get())->primitiveOrRef())
+    {
+        NodeList params = { node.expr };
+        rn = OperatorCallDecorate::generate(c, node, node.target, params, "=");
+    }
 }
 
 void ExprDecorator::visit(BinaryNode &node)
@@ -254,15 +188,8 @@ void ExprDecorator::visit(BinaryNode &node)
 
     if(!lt->primitive() || !rt->primitive())
     {
-        NodePtr id(new IdNode(node.location(), { }, pcx::str("operator", node.token.text())));
-
-        auto cn = new CallNode(node.location(), id);
-        rn = cn;
-
-        cn->params.push_back(node.left);
-        cn->params.push_back(node.right);
-
-        rn = ExprDecorator::decorate(c, rn, nullptr, Flag::SkipParams);
+        NodeList params = { node.right };
+        rn = OperatorCallDecorate::generate(c, node, node.left, params, node.token.text());
     }
 }
 

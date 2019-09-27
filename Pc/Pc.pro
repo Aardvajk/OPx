@@ -23,6 +23,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         application/Pragmas.cpp \
+        decorator/CommonDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/DefaultMethods.cpp \
         decorator/ExprDecorator.cpp \
@@ -65,6 +66,7 @@ SOURCES += \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
         operators/CompareOperators.cpp \
+        operators/OperatorCallDecorate.cpp \
         operators/Operators.cpp \
         parser/CommonParser.cpp \
         parser/DeclarationParser.cpp \
@@ -100,6 +102,7 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     application/Pragmas.h \
+    decorator/CommonDecorator.h \
     decorator/Decorator.h \
     decorator/DefaultMethods.h \
     decorator/ExprDecorator.h \
@@ -141,6 +144,7 @@ HEADERS += \
     nodes/TypeNode.h \
     nodes/VarNode.h \
     operators/CompareOperators.h \
+    operators/OperatorCallDecorate.h \
     operators/Operators.h \
     parser/CommonParser.h \
     parser/DeclarationParser.h \
