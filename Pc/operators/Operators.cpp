@@ -28,6 +28,10 @@ Token Operators::scan(Context &c, bool get)
 
         case Token::Type::Eq:
         case Token::Type::Neq:
+        case Token::Type::Lt:
+        case Token::Type::LtEq:
+        case Token::Type::Gt:
+        case Token::Type::GtEq:
 
         case Token::Type::LeftShift: return tok;
 

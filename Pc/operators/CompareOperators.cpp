@@ -31,6 +31,30 @@ void generateNeq(Context &c, std::ostream &os, Primitive::Type &pt)
     os << "    sub " << pt << ";\n";
 }
 
+void generateLt(Context &c, std::ostream &os, Primitive::Type &pt)
+{
+    os << "    lt " << pt << ";\n";
+    pt = Primitive::Type::Char;
+}
+
+void generateLtEq(Context &c, std::ostream &os, Primitive::Type &pt)
+{
+    os << "    lteq " << pt << ";\n";
+    pt = Primitive::Type::Char;
+}
+
+void generateGt(Context &c, std::ostream &os, Primitive::Type &pt)
+{
+    generateLtEq(c, os, pt);
+    os << "    not char;\n";
+}
+
+void generateGtEq(Context &c, std::ostream &os, Primitive::Type &pt)
+{
+    generateLt(c, os, pt);
+    os << "    not char;\n";
+}
+
 }
 
 std::size_t CompareOperators::generate(Context &c, std::ostream &os, BinaryNode &node)
@@ -52,6 +76,10 @@ std::size_t CompareOperators::generate(Context &c, std::ostream &os, BinaryNode 
     {
         case Token::Type::Eq: generateEq(c, os, pt); break;
         case Token::Type::Neq: generateNeq(c, os, pt); break;
+        case Token::Type::Lt: generateLt(c, os, pt); break;
+        case Token::Type::LtEq: generateLtEq(c, os, pt); break;
+        case Token::Type::Gt: generateGt(c, os, pt); break;
+        case Token::Type::GtEq: generateGtEq(c, os, pt); break;
 
         default: break;
     }

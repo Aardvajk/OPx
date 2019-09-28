@@ -249,7 +249,11 @@ NodePtr comparisons(Context &c, bool get)
         switch(tok.type())
         {
             case Token::Type::Eq:
-            case Token::Type::Neq: n = new BinaryNode(loc, tok, n, assign(c, true)); break;
+            case Token::Type::Neq:
+            case Token::Type::Lt:
+            case Token::Type::LtEq:
+            case Token::Type::Gt:
+            case Token::Type::GtEq: n = new BinaryNode(loc, tok, n, assign(c, true)); break;
 
             default: return n;
         }
