@@ -3,6 +3,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
@@ -20,7 +21,27 @@
 #include "visitors/TypeVisitor.h"
 #include "visitors/QueryVisitors.h"
 
-ExprTransform::ExprTransform(Context &c) : c(c)
+#include <pcx/indexed_range.h>
+
+namespace
+{
+
+void transformLiteral(Context &c, Node &node, Type *expectedType)
+{
+    if(expectedType && expectedType->ref)
+    {
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+        auto temp = pcx::str("temp_literal", info->labels++);
+
+        node.setProperty("temp_literal", temp);
+        info->temps.push_back(std::make_pair(temp, TypeVisitor::assertType(c, &node)));
+    }
+}
+
+}
+
+ExprTransform::ExprTransform(Context &c, Type *expectedType) : c(c), expectedType(expectedType)
 {
 }
 
@@ -52,16 +73,31 @@ void ExprTransform::visit(IdNode &node)
     }
 }
 
+void ExprTransform::visit(CharLiteralNode &node)
+{
+    transformLiteral(c, node, expectedType);
+}
+
+void ExprTransform::visit(IntLiteralNode &node)
+{
+    transformLiteral(c, node, expectedType);
+}
+
+void ExprTransform::visit(BoolLiteralNode &node)
+{
+    transformLiteral(c, node, expectedType);
+}
+
 void ExprTransform::visit(CallNode &node)
 {
     node.target = ExprTransform::transform(c, node.target);
 
-    for(auto &p: node.params)
-    {
-        p = ExprTransform::transform(c, p);
-    }
-
     auto type = TypeVisitor::assertType(c, node.target.get());
+
+    for(auto p: pcx::indexed_range(node.params))
+    {
+        p.value = ExprTransform::transform(c, p.value, type->args[p.index]);
+    }
 
     if(type->method)
     {
@@ -119,9 +155,9 @@ void ExprTransform::visit(BinaryNode &node)
     node.right = ExprTransform::transform(c, node.right);
 }
 
-NodePtr ExprTransform::transform(Context &c, NodePtr &node)
+NodePtr ExprTransform::transform(Context &c, NodePtr &node, Type *expectedType)
 {
-    ExprTransform et(c);
+    ExprTransform et(c, expectedType);
     node->accept(et);
 
     return et.result() ? et.result() : node;

@@ -1,0 +1,20 @@
+include("stdtest.ph");
+
+class foo
+{
+    func new() ... x(321) { }
+
+    var x:std.int;
+}
+
+func x(a:ref std.int, b:const ref std.char, c:ref foo)
+{
+    test.assert(a == 123);
+    test.assert(b == 'd');
+    test.assert(c.x == 321);
+}
+
+func main()
+{
+    x(123, 'd', foo());
+}

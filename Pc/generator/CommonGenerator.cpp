@@ -12,11 +12,27 @@
 #include "generator/ExprGenerator.h"
 #include "generator/AddrGenerator.h"
 
+#include "visitors/TypeVisitor.h"
+
 void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node *node, Type *type)
 {
     if(type->primitive())
     {
-        ExprGenerator::generate(c, os, node);
+        if(auto t = node->findProperty("temp_literal"))
+        {
+            auto temp = t.to<std::string>();
+            auto size = Type::assertSize(node->location(), TypeVisitor::assertType(c, node));
+
+            ExprGenerator::generate(c, os, node);
+            os << "    push &\"" << temp << "\";\n";
+            os << "    store " << size << ";\n";
+            os << "    pop " << size << ";\n";
+            os << "    push &\"" << temp << "\";\n";
+        }
+        else
+        {
+            ExprGenerator::generate(c, os, node);
+        }
     }
     else
     {
