@@ -32,6 +32,7 @@ public:
     virtual void visit(DerefNode &node) override;
     virtual void visit(ThisNode &node) override;
     virtual void visit(AssignNode &node) override;
+    virtual void visit(UnaryNode &node) override;
     virtual void visit(BinaryNode &node) override;
     virtual void visit(InitNode &node) override;
 

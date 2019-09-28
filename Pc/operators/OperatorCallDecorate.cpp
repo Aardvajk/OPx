@@ -10,16 +10,16 @@
 #include "types/Type.h"
 
 #include "decorator/CommonDecorator.h"
+#include "decorator/ExprDecorator.h"
 
 #include "visitors/TypeVisitor.h"
 
 namespace
 {
 
-NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op, Sym *sym)
+NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op)
 {
     NodePtr id(new IdNode(node.location(), first, pcx::str("operator", op)));
-    id->setProperty("sym", sym);
 
     auto cn = new CallNode(node.location(), id);
     NodePtr rn = cn;
@@ -29,13 +29,13 @@ NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeLi
         cn->params.push_back(p);
     }
 
+    rn = ExprDecorator::decorate(c, rn);
     return rn;
 }
 
-NodePtr generateFreeOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op, Sym *sym)
+NodePtr generateFreeOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op)
 {
     NodePtr id(new IdNode(node.location(), { }, pcx::str("operator", op)));
-    id->setProperty("sym", sym);
 
     auto cn = new CallNode(node.location(), id);
     NodePtr rn = cn;
@@ -46,6 +46,7 @@ NodePtr generateFreeOperatorCall(Context &c, Node &node, NodePtr first, NodeList
         cn->params.push_back(p);
     }
 
+    rn = ExprDecorator::decorate(c, rn);
     return rn;
 }
 
@@ -94,11 +95,11 @@ NodePtr OperatorCallDecorate::generate(Context &c, Node &node, NodePtr first, No
 
     if(ms.empty())
     {
-        return generateFreeOperatorCall(c, node, first, params, op, fs.front());
+        return generateFreeOperatorCall(c, node, first, params, op);
     }
     else
     {
-        return generateMethodOperatorCall(c, node, first, params, op, ms.front());
+        return generateMethodOperatorCall(c, node, first, params, op);
     }
 }
 

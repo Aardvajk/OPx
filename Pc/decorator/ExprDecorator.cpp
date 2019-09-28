@@ -10,6 +10,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 
 #include "visitors/SymFinder.h"
@@ -185,6 +186,11 @@ void ExprDecorator::visit(AssignNode &node)
         NodeList params = { node.expr };
         rn = OperatorCallDecorate::generate(c, node, node.target, params, "=");
     }
+}
+
+void ExprDecorator::visit(UnaryNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
 }
 
 void ExprDecorator::visit(BinaryNode &node)

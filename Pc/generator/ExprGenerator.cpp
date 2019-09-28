@@ -12,6 +12,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 
 #include "generator/CommonGenerator.h"
@@ -207,6 +208,17 @@ void ExprGenerator::visit(AssignNode &node)
 
         AddrGenerator::generate(c, os, node.target.get());
         os << "    store " << *sz << ";\n";
+    }
+}
+
+void ExprGenerator::visit(UnaryNode &node)
+{
+    switch(node.token.type())
+    {
+        case Token::Type::Sub:
+        case Token::Type::Exclaim: sz = MathOperators::generateNotNeg(c, os, node); break;
+
+        default: break;
     }
 }
 

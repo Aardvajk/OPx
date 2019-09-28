@@ -24,6 +24,8 @@ Token Operators::scan(Context &c, bool get)
         case Token::Type::Div:
         case Token::Type::Mod:
 
+        case Token::Type::Exclaim:
+
         case Token::Type::Eq:
         case Token::Type::Neq:
 

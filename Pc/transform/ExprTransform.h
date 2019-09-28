@@ -24,6 +24,7 @@ public:
     virtual void visit(AddrOfNode &node) override;
     virtual void visit(DerefNode &node) override;
     virtual void visit(AssignNode &node) override;
+    virtual void visit(UnaryNode &node) override;
     virtual void visit(BinaryNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr &node, Type *expectedType = nullptr);

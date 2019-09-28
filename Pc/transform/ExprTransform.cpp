@@ -9,6 +9,7 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/ThisNode.h"
 
@@ -94,14 +95,14 @@ void ExprTransform::visit(CallNode &node)
 
     auto type = TypeVisitor::assertType(c, node.target.get());
 
-    for(auto p: pcx::indexed_range(node.params))
-    {
-        p.value = ExprTransform::transform(c, p.value, type->args[p.index]);
-    }
-
     if(type->method)
     {
         node.params.insert(node.params.begin(), Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get()));
+    }
+
+    for(auto p: pcx::indexed_range(node.params))
+    {
+        p.value = ExprTransform::transform(c, p.value, type->args[p.index]);
     }
 }
 
@@ -146,6 +147,11 @@ void ExprTransform::visit(DerefNode &node)
 void ExprTransform::visit(AssignNode &node)
 {
     node.target = ExprTransform::transform(c, node.target);
+    node.expr = ExprTransform::transform(c, node.expr);
+}
+
+void ExprTransform::visit(UnaryNode &node)
+{
     node.expr = ExprTransform::transform(c, node.expr);
 }
 

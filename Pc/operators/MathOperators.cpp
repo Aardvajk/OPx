@@ -4,6 +4,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 
 #include "visitors/TypeVisitor.h"
@@ -118,4 +119,28 @@ std::size_t MathOperators::generateMulDivMod(Context &c, std::ostream &os, Binar
 
     os << "    " << op << " " << Primitive::toString(lt->primitiveType()) << ";\n";
     return Type::assertSize(node.location(), lt);
+}
+
+std::size_t MathOperators::generateNotNeg(Context &c, std::ostream &os, UnaryNode &node)
+{
+    auto t = TypeVisitor::assertType(c, node.expr.get());
+
+    ExprGenerator::generate(c, os, node.expr.get());
+
+    if(t->ptr)
+    {
+        throw Error(node.location(), "invalid operator - ", t->text());
+    }
+
+    std::string op;
+    switch(node.token.type())
+    {
+        case Token::Type::Sub: op = "neg"; break;
+        case Token::Type::Exclaim: op = "not"; break;
+
+        default: break;
+    }
+
+    os << "    " << op << " " << Primitive::toString(t->primitiveType()) << ";\n";
+    return Type::assertSize(node.location(), t);
 }

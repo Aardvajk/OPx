@@ -19,6 +19,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/InitNode.h"
 
@@ -216,6 +217,12 @@ void DescVisitor::visit(AssignNode &node)
 {
     node.target->accept(*this);
     r += " = ";
+    node.expr->accept(*this);
+}
+
+void DescVisitor::visit(UnaryNode &node)
+{
+    r += pcx::str(node.token.text());
     node.expr->accept(*this);
 }
 

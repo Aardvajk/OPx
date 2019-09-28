@@ -64,6 +64,7 @@ SOURCES += \
         nodes/ScopeNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
+        nodes/UnaryNode.cpp \
         nodes/VarNode.cpp \
         operators/CompareOperators.cpp \
         operators/MathOperators.cpp \
@@ -143,6 +144,7 @@ HEADERS += \
     nodes/ScopeNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
+    nodes/UnaryNode.h \
     nodes/VarNode.h \
     operators/CompareOperators.h \
     operators/MathOperators.h \

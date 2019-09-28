@@ -9,6 +9,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/UnaryNode.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -104,6 +105,11 @@ void ExprLower::visit(DerefNode &node)
 void ExprLower::visit(AssignNode &node)
 {
     node.target = ExprLower::lower(c, node.target);
+    node.expr = ExprLower::lower(c, node.expr);
+}
+
+void ExprLower::visit(UnaryNode &node)
+{
     node.expr = ExprLower::lower(c, node.expr);
 }
 

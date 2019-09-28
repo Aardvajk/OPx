@@ -13,6 +13,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 
 #include <pcx/lexical_cast.h>
@@ -69,6 +70,16 @@ template<typename N> NodePtr exprNode(Context &c, bool get)
     return nn;
 }
 
+NodePtr unary(Context &c, const Token &token, bool get)
+{
+    auto n = new UnaryNode(c.scanner.token().location(), token);
+    NodePtr nn(n);
+
+    n->expr = entity(c, get);
+
+    return nn;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -92,6 +103,9 @@ NodePtr primary(Context &c, bool get)
 
         case Token::Type::Amp: return exprNode<AddrOfNode>(c, true);
         case Token::Type::Star: return exprNode<DerefNode>(c, true);
+
+        case Token::Type::Sub:
+        case Token::Type::Exclaim: return unary(c, tok, true);
 
         default: throw Error(tok.location(), "primary expected - ", tok.text());
     }

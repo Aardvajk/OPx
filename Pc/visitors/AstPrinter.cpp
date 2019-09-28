@@ -17,6 +17,7 @@
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
@@ -282,6 +283,14 @@ void AstPrinter::visit(AssignNode &node)
         auto g2 = pcx::scoped_counter(tc);
         node.expr->accept(*this);
     }
+}
+
+void AstPrinter::visit(UnaryNode &node)
+{
+    tab() << "unary" << node.token.text() << details(node) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 void AstPrinter::visit(BinaryNode &node)
