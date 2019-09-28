@@ -53,6 +53,15 @@ void ExprLower::visit(CallNode &node)
     {
         node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
     }
+
+    if(type->returnType->ref)
+    {
+        if(!expectedType || !expectedType->ref)
+        {
+            rn = new DerefNode(node.location(), cn);
+            rn->setProperty("type", c.types.insert(type->returnType->removePointer()));
+        }
+    }
 }
 
 void ExprLower::visit(ConstructNode &node)

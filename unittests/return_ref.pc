@@ -1,0 +1,19 @@
+include("stdtest.ph");
+
+var a = 123;
+
+func x():ref std.int
+{
+    return a;
+}
+
+func main()
+{
+    test.assert(x() == 123);
+
+    a = 321;
+    test.assert(x() == 321);
+
+    x() = 999;
+    test.assert(a == 999);
+}

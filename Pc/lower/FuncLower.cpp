@@ -9,6 +9,8 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
 
+#include "types/Type.h"
+
 #include "lower/ExprLower.h"
 
 FuncLower::FuncLower(Context &c) : c(c)
@@ -46,7 +48,9 @@ void FuncLower::visit(ReturnNode &node)
 {
     if(node.expr)
     {
-        node.expr = ExprLower::lower(c, node.expr);
+        auto rt = c.tree.current()->container()->property<Type*>("type")->returnType;
+
+        node.expr = ExprLower::lower(c, node.expr, rt);
     }
 }
 

@@ -74,6 +74,7 @@ DISTFILES += \
     ../unittests/ref_to_value_param.pc \
     ../unittests/return_by_value.pc \
     ../unittests/return_ref.pc \
+    ../unittests/return_ref.pc \
     ../unittests/simple_error_test.pc \
     ../unittests/simple_ref_assign.pc \
     ../unittests/simple_refs.pc \
