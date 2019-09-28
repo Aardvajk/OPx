@@ -25,6 +25,7 @@ class ThisNode;
 class AssignNode;
 class UnaryNode;
 class BinaryNode;
+class LogicalNode;
 class ReturnNode;
 class InitNode;
 
@@ -55,6 +56,7 @@ public:
     virtual void visit(AssignNode &node);
     virtual void visit(UnaryNode &node);
     virtual void visit(BinaryNode &node);
+    virtual void visit(LogicalNode &node);
     virtual void visit(ReturnNode &node);
     virtual void visit(InitNode &node);
 

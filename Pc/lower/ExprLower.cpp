@@ -8,8 +8,9 @@
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/AssignNode.h"
-#include "nodes/BinaryNode.h"
 #include "nodes/UnaryNode.h"
+#include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -114,6 +115,12 @@ void ExprLower::visit(UnaryNode &node)
 }
 
 void ExprLower::visit(BinaryNode &node)
+{
+    node.left = ExprLower::lower(c, node.left);
+    node.right = ExprLower::lower(c, node.right);
+}
+
+void ExprLower::visit(LogicalNode &node)
 {
     node.left = ExprLower::lower(c, node.left);
     node.right = ExprLower::lower(c, node.right);

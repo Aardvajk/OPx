@@ -14,6 +14,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
@@ -238,6 +239,54 @@ void ExprGenerator::visit(BinaryNode &node)
 
         default: break;
     }
+}
+
+void ExprGenerator::visit(LogicalNode &node)
+{
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    if(node.token.type() == Token::Type::And)
+    {
+        auto l0 = info->nextLabelQuoted();
+        auto l1 = info->nextLabelQuoted();
+
+        CommonGenerator::generateBooleanExpression(c, os, node.left.get());
+        os << "    jmp ifz " << l0 << ";\n";
+
+        CommonGenerator::generateBooleanExpression(c, os, node.right.get());
+        os << "    jmp ifz " << l0 << ";\n";
+
+        os << "    push char(1);\n";
+        os << "    jmp " << l1 << ";\n";
+
+        os << l0 << ":\n";
+        os << "    push char(0);\n";
+        os << l1 << ":\n";
+    }
+    else
+    {
+        auto l0 = info->nextLabelQuoted();
+        auto l1 = info->nextLabelQuoted();
+        auto l2 = info->nextLabelQuoted();
+
+        CommonGenerator::generateBooleanExpression(c, os, node.left.get());
+        os << "    not char;\n";
+        os << "    jmp ifz " << l0 << ";\n";
+
+        CommonGenerator::generateBooleanExpression(c, os, node.right.get());
+        os << "    jmp ifz " << l1 << ";\n";
+
+        os << l0 << ":\n";
+        os << "    push char(1);\n";
+        os << "    jmp " << l2 << ";\n";
+
+        os << l1 << ":\n";
+        os << "    push char(0);\n";
+
+        os << l2 << ":\n";
+    }
+
+    sz = c.types.boolType()->size();
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

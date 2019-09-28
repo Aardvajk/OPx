@@ -12,6 +12,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -213,6 +214,12 @@ void ExprDecorator::visit(BinaryNode &node)
         NodeList params = { node.right };
         rn = OperatorCallDecorate::generate(c, node, node.left, params, node.token.text());
     }
+}
+
+void ExprDecorator::visit(LogicalNode &node)
+{
+    node.left = ExprDecorator::decorate(c, node.left);
+    node.right = ExprDecorator::decorate(c, node.right);
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

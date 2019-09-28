@@ -16,6 +16,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
 
 #include "syms/Sym.h"
@@ -126,6 +127,11 @@ void TypeVisitor::visit(BinaryNode &node)
 
         default: throw Error(node.location(), "operator not supported - ", node.token.text());
     }
+}
+
+void TypeVisitor::visit(LogicalNode &node)
+{
+    r = c.types.boolType();
 }
 
 void TypeVisitor::visit(InitNode &node)

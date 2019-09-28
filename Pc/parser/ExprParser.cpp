@@ -15,6 +15,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -260,9 +261,28 @@ NodePtr comparisons(Context &c, bool get)
     }
 }
 
+NodePtr logical(Context &c, bool get)
+{
+    auto n = comparisons(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+
+        auto tok = c.scanner.token();
+        switch(tok.type())
+        {
+            case Token::Type::And:
+            case Token::Type::Or: n = new LogicalNode(loc, tok, n, comparisons(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return comparisons(c, get);
+    return logical(c, get);
 }
 
 }

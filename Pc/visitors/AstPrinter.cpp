@@ -19,6 +19,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
 
@@ -296,6 +297,15 @@ void AstPrinter::visit(UnaryNode &node)
 void AstPrinter::visit(BinaryNode &node)
 {
     tab() << "binary" << node.token.text() << details(node) << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.left->accept(*this);
+    node.right->accept(*this);
+}
+
+void AstPrinter::visit(LogicalNode &node)
+{
+    tab() << "logical" << node.token.text() << details(node) << "\n";
 
     auto g = pcx::scoped_counter(tc);
     node.left->accept(*this);

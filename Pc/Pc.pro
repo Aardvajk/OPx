@@ -57,6 +57,7 @@ SOURCES += \
         nodes/IdNode.cpp \
         nodes/InitNode.cpp \
         nodes/LiteralNodes.cpp \
+        nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
         nodes/PragmaNode.cpp \
@@ -137,6 +138,7 @@ HEADERS += \
     nodes/IdNode.h \
     nodes/InitNode.h \
     nodes/LiteralNodes.h \
+    nodes/LogicalNode.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
     nodes/PragmaNode.h \

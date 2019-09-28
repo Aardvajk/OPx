@@ -26,6 +26,7 @@ public:
     virtual void visit(AssignNode &node) override;
     virtual void visit(UnaryNode &node) override;
     virtual void visit(BinaryNode &node) override;
+    virtual void visit(LogicalNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr &node, Type *expectedType = nullptr);
 

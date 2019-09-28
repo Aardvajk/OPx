@@ -7,12 +7,32 @@
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 #include "types/TypeLookup.h"
 
 #include "generator/ExprGenerator.h"
 #include "generator/AddrGenerator.h"
 
 #include "visitors/TypeVisitor.h"
+
+void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, Node *node)
+{
+    auto et = TypeVisitor::assertType(c, node);
+
+    ExprGenerator::generate(c, os, node);
+
+    if(!TypeCompare(c).compatible(et, c.types.charType()) && !TypeCompare(c).compatible(et, c.types.boolType()))
+    {
+        if(et->primitive())
+        {
+            os << "    convert " << Primitive::toString(et->primitiveType()) << " char;\n";
+        }
+        else
+        {
+            throw Error("internal error - boolean cast of non-primitive not supported");
+        }
+    }
+}
 
 void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node *node, Type *type)
 {

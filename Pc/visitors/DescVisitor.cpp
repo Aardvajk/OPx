@@ -21,6 +21,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
 
 #include "syms/Sym.h"
@@ -227,6 +228,13 @@ void DescVisitor::visit(UnaryNode &node)
 }
 
 void DescVisitor::visit(BinaryNode &node)
+{
+    node.left->accept(*this);
+    r += pcx::str(' ', node.token.text(), ' ');
+    node.right->accept(*this);
+}
+
+void DescVisitor::visit(LogicalNode &node)
 {
     node.left->accept(*this);
     r += pcx::str(' ', node.token.text(), ' ');

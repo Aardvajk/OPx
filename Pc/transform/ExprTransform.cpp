@@ -11,6 +11,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
+#include "nodes/LogicalNode.h"
 #include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
@@ -156,6 +157,12 @@ void ExprTransform::visit(UnaryNode &node)
 }
 
 void ExprTransform::visit(BinaryNode &node)
+{
+    node.left = ExprTransform::transform(c, node.left);
+    node.right = ExprTransform::transform(c, node.right);
+}
+
+void ExprTransform::visit(LogicalNode &node)
 {
     node.left = ExprTransform::transform(c, node.left);
     node.right = ExprTransform::transform(c, node.right);

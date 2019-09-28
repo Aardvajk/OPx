@@ -14,6 +14,9 @@ class FuncInfo
 public:
     FuncInfo();
 
+    std::string nextLabel();
+    std::string nextLabelQuoted();
+
     std::size_t scopes;
     std::size_t labels;
 
