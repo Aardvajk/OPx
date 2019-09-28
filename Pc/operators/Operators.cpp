@@ -18,6 +18,12 @@ Token Operators::scan(Context &c, bool get)
     {
         case Token::Type::Assign:
 
+        case Token::Type::Add:
+        case Token::Type::Sub:
+        case Token::Type::Star:
+        case Token::Type::Div:
+        case Token::Type::Mod:
+
         case Token::Type::Eq:
         case Token::Type::Neq:
 

@@ -17,6 +17,7 @@
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
 
+#include "operators/MathOperators.h"
 #include "operators/CompareOperators.h"
 
 #include "visitors/TypeVisitor.h"
@@ -200,6 +201,13 @@ void ExprGenerator::visit(BinaryNode &node)
 {
     switch(node.token.type())
     {
+        case Token::Type::Add: sz = MathOperators::generateAdd(c, os, node); break;
+        case Token::Type::Sub: sz = MathOperators::generateSub(c, os, node); break;
+
+        case Token::Type::Star:
+        case Token::Type::Div:
+        case Token::Type::Mod: sz = MathOperators::generateMulDivMod(c, os, node); break;
+
         case Token::Type::Eq:
         case Token::Type::Neq: sz = CompareOperators::generate(c, os, node); break;
 

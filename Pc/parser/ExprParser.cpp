@@ -151,7 +151,7 @@ NodePtr entity(Context &c, bool get)
     }
 }
 
-NodePtr shifts(Context &c, bool get)
+NodePtr terms(Context &c, bool get)
 {
     auto n = entity(c, get);
 
@@ -162,7 +162,46 @@ NodePtr shifts(Context &c, bool get)
         auto tok = c.scanner.token();
         switch(tok.type())
         {
-            case Token::Type::LeftShift: n = new BinaryNode(loc, tok, n, entity(c, true)); break;
+            case Token::Type::Star:
+            case Token::Type::Div:
+            case Token::Type::Mod: n = new BinaryNode(loc, tok, n, entity(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
+NodePtr sums(Context &c, bool get)
+{
+    auto n = terms(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+
+        auto tok = c.scanner.token();
+        switch(tok.type())
+        {
+            case Token::Type::Add:
+            case Token::Type::Sub: n = new BinaryNode(loc, tok, n, terms(c, true)); break;
+
+            default: return n;
+        }
+    }
+}
+
+NodePtr shifts(Context &c, bool get)
+{
+    auto n = sums(c, get);
+
+    while(true)
+    {
+        auto loc = c.scanner.token().location();
+
+        auto tok = c.scanner.token();
+        switch(tok.type())
+        {
+            case Token::Type::LeftShift: n = new BinaryNode(loc, tok, n, sums(c, true)); break;
 
             default: return n;
         }

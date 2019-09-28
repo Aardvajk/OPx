@@ -66,6 +66,7 @@ SOURCES += \
         nodes/TypeNode.cpp \
         nodes/VarNode.cpp \
         operators/CompareOperators.cpp \
+        operators/MathOperators.cpp \
         operators/OperatorCallDecorate.cpp \
         operators/Operators.cpp \
         parser/CommonParser.cpp \
@@ -144,6 +145,7 @@ HEADERS += \
     nodes/TypeNode.h \
     nodes/VarNode.h \
     operators/CompareOperators.h \
+    operators/MathOperators.h \
     operators/OperatorCallDecorate.h \
     operators/Operators.h \
     parser/CommonParser.h \

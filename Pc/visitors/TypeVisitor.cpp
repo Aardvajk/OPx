@@ -103,7 +103,19 @@ void TypeVisitor::visit(AssignNode &node)
 
 void TypeVisitor::visit(BinaryNode &node)
 {
-    r = c.types.boolType();
+    switch(node.token.type())
+    {
+        case Token::Type::Add:
+        case Token::Type::Sub:
+        case Token::Type::Star:
+        case Token::Type::Div:
+        case Token::Type::Mod: node.left->accept(*this); break;
+
+        case Token::Type::Eq:
+        case Token::Type::Neq: r = c.types.boolType(); break;
+
+        default: throw Error(node.location(), "operator not supported - ", node.token.text());
+    }
 }
 
 void TypeVisitor::visit(InitNode &node)
