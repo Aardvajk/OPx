@@ -191,6 +191,13 @@ void ExprDecorator::visit(AssignNode &node)
 void ExprDecorator::visit(UnaryNode &node)
 {
     node.expr = ExprDecorator::decorate(c, node.expr);
+
+    auto type = TypeVisitor::assertType(c, node.expr.get());
+    if(!type->primitive())
+    {
+        NodeList params;
+        rn = OperatorCallDecorate::generate(c, node, node.expr, params, node.token.text());
+    }
 }
 
 void ExprDecorator::visit(BinaryNode &node)
