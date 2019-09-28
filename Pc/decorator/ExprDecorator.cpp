@@ -122,6 +122,15 @@ void ExprDecorator::visit(CallNode &node)
         {
             rn = OperatorCallDecorate::generate(c, node, node.target, node.params, "()");
         }
+        else if(!type->returnType->primitiveOrRef())
+        {
+            auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+            auto temp = pcx::str("#temp_return", info->labels++);
+            node.setProperty("temp", temp);
+
+            info->temps.push_back(std::make_pair(temp, type->returnType));
+        }
     }
 }
 

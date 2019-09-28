@@ -158,13 +158,27 @@ void FuncGenerator::visit(ReturnNode &node)
 {
     if(node.expr)
     {
-        if(TypeVisitor::assertType(c, node.expr.get())->primitive())
+        auto type = c.tree.current()->container()->property<Type*>("type")->returnType;
+
+        if(type->primitive())
         {
             auto sz = ExprGenerator::generate(c, os, node.expr.get());
 
             os << "    push &\"@ret\";\n";
             os << "    store " << sz << ";\n";
             os << "    pop " << sz << ";\n";
+        }
+        else
+        {
+            auto cm = TypeLookup::assertCopyMethod(c, node.location(), type);
+
+            os << "    push &\"@ret\";\n";
+            os << "    load 8;\n";
+
+            AddrGenerator::generate(c, os, node.expr.get());
+
+            os << "    push &\"" << cm->funcname() << "\";\n";
+            os << "    call;\n";
         }
     }
 

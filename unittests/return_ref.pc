@@ -7,6 +7,16 @@ func x():ref std.int
     return a;
 }
 
+class foo
+{
+    var x:std.int;
+}
+
+func y(a:ref foo):ref foo
+{
+    return a;
+}
+
 func main()
 {
     test.assert(x() == 123);
@@ -16,4 +26,9 @@ func main()
 
     x() = 999;
     test.assert(a == 999);
+
+    var f:foo;
+    f.x = 765;
+
+    test.assert(y(f).x == 765);
 }

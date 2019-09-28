@@ -45,6 +45,7 @@ DISTFILES += \
     ../unittests/const_ref.pc \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
+    ../unittests/copy_return.pc \
     ../unittests/destructors.pc \
     ../unittests/for_scope.pc \
     ../unittests/for_scope_count.pc \

@@ -90,9 +90,24 @@ void ExprGenerator::visit(CallNode &node)
     auto type = TypeVisitor::assertType(c, node.target.get());
     auto size = Type::assertSize(node.location(), type->returnType);
 
-    if(!c.option("O", "elide_no_effect_ops") || size)
+    if(type->returnType->primitive())
     {
-        os << "    allocs " << size << ";\n";
+        if(!c.option("O", "elide_no_effect_ops") || size)
+        {
+            os << "    allocs " << size << ";\n";
+        }
+
+        sz = size;
+    }
+    else
+    {
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+        auto temp = node.property<std::string>("temp");
+
+        os << "    push &\"" << temp << "\";\n";
+        info->tempDestructs.push_back(std::make_pair(temp, type->returnType));
+
+        sz = sizeof(std::size_t);
     }
 
     for(auto p: pcx::indexed_range(node.params))
@@ -102,8 +117,6 @@ void ExprGenerator::visit(CallNode &node)
 
     ExprGenerator::generate(c, os, node.target.get());
     os << "    call;\n";
-
-    sz = size;
 }
 
 void ExprGenerator::visit(ConstructNode &node)
