@@ -14,6 +14,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/VarNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -22,8 +23,37 @@
 #include "types/Type.h"
 
 #include "decorator/CommonDecorator.h"
+#include "decorator/TypeDecorator.h"
+#include "decorator/VarDecorator.h"
 
 #include "operators/OperatorCallDecorate.h"
+
+#include <pcx/str.h>
+
+#include "visitors/AstPrinter.h"
+
+namespace
+{
+
+template<typename T> NodePtr decorateIncDec(Context &c, T &node, bool pre)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+
+    auto type = TypeVisitor::assertType(c, node.expr.get());
+    if(type->primitive())
+    {
+        if(type->constant)
+        {
+            throw Error(node.location(), "cannot modify a const - ", node.description());
+        }
+
+        return { };
+    }
+
+    throw Error(node.location(), "thinking about complex inc/dec");
+}
+
+}
 
 ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c), expectedType(expectedType), flags(flags)
 {
@@ -225,12 +255,18 @@ void ExprDecorator::visit(LogicalNode &node)
 
 void ExprDecorator::visit(PreIncDecNode &node)
 {
-    node.expr = ExprDecorator::decorate(c, node.expr);
+    if(auto n = decorateIncDec(c, node, true))
+    {
+        rn = n;
+    }
 }
 
 void ExprDecorator::visit(PostIncDecNode &node)
 {
-    node.expr = ExprDecorator::decorate(c, node.expr);
+    if(auto n = decorateIncDec(c, node, false))
+    {
+        rn = n;
+    }
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

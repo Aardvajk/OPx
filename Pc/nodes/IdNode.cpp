@@ -11,3 +11,14 @@ std::string IdNode::classname() const
 {
     return "id";
 }
+
+NodePtr IdNode::create(Location location, const std::vector<std::string> &names)
+{
+    NodePtr pn;
+    for(std::size_t i = 0; i < names.size(); ++i)
+    {
+        pn = new IdNode(location, pn, names[i]);
+    }
+
+    return pn;
+}

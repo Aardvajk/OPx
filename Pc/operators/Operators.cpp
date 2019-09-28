@@ -33,6 +33,9 @@ Token Operators::scan(Context &c, bool get)
         case Token::Type::Gt:
         case Token::Type::GtEq:
 
+        case Token::Type::Inc:
+        case Token::Type::Dec:
+
         case Token::Type::LeftShift: return tok;
 
         default: throw Error(tok.location(), "operator expected - ", tok.text());

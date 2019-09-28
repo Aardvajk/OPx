@@ -160,7 +160,7 @@ Type *TypeVisitor::assertType(Context &c, Node *node)
     auto r = queryType(c, node);
     if(!r)
     {
-        throw Error(node->location(), "type visitor failed - ", node->classname(), " node ", node->description());
+        throw Error(node->location(), "type visitor failed - ", node->classname(), "node ", node->description());
     }
 
     return r;
