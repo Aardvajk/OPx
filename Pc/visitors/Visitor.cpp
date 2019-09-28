@@ -103,3 +103,11 @@ void Visitor::visit(ReturnNode &node)
 void Visitor::visit(InitNode &node)
 {
 }
+
+void Visitor::visit(PreIncDecNode &node)
+{
+}
+
+void Visitor::visit(PostIncDecNode &node)
+{
+}

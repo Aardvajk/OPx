@@ -23,6 +23,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "syms/Sym.h"
 
@@ -246,4 +247,16 @@ void DescVisitor::visit(InitNode &node)
     r += pcx::str(node.name, "(");
     r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
     r += ")";
+}
+
+void DescVisitor::visit(PreIncDecNode &node)
+{
+    r += node.token.text();
+    node.expr->accept(*this);
+}
+
+void DescVisitor::visit(PostIncDecNode &node)
+{
+    node.expr->accept(*this);
+    r += node.token.text();
 }

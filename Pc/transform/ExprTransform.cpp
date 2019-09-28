@@ -13,6 +13,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/ThisNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "syms/Sym.h"
 
@@ -166,6 +167,16 @@ void ExprTransform::visit(LogicalNode &node)
 {
     node.left = ExprTransform::transform(c, node.left);
     node.right = ExprTransform::transform(c, node.right);
+}
+
+void ExprTransform::visit(PreIncDecNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
+}
+
+void ExprTransform::visit(PostIncDecNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node, Type *expectedType)

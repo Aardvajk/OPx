@@ -18,6 +18,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "syms/Sym.h"
 
@@ -137,6 +138,16 @@ void TypeVisitor::visit(LogicalNode &node)
 void TypeVisitor::visit(InitNode &node)
 {
     r = node.property<Sym*>("sym")->property<Type*>("type");
+}
+
+void TypeVisitor::visit(PreIncDecNode &node)
+{
+    node.expr->accept(*this);
+}
+
+void TypeVisitor::visit(PostIncDecNode &node)
+{
+    node.expr->accept(*this);
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

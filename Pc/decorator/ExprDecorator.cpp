@@ -13,6 +13,7 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -220,6 +221,16 @@ void ExprDecorator::visit(LogicalNode &node)
 {
     node.left = ExprDecorator::decorate(c, node.left);
     node.right = ExprDecorator::decorate(c, node.right);
+}
+
+void ExprDecorator::visit(PreIncDecNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+}
+
+void ExprDecorator::visit(PostIncDecNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

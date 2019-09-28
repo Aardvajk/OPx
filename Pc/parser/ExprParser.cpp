@@ -16,6 +16,7 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -71,9 +72,9 @@ template<typename N> NodePtr exprNode(Context &c, bool get)
     return nn;
 }
 
-NodePtr unary(Context &c, const Token &token, bool get)
+template<typename T> NodePtr tokenExprNode(Context &c, const Token &token, bool get)
 {
-    auto n = new UnaryNode(c.scanner.token().location(), token);
+    auto n = new T(c.scanner.token().location(), token);
     NodePtr nn(n);
 
     n->expr = entity(c, get);
@@ -106,7 +107,10 @@ NodePtr primary(Context &c, bool get)
         case Token::Type::Star: return exprNode<DerefNode>(c, true);
 
         case Token::Type::Sub:
-        case Token::Type::Exclaim: return unary(c, tok, true);
+        case Token::Type::Exclaim: return tokenExprNode<UnaryNode>(c, tok, true);
+
+        case Token::Type::Inc:
+        case Token::Type::Dec: return tokenExprNode<PreIncDecNode>(c, tok, true);
 
         default: throw Error(tok.location(), "primary expected - ", tok.text());
     }
@@ -156,10 +160,14 @@ NodePtr entity(Context &c, bool get)
 
     while(true)
     {
-        switch(c.scanner.token().type())
+        auto tok = c.scanner.token();
+        switch(tok.type())
         {
             case Token::Type::Dot: n = dot(c, n, true); break;
             case Token::Type::LeftParen: n = call(c, n, true); break;
+
+            case Token::Type::Inc:
+            case Token::Type::Dec: n = new PostIncDecNode(tok.location(), tok, n); c.scanner.next(true); break;
 
             default: return n;
         }

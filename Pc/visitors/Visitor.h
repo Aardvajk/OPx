@@ -28,6 +28,8 @@ class BinaryNode;
 class LogicalNode;
 class ReturnNode;
 class InitNode;
+class PreIncDecNode;
+class PostIncDecNode;
 
 class Visitor
 {
@@ -59,6 +61,8 @@ public:
     virtual void visit(LogicalNode &node);
     virtual void visit(ReturnNode &node);
     virtual void visit(InitNode &node);
+    virtual void visit(PreIncDecNode &node);
+    virtual void visit(PostIncDecNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

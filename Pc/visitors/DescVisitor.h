@@ -36,6 +36,8 @@ public:
     virtual void visit(BinaryNode &node) override;
     virtual void visit(LogicalNode &node) override;
     virtual void visit(InitNode &node) override;
+    virtual void visit(PreIncDecNode &node) override;
+    virtual void visit(PostIncDecNode &node) override;
 
 private:
     std::string r;

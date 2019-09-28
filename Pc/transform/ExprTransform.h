@@ -27,6 +27,8 @@ public:
     virtual void visit(UnaryNode &node) override;
     virtual void visit(BinaryNode &node) override;
     virtual void visit(LogicalNode &node) override;
+    virtual void visit(PreIncDecNode &node) override;
+    virtual void visit(PostIncDecNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr &node, Type *expectedType = nullptr);
 

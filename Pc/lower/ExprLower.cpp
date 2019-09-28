@@ -11,6 +11,7 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -124,6 +125,16 @@ void ExprLower::visit(LogicalNode &node)
 {
     node.left = ExprLower::lower(c, node.left);
     node.right = ExprLower::lower(c, node.right);
+}
+
+void ExprLower::visit(PreIncDecNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+}
+
+void ExprLower::visit(PostIncDecNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr node, Type *expectedType)

@@ -55,6 +55,7 @@ SOURCES += \
         nodes/ExprNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
+        nodes/IncDecNodes.cpp \
         nodes/InitNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/LogicalNode.cpp \
@@ -136,6 +137,7 @@ HEADERS += \
     nodes/ExprNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
+    nodes/IncDecNodes.h \
     nodes/InitNode.h \
     nodes/LiteralNodes.h \
     nodes/LogicalNode.h \

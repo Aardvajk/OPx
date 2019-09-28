@@ -35,6 +35,8 @@ public:
     virtual void visit(LogicalNode &node) override;
     virtual void visit(ReturnNode &node) override;
     virtual void visit(InitNode &node) override;
+    virtual void visit(PreIncDecNode &node) override;
+    virtual void visit(PostIncDecNode &node) override;
 
 private:
     std::ostream &tab() const;

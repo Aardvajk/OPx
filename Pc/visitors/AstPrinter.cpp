@@ -22,6 +22,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "syms/Sym.h"
 
@@ -347,6 +348,22 @@ void AstPrinter::visit(InitNode &node)
             p->accept(*this);
         }
     }
+}
+
+void AstPrinter::visit(PreIncDecNode &node)
+{
+    tab() << "pre" << node.token.text() << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(PostIncDecNode &node)
+{
+    tab() << "post" << node.token.text() << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const
