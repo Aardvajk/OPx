@@ -15,6 +15,7 @@
 #include "nodes/UnaryNode.h"
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
+#include "nodes/IncDecNodes.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
@@ -27,6 +28,39 @@
 #include "types/Type.h"
 
 #include <pcx/indexed_range.h>
+
+namespace
+{
+
+template<typename T> std::size_t generateIncDec(Context &c, std::ostream &os, T &node, bool pre)
+{
+    auto type = TypeVisitor::assertType(c, node.expr.get());
+
+    auto pr = Primitive::toString(type->primitiveType());
+    auto size = Type::assertSize(node.location(), type);
+
+    if(!pre)
+    {
+        ExprGenerator::generate(c, os, node.expr.get());
+    }
+
+    ExprGenerator::generate(c, os, node.expr.get());
+    os << "    push " << pr << "(1);\n";
+
+    os << "    " << (node.token.type() == Token::Type::Inc ? "add" : "sub") << " " << pr << ";\n";
+
+    AddrGenerator::generate(c, os, node.expr.get());
+    os << "    store " << size << ";\n";
+
+    if(!pre)
+    {
+        os << "    pop " << size << ";\n";
+    }
+
+    return size;
+}
+
+}
 
 ExprGenerator::ExprGenerator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -287,6 +321,16 @@ void ExprGenerator::visit(LogicalNode &node)
     }
 
     sz = c.types.boolType()->size();
+}
+
+void ExprGenerator::visit(PreIncDecNode &node)
+{
+    sz = generateIncDec(c, os, node, true);
+}
+
+void ExprGenerator::visit(PostIncDecNode &node)
+{
+    sz = generateIncDec(c, os, node, false);
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)
