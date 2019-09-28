@@ -118,7 +118,11 @@ void TypeVisitor::visit(BinaryNode &node)
         case Token::Type::Mod: node.left->accept(*this); break;
 
         case Token::Type::Eq:
-        case Token::Type::Neq: r = c.types.boolType(); break;
+        case Token::Type::Neq:
+        case Token::Type::Lt:
+        case Token::Type::LtEq:
+        case Token::Type::Gt:
+        case Token::Type::GtEq: r = c.types.boolType(); break;
 
         default: throw Error(node.location(), "operator not supported - ", node.token.text());
     }
