@@ -10,6 +10,7 @@
 #include "operations/UnaryOps.h"
 #include "operations/CompareOps.h"
 #include "operations/ConvertOps.h"
+#include "operations/TestOps.h"
 
 Machine::Machine(const std::vector<char> &v, ServiceProc sp) : mm(1024 * 10), fs(mm, v.size()), sp(sp)
 {
@@ -64,6 +65,7 @@ void Machine::execute()
             case Op::LtEq: CompareOps::compareOp<CompareOps::LtEq>(rm, s); break;
 
             case Op::Conv: ConvertOps::convert(rm, s); break;
+            case Op::Test: TestOps::test(rm, s); break;
 
             case Op::Alloc: s.pop(v.s0); s.push(fs.allocate(v.s0)); break;
             case Op::Free: s.pop(v.s0); fs.release(v.s0); break;

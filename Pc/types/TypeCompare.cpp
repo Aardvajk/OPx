@@ -109,8 +109,3 @@ bool TypeCompare::exactArgs(const Type *a, const Type *b) const
 
     return true;
 }
-
-bool TypeCompare::convertsTo(const Type *from, const Type *to) const
-{
-    return compatible(from, to);
-}

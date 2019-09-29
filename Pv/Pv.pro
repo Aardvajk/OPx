@@ -24,7 +24,8 @@ SOURCES += \
         components/FreeStore.cpp \
         components/Memory.cpp \
         main.cpp \
-        operations/ConvertOps.cpp
+        operations/ConvertOps.cpp \
+        operations/TestOps.cpp
 
 HEADERS += \
     application/Machine.h \
@@ -36,4 +37,5 @@ HEADERS += \
     operations/CompareOps.h \
     operations/ConvertOps.h \
     operations/MathOps.h \
+    operations/TestOps.h \
     operations/UnaryOps.h

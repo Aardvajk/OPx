@@ -51,6 +51,7 @@ const char *OpCode::toString(Op v)
         "lteq",
 
         "conv",
+        "test",
 
         "alloc",
         "free",

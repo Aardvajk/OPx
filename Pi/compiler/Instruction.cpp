@@ -28,6 +28,7 @@ const char *s[] =
     "lteq",
 
     "convert",
+    "test",
 
     "alloc",
     "free",

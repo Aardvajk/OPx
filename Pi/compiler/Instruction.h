@@ -31,6 +31,7 @@ enum class Type
     LtEq,
 
     Convert,
+    Test,
 
     Alloc,
     Free,

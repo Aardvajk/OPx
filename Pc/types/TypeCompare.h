@@ -15,8 +15,6 @@ public:
     bool exact(const Type *a, const Type *b) const;
     bool exactArgs(const Type *a, const Type *b) const;
 
-    bool convertsTo(const Type *from, const Type *to) const;
-
 private:
     Context &c;
 };

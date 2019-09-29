@@ -52,6 +52,7 @@ enum class Op : std::uint8_t
     LtEq,
 
     Conv,
+    Test,
 
     Alloc,
     Free,

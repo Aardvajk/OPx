@@ -203,6 +203,17 @@ void convertConstruct(Context &c, bool get)
     c.scanner.consume(Token::Type::Semicolon, true);
 }
 
+void testConstruct(Context &c, bool get)
+{
+    auto s = c.scanner.next(get);
+
+    c.pd("-test ", s.text());
+
+    c.func().bytes << OpCode::Op::Test << primitiveFromToken(s);
+
+    c.scanner.consume(Token::Type::Semicolon, true);
+}
+
 void allocConstruct(Context &c, bool get)
 {
     c.pd("-alloc");
@@ -296,6 +307,7 @@ void Code::construct(Context &c, bool get)
         case Instruction::Type::LtEq: opConstruct(c, "lteq", OpCode::Op::LtEq, true); break;
 
         case Instruction::Type::Convert: convertConstruct(c, true); break;
+        case Instruction::Type::Test: testConstruct(c, true); break;
 
         case Instruction::Type::Alloc: allocConstruct(c, true); break;
         case Instruction::Type::Free: freeConstruct(c, true); break;

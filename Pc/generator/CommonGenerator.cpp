@@ -25,7 +25,7 @@ void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, No
     {
         if(et->primitive())
         {
-            os << "    convert " << Primitive::toString(et->primitiveType()) << " char;\n";
+            os << "    test " << Primitive::toString(et->primitiveType()) << ";\n";
         }
         else
         {
