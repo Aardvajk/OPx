@@ -96,6 +96,11 @@ void ExprDecorator::visit(IdNode &node)
         throw Error(node.location(), "ambiguous - ", node.description());
     }
 
+    if(!sv.front()->accessibleFrom(c.tree.current()))
+    {
+        throw Error(node.location(), "not accessible - ", node.description());
+    }
+
     node.setProperty("sym", sv.front());
 }
 

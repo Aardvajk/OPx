@@ -104,6 +104,27 @@ std::string Sym::funcname() const
     return pcx::str(fullname(), property<::Type*>("type")->text());
 }
 
+bool Sym::accessibleFrom(const Sym *scope) const
+{
+    if(access() == Access::Private)
+    {
+        auto s = scope;
+        while(s)
+        {
+            if(s == parent())
+            {
+                return true;
+            }
+
+            s = s->parent();
+        }
+
+        return false;
+    }
+
+    return true;
+}
+
 const char *Sym::toString(Type v)
 {
     static const char *s[] = { "namespace", "class", "scope", "func", "var" };

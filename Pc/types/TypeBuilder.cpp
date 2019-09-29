@@ -34,6 +34,11 @@ void TypeBuilder::visit(TypeNode &node)
             throw Error(node.name->location(), "type expected - ", node.name->description());
         }
 
+        if(!sv.front()->accessibleFrom(c.tree.current()))
+        {
+            throw Error(node.location(), "not accessible - ", node.description());
+        }
+
         t = Type::makePrimary(sv.front());
     }
 

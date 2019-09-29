@@ -47,6 +47,8 @@ public:
     std::string fullname() const;
     std::string funcname() const;
 
+    bool accessibleFrom(const Sym *scope) const;
+
     Sym *parent(){ return ps; }
     const Sym *parent() const { return ps; }
 
