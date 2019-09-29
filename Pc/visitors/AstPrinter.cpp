@@ -117,7 +117,7 @@ void AstPrinter::visit(FuncNode &node)
 {
     if(!node.autoGen || !c.option("debug", "suppress_autogens"))
     {
-        tab() << "func " << node.description() << details(node) << "\n";
+        tab() << (node.findProperty("free").value<bool>() ? "free " : "") << "func " << node.description() << details(node) << "\n";
 
         if(!node.inits.empty())
         {
@@ -155,7 +155,7 @@ void AstPrinter::visit(ClassNode &node)
 
 void AstPrinter::visit(VarNode &node)
 {
-    tab() << "var " << node.description() << details(node) << "\n";
+    tab() << (node.findProperty("free").value<bool>() ? "free " : "") << "var " << node.description() << details(node) << "\n";
 
     if(node.value)
     {

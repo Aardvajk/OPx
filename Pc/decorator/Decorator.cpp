@@ -148,7 +148,7 @@ void Decorator::visit(FuncNode &node)
 
     auto t = Type::makeFunction(node.type ? TypeVisitor::assertType(c, node.type.get()) : c.types.nullType());
 
-    t.method = c.tree.current()->type() == Sym::Type::Class;
+    t.method = c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>();
     t.constMethod = node.constMethod;
 
     if(!t.method && Visitor::query<NameVisitors::SpecialName, Token::Type>(node.name.get()) != Token::Type::Invalid)

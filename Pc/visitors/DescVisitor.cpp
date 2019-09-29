@@ -99,6 +99,11 @@ void DescVisitor::visit(TypeNode &node)
 
 void DescVisitor::visit(FuncNode &node)
 {
+    if(node.findProperty("free").value<bool>())
+    {
+        r += "free ";
+    }
+
     node.name->accept(*this);
 
     r += "(";
@@ -129,6 +134,11 @@ void DescVisitor::visit(ClassNode &node)
 
 void DescVisitor::visit(VarNode &node)
 {
+    if(node.findProperty("free").value<bool>())
+    {
+        r += "free ";
+    }
+
     node.name->accept(*this);
 
     if(auto s = node.findProperty("sym"))

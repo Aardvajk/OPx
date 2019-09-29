@@ -27,7 +27,8 @@ void Parser::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwClass:
         case Token::Type::RwVar:
         case Token::Type::RwPublic:
-        case Token::Type::RwPrivate: DeclarationParser::build(c, block, false); break;
+        case Token::Type::RwPrivate:
+        case Token::Type::RwFree: DeclarationParser::build(c, block, false); break;
 
         default: FuncParser::build(c, block, false);
     }

@@ -58,7 +58,7 @@ void VarDecorator::visit(VarNode &node)
     auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.location(), node.property<Access>("access"), name));
 
     sym->setProperty("type", type);
-    sym->setProperty("member", c.tree.current()->type() == Sym::Type::Class);
+    sym->setProperty("member", c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>());
 
     node.setProperty("sym", sym);
 }

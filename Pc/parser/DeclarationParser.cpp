@@ -99,7 +99,7 @@ void buildInits(Context &c, NodeList &container, bool get)
     }
 }
 
-void buildFunc(Context &c, BlockNode *block, bool get)
+void buildFunc(Context &c, bool free, BlockNode *block, bool get)
 {
     auto name = CommonParser::extendedName(c, get);
 
@@ -114,6 +114,7 @@ void buildFunc(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     n->setProperty("access", c.access.back());
+    n->setProperty("free", free);
 
     auto tok = c.scanner.consume(Token::Type::LeftParen, false);
     if(tok.type() != Token::Type::RightParen)
@@ -197,7 +198,7 @@ void buildClass(Context &c, BlockNode *block, bool get)
     }
 }
 
-void buildVarImp(Context &c, BlockNode *block, bool get)
+void buildVarImp(Context &c, bool free, BlockNode *block, bool get)
 {
     auto name = CommonParser::extendedName(c, get);
 
@@ -205,6 +206,7 @@ void buildVarImp(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     n->setProperty("access", c.access.back());
+    n->setProperty("free", free);
 
     if(c.scanner.token().type() == Token::Type::Colon)
     {
@@ -218,13 +220,13 @@ void buildVarImp(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {
-        buildVarImp(c, block, true);
+        buildVarImp(c, free, block, true);
     }
 }
 
-void buildVar(Context &c, BlockNode *block, bool get)
+void buildVar(Context &c, bool free, BlockNode *block, bool get)
 {
-    buildVarImp(c, block, get);
+    buildVarImp(c, free, block, get);
     c.scanner.consume(Token::Type::Semicolon, false);
 }
 
@@ -239,6 +241,23 @@ void buildAccess(Context &c, Access type, bool get)
     c.scanner.consume(Token::Type::Colon, get);
 }
 
+void buildFree(Context &c, BlockNode *block, bool get)
+{
+    if(c.containers.back() != Sym::Type::Class)
+    {
+        throw Error(c.scanner.token().location(), "free outside class");
+    }
+
+    auto tok = c.scanner.next(get);
+    switch(tok.type())
+    {
+        case Token::Type::RwFunc: buildFunc(c, true, block, true); break;
+        case Token::Type::RwVar: buildVar(c, true, block, true); break;
+
+        default: throw Error(tok.location(), "func or var expected - ", tok.text());
+    }
+}
+
 }
 
 void DeclarationParser::build(Context &c, BlockNode *block, bool get)
@@ -247,12 +266,14 @@ void DeclarationParser::build(Context &c, BlockNode *block, bool get)
     switch(tok.type())
     {
         case Token::Type::RwNamespace: buildNamespace(c, block, true); break;
-        case Token::Type::RwFunc: buildFunc(c, block, true); break;
+        case Token::Type::RwFunc: buildFunc(c, false, block, true); break;
         case Token::Type::RwClass: buildClass(c, block, true); break;
-        case Token::Type::RwVar: buildVar(c, block, true); break;
+        case Token::Type::RwVar: buildVar(c, false, block, true); break;
 
         case Token::Type::RwPublic: buildAccess(c, Access::Public, true); break;
         case Token::Type::RwPrivate: buildAccess(c, Access::Private, true); break;
+
+        case Token::Type::RwFree: buildFree(c, block, true); break;
 
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }
