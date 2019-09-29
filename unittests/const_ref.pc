@@ -1,6 +1,6 @@
 include("stdtest.ph");
 
-pragma(set, "test_error=cannot assign to const - a");
+pragma(set, "test_error=cannot modify a constant - a = 321");
 
 func x(a:const ref std.int)
 {
