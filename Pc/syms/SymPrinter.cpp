@@ -1,5 +1,7 @@
 #include "SymPrinter.h"
 
+#include "application/Context.h"
+
 #include "syms/Sym.h"
 
 #include "types/Type.h"
@@ -29,8 +31,16 @@ bool hasScope(const Sym *sym)
     return sym->type() == Sym::Type::Namespace || sym->type() == Sym::Type::Scope;
 }
 
-void dump(int tab, const Sym *sym, std::ostream &os)
+void dump(Context &c, int tab, const Sym *sym, std::ostream &os)
 {
+    if(sym->type() == Sym::Type::Func)
+    {
+        if(sym->property<bool>("autogen") && c.option("debug", "suppress_autogens"))
+        {
+            return;
+        }
+    }
+
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
     os << ts << type(sym) << " " << sym->fullname();
@@ -53,7 +63,7 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
         for(auto s: sym->children())
         {
-            dump(tab + 1, s, os);
+            dump(c, tab + 1, s, os);
         }
 
         os << ts << "}\n";
@@ -62,7 +72,7 @@ void dump(int tab, const Sym *sym, std::ostream &os)
 
 }
 
-void SymPrinter::print(const Sym *root, std::ostream &os)
+void SymPrinter::print(Context &c, const Sym *root, std::ostream &os)
 {
-    dump(0, root, os);
+    dump(c, 0, root, os);
 }

@@ -1,5 +1,7 @@
 #include "AstPrinter.h"
 
+#include "application/Context.h"
+
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
@@ -68,7 +70,7 @@ std::string details(Node &node)
 
 }
 
-AstPrinter::AstPrinter(std::ostream &os) : os(os), tc(0)
+AstPrinter::AstPrinter(Context &c, std::ostream &os) : c(c), os(os), tc(0)
 {
 }
 
@@ -113,22 +115,25 @@ void AstPrinter::visit(TypeNode &node)
 
 void AstPrinter::visit(FuncNode &node)
 {
-    tab() << "func " << node.description() << details(node) << "\n";
-
-    if(!node.inits.empty())
+    if(!node.autoGen || !c.option("debug", "suppress_autogens"))
     {
-        tab() << "inits\n";
+        tab() << "func " << node.description() << details(node) << "\n";
 
-        auto g = pcx::scoped_counter(tc);
-        for(auto &i: node.inits)
+        if(!node.inits.empty())
         {
-            i->accept(*this);
-        }
-    }
+            tab() << "inits\n";
 
-    if(node.body)
-    {
-        node.body->accept(*this);
+            auto g = pcx::scoped_counter(tc);
+            for(auto &i: node.inits)
+            {
+                i->accept(*this);
+            }
+        }
+
+        if(node.body)
+        {
+            node.body->accept(*this);
+        }
     }
 }
 

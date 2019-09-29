@@ -176,7 +176,9 @@ void Decorator::visit(FuncNode &node)
         auto n = NameVisitors::assertSimpleName(c, node.name.get());
 
         sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), n));
+
         sym->setProperty("type", type);
+        sym->setProperty("autogen", node.autoGen);
     }
 
     sym->setProperty("method", t.method);

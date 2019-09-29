@@ -24,6 +24,7 @@
 #include "types/Type.h"
 
 #include <pcx/textfile.h>
+#include <pcx/scoped_push.h>
 
 #include <iostream>
 #include <fstream>
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
         if(!c.option("q"))
         {
             std::cout << banner("nodes");
-            Visitor::visit<AstPrinter>(n.get(), std::cout);
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
         Visitor::visit<Decorator>(n.get(), c);
@@ -68,10 +69,10 @@ int main(int argc, char *argv[])
         if(!c.option("q"))
         {
             std::cout << banner("decorated nodes");
-            Visitor::visit<AstPrinter>(n.get(), std::cout);
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
 
             std::cout << banner("symbols");
-            SymPrinter::print(c.tree.root(), std::cout);
+            SymPrinter::print(c, c.tree.root(), std::cout);
         }
 
         Visitor::visit<Transform>(n.get(), c);
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
         if(!c.option("q"))
         {
             std::cout << banner("transformed nodes");
-            Visitor::visit<AstPrinter>(n.get(), std::cout);
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
         LowerTypes::convertRefsToPtrs(c);
@@ -89,10 +90,10 @@ int main(int argc, char *argv[])
         if(!c.option("q"))
         {
             std::cout << banner("lowered nodes");
-            Visitor::visit<AstPrinter>(n.get(), std::cout);
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
 
             std::cout << banner("lowered symbols");
-            SymPrinter::print(c.tree.root(), std::cout);
+            SymPrinter::print(c, c.tree.root(), std::cout);
         }
 
         Visitor::visit<Finaliser>(n.get(), c);
@@ -100,10 +101,10 @@ int main(int argc, char *argv[])
         if(!c.option("q"))
         {
             std::cout << banner("finalised nodes");
-            Visitor::visit<AstPrinter>(n.get(), std::cout);
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
 
             std::cout << banner("finalised symbols");
-            SymPrinter::print(c.tree.root(), std::cout);
+            SymPrinter::print(c, c.tree.root(), std::cout);
         }
 
         if(!c.option("q"))
@@ -121,6 +122,9 @@ int main(int argc, char *argv[])
             {
                 throw Error("unable to create - ", files[1]);
             }
+
+            auto sg = pcx::scoped_push(c.args, c.args.back());
+            c.args.back().process("debug-=suppress_autogens");
 
             GlobalsGenerator::generate(c, os);
             Visitor::visit<Generator>(n.get(), c, os);

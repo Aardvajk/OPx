@@ -3,12 +3,13 @@
 
 #include <iostream>
 
+class Context;
 class Sym;
 
 namespace SymPrinter
 {
 
-void print(const Sym *root, std::ostream &os);
+void print(Context &c, const Sym *root, std::ostream &os);
 
 }
 
