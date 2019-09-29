@@ -5,6 +5,7 @@
 #include "nodes/BlockNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/WhileNode.h"
 
 #include "types/Type.h"
 
@@ -30,4 +31,9 @@ void LocalsGenerator::visit(VarNode &node)
 {
     auto s = node.property<Sym*>("sym");
     os << "    var \"" << s->fullname() << "\":" << Type::assertSize(node.location(), s->property<Type*>("type")) << ";\n";
+}
+
+void LocalsGenerator::visit(WhileNode &node)
+{
+    node.body->accept(*this);
 }
