@@ -99,7 +99,7 @@ void FuncDecorator::visit(InitNode &node)
     node.setProperty("sym", sym);
 
     node.target = new IdNode(node.location(), { }, sym->name());
-    node.target = ExprDecorator::decorate(c, node.target);
+    node.target->setProperty("sym", sym);
 
     for(auto &p: node.params)
     {
