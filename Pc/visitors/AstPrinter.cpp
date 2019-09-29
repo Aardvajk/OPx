@@ -23,6 +23,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/WhileNode.h"
 
 #include "syms/Sym.h"
 
@@ -364,6 +365,15 @@ void AstPrinter::visit(PostIncDecNode &node)
 
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
+}
+
+void AstPrinter::visit(WhileNode &node)
+{
+    tab() << "while\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+    node.body->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

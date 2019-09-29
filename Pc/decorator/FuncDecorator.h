@@ -16,6 +16,7 @@ public:
     virtual void visit(ExprNode &node) override;
     virtual void visit(ReturnNode &node) override;
     virtual void visit(InitNode &node) override;
+    virtual void visit(WhileNode &node) override;
 
 private:
     Context &c;

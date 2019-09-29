@@ -269,7 +269,11 @@ void ExprGenerator::visit(BinaryNode &node)
         case Token::Type::Mod: sz = MathOperators::generateMulDivMod(c, os, node); break;
 
         case Token::Type::Eq:
-        case Token::Type::Neq: sz = CompareOperators::generate(c, os, node); break;
+        case Token::Type::Neq:
+        case Token::Type::Lt:
+        case Token::Type::LtEq:
+        case Token::Type::Gt:
+        case Token::Type::GtEq: sz = CompareOperators::generate(c, os, node); break;
 
         default: break;
     }

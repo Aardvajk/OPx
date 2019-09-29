@@ -6,6 +6,7 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
+#include "nodes/ScopeNode.h"
 
 #include "parser/Parser.h"
 
@@ -82,4 +83,26 @@ NodePtr CommonParser::blockContents(Context &c, Location location, bool get)
     c.scanner.next(true);
 
     return n;
+}
+
+NodePtr CommonParser::scopeContents(Context &c, Location location, bool get)
+{
+    auto scope = new ScopeNode(location);
+    NodePtr nn(scope);
+
+    auto tok = c.scanner.next(true);
+
+    if(tok.type() == Token::Type::LeftBrace)
+    {
+        scope->body = blockContents(c, location, false);
+    }
+    else
+    {
+        auto block = new BlockNode(location);
+        scope->body = block;
+
+        Parser::construct(c, block, false);
+    }
+
+    return nn;
 }

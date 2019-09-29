@@ -8,6 +8,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/WhileNode.h"
 
 #include "types/Type.h"
 
@@ -62,4 +63,10 @@ void FuncLower::visit(InitNode &node)
     {
         p = ExprLower::lower(c, p);
     }
+}
+
+void FuncLower::visit(WhileNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+    node.body->accept(*this);
 }

@@ -68,6 +68,7 @@ SOURCES += \
         nodes/TypeNode.cpp \
         nodes/UnaryNode.cpp \
         nodes/VarNode.cpp \
+        nodes/WhileNode.cpp \
         operators/CompareOperators.cpp \
         operators/MathOperators.cpp \
         operators/OperatorCallDecorate.cpp \
@@ -150,6 +151,7 @@ HEADERS += \
     nodes/TypeNode.h \
     nodes/UnaryNode.h \
     nodes/VarNode.h \
+    nodes/WhileNode.h \
     operators/CompareOperators.h \
     operators/MathOperators.h \
     operators/OperatorCallDecorate.h \

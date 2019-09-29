@@ -12,6 +12,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/WhileNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -149,6 +150,12 @@ void FuncTransform::visit(InitNode &node)
     }
 
     rn = FuncTransform::transform(c, rn);
+}
+
+void FuncTransform::visit(WhileNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
+    node.body->accept(*this);
 }
 
 NodePtr FuncTransform::transform(Context &c, NodePtr node, std::size_t index)

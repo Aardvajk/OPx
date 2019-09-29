@@ -9,6 +9,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/WhileNode.h"
 
 #include "decorator/VarDecorator.h"
 #include "decorator/ExprDecorator.h"
@@ -104,4 +105,10 @@ void FuncDecorator::visit(InitNode &node)
     {
         p = ExprDecorator::decorate(c, p, sym->property<Type*>("type"));
     }
+}
+
+void FuncDecorator::visit(WhileNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+    node.body->accept(*this);
 }
