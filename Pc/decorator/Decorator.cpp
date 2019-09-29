@@ -179,9 +179,8 @@ void Decorator::visit(FuncNode &node)
 
         sym->setProperty("type", type);
         sym->setProperty("autogen", node.autoGen);
+        sym->setProperty("method", t.method);
     }
-
-    sym->setProperty("method", t.method);
 
     if(t.constMethod && sym->parent()->type() != Sym::Type::Class)
     {
@@ -210,12 +209,12 @@ void Decorator::visit(ClassNode &node)
     {
         auto n = NameVisitors::assertSimpleUniqueName(c, node.name.get());
         sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), node.property<Access>("access"), n));
+
+        sym->setProperty("type", c.types.insert(Type::makePrimary(sym)));
+        sym->setProperty("primitive", Primitive::Type::Invalid);
     }
 
     auto type = c.types.insert(Type::makePrimary(sym));
-
-    sym->setProperty("type", type);
-    sym->setProperty("primitive", Primitive::Type::Invalid);
 
     node.setProperty("sym", sym);
 
