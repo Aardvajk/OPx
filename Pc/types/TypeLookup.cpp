@@ -9,6 +9,21 @@
 
 #include "syms/Sym.h"
 
+namespace
+{
+
+Sym *testAccess(Context &c, Location location, Sym *sym)
+{
+    if(!sym->accessibleFrom(c.tree.current()))
+    {
+        throw Error(location, "not accessible - ", sym->funcname());
+    }
+
+    return sym;
+}
+
+}
+
 Sym *TypeLookup::findCopyMethod(Context &c, Type *type)
 {
     auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(type->sym)) });
@@ -37,7 +52,7 @@ Sym *TypeLookup::assertCopyMethod(Context &c, Location location, Type *type)
 {
     if(auto s = type->sym->property<Sym*>("cachedCopyMethod"))
     {
-        return s;
+        return testAccess(c, location, s);
     }
 
     throw Error(location, "no copy method - ", type->text());
@@ -47,7 +62,7 @@ Sym *TypeLookup::assertDeleteMethod(Context &c, Location location, Type *type)
 {
     if(auto s = type->sym->property<Sym*>("cachedDeleteMethod"))
     {
-        return s;
+        return testAccess(c, location, s);
     }
 
     throw Error(location, "no delete method - ", type->text());
