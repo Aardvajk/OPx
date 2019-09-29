@@ -42,6 +42,16 @@ void transformLiteral(Context &c, Node &node, Type *expectedType)
     }
 }
 
+template<typename T> void transformIncDec(Context &c, T &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
+
+    if(!Visitor::query<QueryVisitors::IsMutable, bool>(node.expr.get(), c))
+    {
+        throw Error(node.location(), "cannot modify a constant - ", node.description());
+    }
+}
+
 }
 
 ExprTransform::ExprTransform(Context &c, Type *expectedType) : c(c), expectedType(expectedType)
@@ -150,6 +160,11 @@ void ExprTransform::visit(AssignNode &node)
 {
     node.target = ExprTransform::transform(c, node.target);
     node.expr = ExprTransform::transform(c, node.expr);
+
+    if(!Visitor::query<QueryVisitors::IsMutable, bool>(node.target.get(), c))
+    {
+        throw Error(node.location(), "cannot modify a constant - ", node.description());
+    }
 }
 
 void ExprTransform::visit(UnaryNode &node)
@@ -171,12 +186,12 @@ void ExprTransform::visit(LogicalNode &node)
 
 void ExprTransform::visit(PreIncDecNode &node)
 {
-    node.expr = ExprTransform::transform(c, node.expr);
+    transformIncDec(c, node);
 }
 
 void ExprTransform::visit(PostIncDecNode &node)
 {
-    node.expr = ExprTransform::transform(c, node.expr);
+    transformIncDec(c, node);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node, Type *expectedType)

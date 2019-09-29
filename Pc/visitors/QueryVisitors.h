@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 
+class Context;
 class Type;
 
 namespace QueryVisitors
@@ -77,6 +78,22 @@ public:
 private:
     std::unordered_map<std::string, NodePtr> &m;
     NodePtr &n;
+};
+
+class IsMutable : public Visitor
+{
+public:
+    IsMutable(Context &c);
+
+    bool result() const { return r; }
+
+    virtual void visit(IdNode &node) override;
+    virtual void visit(CallNode &node) override;
+    virtual void visit(ThisNode &node) override;
+
+private:
+    Context &c;
+    bool r;
 };
 
 }

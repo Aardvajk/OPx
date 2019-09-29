@@ -4,11 +4,15 @@
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/CallNode.h"
 #include "nodes/InitNode.h"
+#include "nodes/ThisNode.h"
 
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+
+#include "visitors/TypeVisitor.h"
 
 QueryVisitors::DirectType::DirectType() : r(nullptr)
 {
@@ -75,4 +79,45 @@ QueryVisitors::InitNodeMap::InitNodeMap(std::unordered_map<std::string, NodePtr>
 void QueryVisitors::InitNodeMap::visit(InitNode &node)
 {
     m[node.name] = n;
+}
+
+
+QueryVisitors::IsMutable::IsMutable(Context &c) : c(c), r(true)
+{
+}
+
+void QueryVisitors::IsMutable::visit(IdNode &node)
+{
+    if(node.parent)
+    {
+        node.parent->accept(*this);
+    }
+
+    if(r)
+    {
+        auto t = TypeVisitor::queryType(c, &node);
+
+        if(t && t->constant)
+        {
+            r = false;
+        }
+    }
+}
+
+void QueryVisitors::IsMutable::visit(CallNode &node)
+{
+    auto t = TypeVisitor::assertType(c, node.target.get());
+
+    if(t->returnType && t->returnType->constant)
+    {
+        r = false;
+    }
+}
+
+void QueryVisitors::IsMutable::visit(ThisNode &node)
+{
+    if(TypeVisitor::assertType(c, &node)->constant)
+    {
+        r = false;
+    }
 }

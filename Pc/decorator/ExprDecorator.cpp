@@ -39,17 +39,7 @@ template<typename T> NodePtr decorateIncDec(Context &c, T &node, bool pre)
 {
     node.expr = ExprDecorator::decorate(c, node.expr);
 
-    auto type = TypeVisitor::assertType(c, node.expr.get());
-    if(type->primitive())
-    {
-        if(type->constant)
-        {
-            throw Error(node.location(), "cannot modify a const - ", node.description());
-        }
-
-        return { };
-    }
-    else
+    if(!TypeVisitor::assertType(c, node.expr.get())->primitive())
     {
         NodePtr dn(IdNode::create(node.location(), { "std", pre ? "prefix" : "postfix" }));
         NodePtr tn(new TypeNode(node.location(), dn));
@@ -64,6 +54,8 @@ template<typename T> NodePtr decorateIncDec(Context &c, T &node, bool pre)
         NodeList params = { cn };
         return OperatorCallDecorate::generate(c, node, node.expr, params, node.token.text());
     }
+
+    return { };
 }
 
 }
@@ -218,12 +210,6 @@ void ExprDecorator::visit(ThisNode &node)
 void ExprDecorator::visit(AssignNode &node)
 {
     node.target = ExprDecorator::decorate(c, node.target);
-
-    if(TypeVisitor::assertType(c, node.target.get())->constant)
-    {
-        throw Error(node.target->location(), "cannot assign to const - ", node.target->description());
-    }
-
     node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
 
     if(!TypeVisitor::assertType(c, node.target.get())->primitiveOrRef())
