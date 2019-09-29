@@ -5,6 +5,8 @@
 
 #include "scanner/Location.h"
 
+#include "info/Access.h"
+
 #include <pcx/any.h>
 
 #include <string>
@@ -23,7 +25,7 @@ public:
         Var
     };
 
-    Sym(Type type, Location location, std::string name);
+    Sym(Type type, Location location, Access access, std::string name);
     ~Sym();
 
     Sym *add(Sym *sym);
@@ -37,6 +39,7 @@ public:
 
     Type type() const { return t; }
     Location location() const { return n; }
+    Access access() const { return a; }
     std::string name() const { return s; }
 
     std::vector<std::string> names() const;
@@ -57,6 +60,7 @@ public:
 private:
     Type t;
     Location n;
+    Access a;
     std::string s;
 
     Sym *ps;

@@ -35,6 +35,7 @@ FuncNode *createBasicFunction(Sym *sym, BlockNode *block, const std::string &nam
     auto fn = new FuncNode(block->location(), n);
     block->insert(index, fn);
 
+    fn->setProperty("access", Access::Public);
     fn->autoGen = true;
 
     auto sc = new ScopeNode(block->location());
@@ -100,6 +101,7 @@ NodePtr makeParam(Node &node, FuncNode *fn, Sym *sym)
     auto vn = new VarNode(node.location(), pn);
     fn->args.push_back(vn);
 
+    vn->setProperty("access", Access::Private);
     vn->type = makeType(node, true, sym);
 
     return pn;

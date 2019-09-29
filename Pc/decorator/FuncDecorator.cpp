@@ -37,7 +37,7 @@ void FuncDecorator::visit(ScopeNode &node)
 {
     auto info = c.tree.current()->container()->property<FuncInfo*>("info");
 
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), pcx::str("#scope", info->scopes++)));
+    auto sym = c.tree.current()->add(new Sym(Sym::Type::Scope, node.location(), Access::Private, pcx::str("#scope", info->scopes++)));
     node.setProperty("sym", sym);
 
     auto sg = c.tree.open(sym);

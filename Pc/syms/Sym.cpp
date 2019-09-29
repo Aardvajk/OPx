@@ -4,7 +4,7 @@
 
 #include <pcx/join_str.h>
 
-Sym::Sym(Type type, Location location, std::string name) : t(type), n(location), s(name), ps(nullptr)
+Sym::Sym(Type type, Location location, Access access, std::string name) : t(type), n(location), a(access), s(name), ps(nullptr)
 {
 }
 

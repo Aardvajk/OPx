@@ -34,7 +34,10 @@ void buildNamespace(Context &c, BlockNode *block, bool get)
     auto n = new NamespaceNode(c.scanner.token().location(), name);
     block->push_back(n);
 
+    n->setProperty("access", c.access.back());
+
     auto cg = pcx::scoped_push(c.containers, Sym::Type::Namespace);
+    auto ag = pcx::scoped_push(c.access, Access::Public);
 
     n->body = CommonParser::blockContents(c, n->location(), false);
 }
@@ -54,6 +57,8 @@ void buildArgs(Context &c, NodeList &container, bool get)
 
     auto n = new VarNode(tok.location(), nn);
     container.push_back(n);
+
+    n->setProperty("access", Access::Private);
 
     c.scanner.match(Token::Type::Colon, false);
     n->type = TypeParser::build(c, true);
@@ -108,6 +113,8 @@ void buildFunc(Context &c, BlockNode *block, bool get)
     auto n = new FuncNode(name->location(), name);
     block->push_back(n);
 
+    n->setProperty("access", c.access.back());
+
     auto tok = c.scanner.consume(Token::Type::LeftParen, false);
     if(tok.type() != Token::Type::RightParen)
     {
@@ -150,6 +157,7 @@ void buildFunc(Context &c, BlockNode *block, bool get)
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         auto cg = pcx::scoped_push(c.containers, Sym::Type::Func);
+        auto ag = pcx::scoped_push(c.access, Access::Private);
 
         auto scope = new ScopeNode(n->location());
         n->body = scope;
@@ -174,9 +182,12 @@ void buildClass(Context &c, BlockNode *block, bool get)
     auto n = new ClassNode(name->location(), name);
     block->push_back(n);
 
+    n->setProperty("access", c.access.back());
+
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
         auto cg = pcx::scoped_push(c.containers, Sym::Type::Class);
+        auto ag = pcx::scoped_push(c.access, Access::Private);
 
         n->body = CommonParser::blockContents(c, n->location(), false);
     }
@@ -192,6 +203,8 @@ void buildVarImp(Context &c, BlockNode *block, bool get)
 
     auto n = new VarNode(name->location(), name);
     block->push_back(n);
+
+    n->setProperty("access", c.access.back());
 
     if(c.scanner.token().type() == Token::Type::Colon)
     {
@@ -215,6 +228,17 @@ void buildVar(Context &c, BlockNode *block, bool get)
     c.scanner.consume(Token::Type::Semicolon, false);
 }
 
+void buildAccess(Context &c, Access type, bool get)
+{
+    if(c.containers.back() == Sym::Type::Func)
+    {
+        throw Error(c.scanner.token().location(), "invalid access - ", c.scanner.token().text());
+    }
+
+    c.access.back() = type;
+    c.scanner.consume(Token::Type::Colon, get);
+}
+
 }
 
 void DeclarationParser::build(Context &c, BlockNode *block, bool get)
@@ -226,6 +250,9 @@ void DeclarationParser::build(Context &c, BlockNode *block, bool get)
         case Token::Type::RwFunc: buildFunc(c, block, true); break;
         case Token::Type::RwClass: buildClass(c, block, true); break;
         case Token::Type::RwVar: buildVar(c, block, true); break;
+
+        case Token::Type::RwPublic: buildAccess(c, Access::Public, true); break;
+        case Token::Type::RwPrivate: buildAccess(c, Access::Private, true); break;
 
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }

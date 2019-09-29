@@ -8,6 +8,7 @@
 
 #include "types/TypeCache.h"
 
+#include "info/Access.h"
 #include "info/FuncInfo.h"
 
 #include <pcx/args.h>
@@ -39,6 +40,8 @@ public:
     TypeCache types;
 
     std::vector<Sym::Type> containers;
+    std::vector<Access> access;
+
     pcx::ptr_vector<FuncInfo> funcInfos;
 
     std::size_t classDepth;

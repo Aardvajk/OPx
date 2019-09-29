@@ -123,6 +123,7 @@ HEADERS += \
     generator/Generator.h \
     generator/GlobalsGenerator.h \
     generator/LocalsGenerator.h \
+    info/Access.h \
     info/FuncInfo.h \
     lower/ExprLower.h \
     lower/FuncLower.h \

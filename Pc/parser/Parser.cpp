@@ -25,7 +25,9 @@ void Parser::construct(Context &c, BlockNode *block, bool get)
         case Token::Type::RwNamespace:
         case Token::Type::RwFunc:
         case Token::Type::RwClass:
-        case Token::Type::RwVar: DeclarationParser::build(c, block, false); break;
+        case Token::Type::RwVar:
+        case Token::Type::RwPublic:
+        case Token::Type::RwPrivate: DeclarationParser::build(c, block, false); break;
 
         default: FuncParser::build(c, block, false);
     }
@@ -37,6 +39,7 @@ NodePtr Parser::build(Context &c)
     NodePtr n(block);
 
     auto cg = pcx::scoped_push(c.containers, Sym::Type::Namespace);
+    auto ag = pcx::scoped_push(c.access, Access::Public);
 
     c.scanner.next(true);
     while(c.scanner.token().type() != Token::Type::Eof)

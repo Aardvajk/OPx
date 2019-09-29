@@ -1,6 +1,6 @@
 #include "SymTree.h"
 
-SymTree::SymTree() : rs(new Sym(Sym::Type::Namespace, { }, { })), cs(rs.get())
+SymTree::SymTree() : rs(new Sym(Sym::Type::Namespace, { }, Access::Public, { })), cs(rs.get())
 {
 }
 

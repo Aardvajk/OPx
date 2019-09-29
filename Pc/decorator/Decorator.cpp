@@ -125,7 +125,7 @@ void Decorator::visit(NamespaceNode &node)
     if(!sym)
     {
         auto n = NameVisitors::assertSimpleUniqueName(c, node.name.get());
-        sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), n));
+        sym = c.tree.current()->add(new Sym(Sym::Type::Namespace, node.name->location(), node.property<Access>("access"), n));
     }
 
     node.setProperty("sym", sym);
@@ -175,7 +175,7 @@ void Decorator::visit(FuncNode &node)
     {
         auto n = NameVisitors::assertSimpleName(c, node.name.get());
 
-        sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), n));
+        sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), node.property<Access>("access"), n));
 
         sym->setProperty("type", type);
         sym->setProperty("autogen", node.autoGen);
@@ -209,7 +209,7 @@ void Decorator::visit(ClassNode &node)
     if(!sym)
     {
         auto n = NameVisitors::assertSimpleUniqueName(c, node.name.get());
-        sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), n));
+        sym = c.tree.current()->add(new Sym(Sym::Type::Class, node.name->location(), node.property<Access>("access"), n));
     }
 
     auto type = c.types.insert(Type::makePrimary(sym));

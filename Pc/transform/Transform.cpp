@@ -116,7 +116,7 @@ void Transform::visit(FuncNode &node)
         Sym *s = sym->child("this");
         if(!s)
         {
-            s = sym->insert(0, new Sym(Sym::Type::Var, node.location(), "this"));
+            s = sym->insert(0, new Sym(Sym::Type::Var, node.location(), Access::Private, "this"));
             s->setProperty("type", tp);
         }
 
