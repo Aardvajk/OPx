@@ -68,6 +68,7 @@ DISTFILES += \
     ../unittests/primitive_array.pc \
     ../unittests/primitive_incdec.pc \
     ../unittests/primitive_opeq.pc \
+    ../unittests/private_copy.pc \
     ../unittests/ref_member.pc \
     ../unittests/ref_must_init.pc \
     ../unittests/ref_param.pc \

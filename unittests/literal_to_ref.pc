@@ -2,6 +2,7 @@ include("stdtest.ph");
 
 class foo
 {
+public:
     func new() ... x(321) { }
 
     var x:std.int;

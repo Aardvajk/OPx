@@ -9,6 +9,7 @@ func x():ref std.int
 
 class foo
 {
+public:
     var x:std.int;
 }
 

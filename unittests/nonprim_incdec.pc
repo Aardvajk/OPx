@@ -23,6 +23,7 @@ var bpost = 0;
 
 class bar
 {
+public:
     func operator--(:std.prefix){ ++bpre; }
     func operator--(:std.postfix){ ++bpost; }
 }
