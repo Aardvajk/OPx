@@ -21,6 +21,17 @@ std::string type(const Sym *sym)
     return Sym::toString(sym->type());
 }
 
+std::string access(const Sym *sym)
+{
+    switch(sym->access())
+    {
+        case Access::Public: return "public";
+        case Access::Private: return "private";
+    }
+
+    return { };
+}
+
 bool hasScope(const Sym *sym)
 {
     if(sym->type() == Sym::Type::Func || sym->type() == Sym::Type::Class)
@@ -43,7 +54,7 @@ void dump(Context &c, int tab, const Sym *sym, std::ostream &os)
 
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
-    os << ts << type(sym) << " " << sym->fullname();
+    os << ts << access(sym) << " " << type(sym) << " " << sym->fullname();
 
     if(auto s = sym->findProperty("size"))
     {
