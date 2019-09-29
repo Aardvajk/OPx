@@ -64,6 +64,7 @@ DISTFILES += \
     ../unittests/operator_eq.pc \
     ../unittests/operator_eq_chain.pc \
     ../unittests/operator_test.pc \
+    ../unittests/overload_test.pc \
     ../unittests/primitive_array.pc \
     ../unittests/primitive_incdec.pc \
     ../unittests/primitive_opeq.pc \

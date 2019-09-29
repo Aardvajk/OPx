@@ -1,0 +1,26 @@
+include("stdtest.ph");
+include("stdlib.ph");
+
+class foo
+{
+    func new(x:std.int) ... x(x) { }
+
+    func operator++(:std.postfix):foo { var r = foo(this); ++x; return r; }
+
+    func operator<=(a:std.int):std.bool const { return x <= a; }
+    func operator==(a:std.int):std.bool const { return x == a; }
+
+    var x:std.int;
+}
+
+func main()
+{
+    var n = foo(1);
+
+    while(n <= 10)
+    {
+        n++;
+    }
+
+    test.assert(n == 11);
+}
