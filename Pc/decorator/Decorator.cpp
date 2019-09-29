@@ -214,8 +214,6 @@ void Decorator::visit(ClassNode &node)
         sym->setProperty("primitive", Primitive::Type::Invalid);
     }
 
-    auto type = c.types.insert(Type::makePrimary(sym));
-
     node.setProperty("sym", sym);
 
     if(node.body)
@@ -233,6 +231,8 @@ void Decorator::visit(ClassNode &node)
         node.body->accept(*this);
 
         DefaultMethods::generate(c, node, sym);
+
+        auto type = sym->property<Type*>("type");
 
         sym->setProperty("cachedCopyMethod", TypeLookup::findCopyMethod(c, type));
         sym->setProperty("cachedDeleteMethod", TypeLookup::findDeleteMethod(c, type));
