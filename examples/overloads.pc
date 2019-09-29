@@ -1,0 +1,24 @@
+include("stdios.ph");
+include("stdlib.ph");
+
+class foo
+{
+    func new(x:std.int) ... x(x) { }
+
+    func operator++(:std.postfix):foo { var r = foo(this); ++x; return r; }
+    func operator<=(a:std.int):std.bool { return x < a; }
+
+    var x:std.int;
+}
+
+func operator<<(o:ref std.ostream, f:const ref foo):ref std.ostream { return o << f.x; }
+
+func main()
+{
+    var n = foo(1);
+
+    while(n <= 10)
+    {
+        std.out() << n++ << "\n";
+    }
+}

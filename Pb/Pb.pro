@@ -30,6 +30,7 @@ SOURCES += \
         main.cpp
 
 DISTFILES += \
+    ../examples/overloads.pc \
     ../lib/stdios.pc \
     ../lib/stdios.ph \
     ../lib/stdlib.ph \
