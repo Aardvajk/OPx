@@ -1,0 +1,25 @@
+include("stdios.ph");
+
+class foo
+{
+public:
+    free func factory(a:std.int):foo;
+
+    func value():std.int { return a; }
+
+private:
+    func new(a:std.int) ... a(a) { }
+
+    var a:std.int;
+}
+
+func foo.factory(a:std.int):foo
+{
+    return foo(a);
+}
+
+func main()
+{
+    var a = foo.factory(123);
+    std.out() << a.value() << "\n";
+}

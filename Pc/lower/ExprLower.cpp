@@ -82,7 +82,7 @@ void ExprLower::visit(ConstructNode &node)
 
         for(std::size_t i = 0; i < node.params.size(); ++i)
         {
-            node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
+            node.params[i] = ExprLower::lower(c, node.params[i], type->args[i + 1]);
         }
     }
 }

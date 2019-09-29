@@ -31,6 +31,7 @@ SOURCES += \
 
 DISTFILES += \
     ../examples/overloads.pc \
+    ../examples/private_construct.pc \
     ../lib/stdios.pc \
     ../lib/stdios.ph \
     ../lib/stdlib.ph \
