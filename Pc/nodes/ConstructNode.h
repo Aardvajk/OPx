@@ -8,6 +8,7 @@ class Type;
 class ConstructNode : public Node
 {
 public:
+    ConstructNode(Location location, Type *type) : Node(location), type(type) { }
     ConstructNode(Location location, Type *type, NodeList &params) : Node(location), type(type), params(params) { }
 
     virtual void accept(Visitor &v) override;

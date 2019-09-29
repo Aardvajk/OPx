@@ -123,7 +123,7 @@ void ExprTransform::visit(ConstructNode &node)
             t.args.push_back(TypeVisitor::assertType(c, p.get()));
         }
 
-        NodePtr name(new IdNode(node.location(), { }, node.type->sym->name()));
+        NodePtr name(IdNode::create(node.location(), node.type->sym->names()));
         node.target = new IdNode(node.location(), name, "new");
 
         node.target = ExprDecorator::decorate(c, node.target, c.types.insert(t));

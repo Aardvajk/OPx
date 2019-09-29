@@ -59,6 +59,7 @@ DISTFILES += \
     ../unittests/no_assign_gen.pc \
     ../unittests/non_prim_incdec.pc \
     ../unittests/non_prim_opeq.pc \
+    ../unittests/nonprim_incdec.pc \
     ../unittests/operator_eq.pc \
     ../unittests/operator_eq_chain.pc \
     ../unittests/operator_test.pc \

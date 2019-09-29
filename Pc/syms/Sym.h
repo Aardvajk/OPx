@@ -39,6 +39,8 @@ public:
     Location location() const { return n; }
     std::string name() const { return s; }
 
+    std::vector<std::string> names() const;
+
     std::string fullname() const;
     std::string funcname() const;
 

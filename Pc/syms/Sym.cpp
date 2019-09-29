@@ -75,9 +75,12 @@ pcx::any Sym::findProperty(const std::string &key) const
     return i == pm.end() ? pcx::any() : i->second;
 }
 
-std::string Sym::fullname() const
+std::vector<std::string> Sym::names() const
 {
-    if(!ps) return name();
+    if(!ps)
+    {
+        return { name() };
+    }
 
     std::vector<std::string> v;
 
@@ -88,7 +91,12 @@ std::string Sym::fullname() const
         s = s->ps;
     }
 
-    return pcx::join_str(v, ".");
+    return v;
+}
+
+std::string Sym::fullname() const
+{
+    return pcx::join_str(names(), ".");
 }
 
 std::string Sym::funcname() const

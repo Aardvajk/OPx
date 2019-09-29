@@ -6,7 +6,7 @@
 class TypeNode : public Node
 {
 public:
-    explicit TypeNode(Location location) : Node(location), function(false), constant(false), ref(false), ptr(0) { }
+    explicit TypeNode(Location location, NodePtr name = { }) : Node(location), function(false), constant(false), ref(false), ptr(0), name(name) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;

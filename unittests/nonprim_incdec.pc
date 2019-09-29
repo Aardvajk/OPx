@@ -1,0 +1,47 @@
+include("stdlib.ph");
+include("stdtest.ph");
+
+var fpre = 0;
+var fpost = 0;
+
+class foo
+{
+}
+
+func operator++(:foo, :std.prefix)
+{
+    ++fpre;
+}
+
+func operator++(:foo, :std.postfix)
+{
+    ++fpost;
+}
+
+var bpre = 0;
+var bpost = 0;
+
+class bar
+{
+    func operator--(:std.prefix){ ++bpre; }
+    func operator--(:std.postfix){ ++bpost; }
+}
+
+func main()
+{
+    var a = foo();
+
+    ++a;
+    a++;
+
+    test.assert(fpre == 1);
+    test.assert(fpost == 1);
+
+    var b = bar();
+
+    --b;
+    b--;
+
+    test.assert(bpre == 1);
+    test.assert(bpost == 1);
+}

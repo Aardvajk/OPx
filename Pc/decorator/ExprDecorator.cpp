@@ -3,6 +3,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/TypeNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
@@ -28,9 +29,8 @@
 
 #include "operators/OperatorCallDecorate.h"
 
-#include <pcx/str.h>
 
-#include "visitors/AstPrinter.h"
+#include <pcx/str.h>
 
 namespace
 {
@@ -49,8 +49,21 @@ template<typename T> NodePtr decorateIncDec(Context &c, T &node, bool pre)
 
         return { };
     }
+    else
+    {
+        NodePtr dn(IdNode::create(node.location(), { "std", pre ? "prefix" : "postfix" }));
+        NodePtr tn(new TypeNode(node.location(), dn));
 
-    throw Error(node.location(), "thinking about complex inc/dec");
+        Visitor::visit<TypeDecorator>(tn.get(), c);
+
+        auto dt = TypeVisitor::assertType(c, tn.get());
+
+        NodePtr cn(new ConstructNode(node.location(), dt));
+        cn->setProperty("type", dt);
+
+        NodeList params = { cn };
+        return OperatorCallDecorate::generate(c, node, node.expr, params, node.token.text());
+    }
 }
 
 }
