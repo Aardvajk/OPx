@@ -199,7 +199,7 @@ void ExprDecorator::visit(ThisNode &node)
 {
     auto s = c.tree.current()->container();
 
-    if(s->parent()->type() != Sym::Type::Class)
+    if(!s->property<Type*>("type")->method)
     {
         throw Error(node.location(), "this outside method");
     }
