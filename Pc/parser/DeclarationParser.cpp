@@ -213,7 +213,7 @@ void buildVarImp(Context &c, bool free, BlockNode *block, bool get)
         n->type = TypeParser::build(c, true);
     }
 
-    if(c.scanner.token().type() == Token::Type::Assign)
+    if(c.scanner.token().type() == Token::Type::Assign && c.containers.back() != Sym::Type::Class)
     {
         n->value = ExprParser::build(c, true);
     }
