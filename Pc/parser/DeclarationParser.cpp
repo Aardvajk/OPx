@@ -202,12 +202,20 @@ void buildClass(Context &c, BlockNode *block, bool get)
 
 void buildVarImp(Context &c, Qual::Flags quals, BlockNode *block, bool get)
 {
+    auto name = CommonParser::extendedName(c, get);
+
+    if(c.containers.back() == Sym::Type::Class)
+    {
+        if(quals[Qual::Flag::External] && !quals[Qual::Flag::Free])
+        {
+            throw Error(name->location(), "instance member cannot be external - ", name->description());
+        }
+    }
+
     if(quals[Qual::Flag::Free])
     {
         quals |= Qual::Flag::External;
     }
-
-    auto name = CommonParser::extendedName(c, get);
 
     auto n = new VarNode(name->location(), name);
     block->push_back(n);

@@ -88,7 +88,15 @@ void ExprGenerator::visit(IdNode &node)
         }
 
         sz = Type::assertSize(node.location(), sym->property<Type*>("type"));
-        os << "    load " << *sz << ";\n";
+
+        if(!c.option("O", "elide_no_effect_ops") || *sz)
+        {
+            os << "    load " << *sz << ";\n";
+        }
+        else
+        {
+            os << "    pop " << sizeof(std::size_t) << ";\n";
+        }
     }
     else
     {
@@ -226,7 +234,15 @@ void ExprGenerator::visit(DerefNode &node)
     sz = Type::assertSize(node.expr->location(), TypeVisitor::assertType(c, &node));
 
     ExprGenerator::generate(c, os, node.expr.get());
-    os << "    load " << *sz << ";\n";
+
+    if(!c.option("O", "elide_no_effect_ops") || *sz)
+    {
+        os << "    load " << *sz << ";\n";
+    }
+    else
+    {
+        os << "    pop " << sizeof(std::size_t) << ";\n";
+    }
 }
 
 void ExprGenerator::visit(ThisNode &node)

@@ -175,7 +175,7 @@ void FuncGenerator::visit(ReturnNode &node)
             auto cm = TypeLookup::assertCopyMethod(c, node.location(), type);
 
             os << "    push &\"@ret\";\n";
-            os << "    load 8;\n";
+            os << "    load " << sizeof(std::size_t) << ";\n";
 
             AddrGenerator::generate(c, os, node.expr.get());
 
