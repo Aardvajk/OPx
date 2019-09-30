@@ -4,14 +4,14 @@
 
 #include "application/Context.h"
 
-Token Operators::scan(Context &c, bool get)
+std::string Operators::scan(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
 
     if(tok.type() == Token::Type::LeftParen)
     {
         c.scanner.match(Token::Type::RightParen, true);
-        return Token(Token::Type::CallOp, tok.location(), "()");
+        return "()";
     }
 
     switch(tok.type())
@@ -36,7 +36,7 @@ Token Operators::scan(Context &c, bool get)
         case Token::Type::Inc:
         case Token::Type::Dec:
 
-        case Token::Type::LeftShift: return tok;
+        case Token::Type::LeftShift: return tok.text();
 
         default: throw Error(tok.location(), "operator expected - ", tok.text());
     }

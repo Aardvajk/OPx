@@ -30,8 +30,8 @@ std::string convertId(Context &c, const Token &tok)
 {
     if(tok.type() == Token::Type::RwOperator)
     {
-        auto op = Operators::scan(c, true);
-        return tok.text() + op.text();
+        auto s = Operators::scan(c, true);
+        return pcx::str(tok.text(), s);
     }
     else if(tok.type() != Token::Type::Id && tok.type() != Token::Type::RwNew && tok.type() != Token::Type::RwDelete)
     {

@@ -22,8 +22,8 @@ NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
 
     if(tok.type() == Token::Type::RwOperator && extensions)
     {
-        tok = Operators::scan(c, true);
-        name = pcx::str("operator", tok.text());
+        auto s = Operators::scan(c, true);
+        name = pcx::str("operator", s);
 
         c.scanner.next(true);
     }

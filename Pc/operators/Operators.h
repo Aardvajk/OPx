@@ -1,14 +1,14 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
 
-#include "scanner/Token.h"
+#include <string>
 
 class Context;
 
 namespace Operators
 {
 
-Token scan(Context &c, bool get);
+std::string scan(Context &c, bool get);
 
 }
 
