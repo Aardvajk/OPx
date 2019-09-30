@@ -28,22 +28,23 @@ void ExprLower::visit(IdNode &node)
         node.parent = ExprLower::lower(c, node.parent);
     }
 
-    auto type = TypeVisitor::assertType(c, &node);
-
-    if(!type->ref)
+    if(auto type = TypeVisitor::queryType(c, &node))
     {
-        if(expectedType && expectedType->ref)
+        if(!type->ref)
         {
-            rn = new AddrOfNode(node.location(), cn);
-            rn->setProperty("type", c.types.insert(type->addPointer()));
+            if(expectedType && expectedType->ref)
+            {
+                rn = new AddrOfNode(node.location(), cn);
+                rn->setProperty("type", c.types.insert(type->addPointer()));
+            }
         }
-    }
-    else
-    {
-        if(!expectedType || !expectedType->ref)
+        else
         {
-            rn = new DerefNode(node.location(), cn);
-            rn->setProperty("type", c.types.insert(type->removePointer()));
+            if(!expectedType || !expectedType->ref)
+            {
+                rn = new DerefNode(node.location(), cn);
+                rn->setProperty("type", c.types.insert(type->removePointer()));
+            }
         }
     }
 }

@@ -1,0 +1,21 @@
+include("stdtest.ph");
+
+namespace woo
+{
+
+class foo
+{
+public:
+    free var a:std.int;
+    free func f():std.int { return 321; }
+}
+
+}
+
+var woo.foo.a = 123;
+
+func main()
+{
+    test.assert(woo.foo.a == 123);
+    test.assert(woo.foo.f() == 321);
+}

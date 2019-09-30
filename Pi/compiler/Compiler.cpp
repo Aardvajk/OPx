@@ -24,12 +24,22 @@
 namespace
 {
 
-void commonSizeConstruct(Context &c, Sym *sym, const std::string &property, bool get)
+void commonSizeConstruct(Context &c, Location location, Sym *sym, const std::string &property, bool get)
 {
     c.scanner.match(Token::Type::Colon, get);
 
-    auto size = c.scanner.match(Token::Type::IntLiteral, true);
-    sym->properties[property] = pcx::lexical_cast<std::size_t>(size.text());
+    auto tok = c.scanner.match(Token::Type::IntLiteral, true);
+    auto size = pcx::lexical_cast<std::size_t>(tok.text());
+
+    if(auto ex = sym->properties[property])
+    {
+        if(ex.to<std::size_t>() != size)
+        {
+            throw Error(location, "mismatched ", property, " - ", sym->name);
+        }
+    }
+
+    sym->properties[property] = size;
 
     c.scanner.next(true);
 }
@@ -109,19 +119,33 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
         c.scanner.next(true);
     }
 
-    auto props = properties(c, false);
     auto id = c.matchId(false);
 
-    c.assertUnique(id.location(), id.text());
+    Sym *sym = c.syms.find(id.text());
+    if(sym)
+    {
+        if(sym->type != Sym::Type::Global)
+        {
+            throw Error(id.location(), "global var expected - ", id.text());
+        }
 
-    auto sym = c.syms.add(new Sym(type, id.text()));
+        if(!sym->properties["external"].value<bool>())
+        {
+            throw Error(id.location(), "already defined - ", id.text());
+        }
+    }
+    else
+    {
+        sym = c.syms.add(new Sym(type, id.text()));
 
-    processProperties(c, sym, props);
+        sym->properties["external"] = external;
+        sym->properties["flags"] = Object::Entity::Flags();
+    }
 
     auto next = c.scanner.next(true);
     if(next.type() == Token::Type::Colon)
     {
-        commonSizeConstruct(c, sym, "size", false);
+        commonSizeConstruct(c, next.location(), sym, "size", false);
     }
 
     if(type == Sym::Type::Global)
@@ -136,6 +160,10 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
                 if(!sym->properties["size"])
                 {
                     sym->properties["size"] = std::size_t(v.size());
+                }
+                else if(sym->properties["size"].to<std::size_t>() != std::size_t(v.size()))
+                {
+                    throw Error(next.location(), "mismatched size - ", sym->name);
                 }
 
                 if(v.size() > sym->properties["size"].to<std::size_t>())
@@ -197,7 +225,7 @@ void funcConstruct(Context &c, bool get)
 
     auto rs = sym->properties["returnSize"];
 
-    commonSizeConstruct(c, sym, "returnSize", true);
+    commonSizeConstruct(c, id.location(), sym, "returnSize", true);
 
     if(rs && rs.to<std::size_t>() != sym->properties["returnSize"].to<std::size_t>())
     {

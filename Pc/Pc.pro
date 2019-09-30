@@ -125,6 +125,7 @@ HEADERS += \
     generator/LocalsGenerator.h \
     info/Access.h \
     info/FuncInfo.h \
+    info/Qual.h \
     lower/ExprLower.h \
     lower/FuncLower.h \
     lower/Lower.h \

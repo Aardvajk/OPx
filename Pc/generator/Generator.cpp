@@ -144,7 +144,14 @@ void Generator::visit(VarNode &node)
 
     if(!sym->findProperty("member").value<bool>())
     {
-        os << "var \"" << sym->fullname() << "\":" << Type::assertSize(node.location(), sym->property<Type*>("type"));
+        os << "var ";
+
+        if(node.findProperty("external").value<bool>())
+        {
+            os << "external ";
+        }
+
+        os << "\"" << sym->fullname() << "\":" << Type::assertSize(node.location(), sym->property<Type*>("type"));
 
         if(node.value)
         {

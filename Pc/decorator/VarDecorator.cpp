@@ -9,8 +9,32 @@
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/NameVisitors.h"
+#include "visitors/SymFinder.h"
 
 #include "types/Type.h"
+
+namespace
+{
+
+Sym *search(Context &c, Node *node)
+{
+    std::vector<Sym*> sv;
+    SymFinder::find(c, SymFinder::Type::Local, c.tree.current(), node, sv);
+
+    for(auto s: sv)
+    {
+        if(s->type() != Sym::Type::Var)
+        {
+            throw Error(node->location(), "var expected - ", s->fullname());
+        }
+
+        return s;
+    }
+
+    return nullptr;
+}
+
+}
 
 VarDecorator::VarDecorator(Context &c) : c(c)
 {
@@ -48,17 +72,27 @@ void VarDecorator::visit(VarNode &node)
         throw Error(node.location(), "no type specified - ", node.name->description());
     }
 
-    auto name = NameVisitors::assertSimpleUniqueName(c, node.name.get());
-    if(name.empty())
+    auto sym = search(c, node.name.get());
+    if(sym)
     {
-        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-        name = pcx::str("#unnamed", info->labels++);
+        if(!node.findProperty("external").value<bool>())
+        {
+        }
     }
+    else
+    {
+        auto name = NameVisitors::assertSimpleUniqueName(c, node.name.get());
+        if(name.empty())
+        {
+            auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+            name = pcx::str("#unnamed", info->labels++);
+        }
 
-    auto sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.location(), node.property<Access>("access"), name));
+        sym = c.tree.current()->add(new Sym(Sym::Type::Var, node.location(), node.property<Access>("access"), name));
 
-    sym->setProperty("type", type);
-    sym->setProperty("member", c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>());
+        sym->setProperty("type", type);
+        sym->setProperty("member", c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>());
+    }
 
     node.setProperty("sym", sym);
 }
