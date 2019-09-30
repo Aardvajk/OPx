@@ -12,6 +12,7 @@
 #include "visitors/SymFinder.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 namespace
 {
@@ -75,8 +76,14 @@ void VarDecorator::visit(VarNode &node)
     auto sym = search(c, node.name.get());
     if(sym)
     {
-        if(!node.findProperty("external").value<bool>())
+        if(!sym->findProperty("external").value<bool>() && !node.findProperty("external").value<bool>())
         {
+            throw Error(node.location(), "already defined - ", sym->fullname());
+        }
+
+        if(!TypeCompare(c).exact(type, sym->property<Type*>("type")))
+        {
+            throw Error(node.location(), "mismatched type - ", sym->fullname());
         }
     }
     else
@@ -92,6 +99,7 @@ void VarDecorator::visit(VarNode &node)
 
         sym->setProperty("type", type);
         sym->setProperty("member", c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>());
+        sym->setProperty("external", node.findProperty("external").value<bool>());
     }
 
     node.setProperty("sym", sym);

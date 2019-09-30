@@ -129,7 +129,7 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
             throw Error(id.location(), "global var expected - ", id.text());
         }
 
-        if(!sym->properties["external"].value<bool>())
+        if(!sym->properties["external"].value<bool>() && !external)
         {
             throw Error(id.location(), "already defined - ", id.text());
         }
