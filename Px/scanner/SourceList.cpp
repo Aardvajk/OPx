@@ -23,3 +23,8 @@ std::string SourceList::path(Location::Id id) const
 {
     return v[id];
 }
+
+bool SourceList::contains(const std::string &path) const
+{
+    return std::find(v.begin(), v.end(), path) != v.end();
+}

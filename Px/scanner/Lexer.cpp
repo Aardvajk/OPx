@@ -24,6 +24,7 @@ static const std::vector<Reserved> pcReserved =
     { "public", Token::Type::RwPublic },
     { "private", Token::Type::RwPrivate },
     { "free", Token::Type::RwFree },
+    { "inline", Token::Type::RwInline },
     { "var", Token::Type::RwVar },
     { "func", Token::Type::RwFunc },
     { "ptr", Token::Type::RwPtr },

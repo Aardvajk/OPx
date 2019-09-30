@@ -15,6 +15,8 @@ public:
 
     std::string path(Location::Id id) const;
 
+    bool contains(const std::string &path) const;
+
 private:
     std::vector<std::string> v;
 };

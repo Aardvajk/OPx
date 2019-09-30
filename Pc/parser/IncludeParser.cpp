@@ -11,49 +11,51 @@
 namespace
 {
 
-bool searchAndOpen(Context &c, const std::vector<std::string> &search, const std::string &path)
+std::string search(const std::vector<std::string> &search, const std::string &path)
 {
     for(auto s: search)
     {
         auto p = pcx::str(s, '/', path);
         if(pcx::filesys::exists(p))
         {
-            c.open(p);
-            return true;
+            return p;
         }
     }
 
-    return false;
+    return { };
 }
 
-void process(Context &c, BlockNode *block, bool get)
+void process(Context &c, BlockNode *block, bool force, bool get)
 {
-    auto path = c.scanner.match(Token::Type::StringLiteral, get);
+    auto tok = c.scanner.match(Token::Type::StringLiteral, get);
+    auto path = tok.text();
 
-    if(pcx::filesys::exists(path.text()))
+    if(!pcx::filesys::exists(path))
     {
-        c.open(path.text());
-    }
-    else
-    {
-        if(!searchAndOpen(c, c.values("I"), path.text()))
+        path = search(c.values("I"), path);
+        if(path.empty())
         {
-            throw Error(path.location(), "unable to locate - \"", path.text(), "\"");
+            throw Error(tok.location(), "unable to locate - \"", tok.text(), "\"");
         }
     }
 
-    c.scanner.next(true);
-    while(c.scanner.token().type() != Token::Type::Eof)
+    if(force || !c.sources.contains(path))
     {
-        Parser::construct(c, block, false);
-    }
+        c.open(path);
 
-    c.scanner.pop();
+        c.scanner.next(true);
+        while(c.scanner.token().type() != Token::Type::Eof)
+        {
+            Parser::construct(c, block, false);
+        }
+
+        c.scanner.pop();
+    }
 
     c.scanner.next(true);
     if(c.scanner.token().type() == Token::Type::Comma)
     {
-        process(c, block, true);
+        process(c, block, force, true);
     }
 }
 
@@ -66,11 +68,20 @@ void IncludeParser::build(Context &c, BlockNode *block, bool get)
         throw Error(c.scanner.token().location(), "invalid include");
     }
 
-    c.scanner.consume(Token::Type::LeftParen, get);
+    bool force = false;
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::RwInline)
+    {
+        force = true;
+        c.scanner.next(true);
+    }
+
+    c.scanner.consume(Token::Type::LeftParen, false);
 
     if(c.scanner.token().type() != Token::Type::RightParen)
     {
-        process(c, block, false);
+        process(c, block, force, false);
     }
 
     c.scanner.match(Token::Type::RightParen, false);
