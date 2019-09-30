@@ -21,12 +21,13 @@ static const std::vector<Reserved> pcReserved =
 {
     { "class", Token::Type::RwClass },
     { "namespace", Token::Type::RwNamespace },
+    { "var", Token::Type::RwVar },
+    { "func", Token::Type::RwFunc },
     { "public", Token::Type::RwPublic },
     { "private", Token::Type::RwPrivate },
     { "free", Token::Type::RwFree },
     { "inline", Token::Type::RwInline },
-    { "var", Token::Type::RwVar },
-    { "func", Token::Type::RwFunc },
+    { "external", Token::Type::RwExternal },
     { "ptr", Token::Type::RwPtr },
     { "ref", Token::Type::RwRef },
     { "operator", Token::Type::RwOperator },
@@ -50,6 +51,7 @@ static const std::vector<Reserved> piReserved =
 {
     { "var", Token::Type::RwVar },
     { "func", Token::Type::RwFunc },
+    { "external", Token::Type::RwExternal },
     { "arg", Token::Type::RwArg },
     { "char", Token::Type::RwChar },
     { "int", Token::Type::RwInt },

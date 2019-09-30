@@ -100,7 +100,16 @@ void processProperties(Context &c, Sym *sym, const std::vector<std::string> &pro
 
 void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 {
-    auto props = properties(c, get);
+    bool external = false;
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::RwExternal)
+    {
+        external = true;
+        c.scanner.next(true);
+    }
+
+    auto props = properties(c, false);
     auto id = c.matchId(false);
 
     c.assertUnique(id.location(), id.text());
@@ -117,37 +126,39 @@ void varConstruct(Context &c, Sym::Type type, std::vector<Sym*> *v, bool get)
 
     if(type == Sym::Type::Global)
     {
-        std::vector<char> v;
-        if(c.scanner.token().type() == Token::Type::Assign)
+        if(!external)
         {
-            byteListConstruct(c, v, true);
-
-            if(!sym->properties["size"])
+            std::vector<char> v;
+            if(c.scanner.token().type() == Token::Type::Assign)
             {
-                sym->properties["size"] = std::size_t(v.size());
+                byteListConstruct(c, v, true);
+
+                if(!sym->properties["size"])
+                {
+                    sym->properties["size"] = std::size_t(v.size());
+                }
+
+                if(v.size() > sym->properties["size"].to<std::size_t>())
+                {
+                    throw Error(c.scanner.token().location(), "too many bytes - ", id.text());
+                }
+            }
+            else
+            {
+                v.push_back(0);
             }
 
-            if(v.size() > sym->properties["size"].to<std::size_t>())
+            c.globs.emplace_back(sym, c.strings.insert(id.text()));
+
+            auto sz = sym->properties["size"].to<std::size_t>();
+            for(std::size_t i = 0; i < sz; ++i)
             {
-                throw Error(c.scanner.token().location(), "too many bytes - ", id.text());
+                c.globs.back().bytes << (i < v.size() ? v[i] : v.back());
             }
+
+            c.vd.begin('V', sym->name, sz, { });
+            c.vd("var ", sym->name, ":", sz);
         }
-        else
-        {
-            v.push_back(0);
-        }
-
-        c.globs.emplace_back(sym, c.strings.insert(id.text()));
-
-        auto sz = sym->properties["size"].to<std::size_t>();
-        for(std::size_t i = 0; i < sz; ++i)
-        {
-            c.globs.back().bytes << (i < v.size() ? v[i] : v.back());
-        }
-
-        c.vd.begin('V', sym->name, sz, { });
-        c.vd("var ", sym->name, ":", sz);
-
     }
     else if(type == Sym::Type::Local)
     {
