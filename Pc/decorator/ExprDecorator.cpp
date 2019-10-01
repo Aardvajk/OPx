@@ -20,6 +20,7 @@
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
 #include "visitors/QueryVisitors.h"
+#include "visitors/NameVisitors.h"
 
 #include "types/Type.h"
 
@@ -66,6 +67,11 @@ ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c)
 
 void ExprDecorator::visit(IdNode &node)
 {
+    if(!node.parent)
+    {
+        Visitor::visit<NameVisitors::ResolveOpName>(&node, c);
+    }
+
     if(node.parent)
     {
         node.parent = ExprDecorator::decorate(c, node.parent);

@@ -51,8 +51,7 @@ void NameVisitors::ResolveOpName::visit(IdNode &node)
     {
         node.parent->accept(*this);
     }
-
-    if(node.op)
+    else if(node.op)
     {
         Visitor::visit<ResolveOpType>(node.op.get(), c, node);
     }
@@ -78,11 +77,13 @@ void NameVisitors::ResolveOpType::visit(IdNode &node)
     }
 
     id.name += pcx::str(" ", sv.front()->fullname());
+    id.op = { };
 }
 
 void NameVisitors::ResolveOpType::visit(TextNode &node)
 {
     id.name += node.description();
+    id.op = { };
 }
 
 std::string NameVisitors::assertSimpleName(Context &c, Node *node)

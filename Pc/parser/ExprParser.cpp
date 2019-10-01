@@ -42,14 +42,27 @@ std::string convertId(Context &c, const Token &tok)
     return tok.text();
 }
 
-NodePtr id(Context &c, bool get)
+NodePtr id(Context &c, NodePtr parent, bool get)
 {
+    std::string text;
+    NodePtr op;
+
     auto tok = c.scanner.next(get);
-    auto value = convertId(c, tok);
+    if(tok.type() == Token::Type::RwOperator)
+    {
+        op = Operators::scan(c, true);
+        text = "operator";
+    }
+    else if(tok.type() == Token::Type::Id || tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete)
+    {
+        text = tok.text();
+        c.scanner.next(true);
+    }
 
-    NodePtr n = new IdNode(tok.location(), { }, value);
+    auto id = new IdNode(tok.location(), parent, text);
+    NodePtr n(id);
 
-    c.scanner.next(true);
+    id->op = op;
     return n;
 }
 
@@ -90,8 +103,8 @@ NodePtr primary(Context &c, bool get)
     NodePtr n;
     switch(tok.type())
     {
-        case Token::Type::Id: return id(c, false);
-//        case Token::Type::RwOperator:
+        case Token::Type::Id:
+        case Token::Type::RwOperator: return id(c, { }, false);
 
         case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
 
@@ -115,18 +128,6 @@ NodePtr primary(Context &c, bool get)
 
         default: throw Error(tok.location(), "primary expected - ", tok.text());
     }
-}
-
-NodePtr dot(Context &c, NodePtr parent, bool get)
-{
-    auto name = c.scanner.next(get);
-    auto value = convertId(c, name);
-
-    auto n = new IdNode(name.location(), parent, value);
-    NodePtr nn(n);
-
-    c.scanner.next(true);
-    return nn;
 }
 
 void params(Context &c, NodeList &container, bool get)
@@ -164,7 +165,7 @@ NodePtr entity(Context &c, bool get)
         auto tok = c.scanner.token();
         switch(tok.type())
         {
-            case Token::Type::Dot: n = dot(c, n, true); break;
+            case Token::Type::Dot: n = id(c, n, true); break;
             case Token::Type::LeftParen: n = call(c, n, true); break;
 
             case Token::Type::Inc:
