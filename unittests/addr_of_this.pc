@@ -7,11 +7,15 @@ var g:ptr foo;
 class foo
 {
 public:
-    func new(){ g = &this; }
+    func new() ... x(321) { g = &this; }
+
+    var x:std.int;
 }
 
 func main()
 {
     var a = foo();
+
     test.assert(&a == g);
+    test.assert((*g).x == 321);
 }
