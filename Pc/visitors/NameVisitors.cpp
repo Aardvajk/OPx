@@ -51,7 +51,8 @@ void NameVisitors::ResolveOpName::visit(IdNode &node)
     {
         node.parent->accept(*this);
     }
-    else if(node.op)
+
+    if(node.op)
     {
         Visitor::visit<ResolveOpType>(node.op.get(), c, node);
     }

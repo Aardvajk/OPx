@@ -1,0 +1,49 @@
+include("stdtest.ph");
+
+var g = false;
+
+class foo
+{
+}
+
+func operator foo()
+{
+    g = true;
+}
+
+func operator std.int(a:std.char):std.int
+{
+    return std.int(a);
+}
+
+func operator-(:foo):std.int
+{
+    return 321;
+}
+
+namespace woo
+{
+
+namespace foo
+{
+
+func operator()(:std.int):std.int
+{
+    return 32;
+}
+
+}
+
+}
+
+func main()
+{
+    operator foo();
+    test.assert(g);
+
+    test.assert(operator std.int('A') == 65);
+
+    test.assert(operator-(foo()) == 321);
+
+    test.assert(woo.foo.operator()(10) == 32);
+}

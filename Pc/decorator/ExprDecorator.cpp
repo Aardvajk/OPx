@@ -67,10 +67,7 @@ ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c)
 
 void ExprDecorator::visit(IdNode &node)
 {
-    if(!node.parent)
-    {
-        Visitor::visit<NameVisitors::ResolveOpName>(&node, c);
-    }
+    Visitor::visit<NameVisitors::ResolveOpName>(&node, c);
 
     if(node.parent)
     {
