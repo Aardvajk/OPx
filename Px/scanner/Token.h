@@ -17,7 +17,7 @@ public:
         Eq, Neq, Lt, LtEq, Gt, GtEq,
         Exclaim, And, Or, Ellipsis, Inc, Dec,
         AddEq, SubEq, MulEq, DivEq, ModEq,
-        LeftShift, CallOp,
+        LeftShift,
         RwClass, RwNamespace, RwVar, RwFunc,
         RwPublic, RwPrivate, RwFree, RwInline, RwExternal,
         RwArg, RwPtr, RwRef, RwOperator, RwInclude, RwThis, RwPragma, RwConst,
