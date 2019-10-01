@@ -1,0 +1,17 @@
+include("stdtest.ph");
+
+class foo;
+
+var g:ptr foo;
+
+class foo
+{
+public:
+    func new(){ g = &this; }
+}
+
+func main()
+{
+    var a = foo();
+    test.assert(&a == g);
+}
