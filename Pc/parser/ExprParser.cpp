@@ -26,22 +26,6 @@ namespace
 NodePtr entity(Context &c, bool get);
 NodePtr expression(Context &c, bool get);
 
-std::string convertId(Context &c, const Token &tok)
-{
-//    if(tok.type() == Token::Type::RwOperator)
-//    {
-//        auto s = Operators::scan(c, true);
-//        return pcx::str(tok.text(), s);
-//    }
-//    else
-    if(tok.type() != Token::Type::Id && tok.type() != Token::Type::RwNew && tok.type() != Token::Type::RwDelete)
-    {
-        throw Error(tok.location(), "identifier expected - ", tok.text());
-    }
-
-    return tok.text();
-}
-
 NodePtr id(Context &c, NodePtr parent, bool get)
 {
     std::string text;

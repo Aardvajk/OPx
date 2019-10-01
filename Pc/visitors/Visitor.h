@@ -31,6 +31,7 @@ class InitNode;
 class PreIncDecNode;
 class PostIncDecNode;
 class WhileNode;
+class IfNode;
 class TextNode;
 
 class Visitor
@@ -66,6 +67,7 @@ public:
     virtual void visit(PreIncDecNode &node);
     virtual void visit(PostIncDecNode &node);
     virtual void visit(WhileNode &node);
+    virtual void visit(IfNode &node);
     virtual void visit(TextNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)

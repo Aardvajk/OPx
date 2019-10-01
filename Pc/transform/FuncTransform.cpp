@@ -13,6 +13,7 @@
 #include "nodes/InitNode.h"
 #include "nodes/AssignNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -23,6 +24,9 @@
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+
+#include "decorator/CommonDecorator.h"
+#include "syms/Sym.h"
 
 namespace
 {
@@ -156,6 +160,17 @@ void FuncTransform::visit(WhileNode &node)
 {
     node.expr = ExprTransform::transform(c, node.expr);
     node.body->accept(*this);
+}
+
+void FuncTransform::visit(IfNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
+    node.body->accept(*this);
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
 }
 
 NodePtr FuncTransform::transform(Context &c, NodePtr node, std::size_t index)

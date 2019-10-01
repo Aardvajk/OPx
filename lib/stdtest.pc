@@ -3,7 +3,7 @@ include("stdlib.ph");
 
 func test.assert(b:std.bool)
 {
-    while(!b)
+    if(!b)
     {
         std.abort();
     }

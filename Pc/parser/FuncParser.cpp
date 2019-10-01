@@ -7,6 +7,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "parser/CommonParser.h"
 #include "parser/ExprParser.h"
@@ -50,6 +51,23 @@ void buildWhile(Context &c, BlockNode *block, bool get)
     n->body = CommonParser::scopeContents(c, n->location(), true);
 }
 
+void buildIf(Context &c, BlockNode *block, bool get)
+{
+    auto n = new IfNode(c.scanner.token().location());
+    block->push_back(n);
+
+    c.scanner.match(Token::Type::LeftParen, true);
+    n->expr = ExprParser::build(c, true);
+    c.scanner.match(Token::Type::RightParen, false);
+
+    n->body = CommonParser::scopeContents(c, n->location(), true);
+
+    if(c.scanner.token().type() == Token::Type::RwElse)
+    {
+        n->elseBody = CommonParser::scopeContents(c, n->location(), true);
+    }
+}
+
 void buildExpr(Context &c, BlockNode *block, bool get)
 {
     auto n = new ExprNode(c.scanner.token().location());
@@ -77,6 +95,7 @@ void FuncParser::build(Context &c, BlockNode *block, bool get)
         case Token::Type::LeftBrace: buildScope(c, block, false); break;
 
         case Token::Type::RwWhile: buildWhile(c, block, true); break;
+        case Token::Type::RwIf: buildIf(c, block, true); break;
 
         default: buildExpr(c, block, false);
     }

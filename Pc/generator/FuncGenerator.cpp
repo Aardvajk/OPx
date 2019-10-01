@@ -8,6 +8,7 @@
 #include "nodes/ExprNode.h"
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/ExprGenerator.h"
@@ -207,5 +208,28 @@ void FuncGenerator::visit(WhileNode &node)
     node.body->accept(*this);
 
     os << "    jmp " << l0 << ";\n";
+    os << l1 << ":\n";
+}
+
+void FuncGenerator::visit(IfNode &node)
+{
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    auto l0 = info->nextLabelQuoted();
+    auto l1 = info->nextLabelQuoted();
+
+    CommonGenerator::generateBooleanExpression(c, os, node.expr.get());
+    os << "    jmp ifz " << l0 << ";\n";
+
+    node.body->accept(*this);
+    os << "    jmp " << l1 << ";\n";
+
+    os << l0 << ":\n";
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
+
     os << l1 << ":\n";
 }

@@ -9,6 +9,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/WhileNode.h"
+#include "nodes/IfNode.h"
 
 #include "types/Type.h"
 
@@ -69,4 +70,15 @@ void FuncLower::visit(WhileNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
     node.body->accept(*this);
+}
+
+void FuncLower::visit(IfNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+    node.body->accept(*this);
+
+    if(node.elseBody)
+    {
+        node.elseBody->accept(*this);
+    }
 }

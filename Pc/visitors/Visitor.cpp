@@ -116,6 +116,10 @@ void Visitor::visit(WhileNode &node)
 {
 }
 
+void Visitor::visit(IfNode &node)
+{
+}
+
 void Visitor::visit(TextNode &node)
 {
 }
