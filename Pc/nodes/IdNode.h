@@ -8,7 +8,7 @@
 class IdNode : public Node
 {
 public:
-    IdNode(Location location, NodePtr parent, std::string name) : Node(location), parent(parent), name(std::move(name)), special(Token::Type::Invalid) { }
+    IdNode(Location location, NodePtr parent, std::string name) : Node(location), parent(parent), name(std::move(name)), special(Token::Type::Invalid), arrow(false) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
@@ -20,6 +20,7 @@ public:
 
     Token::Type special;
     NodePtr op;
+    bool arrow;
 };
 
 #endif // IDNODE_H

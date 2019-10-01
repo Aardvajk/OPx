@@ -26,7 +26,7 @@ namespace
 NodePtr entity(Context &c, bool get);
 NodePtr expression(Context &c, bool get);
 
-NodePtr id(Context &c, NodePtr parent, bool get)
+NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
 {
     std::string text;
     NodePtr op;
@@ -47,6 +47,8 @@ NodePtr id(Context &c, NodePtr parent, bool get)
     NodePtr n(id);
 
     id->op = op;
+    id->arrow = arrow;
+
     return n;
 }
 
@@ -88,7 +90,7 @@ NodePtr primary(Context &c, bool get)
     switch(tok.type())
     {
         case Token::Type::Id:
-        case Token::Type::RwOperator: return id(c, { }, false);
+        case Token::Type::RwOperator: return id(c, { }, false, false);
 
         case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
 
@@ -149,7 +151,9 @@ NodePtr entity(Context &c, bool get)
         auto tok = c.scanner.token();
         switch(tok.type())
         {
-            case Token::Type::Dot: n = id(c, n, true); break;
+            case Token::Type::Dot: n = id(c, n, false, true); break;
+            case Token::Type::Arrow: n = id(c, n, true, true); break;
+
             case Token::Type::LeftParen: n = call(c, n, true); break;
 
             case Token::Type::Inc:

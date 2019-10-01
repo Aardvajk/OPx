@@ -240,7 +240,7 @@ Token Lexer::next(Mode mode, Source &source)
     if(ch == ';') return Token(Token::Type::Semicolon, loc, ch);
 
     if(ch == '+') return speculate(source, loc, { '+', Token::Type::Add }, { { '+', Token::Type::Inc }, { '=', Token::Type::AddEq } });
-    if(ch == '-') return speculate(source, loc, { '-', Token::Type::Sub }, { { '-', Token::Type::Dec }, { '=', Token::Type::SubEq } });
+    if(ch == '-') return speculate(source, loc, { '-', Token::Type::Sub }, { { '-', Token::Type::Dec }, { '=', Token::Type::SubEq }, { '>', Token::Type::Arrow } });
 
     if(ch == '*') return speculate(source, loc, { '*', Token::Type::Star }, { { '=', Token::Type::MulEq } });
     if(ch == '/') return speculate(source, loc, { '/', Token::Type::Div }, { { '=', Token::Type::DivEq } });

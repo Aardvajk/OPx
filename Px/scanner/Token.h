@@ -13,7 +13,7 @@ public:
     {
         Id, IntLiteral, CharLiteral, StringLiteral, SizeLiteral,
         LeftBrace, RightBrace, LeftParen, RightParen, LeftSub, RightSub,
-        Dot, Comma, Semicolon, Colon, Assign, Amp, Star, Add, Sub, Div, Mod,
+        Dot, Comma, Semicolon, Colon, Assign, Amp, Star, Add, Sub, Div, Mod, Arrow,
         Eq, Neq, Lt, LtEq, Gt, GtEq,
         Exclaim, And, Or, Ellipsis, Inc, Dec,
         AddEq, SubEq, MulEq, DivEq, ModEq,

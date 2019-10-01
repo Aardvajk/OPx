@@ -41,6 +41,7 @@ DISTFILES += \
     ../unittests/addr_of_ref.pc \
     ../unittests/addr_of_ref_param.pc \
     ../unittests/addr_of_this.pc \
+    ../unittests/arrow.pc \
     ../unittests/break.pc \
     ../unittests/complex_ref_members.pc \
     ../unittests/const_method.pc \

@@ -46,7 +46,7 @@ void DescVisitor::visit(IdNode &node)
     if(node.parent)
     {
         node.parent->accept(*this);
-        r += ".";
+        r += node.arrow ? "->" : ".";
     }
 
     r += node.name;

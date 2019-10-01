@@ -1,0 +1,40 @@
+include("stdtest.ph");
+
+class moo
+{
+public:
+    func new() ... x(123) { }
+
+    var x:std.int;
+}
+
+class foo
+{
+public:
+    var m:moo;
+}
+
+class woo
+{
+public:
+    func new(w:ref foo) ... w(&w) { }
+
+    var w:ptr foo;
+}
+
+class bar
+{
+public:
+    func new(n:ref woo) ... n(&n) { }
+
+    var n:ptr woo;
+}
+
+func main()
+{
+    var a = foo();
+    var w = woo(a);
+    var b = bar(w);
+
+    test.assert(b.n->w->m.x == 123);
+}

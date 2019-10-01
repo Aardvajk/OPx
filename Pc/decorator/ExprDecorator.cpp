@@ -67,6 +67,12 @@ ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c)
 
 void ExprDecorator::visit(IdNode &node)
 {
+    if(node.arrow)
+    {
+        node.parent = new DerefNode(node.location(), node.parent);
+        node.arrow = false;
+    }
+
     Visitor::visit<NameVisitors::ResolveOpName>(&node, c);
 
     if(node.parent)
