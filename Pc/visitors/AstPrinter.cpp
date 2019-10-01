@@ -26,6 +26,7 @@
 #include "nodes/InitNode.h"
 #include "nodes/IncDecNodes.h"
 #include "nodes/WhileNode.h"
+#include "nodes/TextNode.h"
 
 #include "syms/Sym.h"
 
@@ -93,7 +94,10 @@ void AstPrinter::visit(BlockNode &node)
 
 void AstPrinter::visit(IdNode &node)
 {
-    tab() << "id " << node.name << details(node) << "\n";
+    tab() << "id " << node.name;
+    if(node.op) os << " " << node.op->description();
+
+    os << details(node) << "\n";
 
     if(node.parent)
     {
@@ -379,6 +383,11 @@ void AstPrinter::visit(WhileNode &node)
     auto g = pcx::scoped_counter(tc);
     node.expr->accept(*this);
     node.body->accept(*this);
+}
+
+void AstPrinter::visit(TextNode &node)
+{
+    tab() << "text " << node.value << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

@@ -28,12 +28,13 @@ NodePtr expression(Context &c, bool get);
 
 std::string convertId(Context &c, const Token &tok)
 {
-    if(tok.type() == Token::Type::RwOperator)
-    {
-        auto s = Operators::scan(c, true);
-        return pcx::str(tok.text(), s);
-    }
-    else if(tok.type() != Token::Type::Id && tok.type() != Token::Type::RwNew && tok.type() != Token::Type::RwDelete)
+//    if(tok.type() == Token::Type::RwOperator)
+//    {
+//        auto s = Operators::scan(c, true);
+//        return pcx::str(tok.text(), s);
+//    }
+//    else
+    if(tok.type() != Token::Type::Id && tok.type() != Token::Type::RwNew && tok.type() != Token::Type::RwDelete)
     {
         throw Error(tok.location(), "identifier expected - ", tok.text());
     }
@@ -89,8 +90,8 @@ NodePtr primary(Context &c, bool get)
     NodePtr n;
     switch(tok.type())
     {
-        case Token::Type::Id:
-        case Token::Type::RwOperator: return id(c, false);
+        case Token::Type::Id: return id(c, false);
+//        case Token::Type::RwOperator:
 
         case Token::Type::RwThis: n = new ThisNode(tok.location()); c.scanner.next(true); return n;
 

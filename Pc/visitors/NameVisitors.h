@@ -53,6 +53,30 @@ private:
     Token::Type r;
 };
 
+class ResolveOpName : public Visitor
+{
+public:
+    ResolveOpName(Context &c);
+
+    virtual void visit(IdNode &node) override;
+
+private:
+    Context &c;
+};
+
+class ResolveOpType : public Visitor
+{
+public:
+    ResolveOpType(Context &c, IdNode &id);
+
+    virtual void visit(IdNode &node) override;
+    virtual void visit(TextNode &node) override;
+
+private:
+    Context &c;
+    IdNode &id;
+};
+
 std::string assertSimpleName(Context &c, Node *node);
 std::string assertUniqueName(Context &c, Node *node);
 

@@ -40,6 +40,7 @@ public:
     virtual void visit(PreIncDecNode &node) override;
     virtual void visit(PostIncDecNode &node) override;
     virtual void visit(WhileNode &node) override;
+    virtual void visit(TextNode &node) override;
 
 private:
     std::ostream &tab() const;

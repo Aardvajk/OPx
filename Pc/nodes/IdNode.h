@@ -19,6 +19,7 @@ public:
     std::string name;
 
     Token::Type special;
+    NodePtr op;
 };
 
 #endif // IDNODE_H

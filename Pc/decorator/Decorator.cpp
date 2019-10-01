@@ -146,6 +146,8 @@ void Decorator::visit(FuncNode &node)
         Visitor::visit<TypeDecorator>(node.type.get(), c);
     }
 
+    Visitor::visit<NameVisitors::ResolveOpName>(node.name.get(), c);
+
     auto t = Type::makeFunction(node.type ? TypeVisitor::assertType(c, node.type.get()) : c.types.nullType());
 
     t.method = c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>();

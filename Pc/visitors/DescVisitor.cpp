@@ -24,6 +24,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/TextNode.h"
 
 #include "syms/Sym.h"
 
@@ -269,4 +270,9 @@ void DescVisitor::visit(PostIncDecNode &node)
 {
     node.expr->accept(*this);
     r += node.token.text();
+}
+
+void DescVisitor::visit(TextNode &node)
+{
+    r += node.value;
 }

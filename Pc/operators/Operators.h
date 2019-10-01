@@ -1,6 +1,8 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
 
+#include "nodes/Node.h"
+
 #include <string>
 
 class Context;
@@ -8,7 +10,7 @@ class Context;
 namespace Operators
 {
 
-std::string scan(Context &c, bool get);
+NodePtr scan(Context &c, bool get);
 
 }
 

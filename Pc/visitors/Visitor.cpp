@@ -115,3 +115,7 @@ void Visitor::visit(PostIncDecNode &node)
 void Visitor::visit(WhileNode &node)
 {
 }
+
+void Visitor::visit(TextNode &node)
+{
+}
