@@ -28,6 +28,12 @@ NodePtr Operators::scan(Context &c, bool get)
         case Token::Type::Div:
         case Token::Type::Mod:
 
+        case Token::Type::AddEq:
+        case Token::Type::SubEq:
+        case Token::Type::MulEq:
+        case Token::Type::DivEq:
+        case Token::Type::ModEq:
+
         case Token::Type::Exclaim:
 
         case Token::Type::Eq:
@@ -43,5 +49,19 @@ NodePtr Operators::scan(Context &c, bool get)
         case Token::Type::LeftShift: c.scanner.next(true); return new TextNode(tok.location(), tok.text());
 
         default: return CommonParser::name(c, false);
+    }
+}
+
+Token Operators::opEqToOp(const Token &token)
+{
+    switch(token.type())
+    {
+        case Token::Type::AddEq: return Token(Token::Type::Add, token.location(), "+");
+        case Token::Type::SubEq: return Token(Token::Type::Sub, token.location(), "-");
+        case Token::Type::MulEq: return Token(Token::Type::Star, token.location(), "*");
+        case Token::Type::DivEq: return Token(Token::Type::Div, token.location(), "/");
+        case Token::Type::ModEq: return Token(Token::Type::Mod, token.location(), "%");
+
+        default: return { };
     }
 }

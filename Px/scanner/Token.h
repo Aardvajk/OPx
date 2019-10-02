@@ -37,6 +37,8 @@ public:
     std::string text() const { return s; }
     Location location() const { return n; }
 
+    operator bool() const;
+
     static const char *toString(Type type);
 
 private:

@@ -2,6 +2,8 @@
 
 #include "application/Context.h"
 
+#include "operators/Operators.h"
+
 #include "nodes/IdNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/LiteralNodes.h"
@@ -259,6 +261,13 @@ void ExprDecorator::visit(BinaryNode &node)
     {
         NodeList params = { node.right };
         rn = OperatorCallDecorate::generate(c, node, node.left, params, node.token.text());
+    }
+    else if(auto tok = Operators::opEqToOp(node.token))
+    {
+        auto an = new AssignNode(node.location(), node.left);
+        rn = an;
+
+        an->expr = new BinaryNode(node.location(), tok, node.left, node.right);
     }
 }
 

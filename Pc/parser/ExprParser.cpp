@@ -162,6 +162,12 @@ NodePtr entity(Context &c, bool get)
             case Token::Type::Inc:
             case Token::Type::Dec: n = new PostIncDecNode(tok.location(), tok, n); c.scanner.next(true); break;
 
+            case Token::Type::AddEq:
+            case Token::Type::SubEq:
+            case Token::Type::MulEq:
+            case Token::Type::DivEq:
+            case Token::Type::ModEq: n = new BinaryNode(tok.location(), tok, n, expressionList(c, true)); break;
+
             default: return n;
         }
     }

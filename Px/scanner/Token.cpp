@@ -12,6 +12,11 @@ Token::Token(Type type, Location location, std::string text) : t(type), n(locati
 {
 }
 
+Token::operator bool() const
+{
+    return t != Type::Invalid;
+}
+
 const char *Token::toString(Type type)
 {
     switch(type)

@@ -118,7 +118,12 @@ void TypeVisitor::visit(BinaryNode &node)
         case Token::Type::Sub:
         case Token::Type::Star:
         case Token::Type::Div:
-        case Token::Type::Mod: node.left->accept(*this); break;
+        case Token::Type::Mod:
+        case Token::Type::AddEq:
+        case Token::Type::SubEq:
+        case Token::Type::MulEq:
+        case Token::Type::DivEq:
+        case Token::Type::ModEq: node.left->accept(*this); break;
 
         case Token::Type::Eq:
         case Token::Type::Neq:
