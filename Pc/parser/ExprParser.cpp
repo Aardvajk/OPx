@@ -26,8 +26,8 @@ namespace
 
 NodePtr entity(Context &c, bool get);
 
-NodePtr parameter(Context &c, bool get);
 NodePtr expression(Context &c, bool get);
+NodePtr expressionList(Context &c, bool get);
 
 NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
 {
@@ -59,7 +59,7 @@ NodePtr parentheses(Context &c, bool get)
 {
     auto tok = c.scanner.match(Token::Type::LeftParen, get);
 
-    auto n = expression(c, true);
+    auto n = expressionList(c, true);
 
     c.scanner.consume(Token::Type::RightParen, false);
     return n;
@@ -121,7 +121,7 @@ NodePtr primary(Context &c, bool get)
 
 void params(Context &c, NodeList &container, bool get)
 {
-    auto n = parameter(c, get);
+    auto n = expression(c, get);
     container.push_back(n);
 
     if(c.scanner.token().type() == Token::Type::Comma)
@@ -233,7 +233,7 @@ NodePtr assign(Context &c, bool get)
         auto an = new AssignNode(c.scanner.token().location(), n);
         n = an;
 
-        an->expr = parameter(c, true);
+        an->expr = expression(c, true);
     }
 
     return n;
@@ -281,18 +281,18 @@ NodePtr logical(Context &c, bool get)
     }
 }
 
-NodePtr parameter(Context &c, bool get)
+NodePtr expression(Context &c, bool get)
 {
     return logical(c, get);
 }
 
-NodePtr expression(Context &c, bool get)
+NodePtr expressionList(Context &c, bool get)
 {
-    auto n = parameter(c, get);
+    auto n = expression(c, get);
 
     while(c.scanner.token().type() == Token::Type::Comma)
     {
-        n = new CommaNode(c.scanner.token().location(), n, expression(c, true));
+        n = new CommaNode(c.scanner.token().location(), n, expressionList(c, true));
     }
 
     return n;
@@ -300,12 +300,12 @@ NodePtr expression(Context &c, bool get)
 
 }
 
-NodePtr ExprParser::buildParameter(Context &c, bool get)
-{
-    return parameter(c, get);
-}
-
 NodePtr ExprParser::buildExpression(Context &c, bool get)
 {
     return expression(c, get);
+}
+
+NodePtr ExprParser::buildExpressionList(Context &c, bool get)
+{
+    return expressionList(c, get);
 }
