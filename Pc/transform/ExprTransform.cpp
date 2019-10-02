@@ -15,12 +15,15 @@
 #include "nodes/ThisNode.h"
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
+#include "nodes/InlineVarNode.h"
 
 #include "syms/Sym.h"
 
 #include "types/Type.h"
 
 #include "decorator/ExprDecorator.h"
+
+#include "transform/FuncTransform.h"
 
 #include "visitors/TypeVisitor.h"
 #include "visitors/QueryVisitors.h"
@@ -199,6 +202,11 @@ void ExprTransform::visit(CommaNode &node)
 {
     node.first = ExprTransform::transform(c, node.first);
     node.second = ExprTransform::transform(c, node.second);
+}
+
+void ExprTransform::visit(InlineVarNode &node)
+{
+    Visitor::visit<FuncTransform>(node.body.get(), c);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node, Type *expectedType)

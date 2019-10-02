@@ -17,9 +17,11 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
+#include "nodes/InlineVarNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
+#include "generator/FuncGenerator.h"
 
 #include "operators/MathOperators.h"
 #include "operators/CompareOperators.h"
@@ -364,6 +366,12 @@ void ExprGenerator::visit(CommaNode &node)
     }
 
     sz = ExprGenerator::generate(c, os, node.second.get());
+}
+
+void ExprGenerator::visit(InlineVarNode &node)
+{
+    Visitor::visit<FuncGenerator>(node.body.get(), c, os);
+    sz = 0;
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

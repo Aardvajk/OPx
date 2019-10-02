@@ -17,6 +17,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/VarNode.h"
 #include "nodes/CommaNode.h"
+#include "nodes/InlineVarNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -28,9 +29,9 @@
 #include "decorator/CommonDecorator.h"
 #include "decorator/TypeDecorator.h"
 #include "decorator/VarDecorator.h"
+#include "decorator/FuncDecorator.h"
 
 #include "operators/OperatorCallDecorate.h"
-
 
 #include <pcx/str.h>
 
@@ -287,6 +288,11 @@ void ExprDecorator::visit(CommaNode &node)
 {
     node.first = ExprDecorator::decorate(c, node.first);
     node.second = ExprDecorator::decorate(c, node.second);
+}
+
+void ExprDecorator::visit(InlineVarNode &node)
+{
+    Visitor::visit<FuncDecorator>(node.body.get(), c);
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

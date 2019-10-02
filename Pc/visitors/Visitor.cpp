@@ -131,3 +131,7 @@ void Visitor::visit(TextNode &node)
 void Visitor::visit(CommaNode &node)
 {
 }
+
+void Visitor::visit(InlineVarNode &node)
+{
+}

@@ -60,6 +60,7 @@ SOURCES += \
         nodes/IfNode.cpp \
         nodes/IncDecNodes.cpp \
         nodes/InitNode.cpp \
+        nodes/InlineVarNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/LogicalNode.cpp \
         nodes/NamespaceNode.cpp \
@@ -149,6 +150,7 @@ HEADERS += \
     nodes/IfNode.h \
     nodes/IncDecNodes.h \
     nodes/InitNode.h \
+    nodes/InlineVarNode.h \
     nodes/LiteralNodes.h \
     nodes/LogicalNode.h \
     nodes/NamespaceNode.h \

@@ -8,6 +8,7 @@ namespace DeclarationParser
 {
 
 void build(Context &c, BlockNode *block, bool get);
+void buildVarDecl(Context &c, BlockNode *block, bool get);
 
 }
 

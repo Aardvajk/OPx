@@ -8,6 +8,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/InlineVarNode.h"
 
 #include "types/Type.h"
 
@@ -51,6 +52,16 @@ void LocalsGenerator::visit(IfNode &node)
 }
 
 void LocalsGenerator::visit(ForNode &node)
+{
+    if(node.init)
+    {
+        node.init->accept(*this);
+    }
+
+    node.body->accept(*this);
+}
+
+void LocalsGenerator::visit(InlineVarNode &node)
 {
     node.body->accept(*this);
 }

@@ -61,6 +61,7 @@ DISTFILES += \
     ../unittests/generate_op_assign.pc \
     ../unittests/generated_new_copy_delete_funcs.pc \
     ../unittests/init_lists.pc \
+    ../unittests/inline_var.pc \
     ../unittests/literal_to_ref.pc \
     ../unittests/must_return.pc \
     ../unittests/no_assign_gen.pc \

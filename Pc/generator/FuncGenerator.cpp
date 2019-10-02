@@ -258,6 +258,8 @@ void FuncGenerator::visit(ForNode &node)
         os << "    jmp ifz " << l1 << ";\n";
     }
 
+    processTempDestructs(c, os, node.location());
+
     node.body->accept(*this);
 
     if(node.post)
@@ -265,6 +267,8 @@ void FuncGenerator::visit(ForNode &node)
         auto sz = ExprGenerator::generate(c, os, node.post.get());
         os << "    pop " << sz << ";\n";
     }
+
+    processTempDestructs(c, os, node.location());
 
     os << "    jmp " << l0 << ";\n";
 

@@ -30,6 +30,7 @@
 #include "nodes/ForNode.h"
 #include "nodes/TextNode.h"
 #include "nodes/CommaNode.h"
+#include "nodes/InlineVarNode.h"
 
 #include "syms/Sym.h"
 
@@ -438,6 +439,12 @@ void AstPrinter::visit(CommaNode &node)
     auto g = pcx::scoped_counter(tc);
     node.first->accept(*this);
     node.second->accept(*this);
+}
+
+void AstPrinter::visit(InlineVarNode &node)
+{
+    tab() << "inlinevar\n";
+    node.body->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

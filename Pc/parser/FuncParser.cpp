@@ -9,9 +9,11 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/InlineVarNode.h"
 
 #include "parser/CommonParser.h"
 #include "parser/ExprParser.h"
+#include "parser/DeclarationParser.h"
 
 namespace
 {
@@ -83,7 +85,20 @@ void buildFor(Context &c, BlockNode *block, bool get)
     c.scanner.consume(Token::Type::LeftParen, true);
     if(c.scanner.token().type() != Token::Type::Semicolon)
     {
-        n->init = ExprParser::buildExpressionList(c, false);
+        if(c.scanner.token().type() == Token::Type::RwVar)
+        {
+            auto i = new InlineVarNode(c.scanner.token().location());
+            n->init = i;
+
+            auto b = new BlockNode(i->location());
+            i->body = b;
+
+            DeclarationParser::buildVarDecl(c, b, true);
+        }
+        else
+        {
+            n->init = ExprParser::buildExpressionList(c, false);
+        }
     }
 
     c.scanner.next(true);

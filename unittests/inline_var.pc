@@ -1,0 +1,16 @@
+include("stdtest.ph");
+
+func main()
+{
+    var g = 0;
+    var h = 0;
+
+    for(var i = 1, j = 10; i <= 10; ++i, --j)
+    {
+        g = i;
+        h = j;
+    }
+
+    test.assert(g == 10);
+    test.assert(h == 1);
+}

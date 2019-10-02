@@ -37,6 +37,7 @@ public:
     virtual void visit(PreIncDecNode &node) override;
     virtual void visit(PostIncDecNode &node) override;
     virtual void visit(CommaNode &node) override;
+    virtual void visit(InlineVarNode &node) override;
 
     static NodePtr decorate(Context &c, NodePtr node, Type *expectedType = nullptr, Flags flags = { });
 

@@ -295,3 +295,8 @@ void DeclarationParser::build(Context &c, BlockNode *block, bool get)
         default: throw Error(tok.location(), "declaration expected - ", tok.text());
     }
 }
+
+void DeclarationParser::buildVarDecl(Context &c, BlockNode *block, bool get)
+{
+    buildVarImp(c, { }, block, get);
+}

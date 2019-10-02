@@ -18,6 +18,7 @@ public:
     virtual void visit(WhileNode &node) override;
     virtual void visit(IfNode &node) override;
     virtual void visit(ForNode &node) override;
+    virtual void visit(InlineVarNode &node) override;
 
 private:
     Context &c;
