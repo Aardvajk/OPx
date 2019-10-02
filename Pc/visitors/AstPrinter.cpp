@@ -36,6 +36,8 @@
 
 #include "types/Type.h"
 
+#include "visitors/NameVisitors.h"
+
 #include <pcx/str.h>
 #include <pcx/join_str.h>
 #include <pcx/scoped_counter.h>
@@ -112,8 +114,11 @@ void AstPrinter::visit(IdNode &node)
 
 void AstPrinter::visit(NamespaceNode &node)
 {
-    tab() << "namespace " << node.description() << details(node) << "\n";
-    node.body->accept(*this);
+    if(Visitor::query<NameVisitors::LastIdOfName, std::string>(node.name.get()) != "std" || !c.option("debug", "suppress_std"))
+    {
+        tab() << "namespace " << node.description() << details(node) << "\n";
+        node.body->accept(*this);
+    }
 }
 
 void AstPrinter::visit(TypeNode &node)

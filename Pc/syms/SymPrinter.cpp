@@ -44,6 +44,14 @@ bool hasScope(const Sym *sym)
 
 void dump(Context &c, int tab, const Sym *sym, std::ostream &os)
 {
+    if(sym->type() == Sym::Type::Namespace)
+    {
+        if(sym->name() == "std" && c.option("debug", "suppress_std"))
+        {
+            return;
+        }
+    }
+
     if(sym->type() == Sym::Type::Func)
     {
         if(sym->property<bool>("autogen") && c.option("debug", "suppress_autogens"))
