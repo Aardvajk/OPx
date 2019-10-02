@@ -44,7 +44,7 @@ void Finaliser::visit(ClassNode &node)
         std::size_t sz = 0;
         for(auto s: sym->children())
         {
-            if(s->type() == Sym::Type::Var)
+            if(s->type() == Sym::Type::Var && !s->findProperty("free").value<bool>())
             {
                 s->setProperty("offset", sz);
                 sz += Type::assertSize(s->location(), s->property<Type*>("type"));

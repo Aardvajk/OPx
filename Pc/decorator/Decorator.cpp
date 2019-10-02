@@ -193,7 +193,7 @@ void Decorator::visit(FuncNode &node)
 
     if(node.body)
     {
-        if(t.method && c.classDepth)
+        if(c.tree.current()->container()->type() == Sym::Type::Class && c.classDepth)
         {
             c.deferredMethods.push_back(&node);
         }

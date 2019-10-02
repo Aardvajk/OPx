@@ -126,7 +126,7 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
 
         for(auto s: sym->children())
         {
-            if(s->type() == Sym::Type::Var)
+            if(s->type() == Sym::Type::Var && !s->findProperty("free").value<bool>())
             {
                 auto in = new InitNode(node.location(), s->name());
                 fn->inits.push_back(in);
@@ -154,7 +154,7 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
 
         for(auto s: sym->children())
         {
-            if(s->type() == Sym::Type::Var)
+            if(s->type() == Sym::Type::Var && !s->findProperty("free").value<bool>())
             {
                 auto en = new ExprNode(node.location());
                 block->push_back(en);

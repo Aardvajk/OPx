@@ -1,0 +1,25 @@
+include("stdtest.ph");
+include("stdios.ph");
+
+class foo
+{
+public:
+    func new(x:std.int) ... x(x) { }
+    func delete(){ }
+
+    free func operator<<(o:ref std.ostream, f:foo):ref std.ostream { g = true; return o; }
+    free var g:std.bool;
+
+private:
+    var x:std.int;
+}
+
+var foo.g = false;
+
+func main()
+{
+    var f = foo(123);
+    std.out() << f;
+
+    test.assert(foo.g);
+}

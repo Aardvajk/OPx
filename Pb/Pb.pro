@@ -56,6 +56,7 @@ DISTFILES += \
     ../unittests/for_scope.pc \
     ../unittests/for_scope_count.pc \
     ../unittests/free_members.pc \
+    ../unittests/free_overload.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
     ../unittests/generate_op_assign.pc \

@@ -76,6 +76,11 @@ void ExprTransform::visit(IdNode &node)
 
             if(sym->findProperty("member").value<bool>() || sym->findProperty("method").value<bool>())
             {
+                if(!c.tree.current()->container()->findProperty("method").value<bool>())
+                {
+                    throw Error(node.location(), "cannot access in free method - ", node.description());
+                }
+
                 auto n = new ThisNode(node.location());
                 node.parent = n;
 

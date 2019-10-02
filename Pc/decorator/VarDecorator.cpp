@@ -100,6 +100,7 @@ void VarDecorator::visit(VarNode &node)
         sym->setProperty("type", type);
         sym->setProperty("member", c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>());
         sym->setProperty("external", node.findProperty("external").value<bool>());
+        sym->setProperty("free", node.findProperty("free").value<bool>());
     }
 
     node.setProperty("sym", sym);
