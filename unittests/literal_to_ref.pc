@@ -8,7 +8,7 @@ public:
     var x:std.int;
 }
 
-func x(a:ref std.int, b:const ref std.char, c:ref foo)
+func z(a:ref std.int, b:const ref std.char, c:ref foo)
 {
     test.assert(a == 123);
     test.assert(b == 'd');
@@ -17,5 +17,5 @@ func x(a:ref std.int, b:const ref std.char, c:ref foo)
 
 func main()
 {
-    x(123, 'd', foo());
+    z(123, 'd', foo());
 }

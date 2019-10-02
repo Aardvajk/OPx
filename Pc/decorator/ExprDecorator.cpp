@@ -100,7 +100,7 @@ void ExprDecorator::visit(IdNode &node)
 
     if(sv.empty())
     {
-        throw Error(node.location(), "not found - ", node.description(), (expectedType ? expectedType->text() : ""));
+        throw Error(node.location(), "not found - ", node.description());
     }
     else if(sv.size() > 1)
     {
