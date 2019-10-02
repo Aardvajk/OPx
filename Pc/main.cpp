@@ -68,11 +68,11 @@ int main(int argc, char *argv[])
 
         if(!c.option("q"))
         {
-            std::cout << banner("decorated nodes");
-            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-
             std::cout << banner("symbols");
             SymPrinter::print(c, c.tree.root(), std::cout);
+
+            std::cout << banner("decorated nodes");
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
         Visitor::visit<Transform>(n.get(), c);
@@ -91,9 +91,6 @@ int main(int argc, char *argv[])
         {
             std::cout << banner("lowered nodes");
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-
-            std::cout << banner("lowered symbols");
-            SymPrinter::print(c, c.tree.root(), std::cout);
         }
 
         Visitor::visit<Finaliser>(n.get(), c);
@@ -102,9 +99,6 @@ int main(int argc, char *argv[])
         {
             std::cout << banner("finalised nodes");
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-
-            std::cout << banner("finalised symbols");
-            SymPrinter::print(c, c.tree.root(), std::cout);
         }
 
         if(!c.option("q"))
