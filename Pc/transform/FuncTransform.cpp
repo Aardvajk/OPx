@@ -14,6 +14,7 @@
 #include "nodes/AssignNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "decorator/ExprDecorator.h"
 
@@ -171,6 +172,26 @@ void FuncTransform::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+}
+
+void FuncTransform::visit(ForNode &node)
+{
+    if(node.init)
+    {
+        node.init = ExprTransform::transform(c, node.init);
+    }
+
+    if(node.cond)
+    {
+        node.cond = ExprTransform::transform(c, node.cond);
+    }
+
+    if(node.post)
+    {
+        node.post = ExprTransform::transform(c, node.post);
+    }
+
+    node.body->accept(*this);
 }
 
 NodePtr FuncTransform::transform(Context &c, NodePtr node, std::size_t index)

@@ -120,6 +120,10 @@ void Visitor::visit(IfNode &node)
 {
 }
 
+void Visitor::visit(ForNode &node)
+{
+}
+
 void Visitor::visit(TextNode &node)
 {
 }

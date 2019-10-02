@@ -9,6 +9,7 @@
 #include "nodes/ReturnNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/ExprGenerator.h"
@@ -230,6 +231,42 @@ void FuncGenerator::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+
+    os << l1 << ":\n";
+}
+
+void FuncGenerator::visit(ForNode &node)
+{
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    auto l0 = info->nextLabelQuoted();
+    auto l1 = info->nextLabelQuoted();
+
+    if(node.init)
+    {
+        auto sz = ExprGenerator::generate(c, os, node.init.get());
+        os << "    pop " << sz << ";\n";
+    }
+
+    processTempDestructs(c, os, node.location());
+
+    os << l0 << ":\n";
+
+    if(node.cond)
+    {
+        CommonGenerator::generateBooleanExpression(c, os, node.cond.get());
+        os << "    jmp ifz " << l1 << ";\n";
+    }
+
+    node.body->accept(*this);
+
+    if(node.post)
+    {
+        auto sz = ExprGenerator::generate(c, os, node.post.get());
+        os << "    pop " << sz << ";\n";
+    }
+
+    os << "    jmp " << l0 << ";\n";
 
     os << l1 << ":\n";
 }

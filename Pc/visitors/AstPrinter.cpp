@@ -27,6 +27,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 #include "nodes/TextNode.h"
 
 #include "syms/Sym.h"
@@ -398,6 +399,30 @@ void AstPrinter::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+}
+
+void AstPrinter::visit(ForNode &node)
+{
+    tab() << "for\n";
+
+    auto g = pcx::scoped_counter(tc);
+
+    if(node.init)
+    {
+        node.init->accept(*this);
+    }
+
+    if(node.cond)
+    {
+        node.cond->accept(*this);
+    }
+
+    if(node.post)
+    {
+        node.post->accept(*this);
+    }
+
+    node.body->accept(*this);
 }
 
 void AstPrinter::visit(TextNode &node)

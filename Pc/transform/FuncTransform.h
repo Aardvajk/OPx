@@ -24,6 +24,7 @@ public:
     virtual void visit(InitNode &node) override;
     virtual void visit(WhileNode &node) override;
     virtual void visit(IfNode &node) override;
+    virtual void visit(ForNode &node) override;
 
     static NodePtr transform(Context &c, NodePtr node, std::size_t index = 0);
 

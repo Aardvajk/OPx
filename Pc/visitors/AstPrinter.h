@@ -41,6 +41,7 @@ public:
     virtual void visit(PostIncDecNode &node) override;
     virtual void visit(WhileNode &node) override;
     virtual void visit(IfNode &node) override;
+    virtual void visit(ForNode &node) override;
     virtual void visit(TextNode &node) override;
 
 private:

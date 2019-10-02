@@ -7,6 +7,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "types/Type.h"
 
@@ -47,4 +48,9 @@ void LocalsGenerator::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+}
+
+void LocalsGenerator::visit(ForNode &node)
+{
+    node.body->accept(*this);
 }

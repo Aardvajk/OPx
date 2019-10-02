@@ -11,6 +11,7 @@
 #include "nodes/InitNode.h"
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
+#include "nodes/ForNode.h"
 
 #include "decorator/VarDecorator.h"
 #include "decorator/ExprDecorator.h"
@@ -111,6 +112,26 @@ void FuncDecorator::visit(InitNode &node)
 void FuncDecorator::visit(WhileNode &node)
 {
     node.expr = ExprDecorator::decorate(c, node.expr);
+    node.body->accept(*this);
+}
+
+void FuncDecorator::visit(ForNode &node)
+{
+    if(node.init)
+    {
+        node.init = ExprDecorator::decorate(c, node.init);
+    }
+
+    if(node.cond)
+    {
+        node.cond = ExprDecorator::decorate(c, node.cond);
+    }
+
+    if(node.post)
+    {
+        node.post = ExprDecorator::decorate(c, node.post);
+    }
+
     node.body->accept(*this);
 }
 
