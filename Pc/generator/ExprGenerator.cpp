@@ -16,6 +16,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/CommaNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
@@ -351,6 +352,18 @@ void ExprGenerator::visit(PreIncDecNode &node)
 void ExprGenerator::visit(PostIncDecNode &node)
 {
     sz = generateIncDec(c, os, node, false);
+}
+
+void ExprGenerator::visit(CommaNode &node)
+{
+    auto size = ExprGenerator::generate(c, os, node.first.get());
+
+    if(!c.option("O", "elide_no_effect_ops") || size)
+    {
+        os << "    pop " << size << ";\n";
+    }
+
+    sz = ExprGenerator::generate(c, os, node.second.get());
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

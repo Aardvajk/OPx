@@ -17,6 +17,7 @@
 #include "nodes/BinaryNode.h"
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/CommaNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -24,6 +25,8 @@ namespace
 {
 
 NodePtr entity(Context &c, bool get);
+
+NodePtr parameter(Context &c, bool get);
 NodePtr expression(Context &c, bool get);
 
 NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
@@ -118,7 +121,7 @@ NodePtr primary(Context &c, bool get)
 
 void params(Context &c, NodeList &container, bool get)
 {
-    auto n = expression(c, get);
+    auto n = parameter(c, get);
     container.push_back(n);
 
     if(c.scanner.token().type() == Token::Type::Comma)
@@ -230,7 +233,7 @@ NodePtr assign(Context &c, bool get)
         auto an = new AssignNode(c.scanner.token().location(), n);
         n = an;
 
-        an->expr = expression(c, true);
+        an->expr = parameter(c, true);
     }
 
     return n;
@@ -278,14 +281,31 @@ NodePtr logical(Context &c, bool get)
     }
 }
 
-NodePtr expression(Context &c, bool get)
+NodePtr parameter(Context &c, bool get)
 {
     return logical(c, get);
 }
 
+NodePtr expression(Context &c, bool get)
+{
+    auto n = parameter(c, get);
+
+    while(c.scanner.token().type() == Token::Type::Comma)
+    {
+        n = new CommaNode(c.scanner.token().location(), n, expression(c, true));
+    }
+
+    return n;
 }
 
-NodePtr ExprParser::build(Context &c, bool get)
+}
+
+NodePtr ExprParser::buildParameter(Context &c, bool get)
+{
+    return parameter(c, get);
+}
+
+NodePtr ExprParser::buildExpression(Context &c, bool get)
 {
     return expression(c, get);
 }

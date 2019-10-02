@@ -33,6 +33,7 @@ public:
     virtual void visit(InitNode &node) override;
     virtual void visit(PreIncDecNode &node) override;
     virtual void visit(PostIncDecNode &node) override;
+    virtual void visit(CommaNode &node) override;
 
     static Type *queryType(Context &c, Node *node);
     static Type *assertType(Context &c, Node *node);

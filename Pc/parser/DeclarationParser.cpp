@@ -73,7 +73,7 @@ void buildArgs(Context &c, NodeList &container, bool get)
 
 void buildParams(Context &c, NodeList &container, bool get)
 {
-    container.push_back(ExprParser::build(c, get));
+    container.push_back(ExprParser::buildParameter(c, get));
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {
@@ -231,7 +231,7 @@ void buildVarImp(Context &c, Qual::Flags quals, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::Assign && c.containers.back() != Sym::Type::Class && !quals[Qual::Flag::External])
     {
-        n->value = ExprParser::build(c, true);
+        n->value = ExprParser::buildParameter(c, true);
     }
 
     if(c.scanner.token().type() == Token::Type::Comma)

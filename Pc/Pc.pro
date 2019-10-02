@@ -50,6 +50,7 @@ SOURCES += \
         nodes/BlockNode.cpp \
         nodes/CallNode.cpp \
         nodes/ClassNode.cpp \
+        nodes/CommaNode.cpp \
         nodes/ConstructNode.cpp \
         nodes/DerefNode.cpp \
         nodes/ExprNode.cpp \
@@ -138,6 +139,7 @@ HEADERS += \
     nodes/BlockNode.h \
     nodes/CallNode.h \
     nodes/ClassNode.h \
+    nodes/CommaNode.h \
     nodes/ConstructNode.h \
     nodes/DerefNode.h \
     nodes/ExprNode.h \

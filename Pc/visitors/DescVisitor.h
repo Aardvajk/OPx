@@ -39,6 +39,7 @@ public:
     virtual void visit(PreIncDecNode &node) override;
     virtual void visit(PostIncDecNode &node) override;
     virtual void visit(TextNode &node) override;
+    virtual void visit(CommaNode &node) override;
 
 private:
     std::string r;

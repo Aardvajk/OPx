@@ -16,6 +16,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNodes.h"
 #include "nodes/VarNode.h"
+#include "nodes/CommaNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -280,6 +281,12 @@ void ExprDecorator::visit(PostIncDecNode &node)
     {
         rn = n;
     }
+}
+
+void ExprDecorator::visit(CommaNode &node)
+{
+    node.first = ExprDecorator::decorate(c, node.first);
+    node.second = ExprDecorator::decorate(c, node.second);
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

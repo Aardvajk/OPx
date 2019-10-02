@@ -43,6 +43,7 @@ DISTFILES += \
     ../unittests/addr_of_this.pc \
     ../unittests/arrow.pc \
     ../unittests/break.pc \
+    ../unittests/comma.pc \
     ../unittests/complex_ref_members.pc \
     ../unittests/const_method.pc \
     ../unittests/const_overload.pc \

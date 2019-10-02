@@ -19,6 +19,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/CommaNode.h"
 
 #include "syms/Sym.h"
 
@@ -148,6 +149,11 @@ void TypeVisitor::visit(PreIncDecNode &node)
 void TypeVisitor::visit(PostIncDecNode &node)
 {
     node.expr->accept(*this);
+}
+
+void TypeVisitor::visit(CommaNode &node)
+{
+    node.second->accept(*this);
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

@@ -1,0 +1,14 @@
+include("stdtest.ph");
+
+var g = false;
+
+func f()
+{
+    g = true;
+}
+
+func main()
+{
+    test.assert((f(), 10, 20) == 20);
+    test.assert(g);
+}

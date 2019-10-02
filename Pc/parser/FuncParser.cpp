@@ -24,7 +24,7 @@ void buildReturn(Context &c, BlockNode *block, bool get)
     auto tok = c.scanner.next(get);
     if(tok.type() != Token::Type::Semicolon)
     {
-        n->expr = ExprParser::build(c, false);
+        n->expr = ExprParser::buildExpression(c, false);
     }
 
     c.scanner.consume(Token::Type::Semicolon, false);
@@ -46,7 +46,7 @@ void buildWhile(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     c.scanner.match(Token::Type::LeftParen, get);
-    n->expr = ExprParser::build(c, true);
+    n->expr = ExprParser::buildExpression(c, true);
     c.scanner.match(Token::Type::RightParen, false);
 
     n->body = CommonParser::scopeContents(c, n->location(), true);
@@ -58,7 +58,7 @@ void buildIf(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     c.scanner.match(Token::Type::LeftParen, true);
-    n->expr = ExprParser::build(c, true);
+    n->expr = ExprParser::buildExpression(c, true);
     c.scanner.match(Token::Type::RightParen, false);
 
     n->body = CommonParser::scopeContents(c, n->location(), true);
@@ -83,19 +83,19 @@ void buildFor(Context &c, BlockNode *block, bool get)
     c.scanner.consume(Token::Type::LeftParen, true);
     if(c.scanner.token().type() != Token::Type::Semicolon)
     {
-        n->init = ExprParser::build(c, false);
+        n->init = ExprParser::buildExpression(c, false);
     }
 
     c.scanner.next(true);
     if(c.scanner.token().type() != Token::Type::Semicolon)
     {
-        n->cond = ExprParser::build(c, false);
+        n->cond = ExprParser::buildExpression(c, false);
     }
 
     c.scanner.next(true);
     if(c.scanner.token().type() != Token::Type::RightParen)
     {
-        n->post = ExprParser::build(c, false);
+        n->post = ExprParser::buildExpression(c, false);
     }
 
     c.scanner.match(Token::Type::RightParen, false);
@@ -108,7 +108,7 @@ void buildExpr(Context &c, BlockNode *block, bool get)
     auto n = new ExprNode(c.scanner.token().location());
     block->push_back(n);
 
-    n->expr = ExprParser::build(c, get);
+    n->expr = ExprParser::buildExpression(c, get);
 
     c.scanner.consume(Token::Type::Semicolon, false);
 }

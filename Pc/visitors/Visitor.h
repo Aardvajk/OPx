@@ -34,6 +34,7 @@ class WhileNode;
 class IfNode;
 class ForNode;
 class TextNode;
+class CommaNode;
 
 class Visitor
 {
@@ -71,6 +72,7 @@ public:
     virtual void visit(IfNode &node);
     virtual void visit(ForNode &node);
     virtual void visit(TextNode &node);
+    virtual void visit(CommaNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

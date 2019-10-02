@@ -8,7 +8,8 @@ class Context;
 namespace ExprParser
 {
 
-NodePtr build(Context &c, bool get);
+NodePtr buildParameter(Context &c, bool get);
+NodePtr buildExpression(Context &c, bool get);
 
 }
 

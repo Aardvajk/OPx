@@ -14,6 +14,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/ThisNode.h"
 #include "nodes/IncDecNodes.h"
+#include "nodes/CommaNode.h"
 
 #include "syms/Sym.h"
 
@@ -192,6 +193,12 @@ void ExprTransform::visit(PreIncDecNode &node)
 void ExprTransform::visit(PostIncDecNode &node)
 {
     transformIncDec(c, node);
+}
+
+void ExprTransform::visit(CommaNode &node)
+{
+    node.first = ExprTransform::transform(c, node.first);
+    node.second = ExprTransform::transform(c, node.second);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node, Type *expectedType)
