@@ -4,7 +4,7 @@
 
 #include "application/Context.h"
 
-#include "parser/CommonParser.h"
+#include "parser/TypeParser.h"
 
 #include "nodes/TextNode.h"
 
@@ -48,7 +48,7 @@ NodePtr Operators::scan(Context &c, bool get)
 
         case Token::Type::LeftShift: c.scanner.next(true); return new TextNode(tok.location(), tok.text());
 
-        default: return CommonParser::name(c, false);
+        default: return TypeParser::build(c, false);
     }
 }
 

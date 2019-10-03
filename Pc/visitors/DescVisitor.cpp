@@ -51,6 +51,12 @@ void DescVisitor::visit(IdNode &node)
     }
 
     r += node.name;
+
+    if(node.op)
+    {
+        r += " ";
+        node.op->accept(*this);
+    }
 }
 
 void DescVisitor::visit(NamespaceNode &node)

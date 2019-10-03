@@ -101,6 +101,7 @@ void AstPrinter::visit(BlockNode &node)
 void AstPrinter::visit(IdNode &node)
 {
     tab() << "id " << node.name;
+
     if(node.op) os << " " << node.op->description();
 
     os << details(node) << "\n";

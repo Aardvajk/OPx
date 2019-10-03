@@ -7,9 +7,11 @@
 #include "scanner/Lexer.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/TypeNode.h"
 #include "nodes/TextNode.h"
 
-#include "visitors/SymFinder.h"
+#include "types/Type.h"
+#include "types/TypeBuilder.h"
 
 NameVisitors::IsNameSimple::IsNameSimple() : r(false)
 {
@@ -41,7 +43,7 @@ void NameVisitors::SpecialName::visit(IdNode &node)
     r = node.special;
 }
 
-NameVisitors::ResolveOpName::ResolveOpName(Context &c) : c(c)
+NameVisitors::ResolveOpName::ResolveOpName(Context &c) : c(c), r(nullptr)
 {
 }
 
@@ -54,31 +56,22 @@ void NameVisitors::ResolveOpName::visit(IdNode &node)
 
     if(node.op)
     {
-        Visitor::visit<ResolveOpType>(node.op.get(), c, node);
+        r = Visitor::query<ResolveOpType, Type*>(node.op.get(), c, node);
     }
 }
 
-NameVisitors::ResolveOpType::ResolveOpType(Context &c, IdNode &id) : c(c), id(id)
+NameVisitors::ResolveOpType::ResolveOpType(Context &c, IdNode &id) : c(c), id(id), r(nullptr)
 {
 }
 
-void NameVisitors::ResolveOpType::visit(IdNode &node)
+void NameVisitors::ResolveOpType::visit(TypeNode &node)
 {
-    std::vector<Sym*> sv;
-    SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), &node, sv);
+    auto t = Visitor::query<TypeBuilder, Type*>(&node, c);
 
-    if(sv.size() > 1)
-    {
-        throw Error(node.location(), "ambiguous - ", node.description());
-    }
-
-    if(sv.empty() || sv.front()->type() != Sym::Type::Class)
-    {
-        throw Error(node.location(), "type expected - ", node.description());
-    }
-
-    id.name += pcx::str(" ", sv.front()->fullname());
+    id.name += " " + t->text();
     id.op = { };
+
+    r = t;
 }
 
 void NameVisitors::ResolveOpType::visit(TextNode &node)

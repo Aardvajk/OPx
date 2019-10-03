@@ -9,9 +9,10 @@ class foo
 func operator foo()
 {
     g = true;
+    return foo();
 }
 
-func operator std.int(a:std.char):std.int
+func operator std.int(a:std.char)
 {
     return std.int(a);
 }
