@@ -113,10 +113,7 @@ void ExprLower::visit(ConstructNode &node)
 {
     if(node.type->primitive())
     {
-        if(expectedType && expectedType->ref)
-        {
-            throw Error(node.location(), "cannot reference primitive - ", node.description());
-        }
+        handleLiteral(node, expectedType);
 
         for(std::size_t i = 0; i < node.params.size(); ++i)
         {

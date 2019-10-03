@@ -33,7 +33,7 @@
 namespace
 {
 
-void transformLiteral(Context &c, Node &node, Type *expectedType)
+template<typename T> void transformLiteral(Context &c, T &node, Type *expectedType)
 {
     if(expectedType && expectedType->ref)
     {
@@ -134,7 +134,11 @@ void ExprTransform::visit(ConstructNode &node)
         p = ExprTransform::transform(c, p);
     }
 
-    if(!node.type->primitive())
+    if(node.type->primitive())
+    {
+        transformLiteral(c, node, expectedType);
+    }
+    else
     {
         auto t = Type::makeFunction(c.types.nullType(), { c.types.insert(Type::makePrimary(false, true, node.type->sym)) });
         for(auto &p: node.params)
