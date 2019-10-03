@@ -3,6 +3,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
@@ -20,6 +21,22 @@
 #include "visitors/TypeVisitor.h"
 
 #include "types/Type.h"
+
+namespace
+{
+
+template<typename T> void handleLiteral(T &node, Type *expectedType)
+{
+    if(expectedType && expectedType->ref)
+    {
+        if(!node.findProperty("temp_literal"))
+        {
+            throw Error(node.location(), "cannot reference literal - ", node.description());
+        }
+    }
+}
+
+}
 
 ExprLower::ExprLower(Context &c, NodePtr &cn, Type *expectedType) : c(c), cn(cn), expectedType(expectedType)
 {
@@ -53,6 +70,26 @@ void ExprLower::visit(IdNode &node)
     }
 }
 
+void ExprLower::visit(CharLiteralNode &node)
+{
+    handleLiteral(node, expectedType);
+}
+
+void ExprLower::visit(IntLiteralNode &node)
+{
+    handleLiteral(node, expectedType);
+}
+
+void ExprLower::visit(BoolLiteralNode &node)
+{
+    handleLiteral(node, expectedType);
+}
+
+void ExprLower::visit(StringLiteralNode &node)
+{
+    handleLiteral(node, expectedType);
+}
+
 void ExprLower::visit(CallNode &node)
 {
     auto type = TypeVisitor::assertType(c, node.target.get());
@@ -76,6 +113,11 @@ void ExprLower::visit(ConstructNode &node)
 {
     if(node.type->primitive())
     {
+        if(expectedType && expectedType->ref)
+        {
+            throw Error(node.location(), "cannot reference primitive - ", node.description());
+        }
+
         for(std::size_t i = 0; i < node.params.size(); ++i)
         {
             node.params[i] = ExprLower::lower(c, node.params[i]);
