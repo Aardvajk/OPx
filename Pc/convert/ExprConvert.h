@@ -11,14 +11,17 @@ class Type;
 class ExprConvert : public Visitor
 {
 public:
-    ExprConvert(Context &c, Type *expectedType);
+    ExprConvert(Context &c, NodePtr &cn, Type *expectedType);
 
     NodePtr result(){ return rn; }
+
+    virtual void visit(CallNode &node) override;
 
     static NodePtr convert(Context &c, NodePtr &node, Type *expectedType = nullptr);
 
 private:
     Context &c;
+    NodePtr &cn;
     Type *expectedType;
 
     NodePtr rn;

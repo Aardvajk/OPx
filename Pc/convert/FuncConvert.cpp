@@ -40,7 +40,7 @@ void FuncConvert::visit(VarNode &node)
 {
     if(node.value)
     {
-        node.value = ExprConvert::convert(c, node.value, TypeVisitor::assertType(c, &node));
+        node.value = ExprConvert::convert(c, node.value);
     }
 }
 
@@ -53,8 +53,7 @@ void FuncConvert::visit(ReturnNode &node)
 {
     if(node.expr)
     {
-        auto rt = c.tree.current()->container()->property<Type*>("type")->returnType;
-        node.expr = ExprConvert::convert(c, node.expr, rt);
+        node.expr = ExprConvert::convert(c, node.expr);
     }
 }
 
@@ -62,23 +61,21 @@ void FuncConvert::visit(InitNode &node)
 {
     node.target = ExprConvert::convert(c, node.target);
 
-    auto t = TypeVisitor::assertType(c, node.target.get());
-
-    for(std::size_t i = 0; i < node.params.size(); ++i)
+    for(auto &p: node.params)
     {
-        node.params[i] = ExprConvert::convert(c, node.params[i], t->args[i]);
+        p = ExprConvert::convert(c, p);
     }
 }
 
 void FuncConvert::visit(WhileNode &node)
 {
-    node.expr = ExprConvert::convert(c, node.expr, c.types.boolType());
+    node.expr = ExprConvert::convert(c, node.expr);
     node.body->accept(*this);
 }
 
 void FuncConvert::visit(IfNode &node)
 {
-    node.expr = ExprConvert::convert(c, node.expr, c.types.boolType());
+    node.expr = ExprConvert::convert(c, node.expr);
     node.body->accept(*this);
 
     if(node.elseBody)
@@ -96,7 +93,7 @@ void FuncConvert::visit(ForNode &node)
 
     if(node.cond)
     {
-        node.cond = ExprConvert::convert(c, node.cond, c.types.nullType());
+        node.cond = ExprConvert::convert(c, node.cond);
     }
 
     if(node.post)
