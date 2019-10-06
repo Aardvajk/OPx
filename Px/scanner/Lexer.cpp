@@ -28,6 +28,7 @@ static const std::vector<Reserved> pcReserved =
     { "free", Token::Type::RwFree },
     { "inline", Token::Type::RwInline },
     { "external", Token::Type::RwExternal },
+    { "explicit", Token::Type::RwExplicit },
     { "ptr", Token::Type::RwPtr },
     { "ref", Token::Type::RwRef },
     { "operator", Token::Type::RwOperator },

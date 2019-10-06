@@ -117,6 +117,7 @@ void buildFunc(Context &c, Qual::Flags quals, BlockNode *block, bool get)
 
     n->setProperty("access", c.access.back());
     n->setProperty("free", quals[Qual::Flag::Free]);
+    n->setProperty("explicit", quals[Qual::Flag::Explicit]);
 
     auto tok = c.scanner.consume(Token::Type::LeftParen, false);
     if(tok.type() != Token::Type::RightParen)
@@ -127,6 +128,11 @@ void buildFunc(Context &c, Qual::Flags quals, BlockNode *block, bool get)
     if(special == Token::Type::RwDelete && !n->args.empty())
     {
         throw Error(name->location(), "delete method cannot have parameters - ", name->description());
+    }
+
+    if(quals[Qual::Flag::Explicit] && special != Token::Type::RwNew)
+    {
+        throw Error(name->location(), "only constructors can be explicit - ", name->description());
     }
 
     c.scanner.consume(Token::Type::RightParen, false);
@@ -212,6 +218,11 @@ void buildVarImp(Context &c, Qual::Flags quals, BlockNode *block, bool get)
         }
     }
 
+    if(quals[Qual::Flag::Explicit])
+    {
+        throw Error(name->location(), "variables cannot be explicit - ", name->description());
+    }
+
     if(quals[Qual::Flag::Free])
     {
         quals |= Qual::Flag::External;
@@ -272,12 +283,13 @@ void DeclarationParser::build(Context &c, BlockNode *block, bool get)
 
     if(tok.type() == Token::Type::RwFree)
     {
-        if(c.containers.back() != Sym::Type::Class)
-        {
-            throw Error(tok.location(), "free outside class");
-        }
-
         quals |= Qual::Flag::Free;
+        tok = c.scanner.next(true);
+    }
+
+    if(tok.type() == Token::Type::RwExplicit)
+    {
+        quals |= Qual::Flag::Explicit;
         tok = c.scanner.next(true);
     }
 

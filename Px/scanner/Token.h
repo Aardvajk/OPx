@@ -19,7 +19,7 @@ public:
         AddEq, SubEq, MulEq, DivEq, ModEq,
         LeftShift,
         RwClass, RwNamespace, RwVar, RwFunc,
-        RwPublic, RwPrivate, RwFree, RwInline, RwExternal,
+        RwPublic, RwPrivate, RwFree, RwInline, RwExternal, RwExplicit,
         RwArg, RwPtr, RwRef, RwOperator, RwInclude, RwThis, RwPragma, RwConst,
         RwWhile, RwIf, RwElse, RwFor, RwBreak,
         RwNew, RwDelete,

@@ -16,7 +16,7 @@ void findConvertMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv)
 
     for(auto s: to->sym->children())
     {
-        if(s->type() == Sym::Type::Func && s->name() == "new")
+        if(s->type() == Sym::Type::Func && s->name() == "new" && !s->findProperty("explicit").value<bool>())
         {
             if(TypeCompare(c).compatibleArgs(&t, s->property<Type*>("type")))
             {

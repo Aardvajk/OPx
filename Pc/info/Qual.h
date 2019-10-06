@@ -9,7 +9,8 @@ namespace Qual
 enum class Flag
 {
     Free = 1,
-    External = 2
+    External = 2,
+    Explicit = 4
 };
 
 using Flags = pcx::flags<Flag>;
