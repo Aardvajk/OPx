@@ -128,6 +128,12 @@ void ExprLower::visit(ConstructNode &node)
         {
             node.params[i] = ExprLower::lower(c, node.params[i], type->args[i + 1]);
         }
+
+        if(!expectedType || !expectedType->ref)
+        {
+            rn = new DerefNode(node.location(), cn);
+            rn->setProperty("type", node.type);
+        }
     }
 }
 
