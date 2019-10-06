@@ -1,0 +1,25 @@
+include("stdtest.ph");
+
+class foo
+{
+public:
+    func new(i:std.int) ... a(std.char(i)) { }
+
+    var a:std.char;
+}
+
+func f(f:const ref foo)
+{
+    test.assert(f.a == 'B');
+}
+
+func g(f:foo)
+{
+    test.assert(f.a == 'C');
+}
+
+func main()
+{
+    f(66);
+    g(67);
+}

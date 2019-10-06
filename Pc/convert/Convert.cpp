@@ -11,6 +11,7 @@
 
 #include "convert/FuncConvert.h"
 #include "convert/ExprConvert.h"
+#include "convert/CommonConvert.h"
 
 #include "visitors/TypeVisitor.h"
 
@@ -54,7 +55,7 @@ void Convert::visit(VarNode &node)
 {
     if(node.value)
     {
-        node.value = ExprConvert::convert(c, node.value, TypeVisitor::assertType(c, &node));
+        node.value = ExprConvert::convert(c, node.value);
     }
 }
 

@@ -23,6 +23,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         application/Pragmas.cpp \
+        convert/CommonConvert.cpp \
         convert/Convert.cpp \
         convert/ExprConvert.cpp \
         convert/FuncConvert.cpp \
@@ -115,6 +116,7 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     application/Pragmas.h \
+    convert/CommonConvert.h \
     convert/Convert.h \
     convert/ExprConvert.h \
     convert/FuncConvert.h \

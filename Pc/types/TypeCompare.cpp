@@ -1,6 +1,7 @@
 #include "TypeCompare.h"
 
 #include "types/Type.h"
+#include "types/TypeConvert.h"
 
 TypeCompare::TypeCompare(Context &c) : c(c)
 {
@@ -108,4 +109,9 @@ bool TypeCompare::exactArgs(const Type *a, const Type *b) const
     }
 
     return true;
+}
+
+bool TypeCompare::convertible(Type *from, Type *to) const
+{
+    return compatible(from, to) || !TypeConvert::find(c, from, to).empty();
 }

@@ -85,6 +85,14 @@ Type Type::addReference() const
     return t;
 }
 
+Type Type::removeReference() const
+{
+    auto t = *this;
+    t.ref = false;
+
+    return t;
+}
+
 std::string Type::text() const
 {
     return toString(this);

@@ -15,6 +15,7 @@
 #include "types/Type.h"
 
 #include "convert/ExprConvert.h"
+#include "convert/CommonConvert.h"
 
 #include "visitors/TypeVisitor.h"
 
