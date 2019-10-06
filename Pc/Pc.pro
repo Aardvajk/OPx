@@ -23,6 +23,9 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 SOURCES += \
         application/Context.cpp \
         application/Pragmas.cpp \
+        convert/Convert.cpp \
+        convert/ExprConvert.cpp \
+        convert/FuncConvert.cpp \
         decorator/CommonDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/DefaultMethods.cpp \
@@ -98,6 +101,7 @@ SOURCES += \
         types/TypeBuilder.cpp \
         types/TypeCache.cpp \
         types/TypeCompare.cpp \
+        types/TypeConvert.cpp \
         types/TypeLookup.cpp \
         visitors/AstPrinter.cpp \
         visitors/DescVisitor.cpp \
@@ -111,6 +115,9 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     application/Pragmas.h \
+    convert/Convert.h \
+    convert/ExprConvert.h \
+    convert/FuncConvert.h \
     decorator/CommonDecorator.h \
     decorator/Decorator.h \
     decorator/DefaultMethods.h \
@@ -187,6 +194,7 @@ HEADERS += \
     types/TypeBuilder.h \
     types/TypeCache.h \
     types/TypeCompare.h \
+    types/TypeConvert.h \
     types/TypeLookup.h \
     visitors/AstPrinter.h \
     visitors/DescVisitor.h \

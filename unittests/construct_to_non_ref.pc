@@ -1,0 +1,20 @@
+include("stdtest.ph");
+
+class foo
+{
+public:
+    func new(a:std.int) ... a(a) { }
+
+    var a:std.int;
+}
+
+class bar
+{
+public:
+    func new(x:foo){ test.assert(x.a == 123); }
+}
+
+func main()
+{
+    bar(foo(123));
+}

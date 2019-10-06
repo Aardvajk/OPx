@@ -48,6 +48,7 @@ DISTFILES += \
     ../unittests/const_method.pc \
     ../unittests/const_overload.pc \
     ../unittests/const_ref.pc \
+    ../unittests/construct_to_non_ref.pc \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
     ../unittests/copy_return.pc \

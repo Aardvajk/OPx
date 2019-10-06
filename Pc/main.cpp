@@ -7,6 +7,8 @@
 
 #include "decorator/Decorator.h"
 
+#include "convert/Convert.h"
+
 #include "transform/Transform.h"
 
 #include "lower/Lower.h"
@@ -72,6 +74,14 @@ int main(int argc, char *argv[])
             SymPrinter::print(c, c.tree.root(), std::cout);
 
             std::cout << banner("decorated nodes");
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
+        }
+
+        Visitor::visit<Convert>(n.get(), c);
+
+        if(!c.option("q"))
+        {
+            std::cout << banner("converted nodes");
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 

@@ -6,9 +6,11 @@
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+#include "types/TypeConvert.h"
 
 #include "visitors/SymFinder.h"
 
+#include <map>
 #include <unordered_set>
 
 namespace
@@ -60,7 +62,7 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
 
     if(expectedType && expectedType->function())
     {
-        std::vector<Sym*> r;
+        std::map<std::size_t, std::vector<Sym*> > m;
 
         for(auto s: sv)
         {
@@ -68,18 +70,41 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
             {
                 auto type = s->property<Type*>("type");
 
-                if(TypeCompare(c).compatibleArgs(type, expectedType) && (!expectedType->constMethod || type->constMethod))
+                if(type->args.size() == expectedType->args.size())
                 {
-                    r.push_back(s);
+                    std::size_t matches = 0;
+                    std::size_t conversions = 0;
+
+                    for(std::size_t i = 0; i < type->args.size(); ++i)
+                    {
+                        if(TypeCompare(c).compatible(expectedType->args[i], type->args[i]))
+                        {
+                            ++matches;
+                        }
+                        else if(!TypeConvert::find(c, expectedType->args[i], type->args[i]).empty())
+                        {
+                            ++matches;
+                            ++conversions;
+                        }
+                    }
+
+                    if(matches == type->args.size())
+                    {
+                        m[conversions].push_back(s);
+                    }
                 }
             }
             else
             {
-                r.push_back(s);
+                m[0].push_back(s);
             }
         }
 
-        sv = r;
+        sv.clear();
+        if(!m.empty())
+        {
+            sv = m.begin()->second;
+        }
     }
 
     if(sv.size() > 1 && expectedType)
