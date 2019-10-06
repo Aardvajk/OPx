@@ -18,8 +18,21 @@ func g(f:foo)
     test.assert(f.a == 'C');
 }
 
+func h():foo
+{
+    return 68;
+}
+
+func hr():ref foo
+{
+    return 69;
+}
+
 func main()
 {
     f(66);
     g(67);
+
+    test.assert(h().a == 'D');
+    test.assert(hr().a == 'E');
 }
