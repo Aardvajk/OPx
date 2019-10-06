@@ -124,10 +124,6 @@ void Visitor::visit(ForNode &node)
 {
 }
 
-void Visitor::visit(TextNode &node)
-{
-}
-
 void Visitor::visit(CommaNode &node)
 {
 }

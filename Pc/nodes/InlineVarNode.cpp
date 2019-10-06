@@ -9,4 +9,5 @@ void InlineVarNode::accept(Visitor &v)
 
 std::string InlineVarNode::classname() const
 {
+    return "inlinevar";
 }

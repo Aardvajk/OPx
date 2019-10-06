@@ -24,7 +24,6 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/InitNode.h"
 #include "nodes/IncDecNodes.h"
-#include "nodes/TextNode.h"
 #include "nodes/CommaNode.h"
 
 #include "syms/Sym.h"
@@ -51,12 +50,6 @@ void DescVisitor::visit(IdNode &node)
     }
 
     r += node.name;
-
-    if(node.op)
-    {
-        r += " ";
-        node.op->accept(*this);
-    }
 }
 
 void DescVisitor::visit(NamespaceNode &node)
@@ -277,11 +270,6 @@ void DescVisitor::visit(PostIncDecNode &node)
 {
     node.expr->accept(*this);
     r += node.token.text();
-}
-
-void DescVisitor::visit(TextNode &node)
-{
-    r += node.value;
 }
 
 void DescVisitor::visit(CommaNode &node)

@@ -32,13 +32,12 @@ NodePtr expressionList(Context &c, bool get);
 NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
 {
     std::string text;
-    NodePtr op;
 
     auto tok = c.scanner.next(get);
     if(tok.type() == Token::Type::RwOperator)
     {
-        op = Operators::scan(c, true);
-        text = "operator";
+        auto op = Operators::scan(c, true);
+        text = pcx::str("operator", op);
     }
     else if(tok.type() == Token::Type::Id || tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete)
     {
@@ -49,7 +48,6 @@ NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
     auto id = new IdNode(tok.location(), parent, text);
     NodePtr n(id);
 
-    id->op = op;
     id->arrow = arrow;
 
     return n;

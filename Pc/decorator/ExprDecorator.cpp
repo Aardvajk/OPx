@@ -77,8 +77,6 @@ void ExprDecorator::visit(IdNode &node)
         node.arrow = false;
     }
 
-    Visitor::visit<NameVisitors::ResolveOpName>(&node, c);
-
     if(node.parent)
     {
         node.parent = ExprDecorator::decorate(c, node.parent);

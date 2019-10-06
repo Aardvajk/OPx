@@ -19,7 +19,6 @@ public:
     std::string name;
 
     Token::Type special;
-    NodePtr op;
     bool arrow;
 };
 

@@ -68,7 +68,6 @@ SOURCES += \
         nodes/PragmaNode.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
-        nodes/TextNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
         nodes/UnaryNode.cpp \
@@ -158,7 +157,6 @@ HEADERS += \
     nodes/PragmaNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
-    nodes/TextNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \
     nodes/UnaryNode.h \

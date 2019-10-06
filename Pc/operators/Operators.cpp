@@ -4,18 +4,15 @@
 
 #include "application/Context.h"
 
-#include "parser/TypeParser.h"
 
-#include "nodes/TextNode.h"
-
-NodePtr Operators::scan(Context &c, bool get)
+std::string Operators::scan(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
 
     if(tok.type() == Token::Type::LeftParen)
     {
         c.scanner.consume(Token::Type::RightParen, true);
-        return new TextNode(tok.location(), "()");
+        return "()";
     }
 
     switch(tok.type())
@@ -46,9 +43,9 @@ NodePtr Operators::scan(Context &c, bool get)
         case Token::Type::Inc:
         case Token::Type::Dec:
 
-        case Token::Type::LeftShift: c.scanner.next(true); return new TextNode(tok.location(), tok.text());
+        case Token::Type::LeftShift: c.scanner.next(true); return tok.text();
 
-        default: return TypeParser::build(c, false);
+        default: throw Error(tok.location(), "operator expected - ", tok.text());
     }
 }
 

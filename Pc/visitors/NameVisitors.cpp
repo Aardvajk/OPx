@@ -8,7 +8,6 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/TypeNode.h"
-#include "nodes/TextNode.h"
 
 #include "types/Type.h"
 #include "types/TypeBuilder.h"
@@ -41,43 +40,6 @@ NameVisitors::SpecialName::SpecialName() : r(Token::Type::Invalid)
 void NameVisitors::SpecialName::visit(IdNode &node)
 {
     r = node.special;
-}
-
-NameVisitors::ResolveOpName::ResolveOpName(Context &c) : c(c), r(nullptr)
-{
-}
-
-void NameVisitors::ResolveOpName::visit(IdNode &node)
-{
-    if(node.parent)
-    {
-        node.parent->accept(*this);
-    }
-
-    if(node.op)
-    {
-        r = Visitor::query<ResolveOpType, Type*>(node.op.get(), c, node);
-    }
-}
-
-NameVisitors::ResolveOpType::ResolveOpType(Context &c, IdNode &id) : c(c), id(id), r(nullptr)
-{
-}
-
-void NameVisitors::ResolveOpType::visit(TypeNode &node)
-{
-    auto t = Visitor::query<TypeBuilder, Type*>(&node, c);
-
-    id.name += " " + t->text();
-    id.op = { };
-
-    r = t;
-}
-
-void NameVisitors::ResolveOpType::visit(TextNode &node)
-{
-    id.name += node.description();
-    id.op = { };
 }
 
 std::string NameVisitors::assertSimpleName(Context &c, Node *node)

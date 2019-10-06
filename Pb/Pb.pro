@@ -52,7 +52,6 @@ DISTFILES += \
     ../unittests/copy_param.pc \
     ../unittests/copy_return.pc \
     ../unittests/destructors.pc \
-    ../unittests/explicit_operator.pc \
     ../unittests/for_scope.pc \
     ../unittests/for_scope_count.pc \
     ../unittests/free_members.pc \
