@@ -6,6 +6,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/DerefNode.h"
 #include "nodes/ThisNode.h"
@@ -51,6 +52,12 @@ void AddrGenerator::visit(IdNode &node)
 }
 
 void AddrGenerator::visit(CallNode &node)
+{
+    ExprGenerator::generate(c, os, &node);
+    ok = true;
+}
+
+void AddrGenerator::visit(ProxyCallNode &node)
 {
     ExprGenerator::generate(c, os, &node);
     ok = true;

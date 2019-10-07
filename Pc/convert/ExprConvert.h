@@ -16,6 +16,7 @@ public:
     NodePtr result(){ return rn; }
 
     virtual void visit(CallNode &node) override;
+    virtual void visit(ProxyCallNode &node) override;
 
     static NodePtr convert(Context &c, NodePtr &node, Type *expectedType = nullptr);
 

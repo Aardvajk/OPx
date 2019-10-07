@@ -9,6 +9,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
@@ -78,6 +79,11 @@ void TypeVisitor::visit(CallNode &node)
 {
     auto t = Visitor::query<TypeVisitor, Type*>(node.target.get(), c);
     r = t->returnType;
+}
+
+void TypeVisitor::visit(ProxyCallNode &node)
+{
+    r = node.sym->property<Type*>("type")->returnType;
 }
 
 void TypeVisitor::visit(ConstructNode &node)

@@ -13,6 +13,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
@@ -213,6 +214,23 @@ void AstPrinter::visit(CallNode &node)
         auto g2 = pcx::scoped_counter(tc);
         node.target->accept(*this);
     }
+
+    if(!node.params.empty())
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "params\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        for(auto &p: node.params)
+        {
+            p->accept(*this);
+        }
+    }
+}
+
+void AstPrinter::visit(ProxyCallNode &node)
+{
+    tab() << "proxycall - " << node.sym->funcname() << details(node) << "\n";
 
     if(!node.params.empty())
     {

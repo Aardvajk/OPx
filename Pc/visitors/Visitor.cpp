@@ -60,6 +60,10 @@ void Visitor::visit(CallNode &node)
 {
 }
 
+void Visitor::visit(ProxyCallNode &node)
+{
+}
+
 void Visitor::visit(ConstructNode &node)
 {
 }

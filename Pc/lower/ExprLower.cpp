@@ -5,6 +5,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
@@ -34,6 +35,27 @@ template<typename T> void handleLiteral(T &node, Type *expectedType)
             throw Error(node.location(), "cannot reference literal - ", node.description());
         }
     }
+}
+
+template<typename T> NodePtr lowerCallNode(Context &c, T &node, NodePtr &cn, Type *type, Type *expectedType)
+{
+    for(std::size_t i = 0; i < node.params.size(); ++i)
+    {
+        node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
+    }
+
+    if(type->returnType->ref)
+    {
+        if(!expectedType || !expectedType->ref)
+        {
+            NodePtr n(new DerefNode(node.location(), cn));
+            n->setProperty("type", c.types.insert(type->returnType->removePointer()));
+
+            return n;
+        }
+    }
+
+    return { };
 }
 
 }
@@ -94,18 +116,19 @@ void ExprLower::visit(CallNode &node)
 {
     auto type = TypeVisitor::assertType(c, node.target.get());
 
-    for(std::size_t i = 0; i < node.params.size(); ++i)
+    if(auto n = lowerCallNode(c, node, cn, type, expectedType))
     {
-        node.params[i] = ExprLower::lower(c, node.params[i], type->args[i]);
+        rn = n;
     }
+}
 
-    if(type->returnType->ref)
+void ExprLower::visit(ProxyCallNode &node)
+{
+    auto type = node.sym->property<Type*>("type");
+
+    if(auto n = lowerCallNode(c, node, cn, type, expectedType))
     {
-        if(!expectedType || !expectedType->ref)
-        {
-            rn = new DerefNode(node.location(), cn);
-            rn->setProperty("type", c.types.insert(type->returnType->removePointer()));
-        }
+        rn = n;
     }
 }
 

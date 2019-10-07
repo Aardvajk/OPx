@@ -8,6 +8,7 @@
 #include "nodes/TypeNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
@@ -61,6 +62,19 @@ template<typename T> NodePtr decorateIncDec(Context &c, T &node, bool pre)
     }
 
     return { };
+}
+
+template<typename T> void decorateComplexReturnTemp(Context &c, T &node, Type *type)
+{
+    if(!type->returnType->primitiveOrRef())
+    {
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+        auto temp = pcx::str("#temp_return", info->labels++);
+        node.setProperty("temp", temp);
+
+        info->temps.push_back(std::make_pair(temp, type->returnType));
+    }
 }
 
 }
@@ -176,16 +190,26 @@ void ExprDecorator::visit(CallNode &node)
         {
             rn = OperatorCallDecorate::generate(c, node, node.target, node.params, "()");
         }
-        else if(!type->returnType->primitiveOrRef())
+        else
         {
-            auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-
-            auto temp = pcx::str("#temp_return", info->labels++);
-            node.setProperty("temp", temp);
-
-            info->temps.push_back(std::make_pair(temp, type->returnType));
+            decorateComplexReturnTemp(c, node, type);
         }
     }
+}
+
+void ExprDecorator::visit(ProxyCallNode &node)
+{
+    if(node.thisNode)
+    {
+        node.thisNode = ExprDecorator::decorate(c, node.thisNode);
+    }
+
+    for(auto &p: node.params)
+    {
+        p = ExprDecorator::decorate(c, p);
+    }
+
+    decorateComplexReturnTemp(c, node, node.sym->property<Type*>("type"));
 }
 
 void ExprDecorator::visit(AddrOfNode &node)

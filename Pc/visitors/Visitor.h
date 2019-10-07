@@ -17,6 +17,7 @@ class BoolLiteralNode;
 class StringLiteralNode;
 class ExprNode;
 class CallNode;
+class ProxyCallNode;
 class ConstructNode;
 class PragmaNode;
 class AddrOfNode;
@@ -55,6 +56,7 @@ public:
     virtual void visit(StringLiteralNode &node);
     virtual void visit(ExprNode &node);
     virtual void visit(CallNode &node);
+    virtual void visit(ProxyCallNode &node);
     virtual void visit(ConstructNode &node);
     virtual void visit(PragmaNode &node);
     virtual void visit(AddrOfNode &node);

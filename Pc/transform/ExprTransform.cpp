@@ -5,6 +5,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
@@ -119,6 +120,21 @@ void ExprTransform::visit(CallNode &node)
     if(type->method)
     {
         node.params.insert(node.params.begin(), Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get()));
+    }
+
+    for(auto p: pcx::indexed_range(node.params))
+    {
+        p.value = ExprTransform::transform(c, p.value, type->args[p.index]);
+    }
+}
+
+void ExprTransform::visit(ProxyCallNode &node)
+{
+    auto type = node.sym->property<Type*>("type");
+
+    if(type->method)
+    {
+        node.params.insert(node.params.begin(), node.thisNode);
     }
 
     for(auto p: pcx::indexed_range(node.params))

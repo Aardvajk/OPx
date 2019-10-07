@@ -1,6 +1,7 @@
 #include "SymScopeVisitor.h"
 
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/ThisNode.h"
 
@@ -20,6 +21,18 @@ void SymScopeVisitor::visit(CallNode &node)
     if(t->returnType && t->returnType->sym)
     {
         curr = t->returnType->sym;
+    }
+}
+
+void SymScopeVisitor::visit(ProxyCallNode &node)
+{
+    if(node.sym)
+    {
+        auto type = node.sym->property<Type*>("type")->returnType;
+        if(type->sym)
+        {
+            curr = type->sym;
+        }
     }
 }
 

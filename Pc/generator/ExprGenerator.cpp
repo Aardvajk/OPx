@@ -7,6 +7,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
@@ -61,6 +62,40 @@ template<typename T> std::size_t generateIncDec(Context &c, std::ostream &os, T 
     }
 
     return size;
+}
+
+template<typename T> std::size_t generateCall(Context &c, std::ostream &os, T &node, Type *type)
+{
+    std::size_t sz = 0;
+
+    auto size = Type::assertSize(node.location(), type->returnType);
+
+    if(type->returnType->primitive())
+    {
+        if(!c.option("O", "elide_no_effect_ops") || size)
+        {
+            os << "    allocs " << size << ";\n";
+        }
+
+        sz = size;
+    }
+    else
+    {
+        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+        auto temp = node.template property<std::string>("temp");
+
+        os << "    push &\"" << temp << "\";\n";
+        info->tempDestructs.push_back(std::make_pair(temp, type->returnType));
+
+        sz = sizeof(std::size_t);
+    }
+
+    for(auto p: pcx::indexed_range(node.params))
+    {
+        CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
+    }
+
+    return sz;
 }
 
 }
@@ -135,34 +170,20 @@ void ExprGenerator::visit(StringLiteralNode &node)
 void ExprGenerator::visit(CallNode &node)
 {
     auto type = TypeVisitor::assertType(c, node.target.get());
-    auto size = Type::assertSize(node.location(), type->returnType);
 
-    if(type->returnType->primitive())
-    {
-        if(!c.option("O", "elide_no_effect_ops") || size)
-        {
-            os << "    allocs " << size << ";\n";
-        }
-
-        sz = size;
-    }
-    else
-    {
-        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-        auto temp = node.property<std::string>("temp");
-
-        os << "    push &\"" << temp << "\";\n";
-        info->tempDestructs.push_back(std::make_pair(temp, type->returnType));
-
-        sz = sizeof(std::size_t);
-    }
-
-    for(auto p: pcx::indexed_range(node.params))
-    {
-        CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
-    }
+    sz = generateCall(c, os, node, type);
 
     ExprGenerator::generate(c, os, node.target.get());
+    os << "    call;\n";
+}
+
+void ExprGenerator::visit(ProxyCallNode &node)
+{
+    auto type = node.sym->property<Type*>("type");
+
+    sz = generateCall(c, os, node, type);
+
+    os << "    push &\"" << node.sym->funcname() << "\";\n";
     os << "    call;\n";
 }
 

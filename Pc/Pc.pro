@@ -70,6 +70,7 @@ SOURCES += \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
         nodes/PragmaNode.cpp \
+        nodes/ProxyCallNode.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
         nodes/ThisNode.cpp \
@@ -164,6 +165,7 @@ HEADERS += \
     nodes/NamespaceNode.h \
     nodes/Node.h \
     nodes/PragmaNode.h \
+    nodes/ProxyCallNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
     nodes/ThisNode.h \

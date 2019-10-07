@@ -5,7 +5,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
-#include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 
 #include "types/Type.h"
 
@@ -17,11 +17,9 @@
 namespace
 {
 
-NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op)
+NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op, Sym *sym)
 {
-    NodePtr id(new IdNode(node.location(), first, pcx::str("operator", op)));
-
-    auto cn = new CallNode(node.location(), id);
+    auto cn = new ProxyCallNode(node.location(), sym, first);
     NodePtr rn = cn;
 
     for(auto &p: params)
@@ -33,11 +31,9 @@ NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeLi
     return rn;
 }
 
-NodePtr generateFreeOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op)
+NodePtr generateFreeOperatorCall(Context &c, Node &node, NodePtr first, NodeList &params, const std::string &op, Sym *sym)
 {
-    NodePtr id(new IdNode(node.location(), { }, pcx::str("operator", op)));
-
-    auto cn = new CallNode(node.location(), id);
+    auto cn = new ProxyCallNode(node.location(), sym);
     NodePtr rn = cn;
 
     cn->params.push_back(first);
@@ -95,11 +91,11 @@ NodePtr OperatorCallDecorate::generate(Context &c, Node &node, NodePtr first, No
 
     if(ms.empty())
     {
-        return generateFreeOperatorCall(c, node, first, params, op);
+        return generateFreeOperatorCall(c, node, first, params, op, fs.front());
     }
     else
     {
-        return generateMethodOperatorCall(c, node, first, params, op);
+        return generateMethodOperatorCall(c, node, first, params, op, ms.front());
     }
 }
 

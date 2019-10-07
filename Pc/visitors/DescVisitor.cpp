@@ -13,6 +13,7 @@
 #include "nodes/LiteralNodes.h"
 #include "nodes/ExprNode.h"
 #include "nodes/CallNode.h"
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/PragmaNode.h"
 #include "nodes/AddrOfNode.h"
@@ -181,6 +182,15 @@ void DescVisitor::visit(StringLiteralNode &node)
 void DescVisitor::visit(CallNode &node)
 {
     node.target->accept(*this);
+
+    r += "(";
+    r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
+    r += ")";
+}
+
+void DescVisitor::visit(ProxyCallNode &node)
+{
+    r += node.sym->fullname();
 
     r += "(";
     r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
