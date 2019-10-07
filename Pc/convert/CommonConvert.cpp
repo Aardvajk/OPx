@@ -9,6 +9,8 @@
 #include "types/TypeCompare.h"
 #include "types/TypeConvert.h"
 
+#include "decorator/ExprDecorator.h"
+
 #include "visitors/TypeVisitor.h"
 
 NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type)
@@ -47,6 +49,8 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type)
             auto cn = new ProxyCallNode(node->location(), sym, node);
             node = cn;
         }
+
+        node = ExprDecorator::decorate(c, node);
     }
 
     return node;

@@ -1,4 +1,5 @@
 include("stdtest.ph");
+include("stdios.ph");
 
 class foo
 {
@@ -15,10 +16,28 @@ func x(i:ref std.int)
     i += 10;
 }
 
+class bar
+{
+public:
+    func new() ... x(888) { }
+
+    func operator foo() const { return foo(x); }
+
+    var x:std.int;
+}
+
+func y(a:foo)
+{
+    test.assert(a.x == 888);
+}
+
 func main()
 {
     var a = foo(10);
 
     x(a);
     test.assert(a.x == 20);
+
+    var b = bar();
+    y(b);
 }
