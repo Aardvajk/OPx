@@ -1,0 +1,24 @@
+include("stdios.ph");
+include("stdlib.ph");
+
+class alpha
+{
+public:
+    func new() ... a('A') { }
+
+    func operator std.bool() const { return a <= 'Z'; }
+    func operator++(:std.prefix):ref alpha { ++a; return this; }
+
+    free func operator<<(o:ref std.ostream, v:alpha):ref std.ostream { return o << v.a; }
+
+private:
+    var a:std.char;
+}
+
+func main()
+{
+    for(var a = alpha(); a; ++a)
+    {
+        std.out() << a << "\n";
+    }
+}

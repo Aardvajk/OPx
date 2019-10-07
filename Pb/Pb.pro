@@ -30,6 +30,7 @@ SOURCES += \
         main.cpp
 
 DISTFILES += \
+    ../examples/alphabet.pc \
     ../examples/overloads.pc \
     ../examples/private_construct.pc \
     ../lib/stdios.pc \

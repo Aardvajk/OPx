@@ -39,12 +39,18 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
 {
     std::vector<Sym*> sv;
     std::unordered_set<Sym*> search;
+    std::unordered_set<Sym*> freeFuncSearch;
 
     for(auto &a: expectedType->args)
     {
         if(a->sym && a->sym->parent() != c.tree.root())
         {
             search.insert(a->sym->parent());
+        }
+
+        if(a->sym->type() == Sym::Type::Class)
+        {
+            freeFuncSearch.insert(a->sym);
         }
     }
 
@@ -53,6 +59,23 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
     for(auto s: search)
     {
         SymFinder::find(c, SymFinder::Type::Local, s, node, sv);
+    }
+
+    for(auto s: freeFuncSearch)
+    {
+        std::vector<Sym*> v;
+        SymFinder::find(c, SymFinder::Type::Local, s, node, v);
+
+        std::vector<Sym*> p;
+        for(auto s: v)
+        {
+            if(s->type() == Sym::Type::Func && !s->findProperty("method").value<bool>())
+            {
+                p.push_back(s);
+            }
+        }
+
+        sv.insert(sv.end(), p.begin(), p.end());
     }
 
     if(expectedType && expectedType->function())
