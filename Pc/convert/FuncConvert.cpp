@@ -57,7 +57,7 @@ void FuncConvert::visit(ReturnNode &node)
         node.expr = ExprConvert::convert(c, node.expr);
 
         auto rt = c.tree.current()->container()->property<Type*>("type")->returnType;
-        node.expr = CommonConvert::convert(c, node.expr, rt);
+        node.expr = CommonConvert::convert(c, node.expr, rt, TypeConvert::Permission::Implicit);
     }
 }
 
@@ -75,6 +75,8 @@ void FuncConvert::visit(WhileNode &node)
 {
     node.expr = ExprConvert::convert(c, node.expr);
     node.body->accept(*this);
+
+    node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
 }
 
 void FuncConvert::visit(IfNode &node)
@@ -86,6 +88,8 @@ void FuncConvert::visit(IfNode &node)
     {
         node.elseBody->accept(*this);
     }
+
+    node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
 }
 
 void FuncConvert::visit(ForNode &node)
@@ -98,6 +102,7 @@ void FuncConvert::visit(ForNode &node)
     if(node.cond)
     {
         node.cond = ExprConvert::convert(c, node.cond);
+        node.cond = CommonConvert::convert(c, node.cond, c.types.boolType(), TypeConvert::Permission::Implicit);
     }
 
     if(node.post)

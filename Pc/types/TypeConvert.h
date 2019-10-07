@@ -10,7 +10,13 @@ class Sym;
 namespace TypeConvert
 {
 
-std::vector<Sym*> find(Context &c, Type *from, Type *to);
+enum class Permission
+{
+    Implicit,
+    Explicit
+};
+
+std::vector<Sym*> find(Context &c, Type *from, Type *to, Permission permission);
 
 }
 

@@ -225,8 +225,8 @@ void ExprTransform::visit(PostIncDecNode &node)
 
 void ExprTransform::visit(CommaNode &node)
 {
-    node.first = ExprTransform::transform(c, node.first);
-    node.second = ExprTransform::transform(c, node.second);
+    node.left = ExprTransform::transform(c, node.left);
+    node.right = ExprTransform::transform(c, node.right);
 }
 
 void ExprTransform::visit(InlineVarNode &node)

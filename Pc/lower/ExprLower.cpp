@@ -212,8 +212,8 @@ void ExprLower::visit(PostIncDecNode &node)
 
 void ExprLower::visit(CommaNode &node)
 {
-    node.first = ExprLower::lower(c, node.first);
-    node.second = ExprLower::lower(c, node.second);
+    node.left = ExprLower::lower(c, node.left);
+    node.right = ExprLower::lower(c, node.right);
 }
 
 void ExprLower::visit(InlineVarNode &node)

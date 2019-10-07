@@ -13,13 +13,13 @@
 
 #include "visitors/TypeVisitor.h"
 
-NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type)
+NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type, TypeConvert::Permission permission)
 {
     auto t = TypeVisitor::assertType(c, node.get());
 
     if(!TypeCompare(c).compatible(type, t))
     {
-        auto sv = TypeConvert::find(c, t, type);
+        auto sv = TypeConvert::find(c, t, type, permission);
         if(sv.empty())
         {
             throw Error(node->location(), "no conversion found - ", node->description());

@@ -164,7 +164,7 @@ void TypeVisitor::visit(PostIncDecNode &node)
 
 void TypeVisitor::visit(CommaNode &node)
 {
-    node.second->accept(*this);
+    node.right->accept(*this);
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

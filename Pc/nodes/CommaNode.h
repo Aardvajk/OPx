@@ -6,13 +6,13 @@
 class CommaNode : public Node
 {
 public:
-    CommaNode(Location location, NodePtr first, NodePtr second) : Node(location), first(first), second(second) { }
+    CommaNode(Location location, NodePtr left, NodePtr right) : Node(location), left(left), right(right) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
 
-    NodePtr first;
-    NodePtr second;
+    NodePtr left;
+    NodePtr right;
 };
 
 #endif // COMMANODE_H

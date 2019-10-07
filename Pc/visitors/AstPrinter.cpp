@@ -457,8 +457,8 @@ void AstPrinter::visit(CommaNode &node)
     tab() << "comma\n";
 
     auto g = pcx::scoped_counter(tc);
-    node.first->accept(*this);
-    node.second->accept(*this);
+    node.left->accept(*this);
+    node.right->accept(*this);
 }
 
 void AstPrinter::visit(InlineVarNode &node)

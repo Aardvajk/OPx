@@ -186,6 +186,14 @@ void ExprDecorator::visit(CallNode &node)
     {
         rn = new ConstructNode(node.location(), dt, node.params);
         rn->setProperty("type", dt->primitive() ? dt : c.types.insert(dt->addReference()));
+
+        if(dt->primitive())
+        {
+            if(node.params.size() > 1)
+            {
+                throw Error(rn->location(), "too many parameters - ", rn->description());
+            }
+        }
     }
     else
     {
@@ -330,8 +338,8 @@ void ExprDecorator::visit(PostIncDecNode &node)
 
 void ExprDecorator::visit(CommaNode &node)
 {
-    node.first = ExprDecorator::decorate(c, node.first);
-    node.second = ExprDecorator::decorate(c, node.second);
+    node.left = ExprDecorator::decorate(c, node.left);
+    node.right = ExprDecorator::decorate(c, node.right);
 }
 
 void ExprDecorator::visit(InlineVarNode &node)

@@ -3,13 +3,15 @@
 
 #include "nodes/Node.h"
 
+#include "types/TypeConvert.h"
+
 class Context;
 class Type;
 
 namespace CommonConvert
 {
 
-NodePtr convert(Context &c, NodePtr node, Type *type);
+NodePtr convert(Context &c, NodePtr node, Type *type, TypeConvert::Permission permission);
 
 }
 

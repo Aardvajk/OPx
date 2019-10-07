@@ -76,7 +76,7 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
                         {
                             ++matches;
                         }
-                        else if(!TypeConvert::find(c, expectedType->args[i], type->args[i]).empty())
+                        else if(!TypeConvert::find(c, expectedType->args[i], type->args[i], TypeConvert::Permission::Implicit).empty())
                         {
                             ++matches;
                             ++conversions;

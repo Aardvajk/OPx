@@ -290,7 +290,7 @@ void DescVisitor::visit(TextNode &node)
 
 void DescVisitor::visit(CommaNode &node)
 {
-    node.first->accept(*this);
+    node.left->accept(*this);
     r += ", ";
-    node.second->accept(*this);
+    node.right->accept(*this);
 }

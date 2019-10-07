@@ -191,11 +191,6 @@ void ExprGenerator::visit(ConstructNode &node)
 {
     if(node.type->primitive())
     {
-        if(node.params.size() > 1)
-        {
-            throw Error(node.location(), "too many parameters - ", node.description());
-        }
-
         auto pt = node.type->primitiveType();
 
         if(node.params.empty())
@@ -205,18 +200,12 @@ void ExprGenerator::visit(ConstructNode &node)
         else
         {
             auto et = TypeVisitor::assertType(c, node.params.front().get());
-            if(et->primitive())
-            {
-                ExprGenerator::generate(c, os, node.params.front().get());
 
-                if(et->primitiveType() != pt)
-                {
-                    os << "    convert " << Primitive::toString(et->primitiveType()) << " " << Primitive::toString(pt) << ";\n";
-                }
-            }
-            else
+            ExprGenerator::generate(c, os, node.params.front().get());
+
+            if(et->primitiveType() != pt)
             {
-                throw Error(node.location(), "non-primitive conversions not supported - ", node.description());
+                os << "    convert " << Primitive::toString(et->primitiveType()) << " " << Primitive::toString(pt) << ";\n";
             }
         }
 
@@ -379,14 +368,14 @@ void ExprGenerator::visit(PostIncDecNode &node)
 
 void ExprGenerator::visit(CommaNode &node)
 {
-    auto size = ExprGenerator::generate(c, os, node.first.get());
+    auto size = ExprGenerator::generate(c, os, node.left.get());
 
     if(!c.option("O", "elide_no_effect_ops") || size)
     {
         os << "    pop " << size << ";\n";
     }
 
-    sz = ExprGenerator::generate(c, os, node.second.get());
+    sz = ExprGenerator::generate(c, os, node.right.get());
 }
 
 void ExprGenerator::visit(InlineVarNode &node)

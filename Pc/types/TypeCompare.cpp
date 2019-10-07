@@ -113,5 +113,5 @@ bool TypeCompare::exactArgs(const Type *a, const Type *b) const
 
 bool TypeCompare::convertible(Type *from, Type *to) const
 {
-    return compatible(from, to) || !TypeConvert::find(c, from, to).empty();
+    return compatible(from, to) || !TypeConvert::find(c, from, to, TypeConvert::Permission::Implicit).empty();
 }
