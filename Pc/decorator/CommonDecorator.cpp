@@ -46,11 +46,6 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
         {
             search.insert(a->sym->parent());
         }
-
-        if(a->sym->type() == Sym::Type::Class)
-        {
-            search.insert(a->sym);
-        }
     }
 
     SymFinder::find(c, SymFinder::Type::Global, c.tree.current(), node, sv);

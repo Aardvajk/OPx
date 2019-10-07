@@ -163,6 +163,11 @@ void Decorator::visit(FuncNode &node)
         throw Error(node.name->location(), "invalid function name - ", node.name->description());
     }
 
+    if(opType && (!t.method || !node.args.empty()))
+    {
+        throw Error(node.name->location(), "invalid conversion operator - ", node.name->description());
+    }
+
     for(auto &a: node.args)
     {
         t.args.push_back(TypeVisitor::assertType(c, a.get()));
@@ -183,6 +188,11 @@ void Decorator::visit(FuncNode &node)
         auto n = NameVisitors::assertSimpleName(c, node.name.get());
 
         sym = c.tree.current()->add(new Sym(Sym::Type::Func, node.name->location(), node.property<Access>("access"), n));
+
+        if(node.findProperty("explicit").value<bool>() && n != "new" && !opType)
+        {
+            throw Error(node.location(), "cannot be explicit - ", node.name->description());
+        }
 
         sym->setProperty("type", type);
         sym->setProperty("autogen", node.autoGen);

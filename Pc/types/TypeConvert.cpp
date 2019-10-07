@@ -26,6 +26,22 @@ void findConvertMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv)
     }
 }
 
+void findOperatorMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv)
+{
+    for(auto s: from->sym->children())
+    {
+        if(s->type() == Sym::Type::Func)
+        {
+            auto op = s->findProperty("opType");
+
+            if(op && TypeCompare(c).compatible(to, op.to<Type*>()) && !s->findProperty("explicit").value<bool>())
+            {
+                sv.push_back(s);
+            }
+        }
+    }
+}
+
 }
 
 std::vector<Sym*> TypeConvert::find(Context &c, Type *from, Type *to)
@@ -35,6 +51,7 @@ std::vector<Sym*> TypeConvert::find(Context &c, Type *from, Type *to)
     if(!from->function() && !to->function())
     {
         findConvertMethod(c, from, to, sv);
+        findOperatorMethod(c, from, to, sv);
     }
 
     return sv;

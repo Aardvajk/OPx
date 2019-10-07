@@ -2,6 +2,7 @@
 
 #include "application/Context.h"
 
+#include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 
 #include "types/Type.h"
@@ -43,7 +44,8 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type)
         }
         else
         {
-            throw Error(node->location(), "non-construct conversions not supported - ", node->description());
+            auto cn = new ProxyCallNode(node->location(), sym, node);
+            node = cn;
         }
     }
 

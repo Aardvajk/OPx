@@ -130,11 +130,6 @@ void buildFunc(Context &c, Qual::Flags quals, BlockNode *block, bool get)
         throw Error(name->location(), "delete method cannot have parameters - ", name->description());
     }
 
-    if(quals[Qual::Flag::Explicit] && special != Token::Type::RwNew)
-    {
-        throw Error(name->location(), "only constructors can be explicit - ", name->description());
-    }
-
     c.scanner.consume(Token::Type::RightParen, false);
 
     if(c.scanner.token().type() == Token::Type::Colon)

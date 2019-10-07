@@ -49,6 +49,7 @@ DISTFILES += \
     ../unittests/const_overload.pc \
     ../unittests/const_ref.pc \
     ../unittests/construct_to_non_ref.pc \
+    ../unittests/convert_op.pc \
     ../unittests/copy_construct_init.pc \
     ../unittests/copy_param.pc \
     ../unittests/copy_return.pc \
@@ -57,7 +58,6 @@ DISTFILES += \
     ../unittests/for_scope.pc \
     ../unittests/for_scope_count.pc \
     ../unittests/free_members.pc \
-    ../unittests/free_overload.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
     ../unittests/generate_op_assign.pc \

@@ -1,20 +1,7 @@
 include("stdtest.ph");
 
-var g = false;
-
 class foo
 {
-}
-
-func operator foo()
-{
-    g = true;
-    return foo();
-}
-
-func operator const std.int(a:std.char)
-{
-    return std.int(a);
 }
 
 func operator-(:foo):std.int
@@ -39,11 +26,6 @@ func operator()(:std.int):std.int
 
 func main()
 {
-    operator foo();
-    test.assert(g);
-
-    test.assert(operator const std.int('A') == 65);
-
     test.assert(operator-(foo()) == 321);
 
     test.assert(woo.foo.operator()(10) == 32);
