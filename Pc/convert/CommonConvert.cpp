@@ -32,6 +32,11 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type)
 
         auto sym = sv.front();
 
+        if(!sym->accessibleFrom(c.tree.current()))
+        {
+            throw Error(node->location(), "not accessible - ", sym->funcname());
+        }
+
         if(sym->name() == "new")
         {
             type = c.types.insert(type->removeReference());
