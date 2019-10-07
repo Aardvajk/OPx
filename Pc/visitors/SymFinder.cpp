@@ -16,22 +16,22 @@
 namespace
 {
 
-void findIn(Sym *scope, const std::string &name, std::vector<Sym*> &result)
+void findIn(Sym *scope, IdNode &node, std::vector<Sym*> &result)
 {
     for(auto s: scope->children())
     {
-        if(s->name() == name)
+        if(s->name() == node.name)
         {
             result.push_back(s);
         }
     }
 }
 
-void findFirst(Sym *scope, const std::string &name, std::vector<Sym*> &result)
+void findFirst(Sym *scope, IdNode &node, std::vector<Sym*> &result)
 {
     while(scope)
     {
-        findIn(scope, name, result);
+        findIn(scope, node, result);
         if(!result.empty())
         {
             return;
@@ -41,9 +41,9 @@ void findFirst(Sym *scope, const std::string &name, std::vector<Sym*> &result)
     }
 }
 
-void search(SymFinder::Type type, Sym *scope, const std::string &name, std::vector<Sym*> &result)
+void search(SymFinder::Type type, Sym *scope, IdNode &node, std::vector<Sym*> &result)
 {
-    type == SymFinder::Type::Global ? findFirst(scope, name, result) : findIn(scope, name, result);
+    type == SymFinder::Type::Global ? findFirst(scope, node, result) : findIn(scope, node, result);
 }
 
 }
@@ -76,25 +76,12 @@ void SymFinder::visit(IdNode &node)
 
         for(auto s: sc)
         {
-            search(Type::Local, s, node.name, r);
+            search(Type::Local, s, node, r);
         }
     }
     else
     {
-        search(type, curr, node.name, r);
-    }
-}
-
-void SymFinder::visit(CallNode &node)
-{
-    node.target->accept(*this);
-}
-
-void SymFinder::visit(ConstructNode &node)
-{
-    if(node.target)
-    {
-        node.target->accept(*this);
+        search(type, curr, node, r);
     }
 }
 

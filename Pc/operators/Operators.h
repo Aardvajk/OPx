@@ -3,6 +3,8 @@
 
 #include "scanner/Token.h"
 
+#include "nodes/Node.h"
+
 #include <string>
 
 class Context;
@@ -10,7 +12,7 @@ class Context;
 namespace Operators
 {
 
-std::string scan(Context &c, bool get);
+NodePtr scan(Context &c, bool get);
 Token opEqToOp(const Token &token);
 
 }

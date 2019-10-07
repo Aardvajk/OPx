@@ -17,13 +17,14 @@ NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
 {
     std::string name;
     Token::Type special = Token::Type::Invalid;
+    NodePtr op;
 
     auto tok = c.scanner.next(get);
 
     if(tok.type() == Token::Type::RwOperator && extensions)
     {
-        auto op = Operators::scan(c, true);
-        name = pcx::str("operator", op);
+        op = Operators::scan(c, true);
+        name = pcx::str("operator");
     }
     else if((tok.type() == Token::Type::RwNew || tok.type() == Token::Type::RwDelete) && extensions)
     {
@@ -44,6 +45,7 @@ NodePtr nameImp(Context &c, NodePtr parent, bool extensions, bool get)
     NodePtr nn(n);
 
     n->special = special;
+    n->op = op;
 
     while(c.scanner.token().type() == Token::Type::Dot)
     {

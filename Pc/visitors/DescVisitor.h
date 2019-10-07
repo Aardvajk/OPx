@@ -39,6 +39,7 @@ public:
     virtual void visit(InitNode &node) override;
     virtual void visit(PreIncDecNode &node) override;
     virtual void visit(PostIncDecNode &node) override;
+    virtual void visit(TextNode &node) override;
     virtual void visit(CommaNode &node) override;
 
 private:

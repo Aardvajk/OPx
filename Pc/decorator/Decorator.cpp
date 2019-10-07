@@ -141,12 +141,19 @@ void Decorator::visit(FuncNode &node)
         Visitor::visit<TypeDecorator>(a.get(), c);
     }
 
+    auto opType = Visitor::query<NameVisitors::ResolveOpName, Type*>(node.name.get(), c);
+
     if(node.type)
     {
+        if(opType)
+        {
+            throw Error(node.type->location(), "cannot explicitly return - ", node.description());
+        }
+
         Visitor::visit<TypeDecorator>(node.type.get(), c);
     }
 
-    auto t = Type::makeFunction(node.type ? TypeVisitor::assertType(c, node.type.get()) : c.types.nullType());
+    auto t = Type::makeFunction(node.type ? TypeVisitor::assertType(c, node.type.get()) : (opType ? opType : c.types.nullType()));
 
     t.method = c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>();
     t.constMethod = node.constMethod;
@@ -181,6 +188,11 @@ void Decorator::visit(FuncNode &node)
         sym->setProperty("autogen", node.autoGen);
         sym->setProperty("method", t.method);
         sym->setProperty("explicit", node.findProperty("explicit").value<bool>());
+
+        if(opType)
+        {
+            sym->setProperty("opType", opType);
+        }
     }
 
     if(t.constMethod && sym->parent()->type() != Sym::Type::Class)

@@ -34,6 +34,7 @@ class PostIncDecNode;
 class WhileNode;
 class IfNode;
 class ForNode;
+class TextNode;
 class CommaNode;
 class InlineVarNode;
 
@@ -73,6 +74,7 @@ public:
     virtual void visit(WhileNode &node);
     virtual void visit(IfNode &node);
     virtual void visit(ForNode &node);
+    virtual void visit(TextNode &node);
     virtual void visit(CommaNode &node);
     virtual void visit(InlineVarNode &node);
 

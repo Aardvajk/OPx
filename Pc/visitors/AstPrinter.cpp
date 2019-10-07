@@ -29,6 +29,7 @@
 #include "nodes/WhileNode.h"
 #include "nodes/IfNode.h"
 #include "nodes/ForNode.h"
+#include "nodes/TextNode.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
 
@@ -100,7 +101,7 @@ void AstPrinter::visit(BlockNode &node)
 
 void AstPrinter::visit(IdNode &node)
 {
-    tab() << "id " << node.name << details(node) << "\n";
+    tab() << "id " << node.name << (node.op ? node.op->description() : "") << details(node) << "\n";
 
     if(node.parent)
     {
@@ -444,6 +445,11 @@ void AstPrinter::visit(ForNode &node)
     }
 
     node.body->accept(*this);
+}
+
+void AstPrinter::visit(TextNode &node)
+{
+    tab() << "text " << node.value << "\n";
 }
 
 void AstPrinter::visit(CommaNode &node)

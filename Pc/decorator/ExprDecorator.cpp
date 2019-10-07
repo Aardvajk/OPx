@@ -28,6 +28,7 @@
 #include "visitors/NameVisitors.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 #include "decorator/CommonDecorator.h"
 #include "decorator/TypeDecorator.h"
@@ -90,6 +91,8 @@ void ExprDecorator::visit(IdNode &node)
         node.parent = new DerefNode(node.location(), node.parent);
         node.arrow = false;
     }
+
+    Visitor::visit<NameVisitors::ResolveOpName>(&node, c);
 
     if(node.parent)
     {
@@ -250,9 +253,19 @@ void ExprDecorator::visit(ThisNode &node)
 void ExprDecorator::visit(AssignNode &node)
 {
     node.target = ExprDecorator::decorate(c, node.target);
-    node.expr = ExprDecorator::decorate(c, node.expr, TypeVisitor::assertType(c, node.target.get()));
 
-    if(!TypeVisitor::assertType(c, node.target.get())->primitiveOrRef())
+    auto t = TypeVisitor::assertType(c, node.target.get());
+
+    node.expr = ExprDecorator::decorate(c, node.expr, t);
+
+    if(t->primitiveOrRef())
+    {
+        if(!TypeCompare(c).convertible(TypeVisitor::assertType(c, node.expr.get()), t))
+        {
+            throw Error(node.expr->location(), t->text(), " expected - ", node.expr->description());
+        }
+    }
+    else
     {
         NodeList params = { node.expr };
         rn = OperatorCallDecorate::generate(c, node, node.target, params, "=");
