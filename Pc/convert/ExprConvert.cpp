@@ -102,6 +102,8 @@ void ExprConvert::visit(AssignNode &node)
 {
     node.target = ExprConvert::convert(c, node.target);
     node.expr = ExprConvert::convert(c, node.expr);
+
+    node.expr = CommonConvert::convert(c, node.expr, TypeVisitor::assertType(c, node.target.get()), TypeConvert::Permission::Implicit);
 }
 
 void ExprConvert::visit(UnaryNode &node)
