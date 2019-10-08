@@ -160,8 +160,11 @@ void Generator::visit(VarNode &node)
                 throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
             }
 
-            os << " = ";
-            Visitor::query<ByteListGenerator, bool>(node.value.get(), c, os);
+            if(Visitor::query<CanByteListGenerate, bool>(node.value.get()))
+            {
+                os << " = ";
+                Visitor::visit<ByteListGenerator>(node.value.get(), c, os);
+            }
         }
 
         os << ";\n";

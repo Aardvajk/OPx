@@ -5,6 +5,9 @@
 #include "application/Context.h"
 
 #include "nodes/BlockNode.h"
+#include "nodes/IdNode.h"
+#include "nodes/FuncNode.h"
+#include "nodes/ScopeNode.h"
 
 #include "parser/CommonParser.h"
 #include "parser/PragmaParser.h"
@@ -13,6 +16,30 @@
 #include "parser/FuncParser.h"
 
 #include <pcx/scoped_push.h>
+
+namespace
+{
+
+NodePtr createFunction(const std::string &name)
+{
+    NodePtr id(new IdNode({ }, { }, name));
+
+    auto fn = new FuncNode({ }, id);
+    NodePtr n(fn);
+
+    fn->setProperty("access", Access::Public);
+//    fn->autoGen = true;
+
+    auto sc = new ScopeNode({ });
+    fn->body = sc;
+
+    auto body = new BlockNode({ });
+    sc->body = body;
+
+    return n;
+}
+
+}
 
 void Parser::construct(Context &c, BlockNode *block, bool get)
 {
@@ -49,6 +76,11 @@ NodePtr Parser::build(Context &c)
     {
         construct(c, block, false);
     }
+
+    auto i = createFunction("#global_init");
+    block->push_back(i);
+
+    c.globalInit = i.get();
 
     return n;
 }

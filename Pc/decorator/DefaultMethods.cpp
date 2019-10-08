@@ -28,7 +28,7 @@
 namespace
 {
 
-FuncNode *createBasicFunction(Sym *sym, BlockNode *block, const std::string &name, std::size_t index)
+FuncNode *createBasicFunction(BlockNode *block, const std::string &name, std::size_t index)
 {
     NodePtr n(new IdNode(block->location(), { }, name));
 
@@ -116,12 +116,12 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
 
     if(!sym->child("new"))
     {
-        Visitor::visit<Decorator>(createBasicFunction(sym, block, "new", index++), c);
+        Visitor::visit<Decorator>(createBasicFunction(block, "new", index++), c);
     }
 
     if(!hasCopyMethod(c, "new", sym))
     {
-        FuncNode *fn = createBasicFunction(sym, block, "new", index++);
+        FuncNode *fn = createBasicFunction(block, "new", index++);
         auto pn = makeParam(node, fn, sym);
 
         for(auto s: sym->children())
@@ -140,12 +140,12 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
 
     if(!sym->child("delete"))
     {
-        Visitor::visit<Decorator>(createBasicFunction(sym, block, "delete", index++), c);
+        Visitor::visit<Decorator>(createBasicFunction(block, "delete", index++), c);
     }
 
     if(!hasCopyMethod(c, "operator=", sym) && !anyConstOrRefMembers(sym))
     {
-        FuncNode *fn = createBasicFunction(sym, block, "operator=", index++);
+        FuncNode *fn = createBasicFunction(block, "operator=", index++);
         fn->type = makeType(node, false, sym);
 
         auto pn = makeParam(node, fn, sym);
@@ -176,3 +176,4 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
         Visitor::visit<Decorator>(fn, c);
     }
 }
+

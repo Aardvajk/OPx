@@ -14,8 +14,7 @@ void GlobalsGenerator::generate(Context &c, std::ostream &os)
     {
         os << "var \"" << i.first << "\" = ";
 
-        ByteListGenerator bg(c, os);
-        i.second->accept(bg);
+        Visitor::visit<ByteListGenerator>(i.second, c, os);
 
         os << ";\n";
     }

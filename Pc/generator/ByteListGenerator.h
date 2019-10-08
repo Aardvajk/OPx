@@ -7,10 +7,10 @@
 
 class Context;
 
-class ByteListGenerator : public Visitor
+class CanByteListGenerate : public Visitor
 {
 public:
-    ByteListGenerator(Context &c, std::ostream &os);
+    CanByteListGenerate();
 
     bool result() const { return ok; }
 
@@ -20,10 +20,22 @@ public:
     virtual void visit(StringLiteralNode &node) override;
 
 private:
+    bool ok;
+};
+
+class ByteListGenerator : public Visitor
+{
+public:
+    ByteListGenerator(Context &c, std::ostream &os);
+
+    virtual void visit(CharLiteralNode &node) override;
+    virtual void visit(IntLiteralNode &node) override;
+    virtual void visit(BoolLiteralNode &node) override;
+    virtual void visit(StringLiteralNode &node) override;
+
+private:
     Context &c;
     std::ostream &os;
-
-    bool ok;
 };
 
 #endif // BYTELISTGENERATOR_H

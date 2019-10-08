@@ -7,7 +7,7 @@
 #include <fstream>
 #include <algorithm>
 
-Context::Context(int argc, char *argv[], std::vector<std::string> &files) : scanner(Lexer::Mode::Pc), types(*this), classDepth(0)
+Context::Context(int argc, char *argv[], std::vector<std::string> &files) : scanner(Lexer::Mode::Pc), types(*this), classDepth(0), globalInit(nullptr)
 {
     args.push_back({ argc, argv, files });
 

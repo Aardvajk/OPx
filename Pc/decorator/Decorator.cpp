@@ -12,10 +12,14 @@
 #include "nodes/FuncNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
+#include "nodes/IdNode.h"
+#include "nodes/ExprNode.h"
+#include "nodes/AssignNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
 #include "visitors/TypeVisitor.h"
+#include "visitors/QueryVisitors.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
@@ -26,6 +30,8 @@
 #include "decorator/VarDecorator.h"
 #include "decorator/FuncDecorator.h"
 #include "decorator/DefaultMethods.h"
+
+#include "generator/ByteListGenerator.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -278,6 +284,19 @@ void Decorator::visit(ClassNode &node)
 void Decorator::visit(VarNode &node)
 {
     Visitor::visit<VarDecorator>(&node, c);
+
+    if(node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get()))
+    {
+        auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalInit);
+
+        auto en = new ExprNode(node.location());
+        block->push_back(en);
+
+        auto an = new AssignNode(node.location(), node.name);
+        en->expr = an;
+
+        an->expr = node.value;
+    }
 }
 
 void Decorator::visit(PragmaNode &node)

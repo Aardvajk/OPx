@@ -48,6 +48,8 @@ public:
     std::vector<FuncNode*> deferredMethods;
 
     std::unordered_map<std::string, Node*> globals;
+
+    Node *globalInit;
 };
 
 #endif // CONTEXT_H
