@@ -1,0 +1,36 @@
+include("stdtest.ph");
+
+func operator std.int(a:std.char)
+{
+    return std.int(a);
+}
+
+namespace foo
+{
+
+class woo
+{
+}
+
+func operator std.char(:woo)
+{
+    return 'A';
+}
+
+}
+
+func f(a:std.int)
+{
+    test.assert(a == 65);
+}
+
+func g(a:std.char)
+{
+    test.assert(a == 'A');
+}
+
+func main()
+{
+    f('A');
+    g(foo.woo());
+}

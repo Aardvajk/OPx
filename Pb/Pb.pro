@@ -58,6 +58,7 @@ DISTFILES += \
     ../unittests/explicit_operators.pc \
     ../unittests/for_scope.pc \
     ../unittests/for_scope_count.pc \
+    ../unittests/free_convert.pc \
     ../unittests/free_members.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
