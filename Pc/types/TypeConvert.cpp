@@ -2,10 +2,14 @@
 
 #include "application/Context.h"
 
+#include "nodes/IdNode.h"
+
 #include "syms/Sym.h"
 
 #include "types/Type.h"
 #include "types/TypeCompare.h"
+
+#include "decorator/CommonDecorator.h"
 
 namespace
 {
@@ -42,6 +46,15 @@ void findOperatorMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv,
     }
 }
 
+void findFreeMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv, TypeConvert::Permission p)
+{
+    NodePtr id(new IdNode({ }, { }, pcx::str("operator ", to->text())));
+    auto t = Type::makeFunction(c.types.nullType(), { from });
+
+    auto v = CommonDecorator::searchCallable(c, id.get(), &t);
+    sv.insert(sv.end(), v.begin(), v.end());
+}
+
 }
 
 std::vector<Sym*> TypeConvert::find(Context &c, Type *from, Type *to, Permission permission)
@@ -52,6 +65,7 @@ std::vector<Sym*> TypeConvert::find(Context &c, Type *from, Type *to, Permission
     {
         findConvertMethod(c, from, to, sv, permission);
         findOperatorMethod(c, from, to, sv, permission);
+        findFreeMethod(c, from, to, sv, permission);
     }
 
     return sv;

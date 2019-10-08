@@ -49,10 +49,18 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type, TypeConvert
 
             node = n;
         }
-        else
+        else if(sym->property<Type*>("type")->method)
         {
             auto cn = new ProxyCallNode(node->location(), sym, node);
             node = cn;
+        }
+        else
+        {
+            auto cn = new ProxyCallNode(node->location(), sym);
+            NodePtr n(cn);
+
+            cn->params.push_back(node);
+            node = n;
         }
 
         node = ExprDecorator::decorate(c, node);

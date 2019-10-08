@@ -163,9 +163,12 @@ void Decorator::visit(FuncNode &node)
         throw Error(node.name->location(), "invalid function name - ", node.name->description());
     }
 
-    if(opType && (!t.method || !node.args.empty()))
+    if(opType)
     {
-        throw Error(node.name->location(), "invalid conversion operator - ", node.name->description());
+        if((t.method && !node.args.empty()) || (!t.method && node.args.size() != 1))
+        {
+            throw Error(node.name->location(), "invalid conversion operator - ", node.name->description());
+        }
     }
 
     for(auto &a: node.args)

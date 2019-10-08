@@ -133,3 +133,4 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
     return sv;
 }
 
+
