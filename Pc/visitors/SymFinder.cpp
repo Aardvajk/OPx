@@ -12,26 +12,37 @@
 #include "syms/Sym.h"
 
 #include "types/Type.h"
+#include "types/TypeCompare.h"
 
 namespace
 {
 
-void findIn(Sym *scope, IdNode &node, std::vector<Sym*> &result)
+void findIn(Context &c, Sym *scope, IdNode &node, std::vector<Sym*> &result)
 {
     for(auto s: scope->children())
     {
-        if(s->name() == node.name)
+        auto on = node.findProperty("opType");
+        auto os = s->findProperty("opType");
+
+        if(on && os)
+        {
+            if(TypeCompare(c).compatible(on.to<Type*>(), os.to<Type*>()))
+            {
+                result.push_back(s);
+            }
+        }
+        else if(s->name() == node.name)
         {
             result.push_back(s);
         }
     }
 }
 
-void findFirst(Sym *scope, IdNode &node, std::vector<Sym*> &result)
+void findFirst(Context &c, Sym *scope, IdNode &node, std::vector<Sym*> &result)
 {
     while(scope)
     {
-        findIn(scope, node, result);
+        findIn(c, scope, node, result);
         if(!result.empty())
         {
             return;
@@ -41,9 +52,9 @@ void findFirst(Sym *scope, IdNode &node, std::vector<Sym*> &result)
     }
 }
 
-void search(SymFinder::Type type, Sym *scope, IdNode &node, std::vector<Sym*> &result)
+void search(Context &c, SymFinder::Type type, Sym *scope, IdNode &node, std::vector<Sym*> &result)
 {
-    type == SymFinder::Type::Global ? findFirst(scope, node, result) : findIn(scope, node, result);
+    type == SymFinder::Type::Global ? findFirst(c, scope, node, result) : findIn(c, scope, node, result);
 }
 
 }
@@ -76,12 +87,12 @@ void SymFinder::visit(IdNode &node)
 
         for(auto s: sc)
         {
-            search(Type::Local, s, node, r);
+            search(c, Type::Local, s, node, r);
         }
     }
     else
     {
-        search(type, curr, node, r);
+        search(c, type, curr, node, r);
     }
 }
 

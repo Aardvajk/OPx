@@ -49,6 +49,8 @@ void findOperatorMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv,
 void findFreeMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv, TypeConvert::Permission p)
 {
     NodePtr id(new IdNode({ }, { }, pcx::str("operator ", to->text())));
+    id->setProperty("opType", to);
+
     auto t = Type::makeFunction(c.types.nullType(), { from });
 
     auto v = CommonDecorator::searchCallable(c, id.get(), &t);
