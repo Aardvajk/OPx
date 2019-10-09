@@ -114,7 +114,7 @@ void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
 
 }
 
-Decorator::Decorator(Context &c) : c(c)
+Decorator::Decorator(Context &c, NodePtr &cn) : c(c), cn(cn)
 {
 }
 
@@ -122,7 +122,7 @@ void Decorator::visit(BlockNode &node)
 {
     for(auto &n: node.nodes)
     {
-        n->accept(*this);
+        Decorator::decorate(c, n);
     }
 }
 
@@ -138,7 +138,7 @@ void Decorator::visit(NamespaceNode &node)
     node.setProperty("sym", sym);
 
     auto sg = c.tree.open(sym);
-    node.body->accept(*this);
+    Decorator::decorate(c, node.body);
 }
 
 void Decorator::visit(FuncNode &node)
@@ -261,7 +261,7 @@ void Decorator::visit(ClassNode &node)
         auto sg = c.tree.open(sym);
         auto dg = pcx::scoped_counter(c.classDepth);
 
-        node.body->accept(*this);
+        Decorator::decorate(c, node.body);
 
         DefaultMethods::generate(c, node, sym);
 
@@ -290,45 +290,16 @@ void Decorator::visit(VarNode &node)
 
     if(!sym->findProperty("member").value<bool>())
     {
-        auto type = TypeVisitor::assertType(c, &node);
-        if(node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get()))
-        {
-            auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalInit);
-
-            auto en = new ExprNode(node.location());
-            block->push_back(en);
-
-            NodePtr id(IdNode::create(node.location(), sym->names()));
-
-            auto an = new AssignNode(node.location(), id);
-            en->expr = an;
-
-            an->expr = node.value;
-
-            node.value = { };
-            Visitor::visit<FuncDecorator>(en, c);
-        }
-
-        if(!type->primitiveOrRef())
-        {
-            auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalDestroy);
-
-            auto en = new ExprNode(node.location());
-            block->insert(0, en);
-
-            auto dm = TypeLookup::assertDeleteMethod(c, node.location(), type);
-
-            NodePtr id(IdNode::create(node.location(), sym->names()));
-
-            auto cn = new ProxyCallNode({ }, dm, id);
-            en->expr = cn;
-
-            Visitor::visit<FuncDecorator>(en, c);
-        }
     }
 }
 
 void Decorator::visit(PragmaNode &node)
 {
     Pragmas::execute(c, node);
+}
+
+void Decorator::decorate(Context &c, NodePtr node)
+{
+    Decorator d(c, node);
+    node->accept(d);
 }

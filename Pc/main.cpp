@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
-        Visitor::visit<Decorator>(n.get(), c);
+        Decorator::decorate(c, n);
 
         if(!c.option("q"))
         {

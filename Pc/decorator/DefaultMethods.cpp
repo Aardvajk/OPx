@@ -116,12 +116,13 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
 
     if(!sym->child("new"))
     {
-        Visitor::visit<Decorator>(createBasicFunction(block, "new", index++), c);
+        createBasicFunction(block, "new", index);
+        Decorator::decorate(c, block->nodes[index++]);
     }
 
     if(!hasCopyMethod(c, "new", sym))
     {
-        FuncNode *fn = createBasicFunction(block, "new", index++);
+        FuncNode *fn = createBasicFunction(block, "new", index);
         auto pn = makeParam(node, fn, sym);
 
         for(auto s: sym->children())
@@ -135,29 +136,30 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
             }
         }
 
-        Visitor::visit<Decorator>(fn, c);
+        Decorator::decorate(c, block->nodes[index++]);
     }
 
     if(!sym->child("delete"))
     {
-        Visitor::visit<Decorator>(createBasicFunction(block, "delete", index++), c);
+        createBasicFunction(block, "delete", index);
+        Decorator::decorate(c, block->nodes[index++]);
     }
 
     if(!hasCopyMethod(c, "operator=", sym) && !anyConstOrRefMembers(sym))
     {
-        FuncNode *fn = createBasicFunction(block, "operator=", index++);
+        FuncNode *fn = createBasicFunction(block, "operator=", index);
         fn->type = makeType(node, false, sym);
 
         auto pn = makeParam(node, fn, sym);
 
-        auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(fn);
+        auto fb = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(fn);
 
         for(auto s: sym->children())
         {
             if(s->type() == Sym::Type::Var && !s->findProperty("free").value<bool>())
             {
                 auto en = new ExprNode(node.location());
-                block->push_back(en);
+                fb->push_back(en);
 
                 NodePtr tn(new IdNode(node.location(), { }, s->name()));
 
@@ -169,11 +171,11 @@ void DefaultMethods::generate(Context &c, ClassNode &node, Sym *sym)
         }
 
         auto rn = new ReturnNode(node.location());
-        block->push_back(rn);
+        fb->push_back(rn);
 
         rn->expr = new ThisNode(node.location());
 
-        Visitor::visit<Decorator>(fn, c);
+        Decorator::decorate(c, block->nodes[index++]);
     }
 }
 
