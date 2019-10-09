@@ -50,6 +50,7 @@ public:
     std::unordered_map<std::string, Node*> globals;
 
     Node *globalInit;
+    Node *globalDestroy;
 };
 
 #endif // CONTEXT_H

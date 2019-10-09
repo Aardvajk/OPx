@@ -108,6 +108,12 @@ int main(int argc, char *argv[])
                 c.refs.insert(n);
                 generateRefs(c, c.find(n));
             }
+
+            for(auto n: c.globalDestroys)
+            {
+                c.refs.insert(n);
+                generateRefs(c, c.find(n));
+            }
         }
 
         Composor::compose(c);

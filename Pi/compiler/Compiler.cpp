@@ -107,6 +107,10 @@ void processProperties(Context &c, Sym *sym, const std::vector<std::string> &pro
         {
             flags |= Object::Entity::Flag::GlobalInit;
         }
+        else if(s == "globaldestroy")
+        {
+            flags |= Object::Entity::Flag::GlobalDestroy;
+        }
     }
 
     sym->properties["flags"] = flags;

@@ -28,7 +28,8 @@ public:
     enum class Flag : std::uint32_t
     {
         AutoGen = 1,
-        GlobalInit = 2
+        GlobalInit = 2,
+        GlobalDestroy = 4
     };
 
     using Flags = pcx::flags<Flag>;

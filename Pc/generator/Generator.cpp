@@ -23,6 +23,22 @@
 #include <pcx/range_reverse.h>
 #include <pcx/join_str.h>
 
+namespace
+{
+
+std::vector<std::string> makePropertyList(FuncNode &node)
+{
+    std::vector<std::string> ps;
+
+    if(node.autoGen) ps.push_back("autogen");
+    if(node.globalInit) ps.push_back("globalinit");
+    if(node.globalDestroy) ps.push_back("globaldestroy");
+
+    return ps;
+}
+
+}
+
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
 }
@@ -50,11 +66,7 @@ void Generator::visit(FuncNode &node)
 
         os << "func";
 
-        std::vector<std::string> ps;
-
-        if(node.autoGen) ps.push_back("autogen");
-        if(node.globalInit) ps.push_back("globalinit");
-
+        auto ps = makePropertyList(node);
         if(!ps.empty())
         {
             os << "[" << pcx::join_str(ps, ", ") << "]";

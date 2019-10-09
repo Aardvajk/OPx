@@ -15,6 +15,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/ExprNode.h"
 #include "nodes/AssignNode.h"
+#include "nodes/ProxyCallNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/NameVisitors.h"
@@ -298,6 +299,22 @@ void Decorator::visit(VarNode &node)
         an->expr = node.value;
 
         node.value = { };
+        Visitor::visit<FuncDecorator>(en, c);
+    }
+
+    auto type = TypeVisitor::assertType(c, &node);
+    if(!type->primitiveOrRef())
+    {
+        auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalDestroy);
+
+        auto en = new ExprNode(node.location());
+        block->insert(0, en);
+
+        auto dm = TypeLookup::assertDeleteMethod(c, node.location(), type);
+
+        auto cn = new ProxyCallNode({ }, dm, node.name);
+        en->expr = cn;
+
         Visitor::visit<FuncDecorator>(en, c);
     }
 }

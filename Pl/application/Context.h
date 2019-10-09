@@ -28,6 +28,7 @@ public:
     std::unordered_set<std::string> refs;
 
     std::vector<std::string> globalInits;
+    std::vector<std::string> globalDestroys;
 
     ByteStream ds;
     ByteStream ps;

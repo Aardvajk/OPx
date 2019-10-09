@@ -6,7 +6,7 @@
 class FuncNode : public Node
 {
 public:
-    FuncNode(Location location, NodePtr name) : Node(location), name(name), constMethod(false), autoGen(false), globalInit(false) { }
+    FuncNode(Location location, NodePtr name) : Node(location), name(name), constMethod(false), autoGen(false), globalInit(false), globalDestroy(false) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
@@ -20,6 +20,7 @@ public:
     bool constMethod;
     bool autoGen;
     bool globalInit;
+    bool globalDestroy;
 };
 
 #endif // FUNCNODE_H

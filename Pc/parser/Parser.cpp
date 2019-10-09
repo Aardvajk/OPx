@@ -22,7 +22,7 @@
 namespace
 {
 
-NodePtr createFunction(const std::string &name)
+NodePtr createFunction(const std::string &name, bool init)
 {
     NodePtr id(new IdNode({ }, { }, name));
 
@@ -31,7 +31,8 @@ NodePtr createFunction(const std::string &name)
 
     fn->setProperty("access", Access::Public);
 //    fn->autoGen = true;
-    fn->globalInit = true;
+    fn->globalInit = init;
+    fn->globalDestroy = !init;
 
     auto sc = new ScopeNode({ });
     fn->body = sc;
@@ -80,10 +81,15 @@ NodePtr Parser::build(Context &c)
         construct(c, block, false);
     }
 
-    auto i = createFunction(pcx::str("#global_init_", pcx::base64::encode(c.sources.path(c.scanner.sourceId()))));
+    auto i = createFunction(pcx::str("#global_init_", pcx::base64::encode(c.sources.path(c.scanner.sourceId()))), true);
     block->push_back(i);
 
     c.globalInit = i.get();
+
+    auto d = createFunction(pcx::str("#global_destroy_", pcx::base64::encode(c.sources.path(c.scanner.sourceId()))), false);
+    block->push_back(d);
+
+    c.globalDestroy = d.get();
 
     return n;
 }

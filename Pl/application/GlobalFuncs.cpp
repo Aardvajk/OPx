@@ -6,6 +6,8 @@
 
 #include "framework/ByteStreamPatch.h"
 
+#include <pcx/range_reverse.h>
+
 namespace
 {
 
@@ -48,6 +50,16 @@ std::size_t GlobalFuncs::generateGlobalInit(Context &c, std::size_t entryPointOf
     c.pd("-call entrypoint");
     c.ps << OpCode::Op::SetRI << OpCode::Reg::Dx << c.ds.position() + entryPointOffset;
     c.ps << OpCode::Op::Call << OpCode::Reg::Dx;
+
+    for(auto n: pcx::range_reverse(c.globalDestroys))
+    {
+        c.pd("-call global destroy ", n);
+
+        auto ep = c.find(n);
+
+        c.ps << OpCode::Op::SetRI << OpCode::Reg::Dx << c.ds.position() + ep->offset;
+        c.ps << OpCode::Op::Call << OpCode::Reg::Dx;
+    }
 
     c.pd("-return");
     c.ps << OpCode::Op::Ret << std::size_t(0);
