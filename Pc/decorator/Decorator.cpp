@@ -286,7 +286,9 @@ void Decorator::visit(VarNode &node)
 {
     Visitor::visit<VarDecorator>(&node, c);
 
-    if(!node.property<Sym*>("sym")->findProperty("member").value<bool>())
+    auto sym = node.property<Sym*>("sym");
+
+    if(!sym->findProperty("member").value<bool>())
     {
         auto type = TypeVisitor::assertType(c, &node);
         if(node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get()))
@@ -296,7 +298,9 @@ void Decorator::visit(VarNode &node)
             auto en = new ExprNode(node.location());
             block->push_back(en);
 
-            auto an = new AssignNode(node.location(), node.name);
+            NodePtr id(IdNode::create(node.location(), sym->names()));
+
+            auto an = new AssignNode(node.location(), id);
             en->expr = an;
 
             an->expr = node.value;
@@ -314,7 +318,9 @@ void Decorator::visit(VarNode &node)
 
             auto dm = TypeLookup::assertDeleteMethod(c, node.location(), type);
 
-            auto cn = new ProxyCallNode({ }, dm, node.name);
+            NodePtr id(IdNode::create(node.location(), sym->names()));
+
+            auto cn = new ProxyCallNode({ }, dm, id);
             en->expr = cn;
 
             Visitor::visit<FuncDecorator>(en, c);

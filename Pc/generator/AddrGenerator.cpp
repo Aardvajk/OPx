@@ -25,29 +25,40 @@ void AddrGenerator::visit(IdNode &node)
 {
     auto sym = node.property<Sym*>("sym");
 
+    bool done = false;
+
     if(node.parent)
     {
-        AddrGenerator::generate(c, os, node.parent.get());
-
-        auto o = sym->property<std::size_t>("offset");
-
-        if(!c.option("O", "elide_no_effect_ops") || o)
+        auto s = node.parent->findProperty("sym");
+        if(s && s.to<Sym*>()->type() == Sym::Type::Var)
         {
-            os << "    push size(" << o << ");\n";
-            os << "    add size;\n";
-        }
+            AddrGenerator::generate(c, os, node.parent.get());
 
-        ok = true;
+            auto o = sym->property<std::size_t>("offset");
+
+            if(!c.option("O", "elide_no_effect_ops") || o)
+            {
+                os << "    push size(" << o << ");\n";
+                os << "    add size;\n";
+            }
+
+            ok = true;
+            done = true;
+        }
     }
-    else if(sym->type() == Sym::Type::Func)
+
+    if(!done)
     {
-        os << "    push &\"" << sym->funcname() << "\";\n";
-        ok = true;
-    }
-    else if(sym->type() == Sym::Type::Var)
-    {
-        os << "    push &\"" << sym->fullname() << "\";\n";
-        ok = true;
+        if(sym->type() == Sym::Type::Func)
+        {
+            os << "    push &\"" << sym->funcname() << "\";\n";
+            ok = true;
+        }
+        else if(sym->type() == Sym::Type::Var)
+        {
+            os << "    push &\"" << sym->fullname() << "\";\n";
+            ok = true;
+        }
     }
 }
 
