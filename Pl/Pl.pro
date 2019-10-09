@@ -24,6 +24,7 @@ SOURCES += \
         application/Composor.cpp \
         application/Context.cpp \
         application/Generator.cpp \
+        application/GlobalFuncs.cpp \
         application/Linker.cpp \
         application/Prologue.cpp \
         main.cpp
@@ -32,5 +33,6 @@ HEADERS += \
     application/Composor.h \
     application/Context.h \
     application/Generator.h \
+    application/GlobalFuncs.h \
     application/Linker.h \
     application/Prologue.h

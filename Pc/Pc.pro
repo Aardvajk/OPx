@@ -212,4 +212,5 @@ HEADERS += \
     visitors/Visitor.h
 
 DISTFILES += \
+    ../workspace/pb_c.bat \
     ../workspace/script.pc

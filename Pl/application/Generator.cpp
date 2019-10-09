@@ -49,6 +49,11 @@ void Generator::generate(Context &c, const std::string &path)
         {
             unit.entities.push_back(e);
         }
+
+        if(e.flags & Object::Entity::Flag::GlobalInit)
+        {
+            c.globalInits.push_back(name);
+        }
     }
 
     std::ifstream dmap(path + ".pmap");

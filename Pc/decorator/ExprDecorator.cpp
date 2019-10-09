@@ -38,6 +38,7 @@
 #include "operators/OperatorCallDecorate.h"
 
 #include <pcx/str.h>
+#include <pcx/base64.h>
 
 namespace
 {
@@ -67,7 +68,7 @@ template<typename T> NodePtr decorateIncDec(Context &c, T &node, bool pre)
 
 template<typename T> void decorateComplexReturnTemp(Context &c, T &node, Type *type)
 {
-    if(!type->returnType->primitiveOrRef())
+    if(!type->returnType->primitiveOrRef() && c.tree.current()->container()->type() == Sym::Type::Func)
     {
         auto info = c.tree.current()->container()->property<FuncInfo*>("info");
 
@@ -134,7 +135,7 @@ void ExprDecorator::visit(IdNode &node)
 
 void ExprDecorator::visit(StringLiteralNode &node)
 {
-    auto name = pcx::str("#global.", c.globals.size());
+    auto name = pcx::str("#global_", c.globals.size(), "_", pcx::base64::encode(c.sources.path(c.scanner.sourceId())));
 
     c.globals[name] = &node;
     node.setProperty("global", name);

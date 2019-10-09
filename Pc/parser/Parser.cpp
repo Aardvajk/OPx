@@ -16,6 +16,8 @@
 #include "parser/FuncParser.h"
 
 #include <pcx/scoped_push.h>
+#include <pcx/str.h>
+#include <pcx/base64.h>
 
 namespace
 {
@@ -29,6 +31,7 @@ NodePtr createFunction(const std::string &name)
 
     fn->setProperty("access", Access::Public);
 //    fn->autoGen = true;
+    fn->globalInit = true;
 
     auto sc = new ScopeNode({ });
     fn->body = sc;
@@ -77,7 +80,7 @@ NodePtr Parser::build(Context &c)
         construct(c, block, false);
     }
 
-    auto i = createFunction("#global_init");
+    auto i = createFunction(pcx::str("#global_init_", pcx::base64::encode(c.sources.path(c.scanner.sourceId()))));
     block->push_back(i);
 
     c.globalInit = i.get();

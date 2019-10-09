@@ -27,7 +27,8 @@ class Entity
 public:
     enum class Flag : std::uint32_t
     {
-        AutoGen = 1
+        AutoGen = 1,
+        GlobalInit = 2
     };
 
     using Flags = pcx::flags<Flag>;

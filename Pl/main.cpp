@@ -6,6 +6,7 @@
 #include "application/Generator.h"
 #include "application/Composor.h"
 #include "application/Linker.h"
+#include "application/GlobalFuncs.h"
 
 #include <pcx/args.h>
 
@@ -101,13 +102,20 @@ int main(int argc, char *argv[])
         {
             c.refs.insert("main():std.null");
             generateRefs(c, me);
+
+            for(auto n: c.globalInits)
+            {
+                c.refs.insert(n);
+                generateRefs(c, c.find(n));
+            }
         }
 
         Composor::compose(c);
 
         Linker::link(c);
 
-        mp.patch(c.ds, c.ds.position() + me->offset);
+        auto gi = GlobalFuncs::generateGlobalInit(c, me->offset);
+        mp.patch(c.ds, c.ds.position() + gi);
 
         if(true)
         {

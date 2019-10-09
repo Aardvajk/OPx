@@ -27,6 +27,8 @@ public:
     std::vector<Object::Unit> units;
     std::unordered_set<std::string> refs;
 
+    std::vector<std::string> globalInits;
+
     ByteStream ds;
     ByteStream ps;
 

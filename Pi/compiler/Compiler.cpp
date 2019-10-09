@@ -103,6 +103,10 @@ void processProperties(Context &c, Sym *sym, const std::vector<std::string> &pro
         {
             flags |= Object::Entity::Flag::AutoGen;
         }
+        else if(s == "globalinit")
+        {
+            flags |= Object::Entity::Flag::GlobalInit;
+        }
     }
 
     sym->properties["flags"] = flags;

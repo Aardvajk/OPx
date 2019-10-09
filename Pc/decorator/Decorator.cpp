@@ -296,6 +296,9 @@ void Decorator::visit(VarNode &node)
         en->expr = an;
 
         an->expr = node.value;
+
+        node.value = { };
+        Visitor::visit<FuncDecorator>(en, c);
     }
 }
 

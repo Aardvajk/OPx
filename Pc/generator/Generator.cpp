@@ -21,6 +21,7 @@
 #include "visitors/TypeVisitor.h"
 
 #include <pcx/range_reverse.h>
+#include <pcx/join_str.h>
 
 Generator::Generator(Context &c, std::ostream &os) : c(c), os(os)
 {
@@ -47,7 +48,18 @@ void Generator::visit(FuncNode &node)
         auto sym = node.property<Sym*>("sym");
         auto type = sym->property<Type*>("type");
 
-        os << "func" << (node.autoGen ? "[autogen]" : "");
+        os << "func";
+
+        std::vector<std::string> ps;
+
+        if(node.autoGen) ps.push_back("autogen");
+        if(node.globalInit) ps.push_back("globalinit");
+
+        if(!ps.empty())
+        {
+            os << "[" << pcx::join_str(ps, ", ") << "]";
+        }
+
         os << " \"" << sym->fullname() << type->text() << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
         os << "{\n";
 
