@@ -1,0 +1,29 @@
+include("stdtest.ph");
+
+var g = false;
+
+func f():std.int
+{
+    g = true;
+    return 123;
+}
+
+var i = f();
+
+var g2 = false;
+
+class foo
+{
+public:
+    func new(){ g2 = true; }
+}
+
+var f2 = foo();
+
+func main()
+{
+    test.assert(g);
+    test.assert(i == 123);
+
+    test.assert(g2);
+}

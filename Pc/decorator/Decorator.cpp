@@ -286,36 +286,39 @@ void Decorator::visit(VarNode &node)
 {
     Visitor::visit<VarDecorator>(&node, c);
 
-    if(node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get()))
+    if(!node.property<Sym*>("sym")->findProperty("member").value<bool>())
     {
-        auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalInit);
+        auto type = TypeVisitor::assertType(c, &node);
+        if(node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get()))
+        {
+            auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalInit);
 
-        auto en = new ExprNode(node.location());
-        block->push_back(en);
+            auto en = new ExprNode(node.location());
+            block->push_back(en);
 
-        auto an = new AssignNode(node.location(), node.name);
-        en->expr = an;
+            auto an = new AssignNode(node.location(), node.name);
+            en->expr = an;
 
-        an->expr = node.value;
+            an->expr = node.value;
 
-        node.value = { };
-        Visitor::visit<FuncDecorator>(en, c);
-    }
+            node.value = { };
+            Visitor::visit<FuncDecorator>(en, c);
+        }
 
-    auto type = TypeVisitor::assertType(c, &node);
-    if(!type->primitiveOrRef())
-    {
-        auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalDestroy);
+        if(!type->primitiveOrRef())
+        {
+            auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalDestroy);
 
-        auto en = new ExprNode(node.location());
-        block->insert(0, en);
+            auto en = new ExprNode(node.location());
+            block->insert(0, en);
 
-        auto dm = TypeLookup::assertDeleteMethod(c, node.location(), type);
+            auto dm = TypeLookup::assertDeleteMethod(c, node.location(), type);
 
-        auto cn = new ProxyCallNode({ }, dm, node.name);
-        en->expr = cn;
+            auto cn = new ProxyCallNode({ }, dm, node.name);
+            en->expr = cn;
 
-        Visitor::visit<FuncDecorator>(en, c);
+            Visitor::visit<FuncDecorator>(en, c);
+        }
     }
 }
 
