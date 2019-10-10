@@ -204,7 +204,7 @@ void Decorator::visit(FuncNode &node)
         }
 
         sym->setProperty("type", type);
-        sym->setProperty("autogen", node.autoGen);
+        sym->setProperty("autogen", node.findProperty("autogen").value<bool>());
         sym->setProperty("method", t.method);
         sym->setProperty("explicit", node.findProperty("explicit").value<bool>());
 

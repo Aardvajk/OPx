@@ -30,9 +30,14 @@ std::vector<std::string> makePropertyList(FuncNode &node)
 {
     std::vector<std::string> ps;
 
-    if(node.autoGen) ps.push_back("autogen");
-    if(node.globalInit) ps.push_back("globalinit");
-    if(node.globalDestroy) ps.push_back("globaldestroy");
+    std::vector<std::string> v = { "autogen", "globalinit", "globaldestroy" };
+    for(auto s: v)
+    {
+        if(node.findProperty(s).value<bool>())
+        {
+            ps.push_back(s);
+        }
+    }
 
     return ps;
 }
@@ -59,7 +64,7 @@ void Generator::visit(NamespaceNode &node)
 
 void Generator::visit(FuncNode &node)
 {
-    if(node.body && (!node.autoGen || !c.option("debug", "suppress_autogens")))
+    if(node.body && (!node.findProperty("autogen").value<bool>() || !c.option("debug", "suppress_autogens")))
     {
         auto sym = node.property<Sym*>("sym");
         auto type = sym->property<Type*>("type");

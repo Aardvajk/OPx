@@ -30,9 +30,10 @@ NodePtr createFunction(const std::string &name, bool init)
     NodePtr n(fn);
 
     fn->setProperty("access", Access::Public);
-//    fn->autoGen = true;
-    fn->globalInit = init;
-    fn->globalDestroy = !init;
+
+    fn->setProperty("autogen", true);
+    fn->setProperty("globalinit", init);
+    fn->setProperty("globaldestroy", !init);
 
     auto sc = new ScopeNode({ });
     fn->body = sc;

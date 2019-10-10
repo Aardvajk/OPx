@@ -126,7 +126,7 @@ void AstPrinter::visit(TypeNode &node)
 
 void AstPrinter::visit(FuncNode &node)
 {
-    if(!node.autoGen || !c.option("debug", "suppress_autogens"))
+    if(!node.findProperty("autogen").value<bool>() || !c.option("debug", "suppress_autogens"))
     {
         tab() << (node.findProperty("free").value<bool>() ? "free " : "") << "func " << node.description() << details(node) << "\n";
 

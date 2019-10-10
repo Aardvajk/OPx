@@ -36,7 +36,7 @@ FuncNode *createBasicFunction(BlockNode *block, const std::string &name, std::si
     block->insert(index, fn);
 
     fn->setProperty("access", Access::Public);
-    fn->autoGen = true;
+    fn->setProperty("autogen", true);
 
     auto sc = new ScopeNode(block->location());
     fn->body = sc;
