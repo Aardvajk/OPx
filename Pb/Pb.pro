@@ -60,6 +60,7 @@ DISTFILES += \
     ../unittests/for_scope_count.pc \
     ../unittests/free_convert.pc \
     ../unittests/free_members.pc \
+    ../unittests/free_nested.pc \
     ../unittests/func_member_access.pc \
     ../unittests/func_ref.pc \
     ../unittests/generate_op_assign.pc \

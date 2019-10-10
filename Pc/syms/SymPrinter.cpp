@@ -62,7 +62,7 @@ void dump(Context &c, int tab, const Sym *sym, std::ostream &os)
 
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
-    os << ts << access(sym) << " " << type(sym) << " " << sym->fullname();
+    os << ts << sym << " " << access(sym) << " " << type(sym) << " " << sym->fullname();
 
     if(auto s = sym->findProperty("size"))
     {

@@ -37,7 +37,7 @@ void generateInitialisers(Context &c, FuncNode &node, Sym *sym)
 
     for(auto s: sym->children())
     {
-        if(s->type() == Sym::Type::Var)
+        if(s->type() == Sym::Type::Var && !s->findProperty("free").value<bool>())
         {
             NodePtr n;
 

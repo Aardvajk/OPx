@@ -288,10 +288,8 @@ void Decorator::visit(VarNode &node)
     auto sym = node.property<Sym*>("sym");
     auto type = sym->property<Type*>("type");
 
-    if(!sym->findProperty("member").value<bool>() && !sym->findProperty("globalinit").value<bool>())
+    if(!sym->findProperty("member").value<bool>() && !node.findProperty("external").value<bool>())
     {
-        sym->setProperty("globalinit", true);
-
         if(!type->primitive() || type->ref || (node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get())))
         {
             auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalInit);

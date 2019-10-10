@@ -52,6 +52,7 @@ void Finaliser::visit(ClassNode &node)
         }
 
         sym->setProperty("size", sz);
+        sym->setProperty("complete", true);
     }
 }
 

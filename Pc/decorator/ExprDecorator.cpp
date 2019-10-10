@@ -85,6 +85,8 @@ ExprDecorator::ExprDecorator(Context &c, Type *expectedType, Flags flags) : c(c)
 {
 }
 
+#include "syms/SymPrinter.h"
+
 void ExprDecorator::visit(IdNode &node)
 {
     if(node.arrow)
@@ -122,6 +124,11 @@ void ExprDecorator::visit(IdNode &node)
     }
     else if(sv.size() > 1)
     {
+std::cout << expectedType->text() << "\n";
+for(auto s: sv) std::cout << s->funcname() << "\n";
+
+SymPrinter::print(c, c.tree.root(), std::cout);
+
         throw Error(node.location(), "ambiguous - ", node.description());
     }
 

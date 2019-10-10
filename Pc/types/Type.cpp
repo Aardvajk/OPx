@@ -137,7 +137,10 @@ pcx::optional<std::size_t> Type::size() const
 
     if(sym)
     {
-        if(auto sz = sym->findProperty("size"))
+        auto sz = sym->findProperty("size");
+        auto cp = sym->findProperty("complete").value<bool>();
+
+        if(sz && cp)
         {
             return sz.to<std::size_t>();
         }

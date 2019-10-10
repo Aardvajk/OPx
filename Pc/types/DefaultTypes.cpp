@@ -18,6 +18,7 @@ Sym *createPrimitive(Context &c, const std::string &name, Primitive::Type type, 
     s->setProperty("size", size);
     s->setProperty("type", c.types.insert(Type::makePrimary(s.get())));
     s->setProperty("primitive", type);
+    s->setProperty("complete", true);
 
     return s.release();
 }

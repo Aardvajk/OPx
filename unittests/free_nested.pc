@@ -1,0 +1,27 @@
+include("stdtest.ph");
+
+namespace woo
+{
+
+var g = false;
+
+namespace doo
+{
+class foo
+{
+public:
+    func new(){ g = true; }
+
+    free var x:foo;
+}
+
+}
+
+}
+
+var woo.doo.foo.x;
+
+func main()
+{
+    test.assert(woo.g);
+}
