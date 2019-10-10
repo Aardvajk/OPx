@@ -31,7 +31,7 @@ std::vector<std::string> makePropertyList(FuncNode &node)
     std::vector<std::string> ps;
 
     std::vector<std::string> v = { "autogen", "globalinit", "globaldestroy" };
-    for(auto s: v)
+    for(const auto &s: v)
     {
         if(node.findProperty(s).value<bool>())
         {

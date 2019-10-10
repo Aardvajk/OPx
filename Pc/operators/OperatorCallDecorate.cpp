@@ -27,7 +27,7 @@ NodePtr generateMethodOperatorCall(Context &c, Node &node, NodePtr first, NodeLi
         cn->params.push_back(p);
     }
 
-    rn = ExprDecorator::decorate(c, rn);
+    rn = ExprDecorator::decorate(c, rn, nullptr, ExprDecorator::Flag::SkipParams);
     return rn;
 }
 
@@ -42,7 +42,7 @@ NodePtr generateFreeOperatorCall(Context &c, Node &node, NodePtr first, NodeList
         cn->params.push_back(p);
     }
 
-    rn = ExprDecorator::decorate(c, rn);
+    rn = ExprDecorator::decorate(c, rn, nullptr, ExprDecorator::Flag::SkipParams);
     return rn;
 }
 
