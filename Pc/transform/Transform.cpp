@@ -158,7 +158,7 @@ void Transform::visit(ClassNode &node)
 
 void Transform::visit(VarNode &node)
 {
-    if(node.value)
+    if(node.value && !node.findProperty("globalinit").value<bool>())
     {
         node.value = ExprTransform::transform(c, node.value);
     }

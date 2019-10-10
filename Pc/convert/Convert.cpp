@@ -53,7 +53,7 @@ void Convert::visit(ClassNode &node)
 
 void Convert::visit(VarNode &node)
 {
-    if(node.value)
+    if(node.value && !node.findProperty("globalinit").value<bool>())
     {
         node.value = ExprConvert::convert(c, node.value);
     }

@@ -102,7 +102,9 @@ void FuncTransform::visit(VarNode &node)
             }
         }
 
-        node.block()->insert(index + 1, createComplexConstruct(c, type, node, node.name, params));
+        NodePtr id = node.findProperty("globalinit").value<bool>() ? IdNode::create(node.location(), node.property<Sym*>("sym")->names()) : node.name;
+
+        node.block()->insert(index + 1, createComplexConstruct(c, type, node, id, params));
     }
 }
 

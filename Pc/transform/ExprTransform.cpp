@@ -167,11 +167,14 @@ void ExprTransform::visit(ConstructNode &node)
 
         node.target = ExprDecorator::decorate(c, node.target, c.types.insert(t));
 
-        auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-        auto temp = pcx::str("temp", info->labels++);
+        if(c.tree.current()->container()->type() == Sym::Type::Func)
+        {
+            auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+            auto temp = pcx::str("temp", info->labels++);
 
-        info->temps.push_back(std::make_pair(temp, node.type));
-        node.setProperty("temp", temp);
+            info->temps.push_back(std::make_pair(temp, node.type));
+            node.setProperty("temp", temp);
+        }
     }
 }
 

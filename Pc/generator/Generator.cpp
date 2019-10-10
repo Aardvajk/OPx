@@ -110,7 +110,7 @@ void Generator::visit(FuncNode &node)
 
             for(auto s: pcx::range_reverse(cs))
             {
-                if(s->type() == Sym::Type::Var)
+                if(s->type() == Sym::Type::Var && !s->findProperty("free").value<bool>())
                 {
                     auto t = s->property<Type*>("type");
                     if(!t->primitive())
@@ -179,11 +179,6 @@ void Generator::visit(VarNode &node)
 
         if(node.value)
         {
-            if(!TypeVisitor::assertType(c, node.value.get())->primitive())
-            {
-                throw Error(node.location(), "non-primitive global initialisers not supported - ", node.value->description());
-            }
-
             if(Visitor::query<CanByteListGenerate, bool>(node.value.get()))
             {
                 os << " = ";

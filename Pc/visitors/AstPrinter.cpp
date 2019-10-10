@@ -233,6 +233,15 @@ void AstPrinter::visit(ProxyCallNode &node)
 {
     tab() << "proxycall - " << node.sym->funcname() << details(node) << "\n";
 
+    if(node.thisNode)
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "this\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        node.thisNode->accept(*this);
+    }
+
     if(!node.params.empty())
     {
         auto g1 = pcx::scoped_counter(tc);

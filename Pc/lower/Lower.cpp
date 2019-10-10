@@ -51,7 +51,7 @@ void Lower::visit(ClassNode &node)
 
 void Lower::visit(VarNode &node)
 {
-    if(node.value)
+    if(node.value && !node.findProperty("globalinit").value<bool>())
     {
         node.value = ExprLower::lower(c, node.value);
     }

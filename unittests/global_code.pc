@@ -1,0 +1,43 @@
+include("stdtest.ph");
+
+var g1 = false, g2 = false;
+
+func f():std.int
+{
+    g1 = true;
+    return 123;
+}
+
+namespace woo
+{
+
+var a = f();
+
+}
+
+class foo
+{
+public:
+    func new(){ g2 = true; }
+}
+
+namespace bar
+{
+
+class woo
+{
+public:
+    free var z:foo;
+}
+
+}
+
+var bar.woo.z = foo();
+
+func main()
+{
+    test.assert(woo.a == 123);
+
+    test.assert(g1);
+    test.assert(g2);
+}

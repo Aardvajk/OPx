@@ -93,13 +93,16 @@ void FuncGenerator::visit(ScopeNode &node)
     for(auto np: pcx::range_reverse(info->destructs.back()))
     {
         auto sym = np->property<Sym*>("sym");
-        auto dm = TypeLookup::assertDeleteMethod(c, np->location(), sym->property<Type*>("type"));
+        if(sym->parent() == c.tree.current())
+        {
+            auto dm = TypeLookup::assertDeleteMethod(c, np->location(), sym->property<Type*>("type"));
 
-        os << "\"#destroy_" << sym->fullname() << "\":\n";
+            os << "\"#destroy_" << sym->fullname() << "\":\n";
 
-        os << "    push &\"" << sym->fullname() << "\";\n";
-        os << "    push &\"" << dm->funcname() << "\";\n";
-        os << "    call;\n";
+            os << "    push &\"" << sym->fullname() << "\";\n";
+            os << "    push &\"" << dm->funcname() << "\";\n";
+            os << "    call;\n";
+        }
     }
 
     info->destructs.pop_back();

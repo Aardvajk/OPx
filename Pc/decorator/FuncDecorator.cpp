@@ -48,7 +48,10 @@ void FuncDecorator::visit(ScopeNode &node)
 
 void FuncDecorator::visit(VarNode &node)
 {
-    Visitor::visit<VarDecorator>(&node, c);
+    if(!node.findProperty("globalinit").value<bool>())
+    {
+        Visitor::visit<VarDecorator>(&node, c);
+    }
 }
 
 void FuncDecorator::visit(ExprNode &node)

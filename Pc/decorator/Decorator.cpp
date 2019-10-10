@@ -14,7 +14,6 @@
 #include "nodes/VarNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/ExprNode.h"
-#include "nodes/AssignNode.h"
 #include "nodes/ProxyCallNode.h"
 
 #include "visitors/SymFinder.h"
@@ -287,9 +286,34 @@ void Decorator::visit(VarNode &node)
     Visitor::visit<VarDecorator>(&node, c);
 
     auto sym = node.property<Sym*>("sym");
+    auto type = sym->property<Type*>("type");
 
-    if(!sym->findProperty("member").value<bool>())
+    if(!sym->findProperty("member").value<bool>() && !sym->findProperty("globalinit").value<bool>())
     {
+        sym->setProperty("globalinit", true);
+
+        if(!type->primitive() || type->ref || (node.value && !Visitor::query<CanByteListGenerate, bool>(node.value.get())))
+        {
+            auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalInit);
+            block->push_back(cn);
+
+            node.setProperty("globalinit", true);
+        }
+
+        if(!type->primitiveOrRef())
+        {
+            auto block = Visitor::query<QueryVisitors::GetBlockNode, BlockNode*>(c.globalDestroy);
+
+            auto en = new ExprNode(node.location());
+            block->insert(0, en);
+
+            NodePtr id(IdNode::create(node.location(), sym->names()));
+
+            auto dm = TypeLookup::assertDeleteMethod(c, node.location(), type);
+
+            auto cn = new ProxyCallNode(node.location(), dm, id);
+            en->expr = cn;
+        }
     }
 }
 

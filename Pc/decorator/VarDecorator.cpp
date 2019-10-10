@@ -68,11 +68,6 @@ void VarDecorator::visit(VarNode &node)
         }
     }
 
-    if(!type)
-    {
-        throw Error(node.location(), "no type specified - ", node.name->description());
-    }
-
     auto sym = search(c, node.name.get());
     if(sym)
     {
@@ -81,13 +76,18 @@ void VarDecorator::visit(VarNode &node)
             throw Error(node.location(), "already defined - ", sym->fullname());
         }
 
-        if(!TypeCompare(c).exact(type, sym->property<Type*>("type")))
+        if(type && !TypeCompare(c).exact(type, sym->property<Type*>("type")))
         {
             throw Error(node.location(), "mismatched type - ", sym->fullname());
         }
     }
     else
     {
+        if(!type)
+        {
+            throw Error(node.location(), "no type specified - ", node.name->description());
+        }
+
         auto name = NameVisitors::assertSimpleUniqueName(c, node.name.get());
         if(name.empty())
         {
