@@ -28,12 +28,8 @@ bool runTest(const std::string &dir, const std::string &path)
     }
 
     if(std::system(pcx::str(exePath("pi"), " -q unittest.pi unittest.po").c_str())) return false;
-    if(std::system(pcx::str(exePath("pl"), " -q -trim unittest.px unittest.po ../lib/stdlib.po ../lib/stdtest.po ../lib/stdios.po").c_str())) return false;
-    if(std::system(pcx::str(exePath("pv"), " -q unittest.px").c_str()))
-    {
-        std::cout << "pb error: unit test failed\n";
-        return false;
-    }
+    if(std::system(pcx::str(exePath("pl"), " -q -trim unittest.px unittest.po ../lib/stdlib.po ../lib/stdtest.po ../lib/stdios.po ../lib/source_info.po").c_str())) return false;
+    if(std::system(pcx::str(exePath("pv"), " -q unittest.px").c_str())) return false;
 
     return true;
 }

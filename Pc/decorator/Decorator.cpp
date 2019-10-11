@@ -166,11 +166,6 @@ void Decorator::visit(FuncNode &node)
     t.method = c.tree.current()->type() == Sym::Type::Class && !node.findProperty("free").value<bool>();
     t.constMethod = node.constMethod;
 
-    if(!t.method && Visitor::query<NameVisitors::SpecialName, Token::Type>(node.name.get()) != Token::Type::Invalid)
-    {
-        throw Error(node.name->location(), "invalid function name - ", node.name->description());
-    }
-
     if(opType)
     {
         if((t.method && !node.args.empty()) || (!t.method && node.args.size() != 1))
@@ -230,6 +225,11 @@ void Decorator::visit(FuncNode &node)
         {
             sym->setProperty("opType", opType);
         }
+    }
+
+    if(sym->parent()->type() != Sym::Type::Class && Visitor::query<NameVisitors::SpecialName, Token::Type>(node.name.get()) != Token::Type::Invalid)
+    {
+        throw Error(node.name->location(), "invalid function name - ", node.name->description());
     }
 
     if(t.constMethod && sym->parent()->type() != Sym::Type::Class)

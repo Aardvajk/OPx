@@ -65,8 +65,14 @@ template<typename T> void transformDefaultParams(Context &c, T &node, Type *type
         while(node.params.size() + offset < type->args.size())
         {
             auto value = Visitor::query<QueryVisitors::GetVarValue, NodePtr>(fn->args[node.params.size() + offset].get());
-            value = ExprTransform::transform(c, value);
 
+            auto cn = Visitor::query<QueryVisitors::GetConstructNode, ConstructNode*>(value.get());
+            if(cn && cn->type->sym->name() == "source_info")
+            {
+                value = new ConstructNode(node.location(), cn->type);
+            }
+
+            value = ExprTransform::transform(c, value);
             node.params.push_back(value);
         }
     }

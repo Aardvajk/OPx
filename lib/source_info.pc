@@ -1,0 +1,10 @@
+include("source_info.ph");
+
+func std.source_info.new(n:std.int) ... n(n)
+{
+}
+
+func std.source_info.line():std.int const
+{
+	return n;
+}

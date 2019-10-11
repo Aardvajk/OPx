@@ -219,9 +219,16 @@ void ExprGenerator::visit(ConstructNode &node)
 
         auto type = TypeVisitor::assertType(c, node.target.get());
 
-        for(auto p: pcx::indexed_range(node.params))
+        if(node.type->sym->name() == "source_info")
         {
-            CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
+            os << "    push int(" << static_cast<int>(node.location().line()) << ");\n";
+        }
+        else
+        {
+            for(auto p: pcx::indexed_range(node.params))
+            {
+                CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
+            }
         }
 
         ExprGenerator::generate(c, os, node.target.get());
