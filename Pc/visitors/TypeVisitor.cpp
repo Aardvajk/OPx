@@ -49,9 +49,13 @@ void TypeVisitor::visit(VarNode &node)
     {
         r = node.type->property<Type*>("type");
     }
-    else
+    else if(auto sp = node.findProperty("sym"))
     {
-        r = node.property<Sym*>("sym")->property<Type*>("type");
+        r = sp.to<Sym*>()->property<Type*>("type");
+    }
+    else if(node.value)
+    {
+        node.value->accept(*this);
     }
 }
 

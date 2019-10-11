@@ -27,6 +27,7 @@ SOURCES += \
         convert/Convert.cpp \
         convert/ExprConvert.cpp \
         convert/FuncConvert.cpp \
+        decorator/ArgDecorator.cpp \
         decorator/CommonDecorator.cpp \
         decorator/Decorator.cpp \
         decorator/DefaultMethods.cpp \
@@ -122,6 +123,7 @@ HEADERS += \
     convert/Convert.h \
     convert/ExprConvert.h \
     convert/FuncConvert.h \
+    decorator/ArgDecorator.h \
     decorator/CommonDecorator.h \
     decorator/Decorator.h \
     decorator/DefaultMethods.h \

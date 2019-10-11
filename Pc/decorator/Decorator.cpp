@@ -30,6 +30,7 @@
 #include "decorator/VarDecorator.h"
 #include "decorator/FuncDecorator.h"
 #include "decorator/DefaultMethods.h"
+#include "decorator/ArgDecorator.h"
 
 #include "generator/ByteListGenerator.h"
 
@@ -142,9 +143,10 @@ void Decorator::visit(NamespaceNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
+    std::size_t defaults = 0;
     for(auto &a: node.args)
     {
-        Visitor::visit<TypeDecorator>(a.get(), c);
+        Visitor::visit<ArgDecorator>(a.get(), c, defaults);
     }
 
     auto opType = Visitor::query<NameVisitors::ResolveOpName, Type*>(node.name.get(), c);
@@ -191,6 +193,16 @@ void Decorator::visit(FuncNode &node)
         {
             throw Error(node.location(), "mismatched return type - ", node.name->description());
         }
+
+        if(sym->findProperty("defaults") && defaults)
+        {
+            throw Error(node.location(), "defaults already declared - ", node.description());
+        }
+
+        if(defaults)
+        {
+            sym->setProperty("defaults", defaults);
+        }
     }
     else
     {
@@ -207,6 +219,12 @@ void Decorator::visit(FuncNode &node)
         sym->setProperty("autogen", node.findProperty("autogen").value<bool>());
         sym->setProperty("method", t.method);
         sym->setProperty("explicit", node.findProperty("explicit").value<bool>());
+        sym->setProperty("funcnode", &node);
+
+        if(defaults)
+        {
+            sym->setProperty("defaults", defaults);
+        }
 
         if(opType)
         {

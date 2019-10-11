@@ -62,8 +62,19 @@ void buildArgs(Context &c, NodeList &container, bool get)
 
     n->setProperty("access", Access::Private);
 
-    c.scanner.match(Token::Type::Colon, false);
-    n->type = TypeParser::build(c, true);
+    if(c.scanner.token().type() == Token::Type::Colon)
+    {
+        n->type = TypeParser::build(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Assign)
+    {
+        n->value = ExprParser::buildExpression(c, true);
+    }
+    else if(!n->type)
+    {
+        throw Error(n->location(), "type expected - ", n->description());
+    }
 
     if(c.scanner.token().type() == Token::Type::Comma)
     {

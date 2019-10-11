@@ -130,6 +130,17 @@ void AstPrinter::visit(FuncNode &node)
     {
         tab() << (node.findProperty("free").value<bool>() ? "free " : "") << "func " << node.description() << details(node) << "\n";
 
+        if(!node.args.empty())
+        {
+            tab() << "args\n";
+
+            auto g = pcx::scoped_counter(tc);
+            for(auto &a: node.args)
+            {
+                a->accept(*this);
+            }
+        }
+
         if(!node.inits.empty())
         {
             tab() << "inits\n";

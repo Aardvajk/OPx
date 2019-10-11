@@ -16,6 +16,17 @@
 namespace
 {
 
+void pruneDefaultArgs(Sym *sym, std::vector<Type*> &args, std::size_t actual)
+{
+    auto no = sym->findProperty("defaults").value<std::size_t>();
+
+    while(args.size() > actual && no)
+    {
+        args.pop_back();
+        --no;
+    }
+}
+
 std::vector<Sym*> pruneResult(const std::vector<Sym*> &sv, const Type *expectedType)
 {
     std::vector<Sym*> r;
@@ -86,27 +97,28 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
         {
             if(s->type() == Sym::Type::Func)
             {
-                auto type = s->property<Type*>("type");
+                auto args = s->property<Type*>("type")->args;
+                pruneDefaultArgs(s, args, expectedType->args.size());
 
-                if(type->args.size() == expectedType->args.size())
+                if(args.size() == expectedType->args.size())
                 {
                     std::size_t matches = 0;
                     std::size_t conversions = 0;
 
-                    for(std::size_t i = 0; i < type->args.size(); ++i)
+                    for(std::size_t i = 0; i < args.size(); ++i)
                     {
-                        if(TypeCompare(c).compatible(expectedType->args[i], type->args[i]))
+                        if(TypeCompare(c).compatible(expectedType->args[i], args[i]))
                         {
                             ++matches;
                         }
-                        else if(!TypeConvert::find(c, expectedType->args[i], type->args[i], TypeConvert::Permission::Implicit).empty())
+                        else if(!TypeConvert::find(c, expectedType->args[i], args[i], TypeConvert::Permission::Implicit).empty())
                         {
                             ++matches;
                             ++conversions;
                         }
                     }
 
-                    if(matches == type->args.size())
+                    if(matches == args.size())
                     {
                         m[conversions].push_back(s);
                     }

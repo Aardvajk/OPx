@@ -1,0 +1,30 @@
+include("stdtest.ph");
+
+func operator std.int(a:std.char){ return std.int(a); }
+
+class foo
+{
+public:
+    func new(a:std.int) ... a(a) { }
+
+    func f(z:std.int = 'A', y = 321);
+
+    var a:std.int;
+}
+
+func foo.f(z:std.int, y:std.int)
+{
+    test.assert(z == 65);
+    test.assert(y == 321);
+}
+
+func f(b:std.int, a:foo = 123)
+{
+    test.assert(a.a == 123);
+    a.f();
+}
+
+func main()
+{
+    f(321);
+}

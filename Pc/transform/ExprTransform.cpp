@@ -3,6 +3,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/FuncNode.h"
 #include "nodes/LiteralNodes.h"
 #include "nodes/CallNode.h"
 #include "nodes/ProxyCallNode.h"
@@ -54,6 +55,18 @@ template<typename T> void transformIncDec(Context &c, T &node)
     if(!Visitor::query<QueryVisitors::IsMutable, bool>(node.expr.get(), c))
     {
         throw Error(node.location(), "cannot modify a constant - ", node.description());
+    }
+}
+
+template<typename T> void transformDefaultParams(Context &c, T &node, Type *type, Sym *sym)
+{
+    if(auto fn = sym->findProperty("funcnode").value<FuncNode*>())
+    {
+        while(node.params.size() < type->args.size())
+        {
+            auto value = Visitor::query<QueryVisitors::GetVarValue, NodePtr>(fn->args[node.params.size()].get());
+            node.params.push_back(value);
+        }
     }
 }
 
@@ -122,6 +135,11 @@ void ExprTransform::visit(CallNode &node)
         node.params.insert(node.params.begin(), Visitor::query<QueryVisitors::GetParent, NodePtr>(node.target.get()));
     }
 
+    if(auto s = node.target->findProperty("sym"))
+    {
+        transformDefaultParams(c, node, type, s.to<Sym*>());
+    }
+
     for(auto p: pcx::indexed_range(node.params))
     {
         p.value = ExprTransform::transform(c, p.value, type->args[p.index]);
@@ -136,6 +154,8 @@ void ExprTransform::visit(ProxyCallNode &node)
     {
         node.params.insert(node.params.begin(), node.thisNode);
     }
+
+    transformDefaultParams(c, node, type, node.sym);
 
     for(auto p: pcx::indexed_range(node.params))
     {

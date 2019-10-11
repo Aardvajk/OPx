@@ -68,6 +68,19 @@ private:
     ConstructNode *r;
 };
 
+class GetVarValue : public Visitor
+{
+public:
+    GetVarValue();
+
+    NodePtr result() const { return r; }
+
+    virtual void visit(VarNode &node) override;
+
+private:
+    NodePtr r;
+};
+
 class InitNodeMap : public Visitor
 {
 public:

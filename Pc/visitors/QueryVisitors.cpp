@@ -2,6 +2,7 @@
 
 #include "nodes/IdNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/VarNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/ClassNode.h"
 #include "nodes/CallNode.h"
@@ -70,6 +71,15 @@ QueryVisitors::GetConstructNode::GetConstructNode() : r(nullptr)
 void QueryVisitors::GetConstructNode::visit(ConstructNode &node)
 {
     r = &node;
+}
+
+QueryVisitors::GetVarValue::GetVarValue()
+{
+}
+
+void QueryVisitors::GetVarValue::visit(VarNode &node)
+{
+    r = node.value;
 }
 
 QueryVisitors::InitNodeMap::InitNodeMap(std::unordered_map<std::string, NodePtr> &m, NodePtr &n) : m(m), n(n)

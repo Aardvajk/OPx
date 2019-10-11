@@ -95,6 +95,11 @@ void Transform::visit(NamespaceNode &node)
 
 void Transform::visit(FuncNode &node)
 {
+    for(auto &a: node.args)
+    {
+        a->accept(*this);
+    }
+
     auto type = node.property<Sym*>("sym")->property<Type*>("type");
 
     if(type->method)

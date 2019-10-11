@@ -35,6 +35,11 @@ void Convert::visit(NamespaceNode &node)
 
 void Convert::visit(FuncNode &node)
 {
+    for(auto &a: node.args)
+    {
+        a->accept(*this);
+    }
+
     if(node.body)
     {
         auto sg = c.tree.open(node.property<Sym*>("sym"));
@@ -56,6 +61,7 @@ void Convert::visit(VarNode &node)
     if(node.value && !node.findProperty("globalinit").value<bool>())
     {
         node.value = ExprConvert::convert(c, node.value);
+        node.value = CommonConvert::convert(c, node.value, TypeVisitor::assertType(c, &node), TypeConvert::Permission::Implicit);
     }
 }
 
