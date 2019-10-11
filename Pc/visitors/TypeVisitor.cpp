@@ -26,6 +26,8 @@
 
 #include "types/Type.h"
 
+#include "visitors/QueryVisitors.h"
+
 TypeVisitor::TypeVisitor(Context &c) : c(c), r(nullptr)
 {
 }
@@ -55,7 +57,13 @@ void TypeVisitor::visit(VarNode &node)
     }
     else if(node.value)
     {
-        node.value->accept(*this);
+        auto t = TypeVisitor::assertType(c, node.value.get());
+        if(Visitor::query<QueryVisitors::GetConstructNode, ConstructNode*>(node.value.get()) && !t->primitive())
+        {
+            t = c.types.insert(t->removeReference());
+        }
+
+        r = t;
     }
 }
 

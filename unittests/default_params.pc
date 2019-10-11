@@ -24,7 +24,21 @@ func f(b:std.int, a:foo = 123)
     a.f();
 }
 
+class woo
+{
+public:
+    func new() ... x(123) { }
+
+    var x:std.int;
+}
+
+func g(w = woo())
+{
+    test.assert(w.x == 123);
+}
+
 func main()
 {
     f(321);
+    g();
 }
