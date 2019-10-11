@@ -219,7 +219,7 @@ void ExprGenerator::visit(ConstructNode &node)
 
         auto type = TypeVisitor::assertType(c, node.target.get());
 
-        if(node.type->sym->name() == "source_info")
+        if(node.type->sym->fullname() == "std.source_info")
         {
             os << "    push int(" << static_cast<int>(node.location().line()) << ");\n";
         }
