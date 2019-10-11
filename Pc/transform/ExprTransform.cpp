@@ -58,13 +58,15 @@ template<typename T> void transformIncDec(Context &c, T &node)
     }
 }
 
-template<typename T> void transformDefaultParams(Context &c, T &node, Type *type, Sym *sym)
+template<typename T> void transformDefaultParams(Context &c, T &node, Type *type, Sym *sym, std::size_t offset = 0)
 {
     if(auto fn = sym->findProperty("funcnode").value<FuncNode*>())
     {
-        while(node.params.size() < type->args.size())
+        while(node.params.size() + offset < type->args.size())
         {
-            auto value = Visitor::query<QueryVisitors::GetVarValue, NodePtr>(fn->args[node.params.size()].get());
+            auto value = Visitor::query<QueryVisitors::GetVarValue, NodePtr>(fn->args[node.params.size() + offset].get());
+            value = ExprTransform::transform(c, value);
+
             node.params.push_back(value);
         }
     }
@@ -194,6 +196,11 @@ void ExprTransform::visit(ConstructNode &node)
 
             info->temps.push_back(std::make_pair(temp, node.type));
             node.setProperty("temp", temp);
+        }
+
+        if(auto sp = node.target->findProperty("sym"))
+        {
+            transformDefaultParams(c, node, TypeVisitor::assertType(c, node.target.get()), sp.to<Sym*>(), 1);
         }
     }
 }

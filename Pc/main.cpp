@@ -31,6 +31,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <initializer_list>
+
 int main(int argc, char *argv[])
 {
     std::vector<std::string> files;

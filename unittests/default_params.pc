@@ -37,8 +37,24 @@ func g(w = woo())
     test.assert(w.x == 123);
 }
 
+include("stdios.ph");
+
+class foo2
+{
+public:
+    func new(a = 10) ... a(a) { }
+
+    var a:std.int;
+}
+
+func g2(a = foo2())
+{
+    test.assert(a.a == 10);
+}
+
 func main()
 {
     f(321);
     g();
+    g2();
 }
