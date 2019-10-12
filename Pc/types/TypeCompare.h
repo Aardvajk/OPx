@@ -1,6 +1,8 @@
 #ifndef TYPECOMPARE_H
 #define TYPECOMPARE_H
 
+#include <vector>
+
 class Context;
 class Type;
 
@@ -10,6 +12,7 @@ public:
     TypeCompare(Context &c);
 
     bool compatible(const Type *a, const Type *b) const;
+    bool compatibleArgs(const std::vector<Type*> &a, const std::vector<Type*> &b) const;
     bool compatibleArgs(const Type *a, const Type *b) const;
 
     bool exact(const Type *a, const Type *b) const;

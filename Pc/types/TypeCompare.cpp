@@ -52,22 +52,27 @@ bool TypeCompare::compatible(const Type *a, const Type *b) const
     return true;
 }
 
-bool TypeCompare::compatibleArgs(const Type *a, const Type *b) const
+bool TypeCompare::compatibleArgs(const std::vector<Type*> &a, const std::vector<Type*> &b) const
 {
-    if(a->args.size() != b->args.size())
+    if(a.size() != b.size())
     {
         return false;
     }
 
-    for(std::size_t i = 0; i < a->args.size(); ++i)
+    for(std::size_t i = 0; i < a.size(); ++i)
     {
-        if(!compatible(a->args[i], b->args[i]))
+        if(!compatible(a[i], b[i]))
         {
             return false;
         }
     }
 
     return true;
+}
+
+bool TypeCompare::compatibleArgs(const Type *a, const Type *b) const
+{
+    return compatibleArgs(a->args, b->args);
 }
 
 bool TypeCompare::exact(const Type *a, const Type *b) const
