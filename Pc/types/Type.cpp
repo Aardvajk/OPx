@@ -186,3 +186,16 @@ std::size_t Type::assertSize(Location location, const Type *type)
     throw Error(location, "use of forward-declared type - ", type->text());
 }
 
+std::vector<Type*> Type::nonDefaultArgs(Sym *sym)
+{
+    auto args = sym->property<Type*>("type")->args;
+
+    auto no = sym->findProperty("defaults").value<std::size_t>();
+    while(no)
+    {
+        args.pop_back();
+        --no;
+    }
+
+    return args;
+}

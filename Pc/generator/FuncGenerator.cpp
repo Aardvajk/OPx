@@ -183,6 +183,7 @@ void FuncGenerator::visit(ReturnNode &node)
             os << "    load " << sizeof(std::size_t) << ";\n";
 
             AddrGenerator::generate(c, os, node.expr.get());
+            CommonGenerator::generateAllDefaultParameters(c, os, cm);
 
             os << "    push &\"" << cm->funcname() << "\";\n";
             os << "    call;\n";

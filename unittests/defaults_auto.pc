@@ -1,0 +1,32 @@
+include("stdtest.ph");
+
+func operator std.int(a:std.char){ return std.int(a); }
+
+class foo
+{
+public:
+    func new(){ }
+    func new(:ref foo, a = 12321) ... x(a) { }
+
+    func operator=(:ref foo, a:std.int = 'A'):ref foo { x = a; return this; }
+
+    var x:std.int;
+}
+
+func f(f:foo):std.int
+{
+    test.assert(f.x == 12321);
+    return 10;
+}
+
+var i = f(foo());
+
+func main()
+{
+    test.assert(i == 10);
+
+    var f:foo;
+    f = foo();
+
+    test.assert(f.x == 65);
+}

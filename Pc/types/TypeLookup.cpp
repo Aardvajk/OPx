@@ -32,8 +32,7 @@ Sym *TypeLookup::findCopyMethod(Context &c, Type *type)
     {
         if(s->name() == "new")
         {
-            auto ft = s->property<Type*>("type");
-            if(TypeCompare(c).compatibleArgs(ft, &t))
+            if(TypeCompare(c).compatibleArgs(Type::nonDefaultArgs(s), t.args))
             {
                 return s;
             }

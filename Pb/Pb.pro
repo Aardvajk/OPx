@@ -55,6 +55,7 @@ DISTFILES += \
     ../unittests/copy_param.pc \
     ../unittests/copy_return.pc \
     ../unittests/default_params.pc \
+    ../unittests/defaults_auto.pc \
     ../unittests/destructors.pc \
     ../unittests/explicit_operators.pc \
     ../unittests/for_scope.pc \

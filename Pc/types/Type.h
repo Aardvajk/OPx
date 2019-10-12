@@ -39,6 +39,8 @@ public:
 
     static std::size_t assertSize(Location location, const Type *type);
 
+    static std::vector<Type*> nonDefaultArgs(Sym *sym);
+
     bool constant;
     bool ref;
     std::size_t ptr;

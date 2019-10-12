@@ -2,7 +2,7 @@
 
 #include "application/Context.h"
 
-#include "nodes/Node.h"
+#include "nodes/FuncNode.h"
 
 #include "syms/Sym.h"
 
@@ -14,6 +14,7 @@
 #include "generator/AddrGenerator.h"
 
 #include "visitors/TypeVisitor.h"
+#include "visitors/QueryVisitors.h"
 
 void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, Node *node)
 {
@@ -67,7 +68,24 @@ void CommonGenerator::generateParameter(Context &c, std::ostream &os, Node *node
 
         os << "    push sp;\n";
         AddrGenerator::generate(c, os, node);
+        generateAllDefaultParameters(c, os, cm);
+
         os << "    push &\"" << cm->funcname() << "\";\n";
         os << "    call;\n";
+    }
+}
+
+void CommonGenerator::generateAllDefaultParameters(Context &c, std::ostream &os, Sym *sym)
+{
+    auto fn = sym->property<FuncNode*>("funcnode");
+    auto no = sym->findProperty("defaults").value<std::size_t>();
+
+    std::size_t i = fn->args.size() - no;
+    while(i < fn->args.size())
+    {
+        auto v = Visitor::query<QueryVisitors::GetVarValue, NodePtr>(fn->args[i]);
+        generateParameter(c, os, v.get(), TypeVisitor::assertType(c, v.get()));
+
+        ++i;
     }
 }

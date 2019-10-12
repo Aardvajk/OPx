@@ -55,16 +55,7 @@ bool hasCopyMethod(Context &c, const std::string &name, Sym *sym)
     {
         if(s->name() == name)
         {
-            auto args = s->property<Type*>("type")->args;
-
-            auto no = s->findProperty("defaults").value<std::size_t>();
-            while(no)
-            {
-                args.pop_back();
-                --no;
-            }
-
-            if(TypeCompare(c).compatibleArgs(args, t.args))
+            if(TypeCompare(c).compatibleArgs(Type::nonDefaultArgs(s), t.args))
             {
                 return true;
             }

@@ -22,7 +22,7 @@ void findConvertMethod(Context &c, Type *from, Type *to, std::vector<Sym*> &sv, 
     {
         if(s->type() == Sym::Type::Func && s->name() == "new" && (!s->findProperty("explicit").value<bool>() || p == TypeConvert::Permission::Explicit))
         {
-            if(TypeCompare(c).compatibleArgs(&t, s->property<Type*>("type")))
+            if(TypeCompare(c).compatibleArgs(Type::nonDefaultArgs(s), t.args))
             {
                 sv.push_back(s);
             }

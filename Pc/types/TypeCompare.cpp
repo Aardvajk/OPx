@@ -70,11 +70,6 @@ bool TypeCompare::compatibleArgs(const std::vector<Type*> &a, const std::vector<
     return true;
 }
 
-bool TypeCompare::compatibleArgs(const Type *a, const Type *b) const
-{
-    return compatibleArgs(a->args, b->args);
-}
-
 bool TypeCompare::exact(const Type *a, const Type *b) const
 {
     if(!compatible(a, b))
