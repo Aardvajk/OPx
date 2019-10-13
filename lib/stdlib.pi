@@ -22,12 +22,45 @@ func "std.print(std.bool):std.null":0
 	pop 1;
 }
 
+func "std.print(std.size):std.null":0
+{
+	arg "std.print.i":8;
+	push "std.print.i";
+	svc 5;
+	pop 8;
+}
+
 func "std.print(ptr std.char):std.null":0
 {
 	arg "std.print.i":8;
 	push "std.print.i";
 	svc 3;
 	pop 8;
+}
+
+func "std.print(ptr std.null):std.null":0
+{
+	arg "std.print.i":8;
+	push "std.print.i";
+	svc 5;
+	pop 8;
+}
+
+func "std.allocate(std.size):ptr std.null":8
+{
+	arg "std.allocate.i":8;
+	push "std.allocate.i";
+	alloc;
+	push &"@ret";
+	store 8;
+	pop 8;
+}
+
+func "std.release(ptr std.null):std.null":0
+{
+	arg "std.release.i":8;
+	push "std.release.i";
+	free;
 }
 
 func "std.abort():std.null":0

@@ -25,6 +25,12 @@ func std.operator<<(o:ref std.ostream, v:ptr std.char):ref std.ostream
     return o;
 }
 
+func std.operator<<(o:ref std.ostream, v:ptr std.null):ref std.ostream
+{
+    std.print(v);
+    return o;
+}
+
 var instance:std.ostream;
 
 func std.out():ref std.ostream

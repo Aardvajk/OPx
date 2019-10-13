@@ -41,6 +41,11 @@ void intProc(int code, Memory &mm, Registers &rg)
         auto i = sr.get<char>();
         std::cout << i;
     }
+    else if(code == 5)
+    {
+        auto i = sr.get<std::size_t>();
+        std::cout << i;
+    }
     else if(code == 13)
     {
         std::cout << "\n";
