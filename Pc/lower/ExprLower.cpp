@@ -16,6 +16,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "lower/FuncLower.h"
 
@@ -219,6 +220,13 @@ void ExprLower::visit(CommaNode &node)
 void ExprLower::visit(InlineVarNode &node)
 {
     Visitor::visit<FuncLower>(node.body.get(), c);
+}
+
+void ExprLower::visit(TernaryNode &node)
+{
+    node.expr = ExprLower::lower(c, node.expr);
+    node.left = ExprLower::lower(c, node.left);
+    node.right = ExprLower::lower(c, node.right);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr node, Type *expectedType)

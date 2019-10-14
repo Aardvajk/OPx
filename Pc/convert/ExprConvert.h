@@ -29,6 +29,7 @@ public:
     virtual void visit(PostIncDecNode &node) override;
     virtual void visit(CommaNode &node) override;
     virtual void visit(InlineVarNode &node) override;
+    virtual void visit(TernaryNode &node) override;
 
     static NodePtr convert(Context &c, NodePtr &node, Type *expectedType = nullptr);
 

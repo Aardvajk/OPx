@@ -32,6 +32,7 @@
 #include "nodes/TextNode.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -485,6 +486,16 @@ void AstPrinter::visit(InlineVarNode &node)
 {
     tab() << "inlinevar\n";
     node.body->accept(*this);
+}
+
+void AstPrinter::visit(TernaryNode &node)
+{
+    tab() << "ternary\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+    node.left->accept(*this);
+    node.right->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

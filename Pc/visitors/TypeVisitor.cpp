@@ -21,6 +21,7 @@
 #include "nodes/InitNode.h"
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -177,6 +178,11 @@ void TypeVisitor::visit(PostIncDecNode &node)
 void TypeVisitor::visit(CommaNode &node)
 {
     node.right->accept(*this);
+}
+
+void TypeVisitor::visit(TernaryNode &node)
+{
+    node.left->accept(*this);
 }
 
 Type *TypeVisitor::queryType(Context &c, Node *node)

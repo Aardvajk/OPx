@@ -139,3 +139,7 @@ void Visitor::visit(CommaNode &node)
 void Visitor::visit(InlineVarNode &node)
 {
 }
+
+void Visitor::visit(TernaryNode &node)
+{
+}

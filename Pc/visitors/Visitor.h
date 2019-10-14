@@ -37,6 +37,7 @@ class ForNode;
 class TextNode;
 class CommaNode;
 class InlineVarNode;
+class TernaryNode;
 
 class Visitor
 {
@@ -77,6 +78,7 @@ public:
     virtual void visit(TextNode &node);
     virtual void visit(CommaNode &node);
     virtual void visit(InlineVarNode &node);
+    virtual void visit(TernaryNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

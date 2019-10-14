@@ -19,6 +19,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
@@ -382,6 +383,26 @@ void ExprGenerator::visit(InlineVarNode &node)
 {
     Visitor::visit<FuncGenerator>(node.body.get(), c, os);
     sz = 0;
+}
+
+void ExprGenerator::visit(TernaryNode &node)
+{
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    auto l0 = info->nextLabelQuoted();
+    auto l1 = info->nextLabelQuoted();
+
+    CommonGenerator::generateBooleanExpression(c, os, node.expr.get());
+    os << "    jmp ifz " << l0 << ";\n";
+
+    sz = ExprGenerator::generate(c, os, node.left.get());
+    os << "    jmp " << l1 << ";\n";
+
+    os << l0 << ":\n";
+
+    ExprGenerator::generate(c, os, node.right.get());
+
+    os << l1 << ":\n";
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)

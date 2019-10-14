@@ -21,6 +21,7 @@
 #include "nodes/VarNode.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -349,6 +350,21 @@ void ExprDecorator::visit(CommaNode &node)
 void ExprDecorator::visit(InlineVarNode &node)
 {
     Visitor::visit<FuncDecorator>(node.body.get(), c);
+}
+
+void ExprDecorator::visit(TernaryNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+    node.left = ExprDecorator::decorate(c, node.left);
+    node.right = ExprDecorator::decorate(c, node.right);
+
+    auto lt = TypeVisitor::assertType(c, node.left.get());
+    auto rt = TypeVisitor::assertType(c, node.right.get());
+
+    if(!TypeCompare(c).compatible(lt, rt))
+    {
+        throw Error(node.right->location(), lt->text(), " expected - ", node.right->description());
+    }
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

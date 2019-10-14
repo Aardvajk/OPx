@@ -74,6 +74,7 @@ SOURCES += \
         nodes/ProxyCallNode.cpp \
         nodes/ReturnNode.cpp \
         nodes/ScopeNode.cpp \
+        nodes/TernaryNode.cpp \
         nodes/TextNode.cpp \
         nodes/ThisNode.cpp \
         nodes/TypeNode.cpp \
@@ -171,6 +172,7 @@ HEADERS += \
     nodes/ProxyCallNode.h \
     nodes/ReturnNode.h \
     nodes/ScopeNode.h \
+    nodes/TernaryNode.h \
     nodes/TextNode.h \
     nodes/ThisNode.h \
     nodes/TypeNode.h \

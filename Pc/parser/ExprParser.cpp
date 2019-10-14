@@ -18,6 +18,7 @@
 #include "nodes/LogicalNode.h"
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
+#include "nodes/TernaryNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -287,9 +288,27 @@ NodePtr logical(Context &c, bool get)
     }
 }
 
+NodePtr ternary(Context &c, bool get)
+{
+    auto n = logical(c, get);
+
+    if(c.scanner.token().type() == Token::Type::Question)
+    {
+        auto tn = new TernaryNode(c.scanner.token().location(), n);
+        n = tn;
+
+        tn->left = expression(c, true);
+
+        c.scanner.match(Token::Type::Colon, false);
+        tn->right = expression(c, true);
+    }
+
+    return n;
+}
+
 NodePtr expression(Context &c, bool get)
 {
-    return logical(c, get);
+    return ternary(c, get);
 }
 
 NodePtr expressionList(Context &c, bool get)

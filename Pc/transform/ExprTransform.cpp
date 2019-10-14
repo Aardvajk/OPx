@@ -18,6 +18,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -262,6 +263,13 @@ void ExprTransform::visit(CommaNode &node)
 void ExprTransform::visit(InlineVarNode &node)
 {
     Visitor::visit<FuncTransform>(node.body.get(), c);
+}
+
+void ExprTransform::visit(TernaryNode &node)
+{
+    node.expr = ExprTransform::transform(c, node.expr);
+    node.left = ExprTransform::transform(c, node.left);
+    node.right = ExprTransform::transform(c, node.right);
 }
 
 NodePtr ExprTransform::transform(Context &c, NodePtr &node, Type *expectedType)

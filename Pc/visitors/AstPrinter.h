@@ -46,6 +46,7 @@ public:
     virtual void visit(TextNode &node) override;
     virtual void visit(CommaNode &node) override;
     virtual void visit(InlineVarNode &node) override;
+    virtual void visit(TernaryNode &node) override;
 
 private:
     std::ostream &tab() const;

@@ -1,5 +1,7 @@
 #include "ExprConvert.h"
 
+#include "application/Context.h"
+
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/ProxyCallNode.h"
@@ -13,6 +15,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -142,6 +145,15 @@ void ExprConvert::visit(CommaNode &node)
 void ExprConvert::visit(InlineVarNode &node)
 {
     Visitor::visit<FuncConvert>(node.body.get(), c);
+}
+
+void ExprConvert::visit(TernaryNode &node)
+{
+    node.expr = ExprConvert::convert(c, node.expr);
+    node.left = ExprConvert::convert(c, node.left);
+    node.right = ExprConvert::convert(c, node.right);
+
+    node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
 }
 
 NodePtr ExprConvert::convert(Context &c, NodePtr &node, Type *expectedType)

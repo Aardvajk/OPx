@@ -27,6 +27,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/TextNode.h"
 #include "nodes/CommaNode.h"
+#include "nodes/TernaryNode.h"
 
 #include "syms/Sym.h"
 
@@ -292,5 +293,14 @@ void DescVisitor::visit(CommaNode &node)
 {
     node.left->accept(*this);
     r += ", ";
+    node.right->accept(*this);
+}
+
+void DescVisitor::visit(TernaryNode &node)
+{
+    node.expr->accept(*this);
+    r += " ? ";
+    node.left->accept(*this);
+    r += " : ";
     node.right->accept(*this);
 }
