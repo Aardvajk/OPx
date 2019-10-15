@@ -103,6 +103,11 @@ void ExprLower::visit(IntLiteralNode &node)
     handleLiteral(node, expectedType);
 }
 
+void ExprLower::visit(SizeLiteralNode &node)
+{
+    handleLiteral(node, expectedType);
+}
+
 void ExprLower::visit(BoolLiteralNode &node)
 {
     handleLiteral(node, expectedType);
@@ -225,8 +230,8 @@ void ExprLower::visit(InlineVarNode &node)
 void ExprLower::visit(TernaryNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
-    node.left = ExprLower::lower(c, node.left);
-    node.right = ExprLower::lower(c, node.right);
+    node.left = ExprLower::lower(c, node.left, expectedType);
+    node.right = ExprLower::lower(c, node.right, expectedType);
 }
 
 NodePtr ExprLower::lower(Context &c, NodePtr node, Type *expectedType)

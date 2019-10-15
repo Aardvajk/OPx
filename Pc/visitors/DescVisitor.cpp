@@ -171,6 +171,11 @@ void DescVisitor::visit(IntLiteralNode &node)
     r += pcx::str(node.value);
 }
 
+void DescVisitor::visit(SizeLiteralNode &node)
+{
+    r += pcx::str(node.value);
+}
+
 void DescVisitor::visit(BoolLiteralNode &node)
 {
     r += node.value ? "true" : "false";

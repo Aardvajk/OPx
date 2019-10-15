@@ -197,6 +197,11 @@ void AstPrinter::visit(IntLiteralNode &node)
     tab() << "int literal " << node.description() << details(node) << "\n";
 }
 
+void AstPrinter::visit(SizeLiteralNode &node)
+{
+    tab() << "size literal " << node.description() << details(node) << "\n";
+}
+
 void AstPrinter::visit(BoolLiteralNode &node)
 {
     tab() << "bool literal " << node.description() << details(node) << "\n";

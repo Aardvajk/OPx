@@ -44,6 +44,10 @@ void Visitor::visit(IntLiteralNode &node)
 {
 }
 
+void Visitor::visit(SizeLiteralNode &node)
+{
+}
+
 void Visitor::visit(BoolLiteralNode &node)
 {
 }

@@ -22,6 +22,16 @@ std::string IntLiteralNode::classname() const
     return "intliteral";
 }
 
+void SizeLiteralNode::accept(Visitor &v)
+{
+    v.visit(*this);
+}
+
+std::string SizeLiteralNode::classname() const
+{
+    return "sizeliteral";
+}
+
 void BoolLiteralNode::accept(Visitor &v)
 {
     v.visit(*this);

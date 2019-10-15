@@ -124,6 +124,9 @@ void ExprConvert::visit(LogicalNode &node)
 {
     node.left = ExprConvert::convert(c, node.left);
     node.right = ExprConvert::convert(c, node.right);
+
+    node.left = CommonConvert::convert(c, node.left, c.types.boolType(), TypeConvert::Permission::Implicit);
+    node.right = CommonConvert::convert(c, node.right, c.types.boolType(), TypeConvert::Permission::Implicit);
 }
 
 void ExprConvert::visit(PreIncDecNode &node)

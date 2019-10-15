@@ -30,7 +30,7 @@ void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, No
         }
         else
         {
-            throw Error("internal error - boolean cast of non-primitive not supported");
+//            throw Error("internal error - boolean cast of non-primitive not supported");
         }
     }
 }

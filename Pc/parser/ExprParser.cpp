@@ -100,6 +100,7 @@ NodePtr primary(Context &c, bool get)
 
         case Token::Type::CharLiteral: n = new CharLiteralNode(tok.location(), tok.text()[0]); c.scanner.next(true); return n;
         case Token::Type::IntLiteral: n = new IntLiteralNode(tok.location(), pcx::lexical_cast<int>(tok.text())); c.scanner.next(true); return n;
+        case Token::Type::SizeLiteral: n = new SizeLiteralNode(tok.location(), pcx::lexical_cast<std::size_t>(tok.text())); c.scanner.next(true); return n;
         case Token::Type::StringLiteral: n = new StringLiteralNode(tok.location(), Lexer::decodeString(tok.text())); c.scanner.next(true); return n;
 
         case Token::Type::RwTrue: n = new BoolLiteralNode(tok.location(), true); c.scanner.next(true); return n;

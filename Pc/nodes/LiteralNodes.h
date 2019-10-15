@@ -25,6 +25,17 @@ public:
     int value;
 };
 
+class SizeLiteralNode : public Node
+{
+public:
+    SizeLiteralNode(Location location, std::size_t value) : Node(location), value(value) { }
+
+    virtual void accept(Visitor &v) override;
+    virtual std::string classname() const override;
+
+    std::size_t value;
+};
+
 class BoolLiteralNode : public Node
 {
 public:

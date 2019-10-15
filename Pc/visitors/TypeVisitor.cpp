@@ -78,6 +78,11 @@ void TypeVisitor::visit(IntLiteralNode &node)
     r = c.types.intType();
 }
 
+void TypeVisitor::visit(SizeLiteralNode &node)
+{
+    r = c.types.sizeType();
+}
+
 void TypeVisitor::visit(BoolLiteralNode &node)
 {
     r = c.types.boolType();

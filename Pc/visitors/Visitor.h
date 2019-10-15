@@ -13,6 +13,7 @@ class ClassNode;
 class VarNode;
 class CharLiteralNode;
 class IntLiteralNode;
+class SizeLiteralNode;
 class BoolLiteralNode;
 class StringLiteralNode;
 class ExprNode;
@@ -54,6 +55,7 @@ public:
     virtual void visit(VarNode &node);
     virtual void visit(CharLiteralNode &node);
     virtual void visit(IntLiteralNode &node);
+    virtual void visit(SizeLiteralNode &node);
     virtual void visit(BoolLiteralNode &node);
     virtual void visit(StringLiteralNode &node);
     virtual void visit(ExprNode &node);

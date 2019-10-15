@@ -122,6 +122,11 @@ void ExprTransform::visit(IntLiteralNode &node)
     transformLiteral(c, node, expectedType);
 }
 
+void ExprTransform::visit(SizeLiteralNode &node)
+{
+    transformLiteral(c, node, expectedType);
+}
+
 void ExprTransform::visit(BoolLiteralNode &node)
 {
     transformLiteral(c, node, expectedType);

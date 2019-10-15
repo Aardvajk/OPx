@@ -18,6 +18,11 @@ void CanByteListGenerate::visit(IntLiteralNode &node)
     ok = true;
 }
 
+void CanByteListGenerate::visit(SizeLiteralNode &node)
+{
+    ok = true;
+}
+
 void CanByteListGenerate::visit(BoolLiteralNode &node)
 {
     ok = true;
@@ -40,6 +45,11 @@ void ByteListGenerator::visit(CharLiteralNode &node)
 void ByteListGenerator::visit(IntLiteralNode &node)
 {
     os << "int(" << node.value << ")";
+}
+
+void ByteListGenerator::visit(SizeLiteralNode &node)
+{
+    os << "size(" << node.value << ")";
 }
 
 void ByteListGenerator::visit(BoolLiteralNode &node)
