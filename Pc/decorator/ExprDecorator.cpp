@@ -80,7 +80,7 @@ template<typename T> void decorateComplexReturnTemp(Context &c, T &node, Type *t
         auto temp = pcx::str("#temp_return", info->labels++);
         node.setProperty("temp", temp);
 
-        info->temps.push_back(std::make_pair(temp, type->returnType));
+        info->temps.push_back(Temp(temp, type->returnType));
     }
 }
 

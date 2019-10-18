@@ -93,13 +93,21 @@ void Generator::visit(FuncNode &node)
         auto info = sym->property<FuncInfo*>("info");
         for(auto &t: info->temps)
         {
-            os << "    var \"" << t.first << "\":" << Type::assertSize(node.location(), t.second) << ";\n";
+            os << "    var \"" << t.name << "\":" << Type::assertSize(node.location(), t.type) << ";\n";
         }
 
         if(!c.option("O", "elide_unneeded_complex_returns") || sym->findProperty("complexReturns").value<bool>())
         {
             os << "    var \"@rf\":1;\n";
             os << "    clrf \"@rf\";\n";
+        }
+
+        for(auto &t: info->temps)
+        {
+            if(t.zeroFlag)
+            {
+                os << "    clrf \"" << t.name << "\";\n";
+            }
         }
 
         Visitor::visit<FuncGenerator>(node.body.get(), c, os);

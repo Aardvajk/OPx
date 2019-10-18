@@ -47,7 +47,7 @@ template<typename T> void transformLiteral(Context &c, T &node, Type *expectedTy
         auto temp = pcx::str("temp_literal", info->labels++);
 
         node.setProperty("temp_literal", temp);
-        info->temps.push_back(std::make_pair(temp, TypeVisitor::assertType(c, &node)));
+        info->temps.push_back(Temp(temp, TypeVisitor::assertType(c, &node)));
     }
 }
 
@@ -202,8 +202,16 @@ void ExprTransform::visit(ConstructNode &node)
             auto info = c.tree.current()->container()->property<FuncInfo*>("info");
             auto temp = pcx::str("temp", info->labels++);
 
-            info->temps.push_back(std::make_pair(temp, node.type));
+            info->temps.push_back(Temp(temp, node.type));
             node.setProperty("temp", temp);
+
+            if(c.potentiallySkipped)
+            {
+                auto flag = pcx::str(temp, "_flag");
+
+                info->temps.push_back(Temp(flag, c.types.boolType(), true));
+                node.setProperty("temp_flag", flag);
+            }
         }
 
         if(auto sp = node.target->findProperty("sym"))
