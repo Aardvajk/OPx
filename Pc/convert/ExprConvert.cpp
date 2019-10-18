@@ -126,8 +126,8 @@ void ExprConvert::visit(LogicalNode &node)
     node.left = ExprConvert::convert(c, node.left);
     node.right = ExprConvert::convert(c, node.right);
 
-    node.left = CommonConvert::convert(c, node.left, c.types.boolType(), TypeConvert::Permission::Implicit);
-    node.right = CommonConvert::convert(c, node.right, c.types.boolType(), TypeConvert::Permission::Implicit);
+    node.left = CommonConvert::convertImplicitBoolean(c, node.left);
+    node.right = CommonConvert::convertImplicitBoolean(c, node.right);
 }
 
 void ExprConvert::visit(PreIncDecNode &node)
@@ -157,7 +157,7 @@ void ExprConvert::visit(TernaryNode &node)
     node.left = ExprConvert::convert(c, node.left);
     node.right = ExprConvert::convert(c, node.right);
 
-    node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
+    node.expr = CommonConvert::convertImplicitBoolean(c, node.expr);
 }
 
 void ExprConvert::visit(TypeCastNode &node)

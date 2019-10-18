@@ -70,3 +70,21 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type, TypeConvert
 
     return node;
 }
+
+NodePtr CommonConvert::convertImplicitBoolean(Context &c, NodePtr node)
+{
+    auto t = TypeVisitor::assertType(c, node.get());
+
+    if(t->primitive() && !TypeCompare(c).compatible(t, c.types.boolType()))
+    {
+        auto n = new ConstructNode(node->location(), c.types.boolType());
+        NodePtr nn(n);
+
+        n->setProperty("type", c.types.boolType());
+        n->params.push_back(node);
+
+        return nn;
+    }
+
+    return convert(c, node, c.types.boolType(), TypeConvert::Permission::Implicit);
+}

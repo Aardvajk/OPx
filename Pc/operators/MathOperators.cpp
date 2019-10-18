@@ -127,7 +127,7 @@ std::size_t MathOperators::generateNotNeg(Context &c, std::ostream &os, UnaryNod
 
     ExprGenerator::generate(c, os, node.expr.get());
 
-    if(t->ptr)
+    if(t->ptr && node.token.type() != Token::Type::Exclaim)
     {
         throw Error(node.location(), "invalid operator - ", t->text());
     }

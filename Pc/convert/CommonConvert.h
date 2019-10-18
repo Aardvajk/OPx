@@ -12,6 +12,7 @@ namespace CommonConvert
 {
 
 NodePtr convert(Context &c, NodePtr node, Type *type, TypeConvert::Permission permission);
+NodePtr convertImplicitBoolean(Context &c, NodePtr node);
 
 }
 

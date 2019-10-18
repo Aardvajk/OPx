@@ -77,7 +77,7 @@ void FuncConvert::visit(WhileNode &node)
     node.expr = ExprConvert::convert(c, node.expr);
     node.body->accept(*this);
 
-    node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
+    node.expr = CommonConvert::convertImplicitBoolean(c, node.expr);
 }
 
 void FuncConvert::visit(IfNode &node)
@@ -90,7 +90,7 @@ void FuncConvert::visit(IfNode &node)
         node.elseBody->accept(*this);
     }
 
-    node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
+    node.expr = CommonConvert::convertImplicitBoolean(c, node.expr);
 }
 
 void FuncConvert::visit(ForNode &node)
@@ -103,7 +103,7 @@ void FuncConvert::visit(ForNode &node)
     if(node.cond)
     {
         node.cond = ExprConvert::convert(c, node.cond);
-        node.cond = CommonConvert::convert(c, node.cond, c.types.boolType(), TypeConvert::Permission::Implicit);
+        node.cond = CommonConvert::convertImplicitBoolean(c, node.cond);
     }
 
     if(node.post)

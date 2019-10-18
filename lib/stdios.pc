@@ -19,6 +19,12 @@ func std.operator<<(o:ref std.ostream, v:std.bool):ref std.ostream
     return o;
 }
 
+func std.operator<<(o:ref std.ostream, v:std.size):ref std.ostream
+{
+    std.print(v);
+    return o;
+}
+
 func std.operator<<(o:ref std.ostream, v:ptr std.char):ref std.ostream
 {
     std.print(v);
