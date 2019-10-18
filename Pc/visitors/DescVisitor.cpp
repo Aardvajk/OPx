@@ -315,6 +315,7 @@ void DescVisitor::visit(TernaryNode &node)
 
 void DescVisitor::visit(TypeCastNode &node)
 {
+    r += pcx::str("typecast ", node.type->text(), " ");
     node.expr->accept(*this);
 }
 
