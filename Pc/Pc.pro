@@ -147,6 +147,7 @@ HEADERS += \
     info/Access.h \
     info/FuncInfo.h \
     info/Qual.h \
+    info/TempDestruct.h \
     lower/ExprLower.h \
     lower/FuncLower.h \
     lower/Lower.h \

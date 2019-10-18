@@ -43,6 +43,7 @@
 
 #include <pcx/str.h>
 #include <pcx/base64.h>
+#include <pcx/scoped_counter.h>
 
 namespace
 {
@@ -324,6 +325,8 @@ void ExprDecorator::visit(BinaryNode &node)
 
 void ExprDecorator::visit(LogicalNode &node)
 {
+    auto g = pcx::scoped_counter(c.potentiallySkipped);
+
     node.left = ExprDecorator::decorate(c, node.left);
     node.right = ExprDecorator::decorate(c, node.right);
 }
@@ -358,6 +361,9 @@ void ExprDecorator::visit(InlineVarNode &node)
 void ExprDecorator::visit(TernaryNode &node)
 {
     node.expr = ExprDecorator::decorate(c, node.expr);
+
+    auto g = pcx::scoped_counter(c.potentiallySkipped);
+
     node.left = ExprDecorator::decorate(c, node.left);
     node.right = ExprDecorator::decorate(c, node.right);
 

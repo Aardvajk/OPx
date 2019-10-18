@@ -1,6 +1,8 @@
 #ifndef FUNCINFO_H
 #define FUNCINFO_H
 
+#include "info/TempDestruct.h"
+
 #include <cstdlib>
 #include <string>
 #include <vector>
@@ -23,7 +25,7 @@ public:
     std::vector<std::vector<Node*> > destructs;
     std::vector<std::pair<std::string, Type*> > temps;
 
-    std::vector<std::pair<std::string, Type*> > tempDestructs;
+    std::vector<TempDestruct> tempDestructs;
 };
 
 #endif // FUNCINFO_H

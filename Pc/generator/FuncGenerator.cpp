@@ -32,9 +32,9 @@ void processTempDestructs(Context &c, std::ostream &os, Location location)
 
     for(auto &t: info->tempDestructs)
     {
-        auto fn = TypeLookup::assertDeleteMethod(c, location, t.second);
+        auto fn = TypeLookup::assertDeleteMethod(c, location, t.type);
 
-        os << "    push &\"" << t.first << "\";\n";
+        os << "    push &\"" << t.name << "\";\n";
         os << "    push &\"" << fn->funcname() << "\";\n";
         os << "    call;\n";
     }

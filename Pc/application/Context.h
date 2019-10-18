@@ -51,6 +51,8 @@ public:
 
     Node *globalInit;
     Node *globalDestroy;
+
+    std::size_t potentiallySkipped;
 };
 
 #endif // CONTEXT_H

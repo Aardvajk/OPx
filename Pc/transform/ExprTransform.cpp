@@ -33,6 +33,7 @@
 #include "visitors/QueryVisitors.h"
 
 #include <pcx/indexed_range.h>
+#include <pcx/scoped_counter.h>
 
 namespace
 {
@@ -246,6 +247,8 @@ void ExprTransform::visit(BinaryNode &node)
 
 void ExprTransform::visit(LogicalNode &node)
 {
+    auto g = pcx::scoped_counter(c.potentiallySkipped);
+
     node.left = ExprTransform::transform(c, node.left);
     node.right = ExprTransform::transform(c, node.right);
 }
@@ -274,6 +277,9 @@ void ExprTransform::visit(InlineVarNode &node)
 void ExprTransform::visit(TernaryNode &node)
 {
     node.expr = ExprTransform::transform(c, node.expr);
+
+    auto g = pcx::scoped_counter(c.potentiallySkipped);
+
     node.left = ExprTransform::transform(c, node.left);
     node.right = ExprTransform::transform(c, node.right);
 }

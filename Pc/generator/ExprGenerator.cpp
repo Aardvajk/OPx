@@ -87,7 +87,7 @@ template<typename T> std::size_t generateCall(Context &c, std::ostream &os, T &n
         auto temp = node.template property<std::string>("temp");
 
         os << "    push &\"" << temp << "\";\n";
-        info->tempDestructs.push_back(std::make_pair(temp, type->returnType));
+        info->tempDestructs.push_back(TempDestruct(temp, type->returnType));
 
         sz = sizeof(std::size_t);
     }
@@ -238,7 +238,7 @@ void ExprGenerator::visit(ConstructNode &node)
         os << "    push &\"" << temp << "\";\n";
 
         auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-        info->tempDestructs.push_back(std::make_pair(temp, node.type));
+        info->tempDestructs.push_back(TempDestruct(temp, node.type));
 
         sz = sizeof(std::size_t);
     }
