@@ -5,6 +5,8 @@
 #include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 
+#include "nodes/TypeCastNode.h"
+
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 #include "types/TypeConvert.h"
@@ -19,6 +21,11 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type, TypeConvert
 
     if(!TypeCompare(c).compatible(type, t))
     {
+        if(TypeConvert::nullPtrConvert(c, t, type))
+        {
+            return new TypeCastNode(node->location(), type, node);
+        }
+
         auto sv = TypeConvert::find(c, t, type, permission);
         if(sv.empty())
         {

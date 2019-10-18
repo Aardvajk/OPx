@@ -16,6 +16,7 @@
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
 #include "nodes/TernaryNode.h"
+#include "nodes/TypeCastNode.h"
 
 #include "syms/Sym.h"
 
@@ -157,6 +158,11 @@ void ExprConvert::visit(TernaryNode &node)
     node.right = ExprConvert::convert(c, node.right);
 
     node.expr = CommonConvert::convert(c, node.expr, c.types.boolType(), TypeConvert::Permission::Implicit);
+}
+
+void ExprConvert::visit(TypeCastNode &node)
+{
+    node.expr = ExprConvert::convert(c, node.expr);
 }
 
 NodePtr ExprConvert::convert(Context &c, NodePtr &node, Type *expectedType)

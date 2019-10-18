@@ -33,6 +33,8 @@
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
 #include "nodes/TernaryNode.h"
+#include "nodes/TypeCastNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "syms/Sym.h"
 
@@ -501,6 +503,40 @@ void AstPrinter::visit(TernaryNode &node)
     node.expr->accept(*this);
     node.left->accept(*this);
     node.right->accept(*this);
+}
+
+void AstPrinter::visit(TypeCastNode &node)
+{
+    tab() << "typecast " << node.type->text() << "\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.expr->accept(*this);
+}
+
+void AstPrinter::visit(SubscriptNode &node)
+{
+    tab() << "subscript\n";
+
+    if(node.target)
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "target\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        node.target->accept(*this);
+    }
+
+    if(!node.params.empty())
+    {
+        auto g1 = pcx::scoped_counter(tc);
+        tab() << "params\n";
+
+        auto g2 = pcx::scoped_counter(tc);
+        for(auto &p: node.params)
+        {
+            p->accept(*this);
+        }
+    }
 }
 
 std::ostream &AstPrinter::tab() const

@@ -28,6 +28,8 @@
 #include "nodes/TextNode.h"
 #include "nodes/CommaNode.h"
 #include "nodes/TernaryNode.h"
+#include "nodes/TypeCastNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "syms/Sym.h"
 
@@ -308,4 +310,17 @@ void DescVisitor::visit(TernaryNode &node)
     node.left->accept(*this);
     r += " : ";
     node.right->accept(*this);
+}
+
+void DescVisitor::visit(TypeCastNode &node)
+{
+    node.expr->accept(*this);
+}
+
+void DescVisitor::visit(SubscriptNode &node)
+{
+    node.target->accept(*this);
+    r += "[";
+    r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
+    r += "]";
 }

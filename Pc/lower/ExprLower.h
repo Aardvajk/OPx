@@ -35,6 +35,7 @@ public:
     virtual void visit(CommaNode &node) override;
     virtual void visit(InlineVarNode &node) override;
     virtual void visit(TernaryNode &node) override;
+    virtual void visit(TypeCastNode &node) override;
 
     static NodePtr lower(Context &c, NodePtr node, Type *expectedType = nullptr);
 

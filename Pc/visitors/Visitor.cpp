@@ -147,3 +147,11 @@ void Visitor::visit(InlineVarNode &node)
 void Visitor::visit(TernaryNode &node)
 {
 }
+
+void Visitor::visit(TypeCastNode &node)
+{
+}
+
+void Visitor::visit(SubscriptNode &node)
+{
+}

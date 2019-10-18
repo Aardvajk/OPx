@@ -19,6 +19,7 @@
 #include "nodes/IncDecNodes.h"
 #include "nodes/CommaNode.h"
 #include "nodes/TernaryNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -147,6 +148,21 @@ NodePtr call(Context &c, NodePtr target, bool get)
     return nn;
 }
 
+NodePtr subscript(Context &c, NodePtr target, bool get)
+{
+    auto n = new SubscriptNode(c.scanner.token().location(), target);
+    NodePtr nn(n);
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() != Token::Type::RightSub)
+    {
+        params(c, n->params, false);
+    }
+
+    c.scanner.consume(Token::Type::RightSub, false);
+    return nn;
+}
+
 NodePtr entity(Context &c, bool get)
 {
     auto n = primary(c, get);
@@ -160,6 +176,7 @@ NodePtr entity(Context &c, bool get)
             case Token::Type::Arrow: n = id(c, n, true, true); break;
 
             case Token::Type::LeftParen: n = call(c, n, true); break;
+            case Token::Type::LeftSub: n = subscript(c, n, true); break;
 
             case Token::Type::Inc:
             case Token::Type::Dec: n = new PostIncDecNode(tok.location(), tok, n); c.scanner.next(true); break;

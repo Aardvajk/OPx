@@ -40,6 +40,8 @@ public:
     virtual void visit(CommaNode &node) override;
     virtual void visit(InlineVarNode &node) override;
     virtual void visit(TernaryNode &node) override;
+    virtual void visit(TypeCastNode &node) override;
+    virtual void visit(SubscriptNode &node) override;
 
     static NodePtr decorate(Context &c, NodePtr node, Type *expectedType = nullptr, Flags flags = { });
 

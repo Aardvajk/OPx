@@ -43,6 +43,8 @@ public:
     virtual void visit(TextNode &node) override;
     virtual void visit(CommaNode &node) override;
     virtual void visit(TernaryNode &node) override;
+    virtual void visit(TypeCastNode &node) override;
+    virtual void visit(SubscriptNode &node) override;
 
 private:
     std::string r;

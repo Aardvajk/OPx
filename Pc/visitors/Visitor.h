@@ -39,6 +39,8 @@ class TextNode;
 class CommaNode;
 class InlineVarNode;
 class TernaryNode;
+class TypeCastNode;
+class SubscriptNode;
 
 class Visitor
 {
@@ -81,6 +83,8 @@ public:
     virtual void visit(CommaNode &node);
     virtual void visit(InlineVarNode &node);
     virtual void visit(TernaryNode &node);
+    virtual void visit(TypeCastNode &node);
+    virtual void visit(SubscriptNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

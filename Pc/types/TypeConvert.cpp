@@ -72,3 +72,37 @@ std::vector<Sym*> TypeConvert::find(Context &c, Type *from, Type *to, Permission
 
     return sv;
 }
+
+bool TypeConvert::nullPtrConvert(Context &c, Type *from, Type *to)
+{
+    auto t = *c.types.nullType();
+    t.ptr = 1;
+
+    if(TypeCompare(c).compatible(from, &t) && to->ptr == 1)
+    {
+        return true;
+    }
+
+    if(TypeCompare(c).compatible(to, &t) && from->ptr == 1)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool TypeConvert::canConvert(Context &c, Type *from, Type *to)
+{
+    if(nullPtrConvert(c, from, to))
+    {
+        return true;
+    }
+
+    if(!find(c, from, to, Permission::Implicit).empty())
+    {
+        return true;
+    }
+
+    return false;
+}
+

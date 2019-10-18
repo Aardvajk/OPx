@@ -18,6 +18,12 @@ NodePtr Operators::scan(Context &c, bool get)
         return new TextNode(tok.location(), "()");
     }
 
+    if(tok.type() == Token::Type::LeftSub)
+    {
+        c.scanner.consume(Token::Type::RightSub, true);
+        return new TextNode(tok.location(), "[]");
+    }
+
     switch(tok.type())
     {
         case Token::Type::Assign:

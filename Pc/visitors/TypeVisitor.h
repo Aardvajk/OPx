@@ -37,6 +37,7 @@ public:
     virtual void visit(PostIncDecNode &node) override;
     virtual void visit(CommaNode &node) override;
     virtual void visit(TernaryNode &node) override;
+    virtual void visit(TypeCastNode &node) override;
 
     static Type *queryType(Context &c, Node *node);
     static Type *assertType(Context &c, Node *node);

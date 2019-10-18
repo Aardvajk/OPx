@@ -22,6 +22,8 @@
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
 #include "nodes/TernaryNode.h"
+#include "nodes/TypeCastNode.h"
+#include "nodes/SubscriptNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -364,6 +366,42 @@ void ExprDecorator::visit(TernaryNode &node)
     if(!TypeCompare(c).compatible(lt, rt))
     {
         throw Error(node.right->location(), lt->text(), " expected - ", node.right->description());
+    }
+}
+
+void ExprDecorator::visit(TypeCastNode &node)
+{
+    node.expr = ExprDecorator::decorate(c, node.expr);
+}
+
+void ExprDecorator::visit(SubscriptNode &node)
+{
+    node.target = ExprDecorator::decorate(c, node.target);
+
+    if(!flags[Flag::SkipParams])
+    {
+        for(auto &p: node.params)
+        {
+            p = ExprDecorator::decorate(c, p);
+        }
+    }
+
+    if(TypeVisitor::assertType(c, node.target.get())->primitive())
+    {
+        if(node.params.size() != 1)
+        {
+            throw Error(node.location(), "invalid parameters - ", node.description());
+        }
+
+        auto bn = new BinaryNode(node.location(), Token(Token::Type::Add, { }, "+"), node.target, node.params.front());
+        NodePtr n(bn);
+
+        rn = new DerefNode(node.location(), n);
+        rn = ExprDecorator::decorate(c, rn);
+    }
+    else
+    {
+        rn = OperatorCallDecorate::generate(c, node, node.target, node.params, "[]");
     }
 }
 

@@ -38,6 +38,7 @@ public:
     virtual void visit(CommaNode &node) override;
     virtual void visit(InlineVarNode &node) override;
     virtual void visit(TernaryNode &node) override;
+    virtual void visit(TypeCastNode &node) override;
 
     static std::size_t generate(Context &c, std::ostream &os, Node *node);
 

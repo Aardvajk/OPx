@@ -20,6 +20,7 @@
 #include "nodes/CommaNode.h"
 #include "nodes/InlineVarNode.h"
 #include "nodes/TernaryNode.h"
+#include "nodes/TypeCastNode.h"
 
 #include "generator/CommonGenerator.h"
 #include "generator/AddrGenerator.h"
@@ -409,6 +410,11 @@ void ExprGenerator::visit(TernaryNode &node)
     ExprGenerator::generate(c, os, node.right.get());
 
     os << l1 << ":\n";
+}
+
+void ExprGenerator::visit(TypeCastNode &node)
+{
+    sz = ExprGenerator::generate(c, os, node.expr.get());
 }
 
 std::size_t ExprGenerator::generate(Context &c, std::ostream &os, Node *node)
