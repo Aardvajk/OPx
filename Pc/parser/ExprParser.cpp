@@ -20,6 +20,9 @@
 #include "nodes/CommaNode.h"
 #include "nodes/TernaryNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/UncheckedCastNode.h"
+
+#include "parser/TypeParser.h"
 
 #include <pcx/lexical_cast.h>
 
@@ -87,6 +90,20 @@ template<typename T> NodePtr tokenExprNode(Context &c, const Token &token, bool 
     return nn;
 }
 
+NodePtr uncheckedCast(Context &c, bool get)
+{
+    auto n = new UncheckedCastNode(c.scanner.token().location());
+    NodePtr nn(n);
+
+    n->type = TypeParser::build(c, get);
+
+    c.scanner.match(Token::Type::LeftParen, false);
+    n->expr = expression(c, true);
+
+    c.scanner.consume(Token::Type::RightParen, false);
+    return nn;
+}
+
 NodePtr primary(Context &c, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -117,6 +134,8 @@ NodePtr primary(Context &c, bool get)
 
         case Token::Type::Inc:
         case Token::Type::Dec: return tokenExprNode<PreIncDecNode>(c, tok, true);
+
+        case Token::Type::RwUncheckedCast: return uncheckedCast(c, true);
 
         default: throw Error(tok.location(), "primary expected - ", tok.text());
     }

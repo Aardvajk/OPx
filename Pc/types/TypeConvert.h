@@ -17,8 +17,6 @@ enum class Permission
 };
 
 std::vector<Sym*> find(Context &c, Type *from, Type *to, Permission permission);
-bool nullPtrConvert(Context &c, Type *from, Type *to);
-
 bool canConvert(Context &c, Type *from, Type *to);
 
 }

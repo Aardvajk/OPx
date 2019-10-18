@@ -30,6 +30,7 @@
 #include "nodes/TernaryNode.h"
 #include "nodes/TypeCastNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/UncheckedCastNode.h"
 
 #include "syms/Sym.h"
 
@@ -323,4 +324,13 @@ void DescVisitor::visit(SubscriptNode &node)
     r += "[";
     r += pcx::join_str(node.params, ", ", [](const NodePtr &n){ return n->description(); });
     r += "]";
+}
+
+void DescVisitor::visit(UncheckedCastNode &node)
+{
+    r += "__unchecked_cast ";
+    node.type->accept(*this);
+    r += "(";
+    node.expr->accept(*this);
+    r += ")";
 }

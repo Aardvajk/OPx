@@ -81,6 +81,7 @@ SOURCES += \
         nodes/TypeCastNode.cpp \
         nodes/TypeNode.cpp \
         nodes/UnaryNode.cpp \
+        nodes/UncheckedCastNode.cpp \
         nodes/VarNode.cpp \
         nodes/WhileNode.cpp \
         operators/CompareOperators.cpp \
@@ -181,6 +182,7 @@ HEADERS += \
     nodes/TypeCastNode.h \
     nodes/TypeNode.h \
     nodes/UnaryNode.h \
+    nodes/UncheckedCastNode.h \
     nodes/VarNode.h \
     nodes/WhileNode.h \
     operators/CompareOperators.h \

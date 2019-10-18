@@ -42,6 +42,7 @@ public:
     virtual void visit(TernaryNode &node) override;
     virtual void visit(TypeCastNode &node) override;
     virtual void visit(SubscriptNode &node) override;
+    virtual void visit(UncheckedCastNode &node) override;
 
     static NodePtr decorate(Context &c, NodePtr node, Type *expectedType = nullptr, Flags flags = { });
 

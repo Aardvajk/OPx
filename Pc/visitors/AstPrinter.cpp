@@ -35,6 +35,7 @@
 #include "nodes/TernaryNode.h"
 #include "nodes/TypeCastNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/UncheckedCastNode.h"
 
 #include "syms/Sym.h"
 
@@ -537,6 +538,15 @@ void AstPrinter::visit(SubscriptNode &node)
             p->accept(*this);
         }
     }
+}
+
+void AstPrinter::visit(UncheckedCastNode &node)
+{
+    tab() << "uncheckedcast\n";
+
+    auto g = pcx::scoped_counter(tc);
+    node.type->accept(*this);
+    node.expr->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

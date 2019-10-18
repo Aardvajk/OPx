@@ -155,3 +155,7 @@ void Visitor::visit(TypeCastNode &node)
 void Visitor::visit(SubscriptNode &node)
 {
 }
+
+void Visitor::visit(UncheckedCastNode &node)
+{
+}

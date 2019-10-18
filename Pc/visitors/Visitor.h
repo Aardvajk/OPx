@@ -41,6 +41,7 @@ class InlineVarNode;
 class TernaryNode;
 class TypeCastNode;
 class SubscriptNode;
+class UncheckedCastNode;
 
 class Visitor
 {
@@ -85,6 +86,7 @@ public:
     virtual void visit(TernaryNode &node);
     virtual void visit(TypeCastNode &node);
     virtual void visit(SubscriptNode &node);
+    virtual void visit(UncheckedCastNode &node);
 
     template<typename T, typename N, typename... Args> static void visit(N node, Args&&... args)
     {

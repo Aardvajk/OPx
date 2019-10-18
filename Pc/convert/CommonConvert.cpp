@@ -21,11 +21,6 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type, TypeConvert
 
     if(!TypeCompare(c).compatible(type, t))
     {
-        if(TypeConvert::nullPtrConvert(c, t, type))
-        {
-            return new TypeCastNode(node->location(), type, node);
-        }
-
         auto sv = TypeConvert::find(c, t, type, permission);
         if(sv.empty())
         {

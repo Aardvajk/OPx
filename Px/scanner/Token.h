@@ -26,6 +26,7 @@ public:
         RwTrue, RwFalse,
         RwReturn,
         RwChar, RwInt, RwSize, RwString,
+        RwUncheckedCast,
         Eof, Invalid
     };
 

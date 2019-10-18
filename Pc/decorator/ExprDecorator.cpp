@@ -24,6 +24,7 @@
 #include "nodes/TernaryNode.h"
 #include "nodes/TypeCastNode.h"
 #include "nodes/SubscriptNode.h"
+#include "nodes/UncheckedCastNode.h"
 
 #include "visitors/SymFinder.h"
 #include "visitors/TypeVisitor.h"
@@ -403,6 +404,14 @@ void ExprDecorator::visit(SubscriptNode &node)
     {
         rn = OperatorCallDecorate::generate(c, node, node.target, node.params, "[]");
     }
+}
+
+void ExprDecorator::visit(UncheckedCastNode &node)
+{
+    Visitor::visit<TypeDecorator>(node.type.get(), c);
+    node.expr = ExprDecorator::decorate(c, node.expr);
+
+    rn = new TypeCastNode(node.location(), TypeVisitor::assertType(c, node.type.get()), node.expr);
 }
 
 NodePtr ExprDecorator::decorate(Context &c, NodePtr node, Type *expectedType, Flags flags)

@@ -45,7 +45,8 @@ static const std::vector<Reserved> pcReserved =
     { "delete", Token::Type::RwDelete },
     { "true", Token::Type::RwTrue },
     { "false", Token::Type::RwFalse },
-    { "return", Token::Type::RwReturn }
+    { "return", Token::Type::RwReturn },
+    { "__unchecked_cast", Token::Type::RwUncheckedCast }
 };
 
 static const std::vector<Reserved> piReserved =
