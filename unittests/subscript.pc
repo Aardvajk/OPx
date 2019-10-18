@@ -1,0 +1,39 @@
+include("stdlib.ph", "stdtest.ph");
+
+class foo
+{
+public:
+    func new(a:std.int) ... a(a) { }
+
+    var a:std.int;
+}
+
+func operator==(:foo,:foo):foo
+{
+    return foo(10);
+}
+
+func operator[](:foo, a:std.int, b = 'z'):std.int
+{
+    test.assert(a == 10);
+    test.assert(b == 'z');
+
+    return 765;
+}
+
+func main()
+{
+    var p:ptr foo = std.allocate(8s);
+
+    p[0] = foo(123);
+    p[1] = foo(321);
+
+    test.assert(p->a == 123);
+    test.assert((p + 1)->a == 321);
+
+    var a = foo(1), b = foo(2);
+
+    test.assert((a == b).a == 10);
+
+    test.assert(a[10] == 765);
+}

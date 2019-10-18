@@ -1,13 +1,17 @@
 #include "SymFinder.h"
 
+#include "application/Context.h"
+
 #include "nodes/IdNode.h"
 #include "nodes/CallNode.h"
 #include "nodes/ProxyCallNode.h"
 #include "nodes/ConstructNode.h"
 #include "nodes/AddrOfNode.h"
 #include "nodes/DerefNode.h"
+#include "nodes/BinaryNode.h"
 
 #include "visitors/SymScopeVisitor.h"
+#include "visitors/TypeVisitor.h"
 
 #include "syms/Sym.h"
 
@@ -104,6 +108,15 @@ void SymFinder::visit(AddrOfNode &node)
 void SymFinder::visit(DerefNode &node)
 {
     node.expr->accept(*this);
+}
+
+void SymFinder::visit(BinaryNode &node)
+{
+    auto t = TypeVisitor::assertType(c, &node);
+    if(!TypeCompare(c).exact(t, c.types.boolType()))
+    {
+        node.left->accept(*this);
+    }
 }
 
 void SymFinder::find(Context &c, Type type, Sym *curr, Node *node, std::vector<Sym*> &result)
