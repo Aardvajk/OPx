@@ -222,6 +222,7 @@ void ExprGenerator::visit(ConstructNode &node)
     else
     {
         auto temp = node.property<std::string>("temp");
+        auto flag = node.findProperty("temp_ps_flag").value<std::string>();
 
         os << "    push &\"" << temp << "\";\n";
 
@@ -235,10 +236,15 @@ void ExprGenerator::visit(ConstructNode &node)
         ExprGenerator::generate(c, os, node.target.get());
         os << "    call;\n";
 
+        if(!flag.empty())
+        {
+            os << "    setf \"" << flag << "\";\n";
+        }
+
         os << "    push &\"" << temp << "\";\n";
 
         auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-        info->tempDestructs.push_back(TempDestruct(temp, node.type));
+        info->tempDestructs.push_back(TempDestruct(temp, node.type, flag));
 
         sz = sizeof(std::size_t);
     }

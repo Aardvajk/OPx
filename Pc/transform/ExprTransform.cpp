@@ -210,7 +210,7 @@ void ExprTransform::visit(ConstructNode &node)
                 auto flag = pcx::str(temp, "_flag");
 
                 info->temps.push_back(Temp(flag, c.types.boolType(), true));
-                node.setProperty("temp_flag", flag);
+                node.setProperty("temp_ps_flag", flag);
             }
         }
 

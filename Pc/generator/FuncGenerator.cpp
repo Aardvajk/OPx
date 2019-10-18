@@ -32,11 +32,27 @@ void processTempDestructs(Context &c, std::ostream &os, Location location)
 
     for(auto &t: info->tempDestructs)
     {
+        std::string l0;
+
+        if(!t.flag.empty())
+        {
+            l0 = info->nextLabelQuoted();
+
+            os << "    push &\"" << t.flag << "\";\n";
+            os << "    load 1;\n";
+            os << "    jmp ifz " << l0 << ";\n";
+        }
+
         auto fn = TypeLookup::assertDeleteMethod(c, location, t.type);
 
         os << "    push &\"" << t.name << "\";\n";
         os << "    push &\"" << fn->funcname() << "\";\n";
         os << "    call;\n";
+
+        if(!t.flag.empty())
+        {
+            os << l0 << ":\n";
+        }
     }
 
     info->tempDestructs.clear();
