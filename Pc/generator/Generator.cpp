@@ -22,6 +22,7 @@
 
 #include <pcx/range_reverse.h>
 #include <pcx/join_str.h>
+#include <pcx/scoped_counter.h>
 
 namespace
 {
@@ -64,7 +65,11 @@ void Generator::visit(NamespaceNode &node)
 
 void Generator::visit(FuncNode &node)
 {
-    if(node.body && (!node.findProperty("autogen").value<bool>() || !c.option("debug", "suppress_autogens")))
+    if(c.classDepth)
+    {
+        c.deferredMethods.push_back(&node);
+    }
+    else if(node.body && (!node.findProperty("autogen").value<bool>() || !c.option("debug", "suppress_autogens")))
     {
         auto sym = node.property<Sym*>("sym");
         auto type = sym->property<Type*>("type");
@@ -170,9 +175,22 @@ void Generator::visit(ClassNode &node)
 {
     if(node.body)
     {
+        auto dg = pcx::scoped_counter(c.classDepth);
+
         auto sg = c.tree.open(node.property<Sym*>("sym"));
         node.body->accept(*this);
     }
+
+    if(!c.classDepth)
+    {
+        for(auto d: c.deferredMethods)
+        {
+            d->accept(*this);
+        }
+
+        c.deferredMethods.clear();
+    }
+
 }
 
 void Generator::visit(VarNode &node)
