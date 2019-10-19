@@ -101,6 +101,7 @@ DISTFILES += \
     ../unittests/simple_error_test.pc \
     ../unittests/simple_ref_assign.pc \
     ../unittests/simple_refs.pc \
+    ../unittests/skipped.pc \
     ../unittests/subscript.pc \
     ../unittests/temp_access.pc \
     ../unittests/temp_construct.pc \
