@@ -1,0 +1,23 @@
+include("stdios.ph", "stdlib.ph");
+
+class foo
+{
+public:
+    func new(a:std.int) ... a(a) { std.out() << "create " << a << "\n"; }
+    func delete(){ std.out() << "delete " << a << "\n"; }
+
+    var a:std.int;
+}
+
+func main()
+{
+    var p = __unchecked_cast ptr foo(std.allocate(8s));
+
+    p[0].new(123);
+    p[1].new(321);
+
+    std.out() << p[0].a << " " << p[1].a << "\n";
+
+    p[0].delete();
+    p[1].delete();
+}
