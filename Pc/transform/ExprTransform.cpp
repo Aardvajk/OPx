@@ -200,14 +200,14 @@ void ExprTransform::visit(ConstructNode &node)
         if(c.tree.current()->container()->type() == Sym::Type::Func)
         {
             auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-            auto temp = pcx::str("temp", info->labels++);
+            auto temp = pcx::str("#temp", info->labels++);
 
             info->temps.push_back(Temp(temp, node.type));
             node.setProperty("temp", temp);
 
             if(c.potentiallySkipped)
             {
-                auto flag = pcx::str(temp, "_flag");
+                auto flag = pcx::str(temp, "_ps_flag");
 
                 info->temps.push_back(Temp(flag, c.types.boolType(), true));
                 node.setProperty("temp_ps_flag", flag);

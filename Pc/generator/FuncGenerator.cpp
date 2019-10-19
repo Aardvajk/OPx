@@ -26,41 +26,10 @@
 namespace
 {
 
-void processTempDestructs(Context &c, std::ostream &os, Location location)
-{
-    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
-
-    for(auto &t: info->tempDestructs)
-    {
-        std::string l0;
-
-        if(!t.flag.empty())
-        {
-            l0 = info->nextLabelQuoted();
-
-            os << "    push &\"" << t.flag << "\";\n";
-            os << "    load 1;\n";
-            os << "    jmp ifz " << l0 << ";\n";
-        }
-
-        auto fn = TypeLookup::assertDeleteMethod(c, location, t.type);
-
-        os << "    push &\"" << t.name << "\";\n";
-        os << "    push &\"" << fn->funcname() << "\";\n";
-        os << "    call;\n";
-
-        if(!t.flag.empty())
-        {
-            os << l0 << ":\n";
-        }
-    }
-
-    info->tempDestructs.clear();
-}
 
 void exitScope(Context &c, std::ostream &os, Node &node, bool returning)
 {
-    processTempDestructs(c, os, node.location());
+    CommonGenerator::processTempDestructs(c, os, node.location());
 
     auto info = c.tree.current()->container()->property<FuncInfo*>("info");
 
@@ -93,7 +62,7 @@ void FuncGenerator::visit(BlockNode &node)
     for(auto &n: node.nodes)
     {
         n->accept(*this);
-        processTempDestructs(c, os, node.location());
+        CommonGenerator::processTempDestructs(c, os, node.location());
     }
 }
 
@@ -268,7 +237,7 @@ void FuncGenerator::visit(ForNode &node)
         os << "    pop " << sz << ";\n";
     }
 
-    processTempDestructs(c, os, node.location());
+    CommonGenerator::processTempDestructs(c, os, node.location());
 
     os << l0 << ":\n";
 
@@ -278,7 +247,7 @@ void FuncGenerator::visit(ForNode &node)
         os << "    jmp ifz " << l1 << ";\n";
     }
 
-    processTempDestructs(c, os, node.location());
+    CommonGenerator::processTempDestructs(c, os, node.location());
 
     node.body->accept(*this);
 
@@ -288,7 +257,7 @@ void FuncGenerator::visit(ForNode &node)
         os << "    pop " << sz << ";\n";
     }
 
-    processTempDestructs(c, os, node.location());
+    CommonGenerator::processTempDestructs(c, os, node.location());
 
     os << "    jmp " << l0 << ";\n";
 

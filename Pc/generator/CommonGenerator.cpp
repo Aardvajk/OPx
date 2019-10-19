@@ -21,16 +21,13 @@ void CommonGenerator::generateBooleanExpression(Context &c, std::ostream &os, No
     auto et = TypeVisitor::assertType(c, node);
 
     ExprGenerator::generate(c, os, node);
+    processTempDestructs(c, os, node->location());
 
     if(!TypeCompare(c).compatible(et, c.types.charType()) && !TypeCompare(c).compatible(et, c.types.boolType()))
     {
         if(et->primitive())
         {
             os << "    test " << Primitive::toString(et->primitiveType()) << ";\n";
-        }
-        else
-        {
-//            throw Error("internal error - boolean cast of non-primitive not supported");
         }
     }
 }
@@ -88,4 +85,36 @@ void CommonGenerator::generateAllDefaultParameters(Context &c, std::ostream &os,
 
         ++i;
     }
+}
+
+void CommonGenerator::processTempDestructs(Context &c, std::ostream &os, Location location)
+{
+    auto info = c.tree.current()->container()->property<FuncInfo*>("info");
+
+    for(auto &t: info->tempDestructs)
+    {
+        std::string l0;
+
+        if(!t.flag.empty())
+        {
+            l0 = info->nextLabelQuoted();
+
+            os << "    push &\"" << t.flag << "\";\n";
+            os << "    load 1;\n";
+            os << "    jmp ifz " << l0 << ";\n";
+        }
+
+        auto fn = TypeLookup::assertDeleteMethod(c, location, t.type);
+
+        os << "    push &\"" << t.name << "\";\n";
+        os << "    push &\"" << fn->funcname() << "\";\n";
+        os << "    call;\n";
+
+        if(!t.flag.empty())
+        {
+            os << l0 << ":\n";
+        }
+    }
+
+    info->tempDestructs.clear();
 }

@@ -231,6 +231,7 @@ void ExprLower::visit(InlineVarNode &node)
 void ExprLower::visit(TernaryNode &node)
 {
     node.expr = ExprLower::lower(c, node.expr);
+
     node.left = ExprLower::lower(c, node.left, expectedType);
     node.right = ExprLower::lower(c, node.right, expectedType);
 }

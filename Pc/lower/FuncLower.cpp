@@ -16,6 +16,8 @@
 
 #include "lower/ExprLower.h"
 
+#include "visitors/TypeVisitor.h"
+
 FuncLower::FuncLower(Context &c) : c(c)
 {
 }
@@ -36,7 +38,7 @@ void FuncLower::visit(ScopeNode &node)
 
 void FuncLower::visit(VarNode &node)
 {
-    if(node.value)
+    if(node.value && TypeVisitor::assertType(c, &node)->primitiveOrRef())
     {
         node.value = ExprLower::lower(c, node.value, node.property<Sym*>("sym")->property<Type*>("type"));
     }

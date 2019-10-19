@@ -225,4 +225,5 @@ HEADERS += \
 
 DISTFILES += \
     ../workspace/pb_c.bat \
-    ../workspace/script.pc
+    ../workspace/script.pc \
+    ../workspace/script.pi
