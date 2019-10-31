@@ -3,6 +3,7 @@ include("stdlib.ph");
 
 class foo
 {
+public:
     func new(x:std.int) ... x(x) { }
 
     func operator++(:std.postfix):foo { var r = foo(this); ++x; return r; }
