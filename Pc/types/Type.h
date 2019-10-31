@@ -5,6 +5,8 @@
 
 #include "scanner/Location.h"
 
+#include "generics/GenericRef.h"
+
 #include <string>
 #include <vector>
 
@@ -36,6 +38,7 @@ public:
     static Type makePrimary(Sym *sym);
     static Type makePrimary(bool constant, bool ref, Sym *sym);
     static Type makeFunction(Type *returnType, const std::vector<Type*> &args = { });
+    static Type makeGeneric(const GenericRef &ref);
 
     static std::size_t assertSize(Location location, const Type *type);
 
@@ -52,6 +55,8 @@ public:
 
     bool method;
     bool constMethod;
+
+    pcx::optional<GenericRef> generic;
 };
 
 #endif // TYPE_H

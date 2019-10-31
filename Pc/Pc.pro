@@ -44,6 +44,9 @@ SOURCES += \
         generator/Generator.cpp \
         generator/GlobalsGenerator.cpp \
         generator/LocalsGenerator.cpp \
+        generics/Generic.cpp \
+        generics/GenericParams.cpp \
+        generics/GenericStack.cpp \
         info/FuncInfo.cpp \
         lower/ExprLower.cpp \
         lower/FuncLower.cpp \
@@ -144,6 +147,10 @@ HEADERS += \
     generator/Generator.h \
     generator/GlobalsGenerator.h \
     generator/LocalsGenerator.h \
+    generics/Generic.h \
+    generics/GenericParams.h \
+    generics/GenericRef.h \
+    generics/GenericStack.h \
     info/Access.h \
     info/FuncInfo.h \
     info/Qual.h \

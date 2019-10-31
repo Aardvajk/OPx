@@ -49,6 +49,11 @@ bool TypeCompare::compatible(const Type *a, const Type *b) const
         return false;
     }
 
+    if(a->generic != b->generic)
+    {
+        return false;
+    }
+
     return true;
 }
 

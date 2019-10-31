@@ -16,6 +16,7 @@ Node *FuncNode::clone() const
 {
     auto f = cloneNode(this, new FuncNode(location(), name->clone()));
 
+    f->generics = generics;
     f->args = listClone(args);
     f->inits = listClone(inits);
     f->type = safeClone(type);

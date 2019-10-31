@@ -7,6 +7,7 @@
 #include "types/Type.h"
 
 #include <pcx/str.h>
+#include <pcx/join_str.h>
 
 namespace
 {
@@ -62,7 +63,14 @@ void dump(Context &c, int tab, const Sym *sym, std::ostream &os)
 
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
-    os << ts << access(sym) << " " << type(sym) << " " << sym->fullname();
+    os << ts << access(sym) << " " << type(sym);
+
+    if(auto gp = sym->findProperty("generics"))
+    {
+        os << "<" << pcx::join_str(gp.to<GenericParams>().params, ", ", [](const Generic &g){ return g.name; }) << ">";
+    }
+
+    os << " " << sym->fullname();
 
     if(auto s = sym->findProperty("size"))
     {

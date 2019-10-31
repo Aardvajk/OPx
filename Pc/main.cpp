@@ -65,8 +65,6 @@ int main(int argc, char *argv[])
 auto cn = n->clone();
 n = { };
 
-std::cout << "n is dead\n";
-
 n = cn;
 
         if(!c.option("q"))

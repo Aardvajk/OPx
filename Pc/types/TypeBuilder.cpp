@@ -24,6 +24,10 @@ void TypeBuilder::visit(TypeNode &node)
             t.args.push_back(Visitor::query<TypeBuilder, Type*>(a.get(), c));
         }
     }
+    else if(auto r = c.generics.typeRef(node.name.get()))
+    {
+        t = Type::makeGeneric(*r);
+    }
     else
     {
         std::vector<Sym*> sv;

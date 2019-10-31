@@ -44,6 +44,18 @@ void buildNamespace(Context &c, BlockNode *block, bool get)
     n->body = CommonParser::blockContents(c, n->location(), false);
 }
 
+void buildGenerics(Context &c, GenericParams &params, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Id, get);
+    params.params.emplace_back(Generic(tok.text()));
+
+    tok = c.scanner.next(true);
+    if(tok.type() == Token::Type::Comma)
+    {
+        buildGenerics(c, params, true);
+    }
+}
+
 void buildArgs(Context &c, NodeList &container, bool get)
 {
     std::string name;
@@ -114,7 +126,16 @@ void buildInits(Context &c, NodeList &container, bool get)
 
 void buildFunc(Context &c, Qual::Flags quals, BlockNode *block, bool get)
 {
-    auto name = CommonParser::extendedName(c, get);
+    GenericParams generics;
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::Lt)
+    {
+        buildGenerics(c, generics, true);
+        c.scanner.consume(Token::Type::Gt, false);
+    }
+
+    auto name = CommonParser::extendedName(c, false);
 
     if(c.containers.back() == Sym::Type::Func)
     {
@@ -129,8 +150,9 @@ void buildFunc(Context &c, Qual::Flags quals, BlockNode *block, bool get)
     n->setProperty("access", c.access.back());
     n->setProperty("free", quals[Qual::Flag::Free]);
     n->setProperty("explicit", quals[Qual::Flag::Explicit]);
+    n->generics = generics;
 
-    auto tok = c.scanner.consume(Token::Type::LeftParen, false);
+    tok = c.scanner.consume(Token::Type::LeftParen, false);
     if(tok.type() != Token::Type::RightParen)
     {
         buildArgs(c, n->args, false);

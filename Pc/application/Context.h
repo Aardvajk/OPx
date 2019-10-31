@@ -11,6 +11,8 @@
 #include "info/Access.h"
 #include "info/FuncInfo.h"
 
+#include "generics/GenericStack.h"
+
 #include <pcx/args.h>
 #include <pcx/ptr_vector.h>
 
@@ -43,6 +45,7 @@ public:
     std::vector<Access> access;
 
     pcx::ptr_vector<FuncInfo> funcInfos;
+    GenericStack generics;
 
     std::size_t classDepth;
     std::vector<FuncNode*> deferredMethods;

@@ -32,6 +32,10 @@ std::string toString(const Type *type)
     {
         s += type->sym->fullname();
     }
+    else if(type->generic)
+    {
+        s += pcx::str("<", type->generic->index, ",", type->generic->depth, ">");
+    }
     else
     {
         s += "(" + pcx::join_str(type->args, ",", toString) + ")";
@@ -172,6 +176,14 @@ Type Type::makeFunction(Type *returnType, const std::vector<Type*> &args)
     Type t;
     t.returnType = returnType;
     t.args = args;
+
+    return t;
+}
+
+Type Type::makeGeneric(const GenericRef &ref)
+{
+    Type t;
+    t.generic = ref;
 
     return t;
 }

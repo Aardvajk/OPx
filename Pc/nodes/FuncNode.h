@@ -3,6 +3,8 @@
 
 #include "nodes/Node.h"
 
+#include "generics/GenericParams.h"
+
 class FuncNode : public Node
 {
 public:
@@ -14,6 +16,7 @@ public:
     virtual Node *clone() const override;
 
     NodePtr name;
+    GenericParams generics;
     NodeList args;
     NodeList inits;
     NodePtr type;

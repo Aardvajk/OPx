@@ -35,6 +35,7 @@
 #include "generator/ByteListGenerator.h"
 
 #include <pcx/scoped_counter.h>
+#include <pcx/scoped_push.h>
 
 namespace
 {
@@ -143,6 +144,8 @@ void Decorator::visit(NamespaceNode &node)
 
 void Decorator::visit(FuncNode &node)
 {
+    auto gp = pcx::scoped_push(c.generics, node.generics);
+
     std::size_t defaults = 0;
     for(auto &a: node.args)
     {
@@ -189,6 +192,14 @@ void Decorator::visit(FuncNode &node)
             throw Error(node.location(), "mismatched return type - ", node.name->description());
         }
 
+        if(auto gp = sym->findProperty("generics"))
+        {
+            if(!gp.to<GenericParams>().namesEquivalent(node.generics))
+            {
+                throw Error(node.location(), "mismatched generics - ", node.name->description());
+            }
+        }
+
         if(sym->findProperty("defaults") && defaults)
         {
             throw Error(node.location(), "defaults already declared - ", node.description());
@@ -215,6 +226,11 @@ void Decorator::visit(FuncNode &node)
         sym->setProperty("method", t.method);
         sym->setProperty("explicit", node.findProperty("explicit").value<bool>());
         sym->setProperty("funcnode", &node);
+
+        if(node.generics)
+        {
+            sym->setProperty("generics", node.generics);
+        }
 
         if(defaults)
         {

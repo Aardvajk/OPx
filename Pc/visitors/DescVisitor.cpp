@@ -106,6 +106,11 @@ void DescVisitor::visit(TypeNode &node)
 
 void DescVisitor::visit(FuncNode &node)
 {
+    if(node.generics)
+    {
+        r += pcx::str("<", pcx::join_str(node.generics.params, ", ", [](const Generic &g){ return g.name; }), "> ");
+    }
+
     if(node.findProperty("free").value<bool>())
     {
         r += "free ";
