@@ -11,3 +11,15 @@ std::string ForNode::classname() const
 {
     return "for";
 }
+
+Node *ForNode::clone() const
+{
+    auto f = new ForNode(location());
+
+    f->init = safeClone(init);
+    f->cond = safeClone(cond);
+    f->post = safeClone(post);
+    f->body = safeClone(body);
+
+    return f;
+}

@@ -11,3 +11,11 @@ std::string ConstructNode::classname() const
 {
     return "construct";
 }
+
+Node *ConstructNode::clone() const
+{
+    auto c = new ConstructNode(location(), type);
+    c->params = listClone(params);
+
+    return c;
+}

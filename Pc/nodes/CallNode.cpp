@@ -11,3 +11,11 @@ std::string CallNode::classname() const
 {
     return "call";
 }
+
+Node *CallNode::clone() const
+{
+    auto c = new CallNode(location(), target);
+    c->params = listClone(params);
+
+    return c;
+}

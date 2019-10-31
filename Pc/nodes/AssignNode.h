@@ -6,10 +6,12 @@
 class AssignNode : public Node
 {
 public:
-    AssignNode(Location location, NodePtr target) : Node(location), target(target) { }
+    AssignNode(Location location, NodePtr target, NodePtr expr = { }) : Node(location), target(target) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
+
+    virtual Node *clone() const override;
 
     NodePtr target;
     NodePtr expr;

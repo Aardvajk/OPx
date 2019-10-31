@@ -11,3 +11,8 @@ std::string AddrOfNode::classname() const
 {
     return "addrof";
 }
+
+Node *AddrOfNode::clone() const
+{
+    return new AddrOfNode(location(), safeClone(expr));
+}

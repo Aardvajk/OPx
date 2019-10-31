@@ -11,3 +11,8 @@ std::string AssignNode::classname() const
 {
     return "assign";
 }
+
+Node *AssignNode::clone() const
+{
+    return new AssignNode(location(), safeClone(target), safeClone(expr));
+}

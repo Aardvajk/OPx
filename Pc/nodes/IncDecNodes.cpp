@@ -14,6 +14,11 @@ std::string PreIncDecNode::classname() const
     return pcx::str("pre", token.text());
 }
 
+Node *PreIncDecNode::clone() const
+{
+    return new PreIncDecNode(location(), token, safeClone(expr));
+}
+
 void PostIncDecNode::accept(Visitor &v)
 {
     v.visit(*this);
@@ -22,4 +27,9 @@ void PostIncDecNode::accept(Visitor &v)
 std::string PostIncDecNode::classname() const
 {
     return pcx::str("post", token.text());
+}
+
+Node *PostIncDecNode::clone() const
+{
+    return new PostIncDecNode(location(), token, safeClone(expr));
 }

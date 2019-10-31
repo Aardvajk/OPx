@@ -14,6 +14,8 @@ public:
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
 
+    virtual Node *clone() const override;
+
     Type *type;
     NodeList params;
     NodePtr target;

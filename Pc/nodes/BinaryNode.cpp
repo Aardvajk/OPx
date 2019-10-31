@@ -13,3 +13,8 @@ std::string BinaryNode::classname() const
 {
     return pcx::str("binary", token.text());
 }
+
+Node *BinaryNode::clone() const
+{
+    return new BinaryNode(location(), token, safeClone(left), safeClone(right));
+}

@@ -22,3 +22,14 @@ NodePtr IdNode::create(Location location, const std::vector<std::string> &names)
 
     return pn;
 }
+
+Node *IdNode::clone() const
+{
+    auto i = new IdNode(location(), safeClone(parent), name);
+
+    i->special = special;
+    i->op = op;
+    i->arrow = arrow;
+
+    return i;
+}

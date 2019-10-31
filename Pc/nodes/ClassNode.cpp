@@ -11,3 +11,8 @@ std::string ClassNode::classname() const
 {
     return "class";
 }
+
+Node *ClassNode::clone() const
+{
+    return new ClassNode(location(), safeClone(name), safeClone(body));
+}

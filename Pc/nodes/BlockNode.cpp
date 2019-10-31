@@ -12,6 +12,14 @@ std::string BlockNode::classname() const
     return "block";
 }
 
+Node *BlockNode::clone() const
+{
+    auto b = new BlockNode(location());
+    b->nodes = listClone(nodes);
+
+    return b;
+}
+
 void BlockNode::push_back(Node *node)
 {
     nodes.push_back(node);

@@ -13,6 +13,8 @@ public:
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
 
+    virtual Node *clone() const override;
+
     Token token;
     NodePtr left;
     NodePtr right;

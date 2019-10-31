@@ -13,6 +13,8 @@ public:
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
 
+    virtual Node *clone() const override;
+
     static NodePtr create(Location location, const std::vector<std::string> &names);
 
     NodePtr parent;

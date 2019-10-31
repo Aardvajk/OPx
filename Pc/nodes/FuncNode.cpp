@@ -11,3 +11,18 @@ std::string FuncNode::classname() const
 {
     return "func";
 }
+
+Node *FuncNode::clone() const
+{
+    auto f = new FuncNode(location(), name->clone());
+
+    f->args = listClone(args);
+    f->inits = listClone(inits);
+    f->type = safeClone(type);
+    f->body = safeClone(body);
+    f->constMethod = constMethod;
+
+    return f;
+}
+
+

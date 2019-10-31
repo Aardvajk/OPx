@@ -8,10 +8,12 @@
 class PreIncDecNode : public Node
 {
 public:
-    PreIncDecNode(Location location, const Token &token) : Node(location), token(token) { }
+    PreIncDecNode(Location location, const Token &token, NodePtr expr = { }) : Node(location), token(token) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
+
+    virtual Node *clone() const override;
 
     Token token;
     NodePtr expr;
@@ -24,6 +26,8 @@ public:
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
+
+    virtual Node *clone() const override;
 
     Token token;
     NodePtr expr;
