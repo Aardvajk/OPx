@@ -42,6 +42,8 @@ public:
     template<typename T> T property(const std::string &key) const;
 
 protected:
+    template<typename T> static T *cloneNode(const Node *from, T *to){ to->pm = from->pm; return to; }
+
     static Node *safeClone(const NodePtr &n);
     static NodeList listClone(const NodeList &n);
 

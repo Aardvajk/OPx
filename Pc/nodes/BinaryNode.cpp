@@ -16,5 +16,5 @@ std::string BinaryNode::classname() const
 
 Node *BinaryNode::clone() const
 {
-    return new BinaryNode(location(), token, safeClone(left), safeClone(right));
+    return cloneNode(this, new BinaryNode(location(), token, safeClone(left), safeClone(right)));
 }

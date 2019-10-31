@@ -11,3 +11,12 @@ std::string ProxyCallNode::classname() const
 {
     return "proxycall";
 }
+
+Node *ProxyCallNode::clone() const
+{
+    auto p = cloneNode(this, new ProxyCallNode(location(), sym, safeClone(thisNode)));
+
+    p->params = listClone(params);
+
+    return p;
+}

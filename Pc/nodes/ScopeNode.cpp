@@ -11,3 +11,8 @@ std::string ScopeNode::classname() const
 {
     return "scope";
 }
+
+Node *ScopeNode::clone() const
+{
+    return cloneNode(this, new ScopeNode(location(), safeClone(body)));
+}

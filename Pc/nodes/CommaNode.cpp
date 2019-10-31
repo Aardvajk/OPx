@@ -14,5 +14,5 @@ std::string CommaNode::classname() const
 
 Node *CommaNode::clone() const
 {
-    return new CommaNode(location(), safeClone(left), safeClone(right));
+    return cloneNode(this, new CommaNode(location(), safeClone(left), safeClone(right)));
 }

@@ -14,5 +14,5 @@ std::string ExprNode::classname() const
 
 Node *ExprNode::clone() const
 {
-    return new ExprNode(location(), safeClone(expr));
+    return cloneNode(this, new ExprNode(location(), safeClone(expr)));
 }

@@ -8,10 +8,12 @@
 class PragmaNode : public Node
 {
 public:
-    PragmaNode(Location location, Pragmas::Type type) : Node(location), type(type) { }
+    PragmaNode(Location location, Pragmas::Type type, std::string arg = { }) : Node(location), type(type), arg(std::move(arg)) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
+
+    virtual Node *clone() const override;
 
     Pragmas::Type type;
     std::string arg;

@@ -13,3 +13,8 @@ std::string UnaryNode::classname() const
 {
     return pcx::str("unary", token.text());
 }
+
+Node *UnaryNode::clone() const
+{
+    return cloneNode(this, new UnaryNode(location(), token, safeClone(expr)));
+}

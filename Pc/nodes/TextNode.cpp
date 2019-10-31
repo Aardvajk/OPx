@@ -11,3 +11,8 @@ std::string TextNode::classname() const
 {
     return "text";
 }
+
+Node *TextNode::clone() const
+{
+    return cloneNode(this, new TextNode(location(), value));
+}

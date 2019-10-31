@@ -14,7 +14,7 @@ std::string CallNode::classname() const
 
 Node *CallNode::clone() const
 {
-    auto c = new CallNode(location(), target);
+    auto c = cloneNode(this, new CallNode(location(), target));
     c->params = listClone(params);
 
     return c;

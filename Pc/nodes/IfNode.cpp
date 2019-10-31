@@ -14,7 +14,7 @@ std::string IfNode::classname() const
 
 Node *IfNode::clone() const
 {
-    auto i = new IfNode(location());
+    auto i = cloneNode(this, new IfNode(location()));
 
     i->expr = safeClone(expr);
     i->body = safeClone(body);

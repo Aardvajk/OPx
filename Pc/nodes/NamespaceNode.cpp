@@ -11,3 +11,8 @@ std::string NamespaceNode::classname() const
 {
     return "namespace";
 }
+
+Node *NamespaceNode::clone() const
+{
+    return cloneNode(this, new NamespaceNode(location(), safeClone(name), safeClone(body)));
+}

@@ -11,8 +11,9 @@ public:
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
 
-    bool function;
+    virtual Node *clone() const override;
 
+    bool function;
     bool constant;
     bool ref;
 

@@ -11,3 +11,8 @@ std::string UncheckedCastNode::classname() const
 {
     return "uncheckedcast";
 }
+
+Node *UncheckedCastNode::clone() const
+{
+    return cloneNode(this, new UncheckedCastNode(location(), safeClone(type), safeClone(expr)));
+}

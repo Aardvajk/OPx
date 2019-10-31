@@ -62,6 +62,13 @@ int main(int argc, char *argv[])
 
         auto n = Parser::build(c);
 
+auto cn = n->clone();
+n = { };
+
+std::cout << "n is dead\n";
+
+n = cn;
+
         if(!c.option("q"))
         {
             std::cout << banner("nodes");

@@ -11,3 +11,8 @@ std::string PragmaNode::classname() const
 {
     return "pragma";
 }
+
+Node *PragmaNode::clone() const
+{
+    return cloneNode(this, new PragmaNode(location(), type, arg));
+}

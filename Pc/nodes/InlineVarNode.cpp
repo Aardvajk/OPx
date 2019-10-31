@@ -11,3 +11,8 @@ std::string InlineVarNode::classname() const
 {
     return "inlinevar";
 }
+
+Node *InlineVarNode::clone() const
+{
+    return cloneNode(this, new InlineVarNode(location(), safeClone(body)));
+}

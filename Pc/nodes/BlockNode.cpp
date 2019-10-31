@@ -14,8 +14,11 @@ std::string BlockNode::classname() const
 
 Node *BlockNode::clone() const
 {
-    auto b = new BlockNode(location());
-    b->nodes = listClone(nodes);
+    auto b = cloneNode(this, new BlockNode(location()));
+    for(auto &n: nodes)
+    {
+        b->push_back(n->clone());
+    }
 
     return b;
 }

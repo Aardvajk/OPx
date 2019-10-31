@@ -6,10 +6,12 @@
 class ScopeNode : public Node
 {
 public:
-    explicit ScopeNode(Location location) : Node(location) { }
+    explicit ScopeNode(Location location, NodePtr body = { }) : Node(location), body(body) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
+
+    virtual Node *clone() const override;
 
     NodePtr body;
 };

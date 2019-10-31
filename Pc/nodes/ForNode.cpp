@@ -14,7 +14,7 @@ std::string ForNode::classname() const
 
 Node *ForNode::clone() const
 {
-    auto f = new ForNode(location());
+    auto f = cloneNode(this, new ForNode(location()));
 
     f->init = safeClone(init);
     f->cond = safeClone(cond);

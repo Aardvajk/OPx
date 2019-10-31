@@ -14,7 +14,7 @@ std::string FuncNode::classname() const
 
 Node *FuncNode::clone() const
 {
-    auto f = new FuncNode(location(), name->clone());
+    auto f = cloneNode(this, new FuncNode(location(), name->clone()));
 
     f->args = listClone(args);
     f->inits = listClone(inits);

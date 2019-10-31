@@ -8,10 +8,12 @@
 class UnaryNode : public Node
 {
 public:
-    UnaryNode(Location location, const Token &token) : Node(location), token(token) { }
+    UnaryNode(Location location, const Token &token, NodePtr expr = { }) : Node(location), token(token), expr(expr) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
+
+    virtual Node *clone() const override;
 
     Token token;
     NodePtr expr;

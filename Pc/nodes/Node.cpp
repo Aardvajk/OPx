@@ -28,7 +28,15 @@ std::string Node::description() const
 
 Node *Node::safeClone(const NodePtr &n)
 {
-    return n ? n->clone() : static_cast<Node*>(nullptr);
+    if(n)
+    {
+        auto r = n->clone();
+        r->pm = n->pm;
+
+        return r;
+    }
+
+    return nullptr;
 }
 
 NodeList Node::listClone(const NodeList &n)

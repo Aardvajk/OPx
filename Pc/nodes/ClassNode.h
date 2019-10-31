@@ -6,7 +6,7 @@
 class ClassNode : public Node
 {
 public:
-    ClassNode(Location location, NodePtr name, NodePtr body = { }) : Node(location), name(name) { }
+    ClassNode(Location location, NodePtr name, NodePtr body = { }) : Node(location), name(name), body(body) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;

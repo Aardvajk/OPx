@@ -14,5 +14,5 @@ std::string DerefNode::classname() const
 
 Node *DerefNode::clone() const
 {
-    return new DerefNode(location(), safeClone(expr));
+    return cloneNode(this, new DerefNode(location(), safeClone(expr)));
 }

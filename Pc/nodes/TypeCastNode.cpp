@@ -11,3 +11,8 @@ std::string TypeCastNode::classname() const
 {
     return "typecast";
 }
+
+Node *TypeCastNode::clone() const
+{
+    return cloneNode(this, new TypeCastNode(location(), type, safeClone(expr)));
+}

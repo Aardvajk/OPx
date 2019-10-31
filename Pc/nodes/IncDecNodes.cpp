@@ -31,5 +31,5 @@ std::string PostIncDecNode::classname() const
 
 Node *PostIncDecNode::clone() const
 {
-    return new PostIncDecNode(location(), token, safeClone(expr));
+    return cloneNode(this, new PostIncDecNode(location(), token, safeClone(expr)));
 }

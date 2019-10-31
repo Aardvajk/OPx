@@ -11,3 +11,8 @@ std::string ThisNode::classname() const
 {
     return "this";
 }
+
+Node *ThisNode::clone() const
+{
+    return cloneNode(this, new ThisNode(location()));
+}

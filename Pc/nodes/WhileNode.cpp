@@ -11,3 +11,13 @@ std::string WhileNode::classname() const
 {
     return "while";
 }
+
+Node *WhileNode::clone() const
+{
+    auto w = cloneNode(this, new WhileNode(location()));
+
+    w->expr = safeClone(expr);
+    w->body = safeClone(body);
+
+    return w;
+}

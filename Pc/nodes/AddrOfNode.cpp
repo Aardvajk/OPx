@@ -14,5 +14,5 @@ std::string AddrOfNode::classname() const
 
 Node *AddrOfNode::clone() const
 {
-    return new AddrOfNode(location(), safeClone(expr));
+    return cloneNode(this, new AddrOfNode(location(), safeClone(expr)));
 }
