@@ -33,6 +33,33 @@
 
 #include <initializer_list>
 
+#include "nodes/FuncNode.h"
+
+namespace
+{
+
+void processGenericUsage(Context &c, GenericUsage &u)
+{
+    NodePtr n = u.node->clone();
+    auto fn = static_cast<FuncNode*>(n.get());
+
+    auto sym = fn->property<Sym*>("sym");
+    sym->clear();
+
+    auto gg = pcx::scoped_push(c.generics, fn->generics.combine(u.types));
+    auto ig = pcx::scoped_lock(c.instantiating);
+
+    Decorator::decorateFunction(c, fn);
+
+    std::cout << banner(Generic::funcName(sym, u.types), " symbols");
+    SymPrinter::print(c, c.tree.root(), std::cout);
+
+    std::cout << banner("decorated nodes");
+    Visitor::visit<AstPrinter>(fn, c, std::cout);
+}
+
+}
+
 int main(int argc, char *argv[])
 {
     std::vector<std::string> files;
@@ -67,22 +94,36 @@ n = { };
 
 n = cn;
 
-        if(!c.option("q"))
-        {
-            std::cout << banner("nodes");
-            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-        }
+//        if(!c.option("q"))
+//        {
+//            std::cout << banner("nodes");
+//            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
+//        }
 
         Decorator::decorate(c, n);
 
-        if(!c.option("q"))
-        {
-            std::cout << banner("symbols");
-            SymPrinter::print(c, c.tree.root(), std::cout);
+//        if(!c.option("q"))
+//        {
+//            std::cout << banner("symbols");
+//            SymPrinter::print(c, c.tree.root(), std::cout);
 
-            std::cout << banner("decorated nodes");
-            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-        }
+//            std::cout << banner("decorated nodes");
+//            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
+//        }
+
+std::cout << banner("generic usages");
+for(auto u: c.genericUsages)
+{
+    std::cout << Generic::funcName(u.node->property<Sym*>("sym"), u.types) << "\n";
+}
+
+for(auto &u: c.genericUsages)
+{
+    processGenericUsage(c, u);
+}
+
+std::cout << banner();
+return 0;
 
         Visitor::visit<Convert>(n.get(), c);
 

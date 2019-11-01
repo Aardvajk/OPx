@@ -10,10 +10,7 @@ Sym::Sym(Type type, Location location, Access access, std::string name) : t(type
 
 Sym::~Sym()
 {
-    for(auto s: cs)
-    {
-        delete s;
-    }
+    clear();
 }
 
 Sym *Sym::add(Sym *sym)
@@ -30,6 +27,16 @@ Sym *Sym::insert(std::size_t pos, Sym *sym)
     sym->ps = this;
 
     return sym;
+}
+
+void Sym::clear()
+{
+    for(auto s: cs)
+    {
+        delete s;
+    }
+
+    cs.clear();
 }
 
 Sym *Sym::child(const std::string &name)

@@ -12,9 +12,11 @@
 #include "info/FuncInfo.h"
 
 #include "generics/GenericStack.h"
+#include "generics/GenericUsageSet.h"
 
 #include <pcx/args.h>
 #include <pcx/ptr_vector.h>
+#include <pcx/scoped_lock.h>
 
 #include <unordered_map>
 
@@ -45,7 +47,10 @@ public:
     std::vector<Access> access;
 
     pcx::ptr_vector<FuncInfo> funcInfos;
+
     GenericStack generics;
+    GenericUsageSet genericUsages;
+    pcx::lock instantiating;
 
     std::size_t classDepth;
     std::vector<FuncNode*> deferredMethods;

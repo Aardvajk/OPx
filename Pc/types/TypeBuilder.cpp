@@ -26,7 +26,14 @@ void TypeBuilder::visit(TypeNode &node)
     }
     else if(auto r = c.generics.typeRef(node.name.get()))
     {
-        t = Type::makeGeneric(*r);
+        if(c.instantiating)
+        {
+            t = *c.generics.type(*r);
+        }
+        else
+        {
+            t = Type::makeGeneric(*r);
+        }
     }
     else
     {

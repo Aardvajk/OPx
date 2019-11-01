@@ -34,6 +34,16 @@ NodePtr entity(Context &c, bool get);
 NodePtr expression(Context &c, bool get);
 NodePtr expressionList(Context &c, bool get);
 
+void buildGenerics(Context &c, NodeList &generics, bool get)
+{
+    generics.push_back(TypeParser::build(c, get));
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        buildGenerics(c, generics, true);
+    }
+}
+
 NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
 {
     std::string text;

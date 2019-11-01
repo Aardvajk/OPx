@@ -13,6 +13,7 @@ public:
     operator bool() const { return !params.empty(); }
 
     bool namesEquivalent(const GenericParams &g) const;
+    GenericParams combine(const std::vector<Type*> &types) const;
 
     std::vector<Generic> params;
 };

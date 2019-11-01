@@ -30,6 +30,7 @@ public:
 
     Sym *add(Sym *sym);
     Sym *insert(std::size_t pos, Sym *sym);
+    void clear();
 
     Sym *child(const std::string &name);
     Sym *container();

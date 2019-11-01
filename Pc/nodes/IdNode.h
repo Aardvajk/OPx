@@ -5,6 +5,8 @@
 
 #include "nodes/Node.h"
 
+class Type;
+
 class IdNode : public Node
 {
 public:

@@ -27,3 +27,8 @@ pcx::optional<GenericRef> GenericStack::typeRef(Node *name) const
 
     return { };
 }
+
+Type *GenericStack::type(const GenericRef &ref) const
+{
+    return v.back().params[ref.index].type;
+}

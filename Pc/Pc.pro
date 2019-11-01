@@ -47,6 +47,7 @@ SOURCES += \
         generics/Generic.cpp \
         generics/GenericParams.cpp \
         generics/GenericStack.cpp \
+        generics/GenericUsageSet.cpp \
         info/FuncInfo.cpp \
         lower/ExprLower.cpp \
         lower/FuncLower.cpp \
@@ -151,6 +152,8 @@ HEADERS += \
     generics/GenericParams.h \
     generics/GenericRef.h \
     generics/GenericStack.h \
+    generics/GenericUsage.h \
+    generics/GenericUsageSet.h \
     info/Access.h \
     info/FuncInfo.h \
     info/Qual.h \

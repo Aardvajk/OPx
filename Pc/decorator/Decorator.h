@@ -20,6 +20,7 @@ public:
     virtual void visit(PragmaNode &node) override;
 
     static void decorate(Context &c, NodePtr node);
+    static void decorateFunction(Context &c, FuncNode *node);
 
 private:
     Context &c;

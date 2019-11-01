@@ -82,7 +82,7 @@ Sym *searchFunc(Context &c, Node *node, const Type *type)
 
 void decorateFunctionBody(Context &c, FuncNode &node, Sym *sym)
 {
-    if(sym->findProperty("defined").value<bool>())
+    if(sym->findProperty("defined").value<bool>() && !c.instantiating)
     {
         throw Error(node.location(), "already defined - ", sym->fullname());
     }
@@ -255,7 +255,7 @@ void Decorator::visit(FuncNode &node)
 
     node.setProperty("sym", sym);
 
-    if(node.body)
+    if(node.body && !node.generics)
     {
         if(c.tree.current()->container()->type() == Sym::Type::Class && c.classDepth)
         {
@@ -265,6 +265,12 @@ void Decorator::visit(FuncNode &node)
         {
             decorateFunctionBody(c, node, sym);
         }
+    }
+
+    if(node.generics)
+    {
+        c.genericUsages.insert(c, GenericUsage(&node, { c.types.intType() }));
+        c.genericUsages.insert(c, GenericUsage(&node, { c.types.charType() }));
     }
 }
 
@@ -358,4 +364,9 @@ void Decorator::decorate(Context &c, NodePtr node)
 {
     Decorator d(c, node);
     node->accept(d);
+}
+
+void Decorator::decorateFunction(Context &c, FuncNode *node)
+{
+    decorateFunctionBody(c, *node, node->property<Sym*>("sym"));
 }

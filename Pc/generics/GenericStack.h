@@ -19,6 +19,7 @@ public:
     void pop_back(){ v.pop_back(); }
 
     pcx::optional<GenericRef> typeRef(Node *name) const;
+    Type *type(const GenericRef &ref) const;
 
 private:
     std::vector<GenericParams> v;
