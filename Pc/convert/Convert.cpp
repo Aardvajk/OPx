@@ -40,7 +40,7 @@ void Convert::visit(FuncNode &node)
         a->accept(*this);
     }
 
-    if(node.body)
+    if(node.body && (!node.generics || c.instantiating))
     {
         auto sg = c.tree.open(node.property<Sym*>("sym"));
         Visitor::visit<FuncConvert>(node.body.get(), c);

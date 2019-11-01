@@ -7,7 +7,7 @@ namespace LowerTypes
 {
 
 void convertRefsToPtrs(Context &c);
-void removeRefs(Context &c);
+void convertPtrsToRefs(Context &c);
 
 }
 

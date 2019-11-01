@@ -65,6 +65,11 @@ void Generator::visit(NamespaceNode &node)
 
 void Generator::visit(FuncNode &node)
 {
+    if(node.generics && !c.instantiating)
+    {
+        return;
+    }
+
     if(c.classDepth)
     {
         c.deferredMethods.push_back(&node);

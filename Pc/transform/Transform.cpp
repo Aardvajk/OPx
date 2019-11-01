@@ -144,7 +144,7 @@ void Transform::visit(FuncNode &node)
         }
     }
 
-    if(node.body)
+    if(node.body && (!node.generics || c.instantiating))
     {
         auto sg = c.tree.open(node.property<Sym*>("sym"));
 

@@ -15,10 +15,13 @@ void LowerTypes::convertRefsToPtrs(Context &c)
     }
 }
 
-void LowerTypes::removeRefs(Context &c)
+void LowerTypes::convertPtrsToRefs(Context &c)
 {
     for(auto &t: c.types)
     {
-        t.ref = false;
+        if(t.ref)
+        {
+            --t.ptr;
+        }
     }
 }

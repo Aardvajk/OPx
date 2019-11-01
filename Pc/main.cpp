@@ -46,6 +46,8 @@ void processGenericUsage(Context &c, GenericUsage &u)
     auto sym = fn->property<Sym*>("sym");
     sym->clear();
 
+    LowerTypes::convertPtrsToRefs(c);
+
     auto gg = pcx::scoped_push(c.generics, fn->generics.combine(u.types));
     auto ig = pcx::scoped_lock(c.instantiating);
 
@@ -56,9 +58,34 @@ void processGenericUsage(Context &c, GenericUsage &u)
 
     std::cout << banner("decorated nodes");
     Visitor::visit<AstPrinter>(fn, c, std::cout);
+
+    Visitor::visit<Convert>(fn, c);
+
+    std::cout << banner("converted nodes");
+    Visitor::visit<AstPrinter>(fn, c, std::cout);
+
+    Visitor::visit<Transform>(fn, c);
+
+    std::cout << banner("transformed nodes");
+    Visitor::visit<AstPrinter>(fn, c, std::cout);
+
+    LowerTypes::convertRefsToPtrs(c);
+    Visitor::visit<Lower>(n.get(), c);
+
+    std::cout << banner("lowered nodes");
+    Visitor::visit<AstPrinter>(fn, c, std::cout);
+
+    std::cout << banner("generate");
+    Visitor::visit<Generator>(fn, c, std::cout);
+
+    std::cout << banner("end");
 }
 
 }
+
+#include "nodes/BlockNode.h"
+#include "nodes/FuncNode.h"
+#include "visitors/NameVisitors.h"
 
 int main(int argc, char *argv[])
 {
@@ -94,36 +121,40 @@ n = { };
 
 n = cn;
 
-//        if(!c.option("q"))
-//        {
-//            std::cout << banner("nodes");
-//            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-//        }
+auto b = static_cast<BlockNode*>(n.get());
+for(auto &n: b->nodes)
+{
+    if(auto f = dynamic_cast<FuncNode*>(n.get()))
+    {
+        auto tag = Visitor::query<NameVisitors::LastIdOfName, std::string>(f->name.get());
+
+        if(tag.substr(0, 9) == "#global_i")
+        {
+            c.globalInit = f;
+        }
+        else if(tag.substr(0, 9) == "#global_d")
+        {
+            c.globalDestroy = f;
+        }
+    }
+}
+
+        if(!c.option("q"))
+        {
+            std::cout << banner("nodes");
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
+        }
 
         Decorator::decorate(c, n);
 
-//        if(!c.option("q"))
-//        {
-//            std::cout << banner("symbols");
-//            SymPrinter::print(c, c.tree.root(), std::cout);
+        if(!c.option("q"))
+        {
+            std::cout << banner("symbols");
+            SymPrinter::print(c, c.tree.root(), std::cout);
 
-//            std::cout << banner("decorated nodes");
-//            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
-//        }
-
-std::cout << banner("generic usages");
-for(auto u: c.genericUsages)
-{
-    std::cout << Generic::funcName(u.node->property<Sym*>("sym"), u.types) << "\n";
-}
-
-for(auto &u: c.genericUsages)
-{
-    processGenericUsage(c, u);
-}
-
-std::cout << banner();
-return 0;
+            std::cout << banner("decorated nodes");
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
+        }
 
         Visitor::visit<Convert>(n.get(), c);
 
@@ -143,7 +174,6 @@ return 0;
 
         LowerTypes::convertRefsToPtrs(c);
         Visitor::visit<Lower>(n.get(), c);
-        LowerTypes::removeRefs(c);
 
         if(!c.option("q"))
         {
@@ -166,6 +196,20 @@ return 0;
             GlobalsGenerator::generate(c, std::cout);
             Visitor::visit<Generator>(n.get(), c, std::cout);
         }
+
+std::cout << banner("generic usages");
+for(auto u: c.genericUsages)
+{
+    std::cout << Generic::funcName(u.node->property<Sym*>("sym"), u.types) << "\n";
+}
+
+for(auto &u: c.genericUsages)
+{
+    processGenericUsage(c, u);
+}
+
+std::cout << banner();
+return 0;
 
         if(true)
         {
