@@ -266,12 +266,6 @@ void Decorator::visit(FuncNode &node)
             decorateFunctionBody(c, node, sym);
         }
     }
-
-    if(node.generics)
-    {
-        c.genericUsages.insert(c, GenericUsage(&node, { c.types.intType() }));
-        c.genericUsages.insert(c, GenericUsage(&node, { c.types.charType() }));
-    }
 }
 
 void Decorator::visit(ClassNode &node)

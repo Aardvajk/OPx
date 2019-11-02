@@ -111,6 +111,18 @@ void ExprDecorator::visit(IdNode &node)
         }
     }
 
+    std::vector<Type*> generics;
+    if(!node.generics.empty())
+    {
+        for(auto &g: node.generics)
+        {
+            Visitor::visit<TypeDecorator>(g.get(), c);
+            generics.push_back(TypeVisitor::assertType(c, g.get()));
+        }
+
+        node.setProperty("generics", generics);
+    }
+
     std::vector<Sym*> sv;
     if(expectedType && expectedType->function())
     {
@@ -135,14 +147,20 @@ void ExprDecorator::visit(IdNode &node)
         throw Error(node.location(), "not accessible - ", node.description());
     }
 
-    node.setProperty("sym", sv.front());
+    auto sym = sv.front();
+    node.setProperty("sym", sym);
+
+    if(!node.generics.empty())
+    {
+        c.genericUsages.insert(c, GenericUsage(sym->property<FuncNode*>("funcnode"), generics));
+    }
 }
 
 void ExprDecorator::visit(StringLiteralNode &node)
 {
-    auto name = pcx::str("#global_", c.globals.size(), "_", pcx::base64::encode(c.sources.path(c.scanner.sourceId())));
+    auto name = pcx::str("#global_", c.globalId++, "_", pcx::base64::encode(c.sources.path(c.scanner.sourceId())));
 
-    c.globals[name] = &node;
+    c.globals.back()[name] = node.clone();
     node.setProperty("global", name);
 }
 

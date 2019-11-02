@@ -8,9 +8,10 @@
 #include <algorithm>
 
 Context::Context(int argc, char *argv[], std::vector<std::string> &files)
-    : scanner(Lexer::Mode::Pc), types(*this), classDepth(0), globalInit(nullptr), globalDestroy(nullptr), potentiallySkipped(0)
+    : scanner(Lexer::Mode::Pc), types(*this), classDepth(0), globalId(0), globalInit(nullptr), globalDestroy(nullptr), potentiallySkipped(0)
 {
     args.push_back({ argc, argv, files });
+    globals.push_back({ });
 
     DefaultTypes::create(*this);
 }

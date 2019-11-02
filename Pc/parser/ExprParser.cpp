@@ -67,6 +67,12 @@ NodePtr id(Context &c, NodePtr parent, bool arrow, bool get)
     id->op = op;
     id->arrow = arrow;
 
+    if(c.scanner.token().type() == Token::Type::Lt)
+    {
+        buildGenerics(c, id->generics, true);
+        c.scanner.consume(Token::Type::Gt, false);
+    }
+
     return n;
 }
 

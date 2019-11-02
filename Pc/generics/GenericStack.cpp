@@ -32,3 +32,14 @@ Type *GenericStack::type(const GenericRef &ref) const
 {
     return v.back().params[ref.index].type;
 }
+
+std::vector<Type*> GenericStack::currentTypes() const
+{
+    std::vector<Type*> r;
+    for(auto t: v.back().params)
+    {
+        r.push_back(t.type);
+    }
+
+    return r;
+}

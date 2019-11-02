@@ -4,6 +4,14 @@ GenericParams::GenericParams()
 {
 }
 
+GenericParams::GenericParams(const std::vector<Type*> &types)
+{
+    for(auto t: types)
+    {
+        params.push_back(Generic({ }, t));
+    }
+}
+
 bool GenericParams::namesEquivalent(const GenericParams &g) const
 {
     return params.size() == g.params.size();

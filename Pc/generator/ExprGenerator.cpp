@@ -34,6 +34,7 @@
 #include "types/Type.h"
 
 #include <pcx/indexed_range.h>
+#include <pcx/scoped_push.h>
 
 namespace
 {
@@ -92,9 +93,15 @@ template<typename T> std::size_t generateCall(Context &c, std::ostream &os, T &n
         sz = sizeof(std::size_t);
     }
 
-    for(auto p: pcx::indexed_range(node.params))
+    for(std::size_t i = 0; i < node.params.size(); ++i)
     {
-        CommonGenerator::generateParameter(c, os, p.value.get(), type->args[p.index]);
+        auto t = type->args[i];
+        if(t->generic)
+        {
+            t = c.generics.type(*t->generic);
+        }
+
+        CommonGenerator::generateParameter(c, os, node.params[i].get(), t);
     }
 
     return sz;
@@ -112,7 +119,15 @@ void ExprGenerator::visit(IdNode &node)
 
     if(sym->type() == Sym::Type::Func)
     {
-        os << "    push &\"" << sym->funcname() << "\";\n";
+        if(node.generics.empty())
+        {
+            os << "    push &\"" << sym->funcname() << "\";\n";
+        }
+        else
+        {
+            os << "    push &\"" << Generic::funcName(sym, node.property<std::vector<Type*> >("generics")) << "\";\n";
+        }
+
         sz = sizeof(std::size_t);
     }
     else if(sym->findProperty("member").value<bool>())
@@ -179,6 +194,7 @@ void ExprGenerator::visit(CallNode &node)
 {
     auto type = TypeVisitor::assertType(c, node.target.get());
 
+    auto gp = pcx::scoped_push(c.generics, GenericParams(node.target->findProperty("generics").value<std::vector<Type*> >()));
     sz = generateCall(c, os, node, type);
 
     ExprGenerator::generate(c, os, node.target.get());

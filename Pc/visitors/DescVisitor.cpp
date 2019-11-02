@@ -56,6 +56,11 @@ void DescVisitor::visit(IdNode &node)
     }
 
     r += node.name;
+
+    if(!node.generics.empty())
+    {
+        r += pcx::str("<", pcx::join_str(node.generics, ",", [](const NodePtr &n){ return n->description(); }), ">");
+    }
 }
 
 void DescVisitor::visit(NamespaceNode &node)

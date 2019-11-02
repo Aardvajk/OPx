@@ -4,6 +4,8 @@
 #include "scanner/SourceList.h"
 #include "scanner/Scanner.h"
 
+#include "nodes/Node.h"
+
 #include "syms/SymTree.h"
 
 #include "types/TypeCache.h"
@@ -20,7 +22,6 @@
 
 #include <unordered_map>
 
-class Node;
 class FuncNode;
 
 class Context
@@ -55,7 +56,8 @@ public:
     std::size_t classDepth;
     std::vector<FuncNode*> deferredMethods;
 
-    std::unordered_map<std::string, Node*> globals;
+    std::vector<std::unordered_map<std::string, NodePtr> > globals;
+    std::size_t globalId;
 
     Node *globalInit;
     Node *globalDestroy;

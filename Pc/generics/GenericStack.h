@@ -21,6 +21,8 @@ public:
     pcx::optional<GenericRef> typeRef(Node *name) const;
     Type *type(const GenericRef &ref) const;
 
+    std::vector<Type*> currentTypes() const;
+
 private:
     std::vector<GenericParams> v;
 };

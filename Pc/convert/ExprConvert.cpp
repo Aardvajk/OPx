@@ -28,6 +28,8 @@
 
 #include "visitors/TypeVisitor.h"
 
+#include <pcx/scoped_push.h>
+
 namespace
 {
 
@@ -35,7 +37,13 @@ void convertParams(Context &c, NodeList &params, Type *type)
 {
     for(std::size_t i = 0; i < params.size(); ++i)
     {
-        params[i] = CommonConvert::convert(c, params[i], type->args[i], TypeConvert::Permission::Implicit);
+        auto t = type->args[i];
+        if(t->generic)
+        {
+            t = c.generics.type(*t->generic);
+        }
+
+        params[i] = CommonConvert::convert(c, params[i], t, TypeConvert::Permission::Implicit);
     }
 }
 
@@ -62,6 +70,7 @@ void ExprConvert::visit(CallNode &node)
         p = ExprConvert::convert(c, p);
     }
 
+    auto gp = pcx::scoped_push(c.generics, GenericParams(node.target->findProperty("generics").value<std::vector<Type*> >()));
     convertParams(c, node.params, TypeVisitor::assertType(c, node.target.get()));
 }
 

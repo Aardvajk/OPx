@@ -9,6 +9,7 @@ class GenericParams
 {
 public:
     GenericParams();
+    explicit GenericParams(const std::vector<Type*> &types);
 
     operator bool() const { return !params.empty(); }
 

@@ -38,7 +38,7 @@
 namespace
 {
 
-void processGenericUsage(Context &c, GenericUsage &u)
+void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 {
     NodePtr n = u.node->clone();
     auto fn = static_cast<FuncNode*>(n.get());
@@ -50,6 +50,7 @@ void processGenericUsage(Context &c, GenericUsage &u)
 
     auto gg = pcx::scoped_push(c.generics, fn->generics.combine(u.types));
     auto ig = pcx::scoped_lock(c.instantiating);
+    auto gp = pcx::scoped_push(c.globals, { });
 
     Decorator::decorateFunction(c, fn);
 
@@ -76,7 +77,8 @@ void processGenericUsage(Context &c, GenericUsage &u)
     Visitor::visit<AstPrinter>(fn, c, std::cout);
 
     std::cout << banner("generate");
-    Visitor::visit<Generator>(fn, c, std::cout);
+    GlobalsGenerator::generate(c, os);
+    Visitor::visit<Generator>(fn, c, os);
 
     std::cout << banner("end");
 }
@@ -115,29 +117,6 @@ int main(int argc, char *argv[])
         c.open(files[0]);
 
         auto n = Parser::build(c);
-
-auto cn = n->clone();
-n = { };
-
-n = cn;
-
-auto b = static_cast<BlockNode*>(n.get());
-for(auto &n: b->nodes)
-{
-    if(auto f = dynamic_cast<FuncNode*>(n.get()))
-    {
-        auto tag = Visitor::query<NameVisitors::LastIdOfName, std::string>(f->name.get());
-
-        if(tag.substr(0, 9) == "#global_i")
-        {
-            c.globalInit = f;
-        }
-        else if(tag.substr(0, 9) == "#global_d")
-        {
-            c.globalDestroy = f;
-        }
-    }
-}
 
         if(!c.option("q"))
         {
@@ -195,21 +174,12 @@ for(auto &n: b->nodes)
 
             GlobalsGenerator::generate(c, std::cout);
             Visitor::visit<Generator>(n.get(), c, std::cout);
+
+            for(auto &u: c.genericUsages)
+            {
+                processGenericUsage(c, u, std::cout);
+            }
         }
-
-std::cout << banner("generic usages");
-for(auto u: c.genericUsages)
-{
-    std::cout << Generic::funcName(u.node->property<Sym*>("sym"), u.types) << "\n";
-}
-
-for(auto &u: c.genericUsages)
-{
-    processGenericUsage(c, u);
-}
-
-std::cout << banner();
-return 0;
 
         if(true)
         {
@@ -224,6 +194,11 @@ return 0;
 
             GlobalsGenerator::generate(c, os);
             Visitor::visit<Generator>(n.get(), c, os);
+
+            for(auto &u: c.genericUsages)
+            {
+                processGenericUsage(c, u, os);
+            }
         }
 
         if(c.option("test_error"))

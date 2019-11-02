@@ -27,6 +27,7 @@ Node *IdNode::clone() const
 {
     auto i = cloneNode(this, new IdNode(location(), safeClone(parent), name));
 
+    i->generics = listClone(generics);
     i->special = special;
     i->op = op;
     i->arrow = arrow;

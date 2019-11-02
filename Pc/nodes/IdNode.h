@@ -22,6 +22,8 @@ public:
     NodePtr parent;
     std::string name;
 
+    NodeList generics;
+
     Token::Type special;
     NodePtr op;
     bool arrow;

@@ -111,7 +111,7 @@ std::vector<Sym*> CommonDecorator::searchCallable(Context &c, Node *node, Type *
                         {
                             ++matches;
                         }
-                        else if(TypeConvert::canConvert(c, expectedType->args[i], args[i]))
+                        else if(args[i]->generic || TypeConvert::canConvert(c, expectedType->args[i], args[i]))
                         {
                             ++matches;
                             ++conversions;

@@ -87,7 +87,16 @@ void Generator::visit(FuncNode &node)
             os << "[" << pcx::join_str(ps, ", ") << "]";
         }
 
-        os << " \"" << sym->fullname() << type->text() << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
+        if(node.generics)
+        {
+            os << " \"" << Generic::funcName(sym, c.generics.currentTypes());
+        }
+        else
+        {
+            os << " \"" << sym->fullname() << type->text();
+        }
+
+        os  << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
         os << "{\n";
 
         for(auto &a: node.args)
