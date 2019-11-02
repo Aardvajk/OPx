@@ -3,15 +3,15 @@
 
 #include <vector>
 
-class FuncNode;
+class Sym;
 class Type;
 
 class GenericUsage
 {
 public:
-    GenericUsage(FuncNode *node, std::vector<Type*> types) : node(node), types(std::move(types)) { }
+    GenericUsage(Sym *sym, std::vector<Type*> types) : sym(sym), types(std::move(types)) { }
 
-    FuncNode *node;
+    Sym *sym;
     std::vector<Type*> types;
 };
 

@@ -40,11 +40,10 @@ namespace
 
 void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 {
-    NodePtr n = u.node->clone();
-    auto fn = static_cast<FuncNode*>(n.get());
+    auto fn = static_cast<FuncNode*>(u.sym->property<FuncNode*>("funcnode")->clone());
+    NodePtr n(fn);
 
-    auto sym = fn->property<Sym*>("sym");
-    sym->clear();
+    u.sym->clear();
 
     LowerTypes::convertPtrsToRefs(c);
 
@@ -54,7 +53,7 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     Decorator::decorateFunction(c, fn);
 
-    std::cout << banner(Generic::funcName(sym, u.types), " symbols");
+    std::cout << banner(Generic::funcName(u.sym, u.types), " symbols");
     SymPrinter::print(c, c.tree.root(), std::cout);
 
     std::cout << banner("decorated nodes");

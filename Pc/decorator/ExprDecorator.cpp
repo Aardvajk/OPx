@@ -152,7 +152,7 @@ void ExprDecorator::visit(IdNode &node)
 
     if(!node.generics.empty())
     {
-        c.genericUsages.insert(c, GenericUsage(sym->property<FuncNode*>("funcnode"), generics));
+        c.genericUsages.insert(c, GenericUsage(sym, generics));
     }
 }
 

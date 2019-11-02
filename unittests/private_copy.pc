@@ -1,4 +1,4 @@
-pragma(set, "test_error=not accessible - foo.new(ptr foo,const ptr foo):std.null [method]");
+pragma(set, "test_error=not accessible - foo.new(ref ptr foo,const ref ptr foo):std.null [method]");
 
 class foo
 {

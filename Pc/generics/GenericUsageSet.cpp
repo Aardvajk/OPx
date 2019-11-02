@@ -7,7 +7,7 @@ namespace
 
 bool same(Context &c, const GenericUsage &a, const GenericUsage &b)
 {
-    if(a.node != b.node)
+    if(a.sym != b.sym)
     {
         return false;
     }
