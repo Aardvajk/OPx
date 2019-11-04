@@ -37,13 +37,7 @@ void convertParams(Context &c, NodeList &params, Type *type)
 {
     for(std::size_t i = 0; i < params.size(); ++i)
     {
-        auto t = type->args[i];
-        if(t->generic)
-        {
-            t = c.generics.type(*t->generic);
-        }
-
-        params[i] = CommonConvert::convert(c, params[i], t, TypeConvert::Permission::Implicit);
+        params[i] = CommonConvert::convert(c, params[i], c.generics.convert(c, type->args[i]), TypeConvert::Permission::Implicit);
     }
 }
 

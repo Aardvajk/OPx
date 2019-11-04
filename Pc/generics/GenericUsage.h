@@ -1,6 +1,8 @@
 #ifndef GENERICUSAGE_H
 #define GENERICUSAGE_H
 
+#include "scanner/Location.h"
+
 #include <vector>
 
 class Sym;
@@ -9,8 +11,9 @@ class Type;
 class GenericUsage
 {
 public:
-    GenericUsage(Sym *sym, std::vector<Type*> types) : sym(sym), types(std::move(types)) { }
+    GenericUsage(Location location, Sym *sym, std::vector<Type*> types) : location(location), sym(sym), types(std::move(types)) { }
 
+    Location location;
     Sym *sym;
     std::vector<Type*> types;
 };

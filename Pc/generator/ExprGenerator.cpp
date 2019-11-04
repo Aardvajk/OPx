@@ -71,9 +71,10 @@ template<typename T> std::size_t generateCall(Context &c, std::ostream &os, T &n
 {
     std::size_t sz = 0;
 
-    auto size = Type::assertSize(node.location(), type->returnType);
+    auto rt = c.generics.convert(c, type->returnType);
+    auto size = Type::assertSize(node.location(), rt);
 
-    if(type->returnType->primitive())
+    if(rt->primitive())
     {
         if(!c.option("O", "elide_no_effect_ops") || size)
         {
@@ -88,20 +89,14 @@ template<typename T> std::size_t generateCall(Context &c, std::ostream &os, T &n
         auto temp = node.template property<std::string>("temp");
 
         os << "    push &\"" << temp << "\";\n";
-        info->tempDestructs.push_back(TempDestruct(temp, type->returnType));
+        info->tempDestructs.push_back(TempDestruct(temp, rt));
 
         sz = sizeof(std::size_t);
     }
 
     for(std::size_t i = 0; i < node.params.size(); ++i)
     {
-        auto t = type->args[i];
-        if(t->generic)
-        {
-            t = c.generics.type(*t->generic);
-        }
-
-        CommonGenerator::generateParameter(c, os, node.params[i].get(), t);
+        CommonGenerator::generateParameter(c, os, node.params[i].get(), c.generics.convert(c, type->args[i]));
     }
 
     return sz;
@@ -125,7 +120,7 @@ void ExprGenerator::visit(IdNode &node)
         }
         else
         {
-            os << "    push &\"" << Generic::funcName(sym, node.property<std::vector<Type*> >("generics")) << "\";\n";
+            os << "    push &\"" << Generic::funcName(c, sym, node.property<std::vector<Type*> >("generics")) << "\";\n";
         }
 
         sz = sizeof(std::size_t);

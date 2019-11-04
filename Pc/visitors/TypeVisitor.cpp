@@ -30,6 +30,8 @@
 
 #include "visitors/QueryVisitors.h"
 
+#include <pcx/scoped_push.h>
+
 TypeVisitor::TypeVisitor(Context &c) : c(c), r(nullptr)
 {
 }
@@ -97,7 +99,9 @@ void TypeVisitor::visit(StringLiteralNode &node)
 void TypeVisitor::visit(CallNode &node)
 {
     auto t = Visitor::query<TypeVisitor, Type*>(node.target.get(), c);
-    r = t->returnType;
+
+    auto gg = pcx::scoped_push(c.generics, GenericParams(node.target->findProperty("generics").value<std::vector<Type*> >()));
+    r = c.generics.convert(c, t->returnType);
 }
 
 void TypeVisitor::visit(ProxyCallNode &node)

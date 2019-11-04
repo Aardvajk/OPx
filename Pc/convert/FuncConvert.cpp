@@ -58,6 +58,11 @@ void FuncConvert::visit(ReturnNode &node)
         node.expr = ExprConvert::convert(c, node.expr);
 
         auto rt = c.tree.current()->container()->property<Type*>("type")->returnType;
+        if(c.instantiating)
+        {
+            rt = c.generics.convert(c, rt);
+        }
+
         node.expr = CommonConvert::convert(c, node.expr, rt, TypeConvert::Permission::Implicit);
     }
 }

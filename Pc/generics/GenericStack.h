@@ -21,6 +21,8 @@ public:
     pcx::optional<GenericRef> typeRef(Node *name) const;
     Type *type(const GenericRef &ref) const;
 
+    Type *convert(Context &c, const Type *t) const;
+
     std::vector<Type*> currentTypes() const;
 
 private:

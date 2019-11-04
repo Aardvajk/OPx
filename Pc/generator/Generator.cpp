@@ -89,14 +89,20 @@ void Generator::visit(FuncNode &node)
 
         if(node.generics)
         {
-            os << " \"" << Generic::funcName(sym, c.generics.currentTypes());
+            os << " \"" << Generic::funcName(c, sym, c.generics.currentTypes());
         }
         else
         {
             os << " \"" << sym->fullname() << type->text();
         }
 
-        os  << "\":" << Type::assertSize(node.location(), type->returnType) << "\n";
+        auto rt = type->returnType;
+        if(c.instantiating)
+        {
+            rt = c.generics.convert(c, rt);
+        }
+
+        os  << "\":" << Type::assertSize(node.location(), rt) << "\n";
         os << "{\n";
 
         for(auto &a: node.args)

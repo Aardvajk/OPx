@@ -209,6 +209,11 @@ void Decorator::visit(FuncNode &node)
         {
             sym->setProperty("defaults", defaults);
         }
+
+        if(node.body)
+        {
+            sym->setProperty("funcnode", &node);
+        }
     }
     else
     {

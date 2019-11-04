@@ -151,6 +151,10 @@ void FuncGenerator::visit(ReturnNode &node)
     if(node.expr)
     {
         auto type = c.tree.current()->container()->property<Type*>("type")->returnType;
+        if(c.instantiating)
+        {
+            type = c.generics.convert(c, type);
+        }
 
         if(type->primitive())
         {

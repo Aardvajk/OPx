@@ -1,5 +1,7 @@
 #include "Generic.h"
 
+#include "application/Context.h"
+
 #include "syms/Sym.h"
 
 #include "types/Type.h"
@@ -11,8 +13,8 @@ Generic::Generic(std::string name, Type *type) : name(std::move(name)), type(typ
 {
 }
 
-std::string Generic::funcName(Sym *sym, const std::vector<Type*> &types)
+std::string Generic::funcName(Context &c, Sym *sym, const std::vector<Type*> &types)
 {
-    auto t = sym->property<Type*>("type");
+    auto t = c.generics.convert(c, sym->property<Type*>("type"));
     return pcx::str(sym->fullname(), "<", pcx::join_str(types, ",", [](const Type *t){ return t->text(); }), ">", t->text());
 }

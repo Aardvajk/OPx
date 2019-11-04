@@ -62,6 +62,10 @@ void FuncDecorator::visit(ExprNode &node)
 void FuncDecorator::visit(ReturnNode &node)
 {
     auto t = c.tree.current()->container()->property<Type*>("type")->returnType;
+    if(c.instantiating)
+    {
+        t = c.generics.convert(c, t);
+    }
 
     if(node.expr)
     {

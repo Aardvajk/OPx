@@ -1,8 +1,12 @@
 #include "GenericStack.h"
 
+#include "application/Context.h"
+
 #include "nodes/Node.h"
 
 #include "visitors/NameVisitors.h"
+
+#include "types/Type.h"
 
 #include <pcx/indexed_range.h>
 
@@ -31,6 +35,31 @@ pcx::optional<GenericRef> GenericStack::typeRef(Node *name) const
 Type *GenericStack::type(const GenericRef &ref) const
 {
     return v.back().params[ref.index].type;
+}
+
+Type *GenericStack::convert(Context &c, const Type *t) const
+{
+    auto r = *t;
+
+    if(r.generic)
+    {
+        r = *c.generics.type(*r.generic);
+    }
+
+    for(std::size_t i = 0; i < r.args.size(); ++i)
+    {
+        if(r.args[i]->generic)
+        {
+            r.args[i] = c.generics.type(*r.args[i]->generic);
+        }
+    }
+
+    if(r.returnType && r.returnType->generic)
+    {
+        r.returnType = c.generics.type(*r.returnType->generic);
+    }
+
+    return c.types.insert(r);
 }
 
 std::vector<Type*> GenericStack::currentTypes() const

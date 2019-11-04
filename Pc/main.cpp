@@ -43,17 +43,25 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
     auto fn = static_cast<FuncNode*>(u.sym->property<FuncNode*>("funcnode")->clone());
     NodePtr n(fn);
 
+    auto gg = pcx::scoped_push(c.generics, fn->generics.combine(u.types));
+
+    if(!fn->body)
+    {
+        throw Error(u.location, "generic function missing definition - ", Generic::funcName(c, u.sym, u.types));
+    }
+
     u.sym->clear();
+
+    fn->setProperty("autogen", true);
 
     LowerTypes::convertPtrsToRefs(c);
 
-    auto gg = pcx::scoped_push(c.generics, fn->generics.combine(u.types));
     auto ig = pcx::scoped_lock(c.instantiating);
     auto gp = pcx::scoped_push(c.globals, { });
 
     Decorator::decorateFunction(c, fn);
 
-    std::cout << banner(Generic::funcName(u.sym, u.types), " symbols");
+    std::cout << banner(Generic::funcName(c, u.sym, u.types), " symbols");
     SymPrinter::print(c, c.tree.root(), std::cout);
 
     std::cout << banner("decorated nodes");
@@ -174,10 +182,10 @@ int main(int argc, char *argv[])
             GlobalsGenerator::generate(c, std::cout);
             Visitor::visit<Generator>(n.get(), c, std::cout);
 
-            for(auto &u: c.genericUsages)
-            {
-                processGenericUsage(c, u, std::cout);
-            }
+//            for(auto &u: c.genericUsages)
+//            {
+//                processGenericUsage(c, u, std::cout);
+//            }
         }
 
         if(true)

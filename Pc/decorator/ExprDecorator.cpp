@@ -44,6 +44,7 @@
 #include <pcx/str.h>
 #include <pcx/base64.h>
 #include <pcx/scoped_counter.h>
+#include <pcx/scoped_push.h>
 
 namespace
 {
@@ -80,7 +81,7 @@ template<typename T> void decorateComplexReturnTemp(Context &c, T &node, Type *t
         auto temp = pcx::str("#temp_return", info->labels++);
         node.setProperty("temp", temp);
 
-        info->temps.push_back(Temp(temp, type->returnType));
+        info->temps.push_back(Temp(temp, c.generics.convert(c, type->returnType)));
     }
 }
 
@@ -152,7 +153,7 @@ void ExprDecorator::visit(IdNode &node)
 
     if(!node.generics.empty())
     {
-        c.genericUsages.insert(c, GenericUsage(sym, generics));
+        c.genericUsages.insert(c, GenericUsage(node.location(), sym, generics));
     }
 }
 
@@ -227,7 +228,8 @@ void ExprDecorator::visit(CallNode &node)
         }
         else
         {
-            decorateComplexReturnTemp(c, node, type);
+                auto gp = pcx::scoped_push(c.generics, GenericParams(node.target->findProperty("generics").value<std::vector<Type*> >()));
+                decorateComplexReturnTemp(c, node, type);
         }
     }
 }
