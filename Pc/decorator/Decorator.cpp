@@ -205,14 +205,23 @@ void Decorator::visit(FuncNode &node)
             throw Error(node.location(), "defaults already declared - ", node.description());
         }
 
+        if(node.body)
+        {
+            auto old = sym->findProperty("funcnode").value<FuncNode*>();
+
+            sym->setProperty("funcnode", &node);
+            if(old && sym->findProperty("defaults"))
+            {
+                for(std::size_t i = 0; i < node.args.size(); ++i)
+                {
+                    node.args[i] = old->args[i];
+                }
+            }
+        }
+
         if(defaults)
         {
             sym->setProperty("defaults", defaults);
-        }
-
-        if(node.body)
-        {
-            sym->setProperty("funcnode", &node);
         }
     }
     else

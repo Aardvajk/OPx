@@ -8,6 +8,7 @@ public:
     func new(a:std.int) ... a(a) { }
 
     func f(z:std.int = 'A', y = 321);
+    func g(z:std.char);
 
     var a:std.int;
 }
@@ -18,10 +19,16 @@ func foo.f(z:std.int, y:std.int)
     test.assert(y == 321);
 }
 
+func foo.g(z:std.char = 'a')
+{
+    test.assert(z == 'a');
+}
+
 func f(b:std.int, a:foo = 123)
 {
     test.assert(a.a == 123);
     a.f();
+    a.g();
 }
 
 class woo
