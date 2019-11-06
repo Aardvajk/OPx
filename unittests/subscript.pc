@@ -23,7 +23,7 @@ func operator[](:foo, a:std.int, b = 'z'):std.int
 
 func main()
 {
-    var p:ptr foo = __unchecked_cast ptr foo(std.allocate(8s));
+    var p:ptr foo = __unchecked_cast<ptr foo>(std.allocate(8s));
 
     p[0] = foo(123);
     p[1] = foo(321);

@@ -111,9 +111,12 @@ NodePtr uncheckedCast(Context &c, bool get)
     auto n = new UncheckedCastNode(c.scanner.token().location());
     NodePtr nn(n);
 
-    n->type = TypeParser::build(c, get);
+    c.scanner.match(Token::Type::Lt, get);
+    n->type = TypeParser::build(c, true);
 
-    c.scanner.match(Token::Type::LeftParen, false);
+    c.scanner.match(Token::Type::Gt, false);
+    c.scanner.match(Token::Type::LeftParen, true);
+
     n->expr = expression(c, true);
 
     c.scanner.consume(Token::Type::RightParen, false);
