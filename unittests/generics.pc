@@ -1,0 +1,23 @@
+include("stdtest.ph", "stdlib.ph");
+
+func<F, T> ptr_cast(x:ptr F):ptr T
+{
+    return __unchecked_cast<ptr T>(x);
+}
+
+func<T> foo(x:ref T)
+{
+    x += 10;
+}
+
+func main()
+{
+    var a = ptr_cast<std.null, std.int>(std.allocate(4s));
+    *a = 123;
+
+    test.assert(*a == 123);
+
+    foo<std.int>(*a);
+
+    test.assert(*a == 133);
+}

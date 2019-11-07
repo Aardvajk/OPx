@@ -61,33 +61,48 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     Decorator::decorateFunction(c, fn);
 
-    std::cout << banner(Generic::funcName(c, u.sym, u.types), " symbols");
-    SymPrinter::print(c, c.tree.root(), std::cout);
+    if(!c.option("q"))
+    {
+        std::cout << banner(Generic::funcName(c, u.sym, u.types), " symbols");
+        SymPrinter::print(c, c.tree.root(), std::cout);
 
-    std::cout << banner("decorated nodes");
-    Visitor::visit<AstPrinter>(fn, c, std::cout);
+        std::cout << banner("decorated nodes");
+        Visitor::visit<AstPrinter>(fn, c, std::cout);
+    }
 
     Visitor::visit<Convert>(fn, c);
 
-    std::cout << banner("converted nodes");
-    Visitor::visit<AstPrinter>(fn, c, std::cout);
+    if(!c.option("q"))
+    {
+        std::cout << banner("converted nodes");
+        Visitor::visit<AstPrinter>(fn, c, std::cout);
+    }
 
     Visitor::visit<Transform>(fn, c);
 
-    std::cout << banner("transformed nodes");
-    Visitor::visit<AstPrinter>(fn, c, std::cout);
+    if(!c.option("q"))
+    {
+        std::cout << banner("transformed nodes");
+        Visitor::visit<AstPrinter>(fn, c, std::cout);
+    }
 
     LowerTypes::convertRefsToPtrs(c);
     Visitor::visit<Lower>(n.get(), c);
 
-    std::cout << banner("lowered nodes");
-    Visitor::visit<AstPrinter>(fn, c, std::cout);
+    if(!c.option("q"))
+    {
+        std::cout << banner("lowered nodes");
+        Visitor::visit<AstPrinter>(fn, c, std::cout);
+    }
 
-    std::cout << banner("generate");
+    if(!c.option("q"))
+    {
+        GlobalsGenerator::generate(c, std::cout);
+        Visitor::visit<Generator>(fn, c, std::cout);
+    }
+
     GlobalsGenerator::generate(c, os);
     Visitor::visit<Generator>(fn, c, os);
-
-    std::cout << banner("end");
 }
 
 }

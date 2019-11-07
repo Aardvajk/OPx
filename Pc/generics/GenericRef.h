@@ -2,6 +2,7 @@
 #define GENERICREF_H
 
 #include <cstdlib>
+#include <unordered_set>
 
 class GenericRef
 {
@@ -14,6 +15,14 @@ public:
 
     std::size_t index;
     std::size_t depth;
+};
+
+class GenericRefHash
+{
+public:
+    GenericRefHash(){ }
+
+    std::size_t operator()(const GenericRef &r) const { return r.index ^ r.depth; }
 };
 
 #endif // GENERICREF_H

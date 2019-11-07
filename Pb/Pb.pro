@@ -67,6 +67,7 @@ DISTFILES += \
     ../unittests/func_ref.pc \
     ../unittests/generate_op_assign.pc \
     ../unittests/generated_new_copy_delete_funcs.pc \
+    ../unittests/generics.pc \
     ../unittests/global_code.pc \
     ../unittests/init_lists.pc \
     ../unittests/inline_var.pc \

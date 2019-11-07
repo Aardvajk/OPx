@@ -186,6 +186,11 @@ void ExprDecorator::visit(CallNode &node)
 
     auto type = TypeVisitor::assertType(c, node.target.get());
 
+    if(node.target->findProperty("generics").value<std::vector<Type*> >().size() != type->genericTypeCount())
+    {
+        throw Error(node.location(), "generic function missing types - ", node.description());
+    }
+
     if(type->method)
     {
         bool constant = false;
@@ -228,8 +233,8 @@ void ExprDecorator::visit(CallNode &node)
         }
         else
         {
-                auto gp = pcx::scoped_push(c.generics, GenericParams(node.target->findProperty("generics").value<std::vector<Type*> >()));
-                decorateComplexReturnTemp(c, node, type);
+            auto gp = pcx::scoped_push(c.generics, GenericParams(node.target->findProperty("generics").value<std::vector<Type*> >()));
+            decorateComplexReturnTemp(c, node, type);
         }
     }
 }

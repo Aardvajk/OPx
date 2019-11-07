@@ -35,6 +35,8 @@ public:
 
     pcx::optional<std::size_t> size() const;
 
+    std::size_t genericTypeCount() const;
+
     static Type makePrimary(Sym *sym);
     static Type makePrimary(bool constant, bool ref, Sym *sym);
     static Type makeFunction(Type *returnType, const std::vector<Type*> &args = { });

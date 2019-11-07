@@ -59,6 +59,8 @@ Type *GenericStack::convert(Context &c, const Type *t) const
         r.returnType = c.generics.type(*r.returnType->generic);
     }
 
+    Generic::combineTypes(r, *t);
+
     return c.types.insert(r);
 }
 
@@ -72,3 +74,18 @@ std::vector<Type*> GenericStack::currentTypes() const
 
     return r;
 }
+
+void GenericStack::dump(std::ostream &os) const
+{
+    for(auto &p: v)
+    {
+        os << "stack [" << p.params.size() << "]\n";
+        for(auto t: p.params)
+        {
+            os << "    " << t.name << " " << t.type->text() << "\n";
+        }
+    }
+
+    os << "====end\n";
+}
+

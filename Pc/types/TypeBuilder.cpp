@@ -53,9 +53,7 @@ void TypeBuilder::visit(TypeNode &node)
         t = Type::makePrimary(sv.front());
     }
 
-    t.constant = node.constant;
-    t.ref = node.ref;
-    t.ptr = node.ptr;
+    Generic::combineTypes(t, node);
 
     r = c.types.insert(t);
 }

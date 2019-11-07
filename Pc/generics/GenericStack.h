@@ -25,6 +25,8 @@ public:
 
     std::vector<Type*> currentTypes() const;
 
+    void dump(std::ostream &os) const;
+
 private:
     std::vector<GenericParams> v;
 };

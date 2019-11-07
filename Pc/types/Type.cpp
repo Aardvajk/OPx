@@ -6,6 +6,8 @@
 
 #include <pcx/join_str.h>
 
+#include <unordered_set>
+
 namespace
 {
 
@@ -151,6 +153,26 @@ pcx::optional<std::size_t> Type::size() const
     }
 
     return { };
+}
+
+std::size_t Type::genericTypeCount() const
+{
+    std::unordered_set<GenericRef, GenericRefHash> s;
+
+    for(auto t: args)
+    {
+        if(t->generic)
+        {
+            s.insert(*t->generic);
+        }
+    }
+
+    if(returnType && returnType->generic)
+    {
+        s.insert(*returnType->generic);
+    }
+
+    return s.size();
 }
 
 Type Type::makePrimary(Sym *sym)

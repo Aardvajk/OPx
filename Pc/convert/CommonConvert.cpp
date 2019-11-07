@@ -24,6 +24,7 @@ NodePtr CommonConvert::convert(Context &c, NodePtr node, Type *type, TypeConvert
         auto sv = TypeConvert::find(c, t, type, permission);
         if(sv.empty())
         {
+std::cout << type->text() << " " << t->text() << "\n";
             throw Error(node->location(), "no conversion found - ", node->description());
         }
 
