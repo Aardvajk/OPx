@@ -45,9 +45,11 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     auto gg = pcx::scoped_push(c.generics, fn->generics.combine(u.types));
 
+    auto ns = Generic::funcName(c, u.sym, u.types);
+
     if(!fn->body)
     {
-        throw Error(u.location, "generic function missing definition - ", Generic::funcName(c, u.sym, u.types));
+        throw Error(u.location, "generic function missing definition - ", n);
     }
 
     u.sym->clear();
@@ -63,10 +65,10 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     if(!c.option("q"))
     {
-        std::cout << banner(Generic::funcName(c, u.sym, u.types), " symbols");
+        std::cout << banner(ns, " symbols");
         SymPrinter::print(c, c.tree.root(), std::cout);
 
-        std::cout << banner("decorated nodes");
+        std::cout << banner(ns, " decorated nodes");
         Visitor::visit<AstPrinter>(fn, c, std::cout);
     }
 
@@ -74,7 +76,7 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     if(!c.option("q"))
     {
-        std::cout << banner("converted nodes");
+        std::cout << banner(ns, " converted nodes");
         Visitor::visit<AstPrinter>(fn, c, std::cout);
     }
 
@@ -82,7 +84,7 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     if(!c.option("q"))
     {
-        std::cout << banner("transformed nodes");
+        std::cout << banner(ns, " transformed nodes");
         Visitor::visit<AstPrinter>(fn, c, std::cout);
     }
 
@@ -91,12 +93,14 @@ void processGenericUsage(Context &c, GenericUsage &u, std::ostream &os)
 
     if(!c.option("q"))
     {
-        std::cout << banner("lowered nodes");
+        std::cout << banner(ns, " lowered nodes");
         Visitor::visit<AstPrinter>(fn, c, std::cout);
     }
 
     if(!c.option("q"))
     {
+        std::cout << banner(ns, " generated");
+
         GlobalsGenerator::generate(c, std::cout);
         Visitor::visit<Generator>(fn, c, std::cout);
     }
@@ -196,11 +200,6 @@ int main(int argc, char *argv[])
 
             GlobalsGenerator::generate(c, std::cout);
             Visitor::visit<Generator>(n.get(), c, std::cout);
-
-//            for(auto &u: c.genericUsages)
-//            {
-//                processGenericUsage(c, u, std::cout);
-//            }
         }
 
         if(true)
