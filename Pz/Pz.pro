@@ -23,6 +23,7 @@ SOURCES += \
         application/Context.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
+        nodes/ClassNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
         nodes/NamespaceNode.cpp \
@@ -40,6 +41,7 @@ SOURCES += \
 HEADERS += \
     application/Context.h \
     nodes/BlockNode.h \
+    nodes/ClassNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
     nodes/NamespaceNode.h \

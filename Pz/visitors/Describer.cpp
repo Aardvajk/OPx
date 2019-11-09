@@ -4,6 +4,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/TypeNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/FuncNode.h"
 
 #include <pcx/join_str.h>
@@ -72,6 +73,11 @@ void Describer::visit(TypeNode &node)
         r += ":";
         node.returnType->accept(*this);
     }
+}
+
+void Describer::visit(ClassNode &node)
+{
+    node.name->accept(*this);
 }
 
 void Describer::visit(FuncNode &node)

@@ -6,6 +6,7 @@
 
 #include "nodes/BlockNode.h"
 #include "nodes/NamespaceNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
 
@@ -20,6 +21,23 @@ void DeclarationParser::buildNamespace(Context &c, BlockNode *block, bool get)
     block->push_back(n);
 
     n->body = CommonParser::blockContents(c, n->location(), false);
+}
+
+void DeclarationParser::buildClass(Context &c, BlockNode *block, bool get)
+{
+    auto name = CommonParser::name(c, get);
+
+    auto n = new ClassNode(name->location(), name);
+    block->push_back(n);
+
+    if(c.scanner.token().type() == Token::Type::LeftBrace)
+    {
+        n->body = CommonParser::blockContents(c, n->location(), false);
+    }
+    else
+    {
+        c.scanner.consume(Token::Type::Semicolon, false);
+    }
 }
 
 void DeclarationParser::buildFunction(Context &c, BlockNode *block, bool get)

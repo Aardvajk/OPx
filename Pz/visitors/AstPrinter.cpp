@@ -4,6 +4,7 @@
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
 #include "nodes/TypeNode.h"
+#include "nodes/ClassNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
 
@@ -49,6 +50,16 @@ void AstPrinter::visit(NamespaceNode &node)
 void AstPrinter::visit(TypeNode &node)
 {
     tab() << "type " << node.description() << "\n";
+}
+
+void AstPrinter::visit(ClassNode &node)
+{
+    tab() << "class " << node.description() << "\n";
+
+    if(node.body)
+    {
+        node.body->accept(*this);
+    }
 }
 
 void AstPrinter::visit(FuncNode &node)
