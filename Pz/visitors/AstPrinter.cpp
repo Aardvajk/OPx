@@ -3,7 +3,9 @@
 #include "nodes/BlockNode.h"
 #include "nodes/IdNode.h"
 #include "nodes/NamespaceNode.h"
+#include "nodes/TypeNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/ScopeNode.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -13,7 +15,6 @@ AstPrinter::AstPrinter(Context &c, std::ostream &os) : c(c), os(os), tc(0)
 
 void AstPrinter::visit(BlockNode &node)
 {
-    tab() << "block\n";
     tab() << "{\n";
 
     if(true)
@@ -45,15 +46,25 @@ void AstPrinter::visit(NamespaceNode &node)
     node.body->accept(*this);
 }
 
+void AstPrinter::visit(TypeNode &node)
+{
+    tab() << "type " << node.description() << "\n";
+}
+
 void AstPrinter::visit(FuncNode &node)
 {
     tab() << "func " << node.description() << "\n";
 
     if(node.body)
     {
-        auto g = pcx::scoped_counter(tc);
         node.body->accept(*this);
     }
+}
+
+void AstPrinter::visit(ScopeNode &node)
+{
+    tab() << "scope\n";
+    node.body->accept(*this);
 }
 
 std::ostream &AstPrinter::tab() const

@@ -15,7 +15,10 @@ std::string FuncNode::classname() const
 NodePtr FuncNode::cloneDetail() const
 {
     auto f = copyDetails(this, new FuncNode(location(), clonePtr(name)));
+    NodePtr n(f);
+
+    f->type = clonePtr(type);
     f->body = clonePtr(body);
 
-    return f;
+    return n;
 }

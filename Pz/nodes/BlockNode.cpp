@@ -15,12 +15,14 @@ std::string BlockNode::classname() const
 NodePtr BlockNode::cloneDetail() const
 {
     auto b = copyDetails(this, new BlockNode(location()));
+    NodePtr n(b);
+
     for(auto n: nodes)
     {
         b->push_back(clonePtr(n));
     }
 
-    return b;
+    return n;
 }
 
 void BlockNode::push_back(Node *node)

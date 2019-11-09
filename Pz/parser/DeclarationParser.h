@@ -8,6 +8,7 @@ namespace DeclarationParser
 {
 
 void buildNamespace(Context &c, BlockNode *block, bool get);
+void buildFunction(Context &c, BlockNode *block, bool get);
 
 }
 

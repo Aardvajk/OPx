@@ -15,5 +15,7 @@ std::string IdNode::classname() const
 NodePtr IdNode::cloneDetail() const
 {
     auto i = copyDetails(this, new IdNode(location(), clonePtr(parent), name));
-    return i;
+    NodePtr n(i);
+
+    return n;
 }

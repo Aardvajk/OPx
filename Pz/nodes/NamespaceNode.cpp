@@ -15,7 +15,9 @@ std::string NamespaceNode::classname() const
 NodePtr NamespaceNode::cloneDetail() const
 {
     auto n = copyDetails(this, new NamespaceNode(location(), clonePtr(name)));
+    NodePtr nn(n);
+
     n->body = clonePtr(body);
 
-    return n;
+    return nn;
 }

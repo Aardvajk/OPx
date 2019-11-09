@@ -27,9 +27,12 @@ SOURCES += \
         nodes/IdNode.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
+        nodes/ScopeNode.cpp \
+        nodes/TypeNode.cpp \
         parser/CommonParser.cpp \
         parser/DeclarationParser.cpp \
         parser/Parser.cpp \
+        parser/TypeParser.cpp \
         visitors/AstPrinter.cpp \
         visitors/Describer.cpp \
         visitors/Visitor.cpp
@@ -41,9 +44,12 @@ HEADERS += \
     nodes/IdNode.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
+    nodes/ScopeNode.h \
+    nodes/TypeNode.h \
     parser/CommonParser.h \
     parser/DeclarationParser.h \
     parser/Parser.h \
+    parser/TypeParser.h \
     visitors/AstPrinter.h \
     visitors/Describer.h \
     visitors/Visitor.h
