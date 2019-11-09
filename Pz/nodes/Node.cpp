@@ -1,5 +1,7 @@
 #include "Node.h"
 
+#include "visitors/Describer.h"
+
 Node::Node(Location location) : n(location), bn(nullptr)
 {
 }
@@ -29,7 +31,7 @@ pcx::any Node::findProperty(const std::string &key) const
 
 std::string Node::description() const
 {
-    return { };
+    return Visitor::query<Describer, std::string>(const_cast<Node*>(this));
 }
 
 Location Node::location() const

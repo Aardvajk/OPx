@@ -4,9 +4,12 @@
 #include "nodes/Node.h"
 
 class Context;
+class BlockNode;
 
 namespace Parser
 {
+
+void construct(Context &c, BlockNode *block, bool get);
 
 NodePtr build(Context &c);
 

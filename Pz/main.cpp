@@ -31,7 +31,10 @@ int main(int argc, char *argv[])
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
-        std::cout << banner();
+        if(!c.args.contains("q"))
+        {
+            std::cout << banner();
+        }
     }
 
     catch(const Error &e)
