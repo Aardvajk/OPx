@@ -25,6 +25,7 @@ SOURCES += \
         nodes/BlockNode.cpp \
         nodes/ClassNode.cpp \
         nodes/FuncNode.cpp \
+        nodes/GenericTagNode.cpp \
         nodes/IdNode.cpp \
         nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     nodes/BlockNode.h \
     nodes/ClassNode.h \
     nodes/FuncNode.h \
+    nodes/GenericTagNode.h \
     nodes/IdNode.h \
     nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \

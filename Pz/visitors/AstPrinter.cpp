@@ -7,6 +7,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/GenericTagNode.h"
 #include "nodes/ScopeNode.h"
 #include "nodes/LiteralNodes.h"
 
@@ -83,6 +84,11 @@ void AstPrinter::visit(FuncNode &node)
     {
         node.body->accept(*this);
     }
+}
+
+void AstPrinter::visit(GenericTagNode &node)
+{
+    tab() << "generic tag " << node.name << "\n";
 }
 
 void AstPrinter::visit(ScopeNode &node)

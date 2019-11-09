@@ -10,6 +10,7 @@ class TypeNode;
 class ClassNode;
 class VarNode;
 class FuncNode;
+class GenericTagNode;
 class ScopeNode;
 class IntLiteralNode;
 
@@ -25,6 +26,7 @@ public:
     virtual void visit(ClassNode &node);
     virtual void visit(VarNode &node);
     virtual void visit(FuncNode &node);
+    virtual void visit(GenericTagNode &node);
     virtual void visit(ScopeNode &node);
     virtual void visit(IntLiteralNode &node);
 

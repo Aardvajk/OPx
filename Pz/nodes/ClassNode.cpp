@@ -17,6 +17,7 @@ NodePtr ClassNode::cloneDetail() const
     auto c = copyDetails(this, new ClassNode(location(), clonePtr(name)));
     NodePtr n(c);
 
+    c->genericTags = cloneList(genericTags);
     c->body = clonePtr(body);
 
     return n;

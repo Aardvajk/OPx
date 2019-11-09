@@ -32,6 +32,10 @@ void Visitor::visit(FuncNode &node)
 {
 }
 
+void Visitor::visit(GenericTagNode &node)
+{
+}
+
 void Visitor::visit(ScopeNode &node)
 {
 }

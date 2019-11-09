@@ -10,6 +10,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/GenericTagNode.h"
 #include "nodes/ScopeNode.h"
 
 #include "parser/CommonParser.h"
@@ -18,6 +19,32 @@
 
 namespace
 {
+
+void buildGenericTag(Context &c, NodeList &container, bool get)
+{
+    auto tok = c.scanner.match(Token::Type::Id, get);
+    container.push_back(new GenericTagNode(tok.location(), tok.text()));
+
+    tok = c.scanner.next(true);
+    if(tok.type() == Token::Type::Comma)
+    {
+        buildGenericTag(c, container, true);
+    }
+}
+
+NodeList buildGenericTags(Context &c, bool get)
+{
+    NodeList r;
+
+    auto tok = c.scanner.next(get);
+    if(tok.type() == Token::Type::Lt)
+    {
+        buildGenericTag(c, r, true);
+        c.scanner.consume(Token::Type::Gt, false);
+    }
+
+    return r;
+}
 
 void buildArgs(Context &c, NodeList &container, bool get)
 {
@@ -58,10 +85,13 @@ void DeclarationParser::buildNamespace(Context &c, BlockNode *block, bool get)
 
 void DeclarationParser::buildClass(Context &c, BlockNode *block, bool get)
 {
-    auto name = CommonParser::name(c, get);
+    auto tags = buildGenericTags(c, get);
+    auto name = CommonParser::name(c, false);
 
     auto n = new ClassNode(name->location(), name);
     block->push_back(n);
+
+    n->genericTags = tags;
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
@@ -104,10 +134,13 @@ void DeclarationParser::buildTerminatedVar(Context &c, BlockNode *block, bool ge
 
 void DeclarationParser::buildFunction(Context &c, BlockNode *block, bool get)
 {
-    auto name = CommonParser::name(c, get);
+    auto tags = buildGenericTags(c, get);
+    auto name = CommonParser::name(c, false);
 
     auto n = new FuncNode(name->location(), name);
     block->push_back(n);
+
+    n->genericTags = tags;
 
     c.scanner.consume(Token::Type::LeftParen, false);
     if(c.scanner.token().type() != Token::Type::RightParen)

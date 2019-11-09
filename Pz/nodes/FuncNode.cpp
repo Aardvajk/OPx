@@ -17,6 +17,7 @@ NodePtr FuncNode::cloneDetail() const
     auto f = copyDetails(this, new FuncNode(location(), clonePtr(name)));
     NodePtr n(f);
 
+    f->genericTags = cloneList(genericTags);
     f->args = cloneList(args);
     f->type = clonePtr(type);
     f->body = clonePtr(body);

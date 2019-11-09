@@ -7,6 +7,7 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/GenericTagNode.h"
 #include "nodes/LiteralNodes.h"
 
 #include <pcx/join_str.h>
@@ -80,6 +81,11 @@ void Describer::visit(TypeNode &node)
 
 void Describer::visit(ClassNode &node)
 {
+    if(!node.genericTags.empty())
+    {
+        r += "<" + pcx::join_str(node.genericTags, ", ", describe) + "> ";
+    }
+
     node.name->accept(*this);
 }
 
@@ -96,6 +102,11 @@ void Describer::visit(VarNode &node)
 
 void Describer::visit(FuncNode &node)
 {
+    if(!node.genericTags.empty())
+    {
+        r += "<" + pcx::join_str(node.genericTags, ", ", describe) + "> ";
+    }
+
     node.name->accept(*this);
 
     r += "(" + pcx::join_str(node.args, ", ", describe) + ")";
@@ -105,6 +116,11 @@ void Describer::visit(FuncNode &node)
         r += ":";
         node.type->accept(*this);
     }
+}
+
+void Describer::visit(GenericTagNode &node)
+{
+    r += node.name;
 }
 
 void Describer::visit(ScopeNode &node)
