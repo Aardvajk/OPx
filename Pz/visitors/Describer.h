@@ -20,6 +20,7 @@ public:
     virtual void visit(VarNode &node) override;
     virtual void visit(FuncNode &node) override;
     virtual void visit(ScopeNode &node) override;
+    virtual void visit(IntLiteralNode &node) override;
 
 private:
     std::string r;

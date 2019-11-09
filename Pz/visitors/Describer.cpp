@@ -7,8 +7,10 @@
 #include "nodes/ClassNode.h"
 #include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
+#include "nodes/LiteralNodes.h"
 
 #include <pcx/join_str.h>
+#include <pcx/lexical_cast.h>
 
 namespace
 {
@@ -108,4 +110,9 @@ void Describer::visit(FuncNode &node)
 void Describer::visit(ScopeNode &node)
 {
     r += "{ scope }";
+}
+
+void Describer::visit(IntLiteralNode &node)
+{
+    r += pcx::lexical_cast<std::string>(node.value);
 }

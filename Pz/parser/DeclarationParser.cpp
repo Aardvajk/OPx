@@ -14,6 +14,7 @@
 
 #include "parser/CommonParser.h"
 #include "parser/TypeParser.h"
+#include "parser/ExprParser.h"
 
 namespace
 {
@@ -70,6 +71,35 @@ void DeclarationParser::buildClass(Context &c, BlockNode *block, bool get)
     {
         c.scanner.consume(Token::Type::Semicolon, false);
     }
+}
+
+void DeclarationParser::buildVar(Context &c, BlockNode *block, bool get)
+{
+    auto name = CommonParser::name(c, get);
+
+    auto n = new VarNode(name->location(), name);
+    block->push_back(n);
+
+    if(c.scanner.token().type() == Token::Type::Colon)
+    {
+        n->type = TypeParser::build(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Assign)
+    {
+        n->value = ExprParser::build(c, true);
+    }
+
+    if(c.scanner.token().type() == Token::Type::Comma)
+    {
+        buildVar(c, block, true);
+    }
+}
+
+void DeclarationParser::buildTerminatedVar(Context &c, BlockNode *block, bool get)
+{
+    buildVar(c, block, get);
+    c.scanner.consume(Token::Type::Semicolon, false);
 }
 
 void DeclarationParser::buildFunction(Context &c, BlockNode *block, bool get)

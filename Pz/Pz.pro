@@ -26,6 +26,7 @@ SOURCES += \
         nodes/ClassNode.cpp \
         nodes/FuncNode.cpp \
         nodes/IdNode.cpp \
+        nodes/LiteralNodes.cpp \
         nodes/NamespaceNode.cpp \
         nodes/Node.cpp \
         nodes/ScopeNode.cpp \
@@ -33,6 +34,7 @@ SOURCES += \
         nodes/VarNode.cpp \
         parser/CommonParser.cpp \
         parser/DeclarationParser.cpp \
+        parser/ExprParser.cpp \
         parser/Parser.cpp \
         parser/TypeParser.cpp \
         visitors/AstPrinter.cpp \
@@ -45,6 +47,7 @@ HEADERS += \
     nodes/ClassNode.h \
     nodes/FuncNode.h \
     nodes/IdNode.h \
+    nodes/LiteralNodes.h \
     nodes/NamespaceNode.h \
     nodes/Node.h \
     nodes/ScopeNode.h \
@@ -52,6 +55,7 @@ HEADERS += \
     nodes/VarNode.h \
     parser/CommonParser.h \
     parser/DeclarationParser.h \
+    parser/ExprParser.h \
     parser/Parser.h \
     parser/TypeParser.h \
     visitors/AstPrinter.h \

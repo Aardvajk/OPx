@@ -14,6 +14,7 @@ public:
 
     NodePtr name;
     NodePtr type;
+    NodePtr value;
 };
 
 #endif // VARNODE_H

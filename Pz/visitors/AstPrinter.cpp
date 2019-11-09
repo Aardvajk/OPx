@@ -5,8 +5,10 @@
 #include "nodes/NamespaceNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
 #include "nodes/ScopeNode.h"
+#include "nodes/LiteralNodes.h"
 
 #include <pcx/scoped_counter.h>
 
@@ -62,6 +64,17 @@ void AstPrinter::visit(ClassNode &node)
     }
 }
 
+void AstPrinter::visit(VarNode &node)
+{
+    tab() << "var " << node.description() << "\n";
+
+    if(node.value)
+    {
+        auto g = pcx::scoped_counter(tc);
+        node.value->accept(*this);
+    }
+}
+
 void AstPrinter::visit(FuncNode &node)
 {
     tab() << "func " << node.description() << "\n";
@@ -76,6 +89,11 @@ void AstPrinter::visit(ScopeNode &node)
 {
     tab() << "scope\n";
     node.body->accept(*this);
+}
+
+void AstPrinter::visit(IntLiteralNode &node)
+{
+    tab() << "int literal " << node.description() << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

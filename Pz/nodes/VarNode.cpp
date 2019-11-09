@@ -18,6 +18,7 @@ NodePtr VarNode::cloneDetail() const
     NodePtr n(v);
 
     v->type = clonePtr(type);
+    v->value = clonePtr(value);
 
     return n;
 }
