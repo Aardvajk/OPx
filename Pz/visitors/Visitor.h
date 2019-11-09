@@ -8,6 +8,7 @@ class IdNode;
 class NamespaceNode;
 class TypeNode;
 class ClassNode;
+class VarNode;
 class FuncNode;
 class ScopeNode;
 
@@ -21,6 +22,7 @@ public:
     virtual void visit(NamespaceNode &node);
     virtual void visit(TypeNode &node);
     virtual void visit(ClassNode &node);
+    virtual void visit(VarNode &node);
     virtual void visit(FuncNode &node);
     virtual void visit(ScopeNode &node);
 

@@ -24,6 +24,10 @@ void Visitor::visit(ClassNode &node)
 {
 }
 
+void Visitor::visit(VarNode &node)
+{
+}
+
 void Visitor::visit(FuncNode &node)
 {
 }

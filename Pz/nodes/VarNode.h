@@ -1,21 +1,19 @@
-#ifndef FUNCNODE_H
-#define FUNCNODE_H
+#ifndef VARNODE_H
+#define VARNODE_H
 
 #include "nodes/Node.h"
 
-class FuncNode : public Node
+class VarNode : public Node
 {
 public:
-    FuncNode(Location location, NodePtr name) : Node(location), name(name) { }
+    VarNode(Location location, NodePtr name) : Node(location), name(name) { }
 
     virtual void accept(Visitor &v) override;
     virtual std::string classname() const override;
     virtual NodePtr cloneDetail() const override;
 
     NodePtr name;
-    NodeList args;
     NodePtr type;
-    NodePtr body;
 };
 
-#endif // FUNCNODE_H
+#endif // VARNODE_H

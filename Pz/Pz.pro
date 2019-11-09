@@ -30,6 +30,7 @@ SOURCES += \
         nodes/Node.cpp \
         nodes/ScopeNode.cpp \
         nodes/TypeNode.cpp \
+        nodes/VarNode.cpp \
         parser/CommonParser.cpp \
         parser/DeclarationParser.cpp \
         parser/Parser.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     nodes/Node.h \
     nodes/ScopeNode.h \
     nodes/TypeNode.h \
+    nodes/VarNode.h \
     parser/CommonParser.h \
     parser/DeclarationParser.h \
     parser/Parser.h \

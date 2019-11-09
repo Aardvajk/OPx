@@ -5,6 +5,7 @@
 #include "nodes/NamespaceNode.h"
 #include "nodes/TypeNode.h"
 #include "nodes/ClassNode.h"
+#include "nodes/VarNode.h"
 #include "nodes/FuncNode.h"
 
 #include <pcx/join_str.h>
@@ -80,10 +81,22 @@ void Describer::visit(ClassNode &node)
     node.name->accept(*this);
 }
 
+void Describer::visit(VarNode &node)
+{
+    node.name->accept(*this);
+
+    if(node.type)
+    {
+        r += ":";
+        node.type->accept(*this);
+    }
+}
+
 void Describer::visit(FuncNode &node)
 {
     node.name->accept(*this);
-    r += "()";
+
+    r += "(" + pcx::join_str(node.args, ", ", describe) + ")";
 
     if(node.type)
     {
