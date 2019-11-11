@@ -21,6 +21,7 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
+        decorate/Decorator.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/ClassNode.cpp \
@@ -44,12 +45,14 @@ SOURCES += \
         syms/SymTree.cpp \
         visitors/AstPrinter.cpp \
         visitors/Describer.cpp \
+        visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         visitors/SymScopeVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
+    decorate/Decorator.h \
     info/ParseInfo.h \
     nodes/BlockNode.h \
     nodes/ClassNode.h \
@@ -73,6 +76,7 @@ HEADERS += \
     syms/SymTree.h \
     visitors/AstPrinter.h \
     visitors/Describer.h \
+    visitors/NameVisitors.h \
     visitors/SymFinder.h \
     visitors/SymScopeVisitor.h \
     visitors/Visitor.h

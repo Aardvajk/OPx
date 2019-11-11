@@ -5,6 +5,8 @@
 
 #include "parser/Parser.h"
 
+#include "decorate/Decorator.h"
+
 #include "visitors/AstPrinter.h"
 
 #include "syms/SymPrinter.h"
@@ -33,10 +35,15 @@ int main(int argc, char *argv[])
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
+        Visitor::visit<Decorator>(n.get(), c);
+
         if(!c.args.contains("q"))
         {
             std::cout << banner("symbols");
             SymPrinter::print(c, c.tree.root(), std::cout);
+
+            std::cout << banner("decorated nodes");
+            Visitor::visit<AstPrinter>(n.get(), c, std::cout);
         }
 
         if(!c.args.contains("q"))
