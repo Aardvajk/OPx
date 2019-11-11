@@ -86,11 +86,6 @@ void AstPrinter::visit(FuncNode &node)
     }
 }
 
-void AstPrinter::visit(GenericTagNode &node)
-{
-    tab() << "generic tag " << node.name << "\n";
-}
-
 void AstPrinter::visit(ScopeNode &node)
 {
     tab() << "scope\n";

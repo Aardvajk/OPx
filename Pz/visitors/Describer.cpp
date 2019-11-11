@@ -24,11 +24,6 @@ Describer::Describer()
 {
 }
 
-void Describer::visit(BlockNode &node)
-{
-    r = "{ block }";
-}
-
 void Describer::visit(IdNode &node)
 {
     if(node.parent)
@@ -121,11 +116,6 @@ void Describer::visit(FuncNode &node)
 void Describer::visit(GenericTagNode &node)
 {
     r += node.name;
-}
-
-void Describer::visit(ScopeNode &node)
-{
-    r += "{ scope }";
 }
 
 void Describer::visit(IntLiteralNode &node)

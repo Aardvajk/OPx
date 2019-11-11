@@ -12,7 +12,6 @@ public:
 
     std::string result() const { return r; }
 
-    virtual void visit(BlockNode &node) override;
     virtual void visit(IdNode &node) override;
     virtual void visit(NamespaceNode &node) override;
     virtual void visit(TypeNode &node) override;
@@ -20,7 +19,6 @@ public:
     virtual void visit(VarNode &node) override;
     virtual void visit(FuncNode &node) override;
     virtual void visit(GenericTagNode &node) override;
-    virtual void visit(ScopeNode &node) override;
     virtual void visit(IntLiteralNode &node) override;
 
 private:

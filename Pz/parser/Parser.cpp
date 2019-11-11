@@ -8,6 +8,8 @@
 
 #include "parser/DeclarationParser.h"
 
+#include <pcx/scoped_push.h>
+
 void Parser::construct(Context &c, BlockNode *block, bool get)
 {
     auto tok = c.scanner.next(get);
@@ -26,6 +28,8 @@ NodePtr Parser::build(Context &c)
 {
     auto b = new BlockNode({ });
     NodePtr n(b);
+
+    auto cg = pcx::scoped_push(c.parseInfo.containers, Sym::Type::Namespace);
 
     c.scanner.next(true);
     while(c.scanner.token().type() != Token::Type::Eof)

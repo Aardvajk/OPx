@@ -17,6 +17,8 @@
 #include "parser/TypeParser.h"
 #include "parser/ExprParser.h"
 
+#include <pcx/scoped_push.h>
+
 namespace
 {
 
@@ -77,8 +79,15 @@ void DeclarationParser::buildNamespace(Context &c, BlockNode *block, bool get)
 {
     auto name = CommonParser::name(c, get);
 
+    if(c.parseInfo.containers.back() != Sym::Type::Namespace)
+    {
+        throw Error(name->location(), "invalid namespace - ", name->description());
+    }
+
     auto n = new NamespaceNode(name->location(), name);
     block->push_back(n);
+
+    auto cg = pcx::scoped_push(c.parseInfo.containers, Sym::Type::Namespace);
 
     n->body = CommonParser::blockContents(c, n->location(), false);
 }
@@ -88,6 +97,11 @@ void DeclarationParser::buildClass(Context &c, BlockNode *block, bool get)
     auto tags = buildGenericTags(c, get);
     auto name = CommonParser::name(c, false);
 
+    if(c.parseInfo.containers.back() == Sym::Type::Func)
+    {
+        throw Error(name->location(), "invalid class - ", name->description());
+    }
+
     auto n = new ClassNode(name->location(), name);
     block->push_back(n);
 
@@ -95,6 +109,8 @@ void DeclarationParser::buildClass(Context &c, BlockNode *block, bool get)
 
     if(c.scanner.token().type() == Token::Type::LeftBrace)
     {
+        auto cg = pcx::scoped_push(c.parseInfo.containers, Sym::Type::Class);
+
         n->body = CommonParser::blockContents(c, n->location(), false);
     }
     else
@@ -137,6 +153,11 @@ void DeclarationParser::buildFunction(Context &c, BlockNode *block, bool get)
     auto tags = buildGenericTags(c, get);
     auto name = CommonParser::name(c, false);
 
+    if(c.parseInfo.containers.back() == Sym::Type::Func)
+    {
+        throw Error(name->location(), "invalid function - ", name->description());
+    }
+
     auto n = new FuncNode(name->location(), name);
     block->push_back(n);
 
@@ -159,6 +180,8 @@ void DeclarationParser::buildFunction(Context &c, BlockNode *block, bool get)
     {
         auto scope = new ScopeNode(n->location());
         n->body = scope;
+
+        auto cg = pcx::scoped_push(c.parseInfo.containers, Sym::Type::Func);
 
         scope->body = CommonParser::blockContents(c, n->location(), false);
     }

@@ -38,12 +38,19 @@ SOURCES += \
         parser/ExprParser.cpp \
         parser/Parser.cpp \
         parser/TypeParser.cpp \
+        syms/Sym.cpp \
+        syms/SymGuard.cpp \
+        syms/SymPrinter.cpp \
+        syms/SymTree.cpp \
         visitors/AstPrinter.cpp \
         visitors/Describer.cpp \
+        visitors/SymFinder.cpp \
+        visitors/SymScopeVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
+    info/ParseInfo.h \
     nodes/BlockNode.h \
     nodes/ClassNode.h \
     nodes/FuncNode.h \
@@ -60,8 +67,14 @@ HEADERS += \
     parser/ExprParser.h \
     parser/Parser.h \
     parser/TypeParser.h \
+    syms/Sym.h \
+    syms/SymGuard.h \
+    syms/SymPrinter.h \
+    syms/SymTree.h \
     visitors/AstPrinter.h \
     visitors/Describer.h \
+    visitors/SymFinder.h \
+    visitors/SymScopeVisitor.h \
     visitors/Visitor.h
 
 DISTFILES += \

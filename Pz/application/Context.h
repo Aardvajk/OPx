@@ -6,6 +6,10 @@
 #include "scanner/Scanner.h"
 #include "scanner/SourceList.h"
 
+#include "syms/SymTree.h"
+
+#include "info/ParseInfo.h"
+
 class Context
 {
 public:
@@ -17,6 +21,10 @@ public:
 
     Scanner scanner;
     SourceList sources;
+
+    SymTree tree;
+
+    ParseInfo parseInfo;
 };
 
 #endif // CONTEXT_H

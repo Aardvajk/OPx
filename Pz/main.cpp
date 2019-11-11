@@ -7,6 +7,8 @@
 
 #include "visitors/AstPrinter.h"
 
+#include "syms/SymPrinter.h"
+
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -29,6 +31,12 @@ int main(int argc, char *argv[])
         {
             std::cout << banner("nodes");
             Visitor::visit<AstPrinter>(n.get(), c, std::cout);
+        }
+
+        if(!c.args.contains("q"))
+        {
+            std::cout << banner("symbols");
+            SymPrinter::print(c, c.tree.root(), std::cout);
         }
 
         if(!c.args.contains("q"))
