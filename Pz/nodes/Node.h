@@ -23,7 +23,6 @@ class BlockNode;
 class Node
 {
 public:
-    explicit Node(Location location);
     virtual ~Node();
 
     NodePtr clone() const;
@@ -41,6 +40,8 @@ public:
     template<typename T> T property(const std::string &key) const;
 
 protected:
+    explicit Node(Location location);
+
     template<typename T> static T copyDetails(const Node *from, T to){ to->pm = from->pm; return to; }
 
     static NodePtr clonePtr(const NodePtr &n);

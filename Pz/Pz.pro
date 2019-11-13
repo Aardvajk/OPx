@@ -43,6 +43,11 @@ SOURCES += \
         syms/SymGuard.cpp \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
+        types/DefaultTypes.cpp \
+        types/Type.cpp \
+        types/TypeBuilder.cpp \
+        types/TypeCache.cpp \
+        types/TypeCompare.cpp \
         visitors/AstPrinter.cpp \
         visitors/Describer.cpp \
         visitors/NameVisitors.cpp \
@@ -74,6 +79,11 @@ HEADERS += \
     syms/SymGuard.h \
     syms/SymPrinter.h \
     syms/SymTree.h \
+    types/DefaultTypes.h \
+    types/Type.h \
+    types/TypeBuilder.h \
+    types/TypeCache.h \
+    types/TypeCompare.h \
     visitors/AstPrinter.h \
     visitors/Describer.h \
     visitors/NameVisitors.h \

@@ -11,7 +11,27 @@
 #include "nodes/ScopeNode.h"
 #include "nodes/LiteralNodes.h"
 
+#include "syms/Sym.h"
+
 #include <pcx/scoped_counter.h>
+
+namespace
+{
+
+std::string details(Node &node)
+{
+    std::string r;
+
+    if(auto s = node.findProperty("sym"))
+    {
+        auto sym = s.to<Sym*>();
+        r += pcx::str(" -> ", sym->fullname());
+    }
+
+    return r;
+}
+
+}
 
 AstPrinter::AstPrinter(Context &c, std::ostream &os) : c(c), os(os), tc(0)
 {
@@ -35,7 +55,7 @@ void AstPrinter::visit(BlockNode &node)
 
 void AstPrinter::visit(IdNode &node)
 {
-    tab() << "id " << node.name << "\n";
+    tab() << "id " << node.name << details(node) << "\n";
 
     if(node.parent)
     {
@@ -46,18 +66,18 @@ void AstPrinter::visit(IdNode &node)
 
 void AstPrinter::visit(NamespaceNode &node)
 {
-    tab() << "namespace " << node.name->description() << "\n";
+    tab() << "namespace " << node.name->description() << details(node) << "\n";
     node.body->accept(*this);
 }
 
 void AstPrinter::visit(TypeNode &node)
 {
-    tab() << "type " << node.description() << "\n";
+    tab() << "type " << node.description() << details(node) << "\n";
 }
 
 void AstPrinter::visit(ClassNode &node)
 {
-    tab() << "class " << node.description() << "\n";
+    tab() << "class " << node.description() << details(node) << "\n";
 
     if(node.body)
     {
@@ -67,7 +87,7 @@ void AstPrinter::visit(ClassNode &node)
 
 void AstPrinter::visit(VarNode &node)
 {
-    tab() << "var " << node.description() << "\n";
+    tab() << "var " << node.description() << details(node) << "\n";
 
     if(node.value)
     {
@@ -78,7 +98,7 @@ void AstPrinter::visit(VarNode &node)
 
 void AstPrinter::visit(FuncNode &node)
 {
-    tab() << "func " << node.description() << "\n";
+    tab() << "func " << node.description() << details(node) << "\n";
 
     if(node.body)
     {
@@ -88,13 +108,13 @@ void AstPrinter::visit(FuncNode &node)
 
 void AstPrinter::visit(ScopeNode &node)
 {
-    tab() << "scope\n";
+    tab() << "scope " << details(node) << "\n";
     node.body->accept(*this);
 }
 
 void AstPrinter::visit(IntLiteralNode &node)
 {
-    tab() << "int literal " << node.description() << "\n";
+    tab() << "int literal " << node.description() << details(node) << "\n";
 }
 
 std::ostream &AstPrinter::tab() const

@@ -8,6 +8,8 @@
 
 #include "syms/SymTree.h"
 
+#include "types/TypeCache.h"
+
 #include "info/ParseInfo.h"
 
 class Context
@@ -23,6 +25,7 @@ public:
     SourceList sources;
 
     SymTree tree;
+    TypeCache types;
 
     ParseInfo parseInfo;
 };
