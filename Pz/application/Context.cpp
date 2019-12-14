@@ -2,10 +2,13 @@
 
 #include "framework/Error.h"
 
+#include "types/DefaultTypes.h"
+
 #include <fstream>
 
 Context::Context(int argc, char *argv[], std::vector<std::string> &files) : args(argc, argv, files), scanner(Lexer::Mode::Pc)
 {
+    DefaultTypes::create(*this);
 }
 
 void Context::open(const std::string &path)

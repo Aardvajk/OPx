@@ -4,6 +4,8 @@
 
 #include "syms/Sym.h"
 
+#include "types/Type.h"
+
 #include <pcx/str.h>
 #include <pcx/join_str.h>
 
@@ -29,7 +31,21 @@ void dump(Context &c, int tab, const Sym *sym, std::ostream &os)
 {
     auto ts = std::string(std::size_t(tab * 4), ' ');
 
-    os << ts << type(sym) << " " << sym->fullname() << "\n";
+    os << ts << type(sym);
+
+    if(auto g = sym->findProperty("genericParams"))
+    {
+        os << " <" << pcx::join_str(g.to<GenericParamList>(), ", ", [](const GenericParam &p){ return p.name; }) << ">";
+    }
+
+    os << " " << sym->fullname();
+
+    if(auto t = sym->findProperty("type"))
+    {
+        os << " -> " << t.to<Type*>()->text();
+    }
+
+    os << "\n";
 
     if(hasScope(sym))
     {

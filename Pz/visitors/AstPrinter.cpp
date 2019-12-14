@@ -13,6 +13,8 @@
 
 #include "syms/Sym.h"
 
+#include "types/Type.h"
+
 #include <pcx/scoped_counter.h>
 
 namespace
@@ -26,6 +28,11 @@ std::string details(Node &node)
     {
         auto sym = s.to<Sym*>();
         r += pcx::str(" -> ", sym->fullname());
+
+        if(auto t = sym->findProperty("type"))
+        {
+            r += pcx::str(" -> ", t.to<Type*>()->text());
+        }
     }
 
     return r;

@@ -3,6 +3,10 @@
 #include "types/Type.h"
 #include "types/TypeCompare.h"
 
+TypeCache::TypeCache()
+{
+}
+
 TypeCache::~TypeCache()
 {
 }
@@ -24,4 +28,9 @@ Type *TypeCache::insert(const Type &type)
 Type *TypeCache::nullType()
 {
     return v.ptr(0);
+}
+
+Type *TypeCache::intType()
+{
+    return v.ptr(1);
 }

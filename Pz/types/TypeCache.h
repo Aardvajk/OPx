@@ -8,11 +8,13 @@ class Type;
 class TypeCache
 {
 public:
+    TypeCache();
     ~TypeCache();
 
     Type *insert(const Type &type);
 
     Type *nullType();
+    Type *intType();
 
 private:
     pcx::ptr_vector<Type> v;

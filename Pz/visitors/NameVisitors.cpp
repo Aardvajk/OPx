@@ -5,6 +5,7 @@
 #include "application/Context.h"
 
 #include "nodes/IdNode.h"
+#include "nodes/GenericTagNode.h"
 
 void NameVisitors::IsNameSimple::visit(IdNode &node)
 {
@@ -44,4 +45,9 @@ std::string NameVisitors::assertSimpleUniqueName(Context &c, Node *node)
 {
     assertSimpleName(c, node);
     return assertUniqueName(c, node);
+}
+
+void NameVisitors::GenericTagName::visit(GenericTagNode &node)
+{
+    r = node.name;
 }

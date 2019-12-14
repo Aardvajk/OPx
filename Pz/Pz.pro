@@ -21,7 +21,11 @@ PRE_TARGETDEPS = "C:/Projects/Px/Px/build-Px/release/libPx.a"
 
 SOURCES += \
         application/Context.cpp \
+        decorate/ArgDecorator.cpp \
         decorate/Decorator.cpp \
+        generics/GenericParam.cpp \
+        generics/GenericParamList.cpp \
+        generics/GenericStack.cpp \
         main.cpp \
         nodes/BlockNode.cpp \
         nodes/ClassNode.cpp \
@@ -44,6 +48,7 @@ SOURCES += \
         syms/SymPrinter.cpp \
         syms/SymTree.cpp \
         types/DefaultTypes.cpp \
+        types/GenericRef.cpp \
         types/Type.cpp \
         types/TypeBuilder.cpp \
         types/TypeCache.cpp \
@@ -53,11 +58,16 @@ SOURCES += \
         visitors/NameVisitors.cpp \
         visitors/SymFinder.cpp \
         visitors/SymScopeVisitor.cpp \
+        visitors/TypeVisitor.cpp \
         visitors/Visitor.cpp
 
 HEADERS += \
     application/Context.h \
+    decorate/ArgDecorator.h \
     decorate/Decorator.h \
+    generics/GenericParam.h \
+    generics/GenericParamList.h \
+    generics/GenericStack.h \
     info/ParseInfo.h \
     nodes/BlockNode.h \
     nodes/ClassNode.h \
@@ -80,6 +90,7 @@ HEADERS += \
     syms/SymPrinter.h \
     syms/SymTree.h \
     types/DefaultTypes.h \
+    types/GenericRef.h \
     types/Type.h \
     types/TypeBuilder.h \
     types/TypeCache.h \
@@ -89,6 +100,7 @@ HEADERS += \
     visitors/NameVisitors.h \
     visitors/SymFinder.h \
     visitors/SymScopeVisitor.h \
+    visitors/TypeVisitor.h \
     visitors/Visitor.h
 
 DISTFILES += \
